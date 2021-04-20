@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Revealit Ar</string>
+    <string name="strHome">Home</string>
+    <string name="strInternetAvailable">Internet Available</string>
+    <string name="strNoInternetAvailable">No Internet Available</string>
+    <string name="strWarningDialogTitle">Warning Message</string>
+    <string name="strOk">Ok</string>
+    <string name="strPleaseWait">Please Wait</string>
+    <string name="strButton">Play Video</string>
+    <string name="strARmode">Launch AR mode</string>
+
+
+
+</resources>
