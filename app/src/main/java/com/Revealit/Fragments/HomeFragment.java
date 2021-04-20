@@ -67,8 +67,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mView = inflater.inflate(R.layout.fragment_home, container, false);
 
         return mView;
-
-
+        
     }
 
 
