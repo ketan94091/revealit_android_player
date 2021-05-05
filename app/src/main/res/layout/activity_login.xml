@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/border_square_transperant">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingBottom="20dp"
+            android:paddingRight="20dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/main_logo_small" />
+
+            <EditText
+                android:id="@+id/edtUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_square_gray"
+                android:padding="8dp"
+                android:drawableLeft="@drawable/user"
+                android:textColor="@color/colorWhite"
+                android:drawablePadding="5dp"
+                android:singleLine="true"
+                android:maxEms="50"
+                />
+
+            <EditText
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/key"
+                android:background="@drawable/border_square_gray"
+                android:padding="8dp"
+                android:drawablePadding="5dp"
+                android:textColor="@color/colorWhite"
+                android:singleLine="true"
+                android:inputType="textPassword"
+                android:maxEms="50"
+               />
+
+            <TextView
+                android:id="@+id/txtLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="10dp"
+                android:gravity="end"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:text="@string/strLogin"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/border_square_gray"/>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

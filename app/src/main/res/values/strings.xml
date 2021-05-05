@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">Revealit</string>
+    <string name="strHome">Home</string>
+    <string name="strInternetAvailable">Internet Available</string>
+    <string name="strNoInternetAvailable">No Internet Available</string>
+    <string name="strWarningDialogTitle">Warning Message</string>
+    <string name="strOk">Ok</string>
+    <string name="strPleaseWait">Please Wait</string>
+    <string name="strButton">Play Video</string>
+    <string name="strARmode">Launch AR mode</string>
+    <string name="strLogin">Login</string>
+    <string name="strListen">Listen</string>
+    <string name="strPlay">Play</string>
+    <string name="strWallet">Wallet</string>
+    <string name="strGetStarted">Get Started</string>
+    <string name="strCreateAccount">Create Account</string>
+    <string name="strCreateAccountTitleOne">We need some basic information to create</string>
+    <string name="strCreateAccountTitleTwo">your revealit account</string>
+    <string name="strRegisterAccount">Register Account</string>
+    <string name="strRevealitName">Revealit Name</string>
+    <string name="strChooseaname">Choose a name you would like to use publicly</string>
+    <string name="strChooseanameTwo">with revealit</string>
+    <string name="strVerifyEmail">Verify your email address</string>
+    <string name="strThankyouforSigningUp">Thank you for signing up for revealit</string>
+    <string name="strThankyouforSigningUpTitle"> As an extra security pre-caution, please verify \nyour email using the code below to continue \nsign up</string>
+    <string name="strNext">Next</string>
+
+    <string name="strWarningTitleOne">Minimum password length 6</string>
+    <string name="strWarningTitleTwo">Minimum 1 Digit, Lowercase, Uppercase</string>
+    <string name="strWarningTitleThree">Max consecutive characters 2</string>
+    <string name="strEmailid">Email</string>
+    <string name="strPassword">Password</string>
+
+
+    <string name="strLongPasswordSuggestionTitleOne">Hey that \'s long password right?</string>
+    <string name="strLongPasswordSuggestionTitleTwo">Don’t worry if you’re onboard we will log you in with your face or fingerprint.</string>
+    <string name="strLongPasswordSuggestionTitleThree">to login day to day.</string>
+
+    <string name="strCreateAccountTermAndConditionOne">By clicking "Create Account"  you are agree to our </string>
+    <string name="strCreateAccountTermAndConditionTwo">Terms of Services and Privacy Policy</string>
+    <string name="strNoSpaceAllowed">No Spaces Allowed.</string>
+    <string name="strEmailAlreadyRegistered">Email is already registered</string>
+    <string name="strEmailAlreadyRegisteredMsg">This email is already registered with revealit would</string>
+    <string name="strEmailAlreadyRegisteredMsgTwo">you like to</string>
+
+
+    <string name="strEnterUserName">Please enter username!</string>
+    <string name="strEnterPassword">Please enter password!</string>
+    <string name="strUsernamePasswordWrong">Wrong username or password!</string>
+    <string name="strSomethingWentWrong">Something went wrong please try again.</string>
+    <string name="title_activity_home_navigationbar">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+
+</resources>

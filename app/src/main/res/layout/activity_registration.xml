@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imgCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/close_black"
+            android:layout_margin="20dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="30dp"
+            android:layout_marginTop="30dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+          >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strCreateAccount"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorGrayBottomBar"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strCreateAccountTitleOne"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorGrayBottomBar"
+                android:textSize="12dp"
+                android:layout_marginTop="10dp"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strCreateAccountTitleTwo"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorGrayBottomBar"
+                android:textSize="12dp"
+                />
+        </LinearLayout>
+
+            <EditText
+                android:id="@+id/edtEmailid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:background="@drawable/round_corner_border"
+                android:layout_marginTop="20dp"
+                android:singleLine="true"
+                android:textSize="12dp"
+                android:maxEms="50"
+                android:hint="@string/strEmailid"
+                android:textColorHint="@color/colorGrayLight"
+                android:textColor="@color/colorGrayBottomBar"
+               />
+
+            <EditText
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:background="@drawable/round_corner_border"
+                android:layout_marginTop="10dp"
+                android:singleLine="true"
+                android:textSize="12dp"
+                android:maxEms="50"
+                android:hint="@string/strPassword"
+                android:textColorHint="@color/colorGrayLight"
+                android:textColor="@color/colorGrayBottomBar"
+                />
+
+            <LinearLayout
+                android:id="@+id/linearEmailAlreadyRegistered"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="gone"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strEmailAlreadyRegistered"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorRedDark"
+                    android:textSize="12dp"
+                    android:layout_marginTop="10dp"
+                    android:drawableLeft="@drawable/close"
+                    android:drawablePadding="5dp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strEmailAlreadyRegisteredMsg"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorGrayBottomBar"
+                    android:textSize="12dp"
+                    android:layout_marginTop="10dp"
+                    android:drawablePadding="5dp"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strEmailAlreadyRegisteredMsgTwo"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorGrayBottomBar"
+                    android:textSize="12dp"
+                    android:layout_marginTop="10dp"
+                    android:drawablePadding="5dp"
+                    />
+
+                    <TextView
+                        android:id="@+id/txtLogin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/strLogin"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/colorBlueBottomBar"
+                        android:textSize="12dp"
+                        android:layout_marginTop="10dp"
+                        android:drawablePadding="5dp"
+                        android:layout_marginLeft="5dp"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/linearWarningMsgs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="gone"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strWarningTitleOne"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorRedDark"
+                    android:textSize="12dp"
+                    android:layout_marginTop="10dp"
+                    android:drawableLeft="@drawable/close"
+                    android:drawablePadding="5dp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strWarningTitleTwo"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorRedDark"
+                    android:textSize="12dp"
+                    android:layout_marginTop="10dp"
+                    android:drawableLeft="@drawable/close"
+                    android:drawablePadding="5dp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strWarningTitleThree"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorRedDark"
+                    android:textSize="12dp"
+                    android:layout_marginTop="10dp"
+                    android:drawableLeft="@drawable/close"
+                    android:drawablePadding="5dp"
+                    />
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/linearLongPasswordMsgs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strLongPasswordSuggestionTitleOne"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorMainLogo"
+                    android:textSize="12dp"
+                    android:layout_marginTop="10dp"
+                    android:drawablePadding="5dp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strLongPasswordSuggestionTitleTwo"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorGrayBottomBar"
+                    android:textSize="12dp"
+                    android:drawablePadding="5dp"
+                    />
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:padding="20dp"
+            android:layout_marginBottom="50dp">
+
+            <TextView
+                android:id="@+id/txtGetStartedDisabled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strCreateAccount"
+                android:background="@drawable/round_corner_border_disabled"
+                android:textAlignment="center"
+                android:textColor="@color/colorGrayLight"
+                android:padding="10dp"
+                android:textSize="12dp"
+                />
+            <TextView
+                android:id="@+id/txtGetStartedEnabled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strCreateAccount"
+                android:background="@drawable/round_corner_border"
+                android:textAlignment="center"
+                android:textColor="@color/colorGrayBottomBar"
+                android:padding="10dp"
+                android:textSize="12dp"
+                android:visibility="gone"
+                />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strCreateAccountTermAndConditionOne"
+                android:textAlignment="center"
+                android:textColor="@color/colorGrayBottomBar"
+                android:textSize="12dp"
+                android:layout_marginTop="20dp"
+                android:drawablePadding="5dp"
+                />
+            <TextView
+                android:id="@+id/txtTermsOfService"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strCreateAccountTermAndConditionTwo"
+                android:textAlignment="center"
+                android:textColor="@color/colorMainLogo"
+                android:textSize="12dp"
+                android:layout_marginTop="10dp"
+                android:drawablePadding="5dp"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

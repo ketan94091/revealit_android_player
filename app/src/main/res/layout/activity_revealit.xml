@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imgGoBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/close_black"
+            android:layout_margin="20dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="30dp"
+            android:layout_marginTop="30dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strRevealitName"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorGrayBottomBar"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strChooseaname"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorGrayBottomBar"
+                android:textSize="12dp"
+                android:layout_marginTop="5dp"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strChooseanameTwo"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorGrayBottomBar"
+                android:textSize="12dp"
+                />
+
+            <EditText
+                android:id="@+id/edtUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:background="@drawable/round_corner_border"
+                android:layout_marginTop="40dp"
+                android:drawableRight="@drawable/check"
+                android:singleLine="true"
+                android:textSize="13dp"
+                android:maxEms="50"
+                android:textColor="@color/colorGrayBottomBar"
+               />
+
+
+            <TextView
+                android:id="@+id/txtGetNextDisabled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strCreateAccount"
+                android:background="@drawable/round_corner_border_disabled"
+                android:textAlignment="center"
+                android:textColor="@color/colorGrayLight"
+                android:padding="10dp"
+                android:textSize="12dp"
+                android:layout_marginTop="100dp"
+                android:visibility="gone"
+                />
+            <TextView
+                android:id="@+id/txtNextEnabled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strCreateAccount"
+                android:background="@drawable/round_corner_border"
+                android:textAlignment="center"
+                android:textColor="@color/colorGrayBottomBar"
+                android:padding="10dp"
+                android:textSize="12dp"
+                android:layout_marginTop="100dp"
+                />
+
+
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

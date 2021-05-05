@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/ralativeMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/relativeFeatured"
+            android:layout_width="match_parent"
+            android:layout_height="120dp">
+
+
+            <ImageView
+                android:id="@+id/imgBiteBanner"
+                android:layout_width="450dp"
+                android:layout_height="200dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/bite_templet"
+                />
+
+            <TextView
+                android:id="@+id/txtBiteTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/colorWhite"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imgBiteBrandLogo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:src="@mipmap/bite_brand_logo_templet" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linearTrending"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relativeFeatured"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:weightSum="3">
+
+            <TextView
+                android:id="@+id/txtSubTitleOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Makeup"
+                android:textAlignment="center"
+                android:textColor="@color/colorGrayBottomBar"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/txtSubTitleTwo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="New"
+                android:textAlignment="center"
+                android:textColor="@color/colorGrayBottomBar"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/txtSubTitleThree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Trending"
+                android:textAlignment="center"
+                android:textColor="@color/colorGrayBottomBar"
+                android:textSize="15dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtPlay"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearTrending"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/border_button_mai_logo"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:text="@string/strPlay"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleCategoryList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/txtPlay"
+            android:layout_marginTop="10dp"
+            />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
