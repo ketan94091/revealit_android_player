@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.GenericTextWatcher;
@@ -39,7 +41,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class VerificationCodeActivity extends YouTubeBaseActivity implements View.OnClickListener {
+public class VerificationCodeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Activity mActivity;
     private Context mContext;

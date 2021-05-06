@@ -2,20 +2,24 @@ package com.Revealit.Activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 
-public class GettingStartedActivity extends YouTubeBaseActivity implements View.OnClickListener {
+public class GettingStartedActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Activity mActivity;
     private Context mContext;
@@ -89,10 +93,12 @@ public class GettingStartedActivity extends YouTubeBaseActivity implements View.
                 Intent mRegistrationIntent = new Intent(this, RegistrationActivity.class);
                 startActivity(mRegistrationIntent);
 
+
+
                 break;
         }
     }
-    
+
 
 }
 

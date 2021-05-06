@@ -2,11 +2,13 @@ package com.Revealit.Activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Trace;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,17 +16,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 
-public class RevealitNameActivity extends YouTubeBaseActivity implements View.OnClickListener {
+public class RevealitNameActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Activity mActivity;
     private Context mContext;
-    private static final String TAG = "RegistrationActivity";
+    private static final String TAG = "RevealitNameActivity";
 
 
     private SessionManager mSessionManager;
@@ -106,6 +110,18 @@ public class RevealitNameActivity extends YouTubeBaseActivity implements View.On
 
         });
 
+        edtUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    edtUsername.setBackground(getResources().getDrawable(R.drawable.round_corner_focused_border));
+                } else {
+                    edtUsername.setBackground(getResources().getDrawable(R.drawable.round_corner_border));
+                }
+
+            }
+        });
+
 
     }
 
@@ -129,9 +145,45 @@ public class RevealitNameActivity extends YouTubeBaseActivity implements View.On
             case R.id.txtNextEnabled:
 
 
+                openBiomatricPermissionDialog();
+
 
                 break;
         }
+    }
+
+    private void openBiomatricPermissionDialog() {
+
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
+        dialogBuilder.setCancelable(false);
+        LayoutInflater inflater = mActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.custom_biomatric_permission_dailoague, null);
+        dialogBuilder.setView(dialogView);
+
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        TextView txtDontAllow = (TextView) dialogView.findViewById(R.id.txtDontAllow);
+        TextView txtOk = (TextView) dialogView.findViewById(R.id.txtOk);
+
+        txtDontAllow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+            }
+        });
+
+        txtOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+            }
+        });
+        mAlertDialog.show();
+
     }
 
 

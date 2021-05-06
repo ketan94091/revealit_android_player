@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 
 import com.Revealit.CommonClasse.CommonMethods;
@@ -45,7 +46,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RegistrationActivity extends YouTubeBaseActivity implements View.OnClickListener {
+public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Activity mActivity;
     private Context mContext;
@@ -198,6 +199,29 @@ public class RegistrationActivity extends YouTubeBaseActivity implements View.On
             }
         });
 
+        edtEmailid.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    edtEmailid.setBackground(getResources().getDrawable(R.drawable.round_corner_focused_border));
+                } else {
+                    edtEmailid.setBackground(getResources().getDrawable(R.drawable.round_corner_border));
+                }
+
+            }
+        });
+
+        edtPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    edtPassword.setBackground(getResources().getDrawable(R.drawable.round_corner_focused_border));
+                } else {
+                    edtPassword.setBackground(getResources().getDrawable(R.drawable.round_corner_border));
+                }
+
+            }
+        });
 
     }
 

@@ -42,6 +42,9 @@
     <string name="strEmailAlreadyRegistered">Email is already registered</string>
     <string name="strEmailAlreadyRegisteredMsg">This email is already registered with revealit would</string>
     <string name="strEmailAlreadyRegisteredMsgTwo">you like to</string>
+    <string name="strBiomatricPermissionOne">Do you want to allow Revealit to use Face ID?</string>
+    <string name="strBiomatricPermissionTwo">Revealit need excess for you to authenticate with TouchId or FaceId</string>
+    <string name="strDontAllow">Dont allow</string>
 
 
     <string name="strEnterUserName">Please enter username!</string>
