@@ -34,6 +34,8 @@ public class Constants {
     public static final String PROTON_EMAIL = "email";
     public static final String PROTON_PASSWORD = "password";
     public static final String PROTON_VERIFICATION_CODE = "verify_code";
+    public static final String IS_ALLOW_BIOMETRIC = "isUserAllowBioMetric";
+    public static final String IS_FIRST_LOGIN = "isFirstLogin";
 
 
 

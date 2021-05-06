@@ -88,11 +88,11 @@ public class RevealitNameActivity extends AppCompatActivity implements View.OnCl
             {
                 // TODO Auto-generated method stub
                 if (s.toString().length() == 0){
-                    edtUsername.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.cross, 0);
+                    edtUsername.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.cross_circle, 0);
                     txtGetNextDisabled.setVisibility(View.VISIBLE);
                     txtNextEnabled.setVisibility(View.GONE);
                 }else {
-                    edtUsername.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
+                    edtUsername.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.check, 0);
                     txtGetNextDisabled.setVisibility(View.GONE);
                     txtNextEnabled.setVisibility(View.VISIBLE);
                 }
@@ -169,6 +169,9 @@ public class RevealitNameActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onClick(View v) {
 
+                //UPDATE FLAG IF USER ALLOW BIOMETRIC AUTHENTICATION
+                mSessionManager.updatePreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC , false);
+
                 mAlertDialog.dismiss();
 
             }
@@ -177,6 +180,9 @@ public class RevealitNameActivity extends AppCompatActivity implements View.OnCl
         txtOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //UPDATE FLAG IF USER ALLOW BIOMETRIC AUTHENTICATION
+                mSessionManager.updatePreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC , true);
 
                 mAlertDialog.dismiss();
 

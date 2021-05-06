@@ -14,7 +14,7 @@
             android:id="@+id/imgGoBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/close_black"
+            android:src="@mipmap/cross"
             android:layout_margin="20dp"
             />
 
@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/strRevealitName"
                 android:textAlignment="textStart"
-                android:textColor="@color/colorGrayBottomBar"
+                android:textColor="@color/colorBlack"
                 android:textSize="15dp"
                 android:textStyle="bold"
                 />
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/strChooseaname"
                 android:textAlignment="textStart"
-                android:textColor="@color/colorGrayBottomBar"
+                android:textColor="@color/colorGrayLight"
                 android:textSize="12dp"
                 android:layout_marginTop="5dp"
                 />
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/strChooseanameTwo"
                 android:textAlignment="textStart"
-                android:textColor="@color/colorGrayBottomBar"
+                android:textColor="@color/colorGrayLight"
                 android:textSize="12dp"
                 />
 
@@ -59,7 +59,7 @@
                 android:padding="8dp"
                 android:background="@drawable/round_corner_border"
                 android:layout_marginTop="40dp"
-                android:drawableRight="@drawable/check"
+                android:drawableRight="@mipmap/check"
                 android:singleLine="true"
                 android:textSize="13dp"
                 android:maxEms="50"

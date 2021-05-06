@@ -93,7 +93,7 @@ public class SplashScreen extends AppCompatActivity {
                     startActivity(mIntent);
                     finish();
                 } else {
-                    Intent mIntent = new Intent(SplashScreen.this, HomeScreenTabLayout.class);
+                    Intent mIntent = new Intent(SplashScreen.this, BiomatricAuthenticationActivity.class);
                     startActivity(mIntent);
                     finish();
                 }

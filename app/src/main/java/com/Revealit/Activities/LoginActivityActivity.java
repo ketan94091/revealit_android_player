@@ -2,9 +2,11 @@ package com.Revealit.Activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -107,11 +109,61 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
 
                 if(checkValidation()){
 
-                    callAuthenticationAPI();
+                    //IF FIRST LOGIN DONE = DONT ASK FOR BIOMETRIC
+                    //ELSE ASK FOR BIO METRIC ONLY ONCE
+                    if (!mSessionManager.getPreferenceBoolean(Constants.IS_FIRST_LOGIN)){
+                        openBiomatricPermissionDialog();
+                    }else {
+                        callAuthenticationAPI();
+                    }
+
                 }
 
                 break;
         }
+    }
+    private void openBiomatricPermissionDialog() {
+
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
+        dialogBuilder.setCancelable(false);
+        LayoutInflater inflater = mActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.custom_biomatric_permission_dailoague, null);
+        dialogBuilder.setView(dialogView);
+
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        TextView txtDontAllow = (TextView) dialogView.findViewById(R.id.txtDontAllow);
+        TextView txtOk = (TextView) dialogView.findViewById(R.id.txtOk);
+
+        txtDontAllow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //UPDATE FLAG IF USER ALLOW BIOMETRIC AUTHENTICATION
+                mSessionManager.updatePreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC , false);
+
+                mAlertDialog.dismiss();
+
+                callAuthenticationAPI();
+
+            }
+        });
+
+        txtOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //UPDATE FLAG IF USER ALLOW BIOMETRIC AUTHENTICATION
+                mSessionManager.updatePreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC , true);
+
+                mAlertDialog.dismiss();
+
+                callAuthenticationAPI();
+
+            }
+        });
+        mAlertDialog.show();
+
     }
 
     private void callAuthenticationAPI() {
@@ -178,6 +230,8 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
                         mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE ,response.body().getTokenType());
                         mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_EXPIRES_IN ,response.body().getExpiresIn());
                         mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
+                        mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
+                        mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
 
                         Intent mIntent = new Intent(LoginActivityActivity.this, HomeScreenTabLayout.class);
                         startActivity(mIntent);

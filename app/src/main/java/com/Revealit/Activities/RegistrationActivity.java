@@ -128,13 +128,13 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
                 } else {
                     if (edtEmailid.getText().toString().matches(Constants.EMAIL_VALIDATION_REGEX) && s.length() > 0) {
-                        edtEmailid.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
+                        edtEmailid.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.check, 0);
 
                         //CHECK WHETHER EMAIL IS ALREADY REGISTERED
                         checkEmailValidation();
 
                     } else {
-                        edtEmailid.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.cross, 0);
+                        edtEmailid.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.cross_circle, 0);
 
                         isEmailValid = false;
                         updateUI();
@@ -167,7 +167,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 } else {
 
                     if (edtPassword.getText().toString().matches(Constants.PASSWORD_VALIDATION_REGEX) && s.length() > 0) {
-                        edtPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
+                        edtPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.check, 0);
 
                         linearLongPasswordMsgs.setVisibility(View.GONE);
                         linearWarningMsgs.setVisibility(View.GONE);
@@ -177,7 +177,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                         updateUI();
 
                     } else {
-                        edtPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.cross, 0);
+                        edtPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.cross_circle, 0);
 
                         linearLongPasswordMsgs.setVisibility(View.VISIBLE);
                         linearWarningMsgs.setVisibility(View.VISIBLE);
@@ -365,7 +365,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                         linearEmailAlreadyRegistered.setVisibility(View.VISIBLE);
 
                         //CHANGE THE DRAWBLE
-                        edtEmailid.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.cross, 0);
+                        edtEmailid.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.cross_circle, 0);
 
                         //UPDATE FLAG
                         isEmailValid = false;

@@ -14,7 +14,7 @@
             android:id="@+id/imgCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/close_black"
+            android:src="@mipmap/cross"
             android:layout_margin="20dp"
             />
 
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/strCreateAccount"
                 android:textAlignment="textStart"
-                android:textColor="@color/colorGrayBottomBar"
+                android:textColor="@color/colorBlack"
                 android:textSize="15dp"
                 android:textStyle="bold"
                 />
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/strCreateAccountTitleOne"
                 android:textAlignment="textStart"
-                android:textColor="@color/colorGrayBottomBar"
+                android:textColor="@color/colorGrayLight"
                 android:textSize="12dp"
                 android:layout_marginTop="10dp"
                 />
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/strCreateAccountTitleTwo"
                 android:textAlignment="textStart"
-                android:textColor="@color/colorGrayBottomBar"
+                android:textColor="@color/colorGrayLight"
                 android:textSize="12dp"
                 />
         </LinearLayout>
@@ -107,7 +107,7 @@
                     android:textColor="@color/colorRedDark"
                     android:textSize="12dp"
                     android:layout_marginTop="10dp"
-                    android:drawableLeft="@drawable/close"
+                    android:drawableLeft="@mipmap/bang"
                     android:drawablePadding="5dp"
                     />
                 <TextView
@@ -160,6 +160,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/border_error_password"
                 android:visibility="gone"
                 >
 
@@ -171,7 +173,7 @@
                     android:textColor="@color/colorRedDark"
                     android:textSize="12dp"
                     android:layout_marginTop="10dp"
-                    android:drawableLeft="@drawable/close"
+                    android:drawableLeft="@mipmap/bang"
                     android:drawablePadding="5dp"
                     />
                 <TextView
@@ -182,7 +184,7 @@
                     android:textColor="@color/colorRedDark"
                     android:textSize="12dp"
                     android:layout_marginTop="10dp"
-                    android:drawableLeft="@drawable/close"
+                    android:drawableLeft="@mipmap/bang"
                     android:drawablePadding="5dp"
                     />
                 <TextView
@@ -193,7 +195,7 @@
                     android:textColor="@color/colorRedDark"
                     android:textSize="12dp"
                     android:layout_marginTop="10dp"
-                    android:drawableLeft="@drawable/close"
+                    android:drawableLeft="@mipmap/bang"
                     android:drawablePadding="5dp"
                     />
 
@@ -208,14 +210,15 @@
                 android:orientation="vertical"
                 android:padding="10dp"
                 android:layout_marginTop="20dp"
-                android:visibility="gone">
+                android:visibility="gone"
+               >
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/strLongPasswordSuggestionTitleOne"
                     android:textAlignment="textStart"
-                    android:textColor="@color/colorMainLogo"
+                    android:textColor="@color/colorLongpasswordText"
                     android:textSize="12dp"
                     android:layout_marginTop="10dp"
                     android:drawablePadding="5dp"
@@ -225,7 +228,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/strLongPasswordSuggestionTitleTwo"
                     android:textAlignment="textStart"
-                    android:textColor="@color/colorGrayBottomBar"
+                    android:textColor="@color/colorGrayLight"
                     android:textSize="12dp"
                     android:drawablePadding="5dp"
                     />
@@ -247,23 +250,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/strCreateAccount"
-                android:background="@drawable/round_corner_border_disabled"
+                android:background="@drawable/round_corner_disabled_registration"
                 android:textAlignment="center"
-                android:textColor="@color/colorGrayLight"
+                android:textColor="@color/colorWhite"
                 android:padding="10dp"
                 android:textSize="12dp"
+
                 />
             <TextView
                 android:id="@+id/txtGetStartedEnabled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/strCreateAccount"
-                android:background="@drawable/round_corner_border"
+                android:background="@drawable/round_corner_enabled_registration"
                 android:textAlignment="center"
-                android:textColor="@color/colorGrayBottomBar"
+                android:textColor="@color/colorWhite"
                 android:padding="10dp"
                 android:textSize="12dp"
                 android:visibility="gone"
+
                 />
 
 
@@ -272,7 +277,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/strCreateAccountTermAndConditionOne"
                 android:textAlignment="center"
-                android:textColor="@color/colorGrayBottomBar"
+                android:textColor="@color/colorGrayLight"
                 android:textSize="12dp"
                 android:layout_marginTop="20dp"
                 android:drawablePadding="5dp"
@@ -283,7 +288,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/strCreateAccountTermAndConditionTwo"
                 android:textAlignment="center"
-                android:textColor="@color/colorMainLogo"
+                android:textColor="@color/colorButtonEnabled"
                 android:textSize="12dp"
                 android:layout_marginTop="10dp"
                 android:drawablePadding="5dp"

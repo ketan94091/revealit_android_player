@@ -321,7 +321,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
                     CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 
-                    mActivity.finish();
+
                 }
 
             }
@@ -334,7 +334,6 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
                 CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 
-                mActivity.finish();
 
             }
         });

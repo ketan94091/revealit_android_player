@@ -146,8 +146,14 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
         frameOverlay = (FrameLayout) findViewById(R.id.frameOverlay);
 
+        txtTitle.setText(strMediaTitle.replace("\u0027", "'"));
+
         //SHOW MEDIA TITLE
-        txtTitle.setText(strMediaTitle);
+       /* if(strMediaTitle.contains("\u0027s")) {
+            txtTitle.setText(strMediaTitle.replace("\u0027s", "'s"));
+        }else{
+            txtTitle.setText(strMediaTitle);
+        }*/
 
         mVideoView.setVideoPath(strMediaURL);
 

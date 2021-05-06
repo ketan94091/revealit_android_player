@@ -69,6 +69,10 @@
             android:name=".Activities.VerificationCodeActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".Activities.BiomatricAuthenticationActivity"
+            android:screenOrientation="portrait" />
+
 
 
 
