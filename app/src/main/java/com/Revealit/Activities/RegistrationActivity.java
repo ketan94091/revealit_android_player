@@ -377,6 +377,18 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 } else {
                     CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 
+                    //VISIBLE EMAIL ALREADY REGISTERED MSG
+                    linearEmailAlreadyRegistered.setVisibility(View.VISIBLE);
+
+                    //CHANGE THE DRAWBLE
+                    edtEmailid.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.cross_circle, 0);
+
+                    //UPDATE FLAG
+                    isEmailValid = false;
+
+                    //UPDATE UI
+                    updateUI();
+
                 }
             }
 
@@ -385,6 +397,18 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
 
                 CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+
+                //VISIBLE EMAIL ALREADY REGISTERED MSG
+                linearEmailAlreadyRegistered.setVisibility(View.VISIBLE);
+
+                //CHANGE THE DRAWBLE
+                edtEmailid.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.cross_circle, 0);
+
+                //UPDATE FLAG
+                isEmailValid = false;
+
+                //UPDATE UI
+                updateUI();
 
 
             }
@@ -450,6 +474,10 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
 
                     if (response.body().getStatus().equals("ok")) {
+
+                        //SAVE AUTHENTICATION DATA
+                        mSessionManager.updatePreferenceString(Constants.PROTON_EMAIL, edtEmailid.getText().toString());
+                        mSessionManager.updatePreferenceString(Constants.PROTON_PASSWORD, edtPassword.getText().toString());
 
                         Intent mIntent = new Intent(RegistrationActivity.this, VerificationCodeActivity.class);
                         startActivity(mIntent);

@@ -5,6 +5,7 @@ import com.Revealit.CommonClasse.Constants;
 import com.Revealit.ModelClasses.CheckEmailModel;
 import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.ModelClasses.LoginAuthModel;
+import com.Revealit.ModelClasses.UserRegistrationModel;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -48,4 +49,8 @@ public interface UpdateAllAPI {
     //VERIFY CODE
     @POST(Constants.API_VERIFY_CODE)
     Call<CheckEmailModel> verifyCode(@Body JsonObject body);
+
+    //VERIFY CODE
+    @POST(Constants.API_USER_REGISTRAION_TO_PROTON_AND_REVEALIT)
+    Call<UserRegistrationModel> userRegistration(@Body JsonObject body);
 }

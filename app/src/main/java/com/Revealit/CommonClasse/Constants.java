@@ -14,6 +14,7 @@ public class Constants {
     public static final String API_CHECK_EMAIL_FOR_PROTON_REGISTRATION = "api/user/check";
     public static final String API_SEND_VERIFICATION_CODE = "api/user/sendverifycode";
     public static final String API_VERIFY_CODE = "api/user/verify";
+    public static final String API_USER_REGISTRAION_TO_PROTON_AND_REVEALIT = "api/user/register";
 
 
     public static final String AUTH_TOKEN = "access_token";
@@ -34,8 +35,10 @@ public class Constants {
     public static final String PROTON_EMAIL = "email";
     public static final String PROTON_PASSWORD = "password";
     public static final String PROTON_VERIFICATION_CODE = "verify_code";
+    public static final String PROTON_USERNAME = "friendly_name";
     public static final String IS_ALLOW_BIOMETRIC = "isUserAllowBioMetric";
     public static final String IS_FIRST_LOGIN = "isFirstLogin";
+    public static final String PROTON_ACCOUNT_NAME = "protonAccountNAme";
 
 
 

@@ -20,9 +20,9 @@
     <string name="strRevealitName">Revealit Name</string>
     <string name="strChooseaname">Choose a name you would like to use publicly</string>
     <string name="strChooseanameTwo">with revealit</string>
-    <string name="strVerifyEmail">Verify your email address</string>
+    <string name="strVerifyEmail">E-mail Address Verification</string>
     <string name="strThankyouforSigningUp">Thank you for signing up for revealit</string>
-    <string name="strThankyouforSigningUpTitle"> As an extra security pre-caution, please verify \nyour email using the code below to continue \nsign up</string>
+    <string name="strThankyouforSigningUpTitle">Please use the code emailed to you to verify below</string>
     <string name="strNext">Next</string>
 
     <string name="strWarningTitleOne">Minimum password length 6</string>

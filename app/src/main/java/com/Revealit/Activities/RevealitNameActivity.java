@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Trace;
 import android.text.Editable;
@@ -18,11 +19,29 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
+import com.Revealit.ModelClasses.UserRegistrationModel;
 import com.Revealit.R;
+import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
+import java.io.IOException;
+import java.lang.reflect.Modifier;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RevealitNameActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -78,7 +97,7 @@ public class RevealitNameActivity extends AppCompatActivity implements View.OnCl
         //SET USERNAME FROM EMAIL
         String strUserEMail = mSessionManager.getPreference(Constants.PROTON_EMAIL);
         String[] parts = strUserEMail.split("@");
-        edtUsername.setText(""+parts[0]);
+        edtUsername.setText(""+parts[0].replaceAll("[^a-zA-Z0-9]", ""));
 
 
 
@@ -174,6 +193,8 @@ public class RevealitNameActivity extends AppCompatActivity implements View.OnCl
 
                 mAlertDialog.dismiss();
 
+                userRegistrationAPI();
+
             }
         });
 
@@ -186,11 +207,116 @@ public class RevealitNameActivity extends AppCompatActivity implements View.OnCl
 
                 mAlertDialog.dismiss();
 
+                userRegistrationAPI();
+
             }
         });
         mAlertDialog.show();
 
     }
+
+    private void userRegistrationAPI() {
+
+        //OPEN DIALOGUE
+        CommonMethods.showDialog(mContext);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.API_END_POINTS_IVA_TEST)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+        JsonObject paramObject = new JsonObject();
+        paramObject.addProperty(Constants.PROTON_EMAIL, mSessionManager.getPreference(Constants.PROTON_EMAIL));
+        paramObject.addProperty(Constants.PROTON_PASSWORD, mSessionManager.getPreference(Constants.PROTON_PASSWORD));
+        paramObject.addProperty(Constants.PROTON_VERIFICATION_CODE, mSessionManager.getPreference(Constants.PROTON_VERIFICATION_CODE));
+        paramObject.addProperty(Constants.PROTON_USERNAME, edtUsername.getText().toString());
+
+        Call<UserRegistrationModel> call = patchService1.userRegistration(paramObject);
+
+        call.enqueue(new Callback<UserRegistrationModel>() {
+            @Override
+            public void onResponse(Call<UserRegistrationModel> call, Response<UserRegistrationModel> response) {
+
+                CommonMethods.printLogE("Response @ userRegistrationAPI: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ userRegistrationAPI: ", "" + response.code());
+
+                //CLOSED DIALOGUE
+                CommonMethods.closeDialog();
+
+                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+
+                    Gson gson = new GsonBuilder()
+                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                            .serializeNulls()
+                            .create();
+
+                    CommonMethods.printLogE("Response @ userRegistrationAPI: ", "" + gson.toJson(response.body()));
+
+                    if (response.body().getStatus().equals("error")){
+
+                        CommonMethods.buildDialog(mContext, response.body().getMessage());
+
+
+                    } else if (response.body().getData() != null) {
+
+
+                        //SAVE AUTHENTICATION DATA
+                        mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN ,response.body().getData().getAccessToken());
+                        mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE ,response.body().getData().getTokenType());
+                        mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_EXPIRES_IN ,response.body().getData().getExpiresIn());
+                        mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME ,response.body().getData().getProtonAccountName());
+                        mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
+                        mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
+
+                        Intent mIntent = new Intent(RevealitNameActivity.this, HomeScreenTabLayout.class);
+                        mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(mIntent);
+
+                    }
+
+                } else {
+
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserRegistrationModel> call, Throwable t) {
+
+                //CLOSED DIALOGUE
+                CommonMethods.closeDialog();
+
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+
+
+            }
+        });
+
+    }
+
 
 
 }

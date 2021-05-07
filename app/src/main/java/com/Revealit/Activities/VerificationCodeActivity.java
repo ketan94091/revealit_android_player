@@ -333,6 +333,9 @@ public class VerificationCodeActivity extends AppCompatActivity implements View.
 
                         if (response.body().getStatus().equals("ok")) {
 
+                            //SAVE VERIFICATION CODE FOR FURTHER USE.
+                            mSessionManager.updatePreferenceString(Constants.PROTON_VERIFICATION_CODE, strCode);
+
                             Intent mIntent = new Intent(VerificationCodeActivity.this, RevealitNameActivity.class);
                             startActivity(mIntent);
 

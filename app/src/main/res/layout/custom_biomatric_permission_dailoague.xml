@@ -17,7 +17,11 @@
             android:orientation="vertical"
             >
 
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,6 +39,8 @@
                 android:textColor="@color/colorGrayBottomBar"
                 android:textSize="12dp"
                 android:textAlignment="center"/>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"

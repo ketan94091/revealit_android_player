@@ -268,7 +268,6 @@
                 android:padding="10dp"
                 android:textSize="12dp"
                 android:visibility="gone"
-
                 />
 
 
