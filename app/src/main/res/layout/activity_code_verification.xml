@@ -29,7 +29,8 @@
                     android:layout_height="100dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:src="@mipmap/logo_shopping" />
+                    android:src="@mipmap/logo_shopping"
+                    android:layout_gravity="center_horizontal"/>
 
                 <TextView
                     android:layout_width="match_parent"

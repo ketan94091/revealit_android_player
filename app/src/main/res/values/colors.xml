@@ -35,6 +35,11 @@
     <color name="colorTermsCondition">#50ba77</color>
     <color name="colorLongpasswordText">#a36cef</color>
     <color name="colorErrorWarning">#fef2f2</color>
+    <color name="colorAmountAndSymbol">#238849</color>
+    <color name="colorWalletBorder">#CBD5E1</color>
+    <color name="colorWalletBorderLight">#B0CBD5E1</color>
+    <color name="colorWalletText">#64748B</color>
+    <color name="colorCurrency">#22C55E</color>
 
 
 </resources>

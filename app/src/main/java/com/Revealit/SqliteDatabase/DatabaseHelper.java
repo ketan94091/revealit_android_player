@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.Revealit.ModelClasses.CategoryNamesListModel;
 import com.Revealit.ModelClasses.CategoryWisePlayListModel;
+import com.Revealit.ModelClasses.RewardHistoryDatabaseModel;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,7 @@ public class DatabaseHelper {
     // Table Names
     public static String TABLE_CATEGORY_NAMES = "tableCategoryNames";
     public static String TABLE_CATEGORY_WISE_PLAY_LIST = "tableCategoryWisePlayList";
+    public static String TABLE_REWARD_HISTORY = "tableRewardHistory";
 
     //FIELD TABLE_CATEGORY_NAMES
     public static String KEY_ID = "keyID";
@@ -32,6 +34,11 @@ public class DatabaseHelper {
     public static String KEY_CATEGORY_WISE_PLAY_MEDIA_TYPE = "keyCategoryWisePlayMediaType";
     public static String KEY_CATEGORY_WISE_PLAY_MEDIA_URL = "keyCategoryWisePlayMediaIUrl";
     public static String KEY_CATEGORY_WISE_PLAY_MEDIA_COVER_ART = "keyCategoryWisePlayMediaCoverArt";
+
+    //FIELD TABLE_REWARD_HISTORY
+    public static String KEY_REWARD_HISTORY_AMOUNT = "keyAmount";
+    public static String KEY_REWARD_HISTORY_ACTION = "keyAction";
+    public static String KEY_REWARD_HISTORY_DISPLAY_DATE = "keyDisplayDate";
 
 
 
@@ -214,6 +221,58 @@ public class DatabaseHelper {
 
         return mCategoryWisePlayListModel;
     }
+
+
+
+    //INSERT CATEGORY NAMES
+    public Long insertRewardHistoryData(String strAmount,
+                                    String strAction,
+                                        String strDisplayDateName) {
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_REWARD_HISTORY_AMOUNT, strAmount);
+        values.put(KEY_REWARD_HISTORY_ACTION, strAction);
+        values.put(KEY_REWARD_HISTORY_DISPLAY_DATE, strDisplayDateName);
+
+        return mSqLiteDatabase.insert(TABLE_REWARD_HISTORY, null, values);
+
+    }
+
+    //GET CATEGORY NAMES LIST
+    public ArrayList<RewardHistoryDatabaseModel.Datum> gettRewardHistoryData() {
+        ArrayList<RewardHistoryDatabaseModel.Datum> mRewardHistoryList = new ArrayList<>();
+
+        try {
+            result = mSqLiteDatabase.query(TABLE_REWARD_HISTORY, new String[]{}, null, null,
+                    null, null, null);
+
+            if (result.moveToFirst()) {
+                do {
+                    RewardHistoryDatabaseModel.Datum mRewardHistoryModel = new RewardHistoryDatabaseModel.Datum();
+                    mRewardHistoryModel.setAmount(result.getString(1));
+                    mRewardHistoryModel.setAction(result.getString(2));
+                    mRewardHistoryModel.setDisplayDate(result.getString(3));
+                    mRewardHistoryList.add(mRewardHistoryModel);
+
+                } while (result.moveToNext());
+            }
+
+        } catch (Exception e) {
+
+        } finally {
+            if (result != null) {
+                result.close();
+                result = null;
+            }
+        }
+
+        return mRewardHistoryList;
+    }
+    public static void clearRewardTable() {
+
+        mSqLiteDatabase.delete(TABLE_REWARD_HISTORY, null, null);
+    }
+
 
     public static void clearAllTables() {
 

@@ -4,7 +4,8 @@ public class Constants {
 
 
     //API_END POINT
-    public static String API_END_POINTS = "https://staging.api.revealit.io/";
+    public static String API_END_POINTS_STAGING = "https://staging.api.revealit.io/";
+    public static String API_END_POINTS = "https://scapi.revealit.io/";
     public static String API_END_POINTS_IVA_TEST = "https://tcapi.revealit.io/";
 
     //API'S
@@ -15,6 +16,9 @@ public class Constants {
     public static final String API_SEND_VERIFICATION_CODE = "api/user/sendverifycode";
     public static final String API_VERIFY_CODE = "api/user/verify";
     public static final String API_USER_REGISTRAION_TO_PROTON_AND_REVEALIT = "api/user/register";
+    public static final String API_GET_USER_ACCOUNT_DETAILS = "/api/proton/get_account";
+    public static final String API_GET_REWARD_HISTORY = "/api/rewards/history";
+    public static final String API_GET_MORE_REWARD_HISTORY = "/api/rewards/history";
 
 
     public static final String AUTH_TOKEN = "access_token";

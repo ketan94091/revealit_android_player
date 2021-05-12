@@ -24,6 +24,13 @@
     <string name="strThankyouforSigningUp">Thank you for signing up for revealit</string>
     <string name="strThankyouforSigningUpTitle">Please use the code emailed to you to verify below</string>
     <string name="strNext">Next</string>
+    <string name="strBalance">Balance</string>
+    <string name="strCurrency">Currency</string>
+    <string name="strRewardHistory">Reward History</string>
+    <string name="strType">Type</string>
+    <string name="strAmount">Amount</string>
+    <string name="strWhen">When</string>
+    <string name="strLoadMore">Load More...</string>
 
     <string name="strWarningTitleOne">Minimum password length 6</string>
     <string name="strWarningTitleTwo">Minimum 1 Digit, Lowercase, Uppercase</string>
@@ -45,6 +52,7 @@
     <string name="strBiomatricPermissionOne">Do you want to allow Revealit to use Face ID?</string>
     <string name="strBiomatricPermissionTwo">Revealit need excess for you to authenticate with TouchId or FaceId</string>
     <string name="strDontAllow">Dont allow</string>
+    <string name="strAccount">Account</string>
 
 
     <string name="strEnterUserName">Please enter username!</string>

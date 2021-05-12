@@ -33,7 +33,7 @@ public class BiomatricAuthenticationActivity extends AppCompatActivity implement
 
     private Activity mActivity;
     private Context mContext;
-    private static final String TAG = "RevealitNameActivity";
+    private static final String TAG = "BiomatricAuthenticationActivity";
 
 
     private SessionManager mSessionManager;
@@ -148,9 +148,7 @@ public class BiomatricAuthenticationActivity extends AppCompatActivity implement
             @Override
             public void onAuthenticationFailed() {
                 super.onAuthenticationFailed();
-                Toast.makeText(getApplicationContext(), "Authentication failed",
-                        Toast.LENGTH_SHORT)
-                        .show();
+
             }
         });
 

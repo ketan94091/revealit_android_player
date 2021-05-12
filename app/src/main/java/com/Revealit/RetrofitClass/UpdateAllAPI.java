@@ -1,17 +1,23 @@
 package com.Revealit.RetrofitClass;
 
 
+import android.text.PrecomputedText;
+
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.ModelClasses.CheckEmailModel;
 import com.Revealit.ModelClasses.DotsLocationsModel;
+import com.Revealit.ModelClasses.GetAccountDetailsModel;
 import com.Revealit.ModelClasses.LoginAuthModel;
+import com.Revealit.ModelClasses.RewardHistoryModel;
 import com.Revealit.ModelClasses.UserRegistrationModel;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import kotlin.ParameterName;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -53,4 +59,16 @@ public interface UpdateAllAPI {
     //VERIFY CODE
     @POST(Constants.API_USER_REGISTRAION_TO_PROTON_AND_REVEALIT)
     Call<UserRegistrationModel> userRegistration(@Body JsonObject body);
+
+    //GET ACCOUNT DETAILS API WITH RETROFIT
+    @POST(Constants.API_GET_USER_ACCOUNT_DETAILS)
+    Call<GetAccountDetailsModel> getUserAccountDetails(@Query("account_name") String account_name);
+
+    //GET ACCOUNT DETAILS API WITH RETROFIT
+    @POST(Constants.API_GET_REWARD_HISTORY)
+    Call<RewardHistoryModel> getRewardHistory();
+
+    //GET MORE REWARD DATA
+    @POST(Constants.API_GET_MORE_REWARD_HISTORY)
+    Call<RewardHistoryModel> getMoreRewardData(@Query("page") int page);
 }

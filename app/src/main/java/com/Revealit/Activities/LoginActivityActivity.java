@@ -193,7 +193,7 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
 
             final OkHttpClient client = httpClient.build();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.API_END_POINTS)
+                    .baseUrl(Constants.API_END_POINTS_STAGING)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
                     .build();

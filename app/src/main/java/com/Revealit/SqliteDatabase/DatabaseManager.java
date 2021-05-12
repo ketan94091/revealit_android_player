@@ -32,6 +32,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         db.execSQL(tableCategoryList());
         db.execSQL(tableCategoryWisePlayList());
+        db.execSQL(tableRewardHistory());
 
     }
 
@@ -50,7 +51,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     }
 
-  private String tableCategoryList() {
+    private String tableCategoryList() {
         return "CREATE TABLE IF NOT EXISTS " + DatabaseHelper.TABLE_CATEGORY_NAMES
                 + " ( " + DatabaseHelper.KEY_ID + " INTEGER PRIMARY KEY,"
                 + DatabaseHelper.KEY_CATEGORY_NAMES + " text, "
@@ -69,6 +70,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 + DatabaseHelper.KEY_CATEGORY_WISE_PLAY_MEDIA_URL + " text, "
                 + DatabaseHelper.KEY_CATEGORY_WISE_PLAY_MEDIA_COVER_ART + " text);";
     }
+    private String tableRewardHistory() {
+
+        return "CREATE TABLE IF NOT EXISTS " + DatabaseHelper.TABLE_REWARD_HISTORY
+                + " ( " + DatabaseHelper.KEY_ID + " INTEGER PRIMARY KEY,"
+                + DatabaseHelper.KEY_REWARD_HISTORY_AMOUNT + " text, "
+                + DatabaseHelper.KEY_REWARD_HISTORY_ACTION + " text, "
+                + DatabaseHelper.KEY_REWARD_HISTORY_DISPLAY_DATE + " text);";
+    }
+
 
 
 }

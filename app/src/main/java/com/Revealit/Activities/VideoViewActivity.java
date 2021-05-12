@@ -146,15 +146,6 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
         frameOverlay = (FrameLayout) findViewById(R.id.frameOverlay);
 
-        txtTitle.setText(strMediaTitle.replace("\u0027", "'"));
-
-        //SHOW MEDIA TITLE
-       /* if(strMediaTitle.contains("\u0027s")) {
-            txtTitle.setText(strMediaTitle.replace("\u0027s", "'s"));
-        }else{
-            txtTitle.setText(strMediaTitle);
-        }*/
-
         mVideoView.setVideoPath(strMediaURL);
 
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -398,23 +389,23 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
             imgDynamicCoordinateView.setImageResource(R.drawable.dots);
             imgDynamicCoordinateView.setTag(i);
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(45, 45);
-            layoutParams.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))) + 30);
+            layoutParams.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))));
             layoutParams.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))) + 10);
             ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor(""+data.get(i).getItemDotColor())));
             frameOverlay.addView(imgDynamicCoordinateView, layoutParams);
 
-            //ADD DYNAMIC TEXT VIEW FOR VENDOR AND ITEM NAME
-            /*txtVendorName = new TextView(this);
+           /* //ADD DYNAMIC TEXT VIEW FOR VENDOR AND ITEM NAME
+            txtVendorName = new TextView(this);
             txtVendorName.setText(" "+data.get(i).getItemName() +" \n "+data.get(i).getVendor());
            // txtVendorName.setTextColor(Color.parseColor(""+data.get(i).getItemLabelColor()));
             txtVendorName.setTextColor(Color.parseColor("#ffffff"));
             txtVendorName.setTextSize(9);
             txtVendorName.setTag(i);
             FrameLayout.LayoutParams layoutParamsVendor = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParamsVendor.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))) + 80);
+            layoutParamsVendor.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))) + 50);
             layoutParamsVendor.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))) + 10);
-            frameOverlay.addView(txtVendorName, layoutParamsVendor);*/
-
+            frameOverlay.addView(txtVendorName, layoutParamsVendor);
+*/
 
             imgDynamicCoordinateView.setOnClickListener(new View.OnClickListener() {
                 @Override
