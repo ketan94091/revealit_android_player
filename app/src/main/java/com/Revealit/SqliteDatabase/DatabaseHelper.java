@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.Revealit.ModelClasses.CategoryNamesListModel;
 import com.Revealit.ModelClasses.CategoryWisePlayListModel;
+import com.Revealit.ModelClasses.GetAccountDetailsModel;
 import com.Revealit.ModelClasses.RewardHistoryDatabaseModel;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class DatabaseHelper {
     public static String TABLE_CATEGORY_NAMES = "tableCategoryNames";
     public static String TABLE_CATEGORY_WISE_PLAY_LIST = "tableCategoryWisePlayList";
     public static String TABLE_REWARD_HISTORY = "tableRewardHistory";
+    public static String TABLE_CURRENCY_LIST = "tableCurrencyList";
 
     //FIELD TABLE_CATEGORY_NAMES
     public static String KEY_ID = "keyID";
@@ -40,6 +42,11 @@ public class DatabaseHelper {
     public static String KEY_REWARD_HISTORY_ACTION = "keyAction";
     public static String KEY_REWARD_HISTORY_DISPLAY_DATE = "keyDisplayDate";
 
+    //FIELD TABLE_REWARD_HISTORY
+    public static String KEY_CURRENCY_TITLE = "symbol";
+    public static String KEY_CURRENCY_AMOUNT = "value";
+    public static String KEY_CURRENCY_ICON_URL = "icon";
+    public static String KEY_CURRENCY_NAME = "name";
 
 
     DatabaseManager dbManager;
@@ -69,7 +76,7 @@ public class DatabaseHelper {
 
     //INSERT CATEGORY NAMES
     public Long insertCategoryNames(String strCategoryName,
-                                 String strSlugName) {
+                                    String strSlugName) {
 
         ContentValues values = new ContentValues();
         values.put(KEY_CATEGORY_NAMES, strCategoryName);
@@ -111,14 +118,14 @@ public class DatabaseHelper {
 
     //INSERT CATEGORY WISE PLAYLIST
     public Long insertCategoryWisePlayData(String strCategoryName,
-                                 String strSlugName,
-                                 int strmediaID,
-                                 String strmediaShowTitle,
-                                 String strmediaTitle,
-                                 String strmediaType,
-                                 String strmediaUrl,
-                                 String strmediaCoverArt
-                                 ) {
+                                           String strSlugName,
+                                           int strmediaID,
+                                           String strmediaShowTitle,
+                                           String strmediaTitle,
+                                           String strmediaType,
+                                           String strmediaUrl,
+                                           String strmediaCoverArt
+    ) {
 
         ContentValues values = new ContentValues();
         values.put(KEY_CATEGORY_NAMES, strCategoryName);
@@ -223,10 +230,9 @@ public class DatabaseHelper {
     }
 
 
-
     //INSERT CATEGORY NAMES
     public Long insertRewardHistoryData(String strAmount,
-                                    String strAction,
+                                        String strAction,
                                         String strDisplayDateName) {
 
         ContentValues values = new ContentValues();
@@ -268,6 +274,61 @@ public class DatabaseHelper {
 
         return mRewardHistoryList;
     }
+
+    //INSERT CATEGORY NAMES
+    public Long insertCurrencyListData(String strTitle,
+                                       String strAmount,
+                                       String strIconURL,
+                                       String strCurrencyName) {
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_CURRENCY_TITLE, strTitle);
+        values.put(KEY_CURRENCY_AMOUNT, strAmount);
+        values.put(KEY_CURRENCY_ICON_URL, strIconURL);
+        values.put(KEY_CURRENCY_NAME, strCurrencyName);
+
+        return mSqLiteDatabase.insert(TABLE_CURRENCY_LIST, null, values);
+
+    }
+
+    //GET CATEGORY NAMES LIST
+    public ArrayList<GetAccountDetailsModel.Token.Values> getCurrencyList() {
+        ArrayList<GetAccountDetailsModel.Token.Values> mCurrencyList = new ArrayList<>();
+
+        try {
+            result = mSqLiteDatabase.query(TABLE_CURRENCY_LIST, new String[]{}, null, null,
+                    null, null, null);
+
+            if (result.moveToFirst()) {
+                do {
+                    GetAccountDetailsModel.Token.Values mCurrencyModel = new GetAccountDetailsModel.Token.Values();
+                    mCurrencyModel.setSymbol(result.getString(1));
+                    mCurrencyModel.setValue(result.getString(2));
+                    mCurrencyModel.setIcon(result.getString(3));
+                    mCurrencyModel.setName(result.getString(4));
+                    mCurrencyList.add(mCurrencyModel);
+
+                } while (result.moveToNext());
+            }
+
+        } catch (Exception e) {
+
+        } finally {
+            if (result != null) {
+                result.close();
+                result = null;
+            }
+        }
+
+        return mCurrencyList;
+    }
+
+
+    public static void clearCurrencyListTable() {
+
+        mSqLiteDatabase.delete(TABLE_CURRENCY_LIST, null, null);
+    }
+
     public static void clearRewardTable() {
 
         mSqLiteDatabase.delete(TABLE_REWARD_HISTORY, null, null);

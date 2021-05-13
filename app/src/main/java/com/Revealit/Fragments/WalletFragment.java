@@ -1,8 +1,11 @@
 package com.Revealit.Fragments;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +22,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,6 +40,8 @@ import com.Revealit.ModelClasses.RewardHistoryModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -46,7 +52,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -73,11 +83,13 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private LinearLayoutManager recylerViewLayoutManager;
     private RewardSummeryListAdapter2 mRewardSummeryListAdapter2;
     private ImageView imgRefresh;
-    private TextView txtAmount,txtAccountName;
+    private TextView txtCurrencyType, txtAmount, txtAccountName;
     private RelativeLayout relativeAccountDetails;
-    private LinearLayout linearRewardHistory;
+    private LinearLayout linearCurrency, linearRewardHistory;
     private int intPageCount = 0;
     private int intTotalPageCount = 0;
+    private String strAccountName = "", strAmount = "";
+
 
     @Override
     public void onAttach(Context context) {
@@ -113,18 +125,20 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         //REFRESH INITIAL COUNT
         intPageCount = 0;
-        intTotalPageCount=0;
+        intTotalPageCount = 0;
 
-        imgRefresh = (ImageView)mView.findViewById(R.id.imgRefresh);
+        imgRefresh = (ImageView) mView.findViewById(R.id.imgRefresh);
 
-        txtAccountName =(TextView)mView.findViewById(R.id.txtAccountName);
-        txtAmount =(TextView)mView.findViewById(R.id.txtAmount);
+        txtAccountName = (TextView) mView.findViewById(R.id.txtAccountName);
+        txtAmount = (TextView) mView.findViewById(R.id.txtAmount);
+        txtCurrencyType = (TextView) mView.findViewById(R.id.txtCurrencyType);
 
-        relativeAccountDetails = (RelativeLayout)mView.findViewById(R.id.relativeAccountDetails);
+        relativeAccountDetails = (RelativeLayout) mView.findViewById(R.id.relativeAccountDetails);
 
-        linearRewardHistory =(LinearLayout)mView.findViewById(R.id.linearRewardHistory);
+        linearRewardHistory = (LinearLayout) mView.findViewById(R.id.linearRewardHistory);
+        linearCurrency = (LinearLayout) mView.findViewById(R.id.linearCurrency);
 
-        recycleRewardHistory = (RecyclerView)mView.findViewById(R.id.recycleRewardHistory);
+        recycleRewardHistory = (RecyclerView) mView.findViewById(R.id.recycleRewardHistory);
         recylerViewLayoutManager = new LinearLayoutManager(mActivity);
         recycleRewardHistory.setLayoutManager(recylerViewLayoutManager);
 
@@ -132,6 +146,11 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         //SET VISIBILITY
         relativeAccountDetails.setVisibility(View.GONE);
         linearRewardHistory.setVisibility(View.GONE);
+
+        //CLEAR AMOUNT AND CURRENCY TYPE DATA
+        txtAmount.setText("");
+        txtCurrencyType.setText("");
+        txtAccountName.setText("");
 
     }
 
@@ -154,26 +173,55 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
 
         imgRefresh.setOnClickListener(this);
+        linearCurrency.setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View mView) {
 
-        switch (mView.getId()){
+        switch (mView.getId()) {
 
             case R.id.imgRefresh:
 
                 //REFRESH INITIAL COUNT
                 intPageCount = 0;
-                intTotalPageCount=0;
+                intTotalPageCount = 0;
 
                 //CALL WALLET(ACCOUNTS) DETAILS
                 callWalletDetails();
 
                 break;
 
+            case R.id.linearCurrency:
+
+
+                //OPEN CURRENCY SELECTOR DIALOG
+                if (mDatabaseHelper.getCurrencyList().size() != 0) {
+                    openCurrencySelectorDialog();
+                }
+
+                break;
+
         }
+
+    }
+
+    private void openCurrencySelectorDialog() {
+
+        final Dialog dialog = new Dialog(mActivity);
+        dialog.setContentView(R.layout.dialog_currency_list);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        RecyclerView recycleCurrencyList = dialog.findViewById(R.id.recycleCurrencyList);
+
+        LinearLayoutManager manager = new LinearLayoutManager(mActivity);
+        recycleCurrencyList.setLayoutManager(manager);
+
+        //SET ADAPTER
+        CurrencyListAdapter mCurrencyListAdapter = new CurrencyListAdapter(mContext, mActivity, mDatabaseHelper.getCurrencyList(), dialog);
+        recycleCurrencyList.setAdapter(mCurrencyListAdapter);
+
+        dialog.show();
 
     }
 
@@ -219,11 +267,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(Call<GetAccountDetailsModel> call, Response<GetAccountDetailsModel> response) {
 
-                CommonMethods.printLogE("Response @ callWalletDetails : ","" + response.isSuccessful());
-                CommonMethods.printLogE("Response @ callWalletDetails : " ,""+ response.code());
-
-                //CLOSE DIALOG
-                CommonMethods.closeDialog();
+                CommonMethods.printLogE("Response @ callWalletDetails : ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callWalletDetails : ", "" + response.code());
 
 
                 if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
@@ -233,30 +278,71 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                             .serializeNulls()
                             .create();
 
-                    CommonMethods.printLogE("Response @ callWalletDetails : " ,""+ gson.toJson(response.body()));
+                    CommonMethods.printLogE("Response @ callWalletDetails : ", "" + gson.toJson(response.body()));
 
-                    //UPDATE UI
-                    relativeAccountDetails.setVisibility(View.VISIBLE);
-                    txtAccountName.setText(""+response.body().getData().getAccountName());
-                    txtAmount.setText(""+response.body().getData().getTokens().get(0).getInUsd());
+
+                    //SET ACCOUNT DETAILS
+                    strAccountName = "" + response.body().getData().getAccountName();
+
+                    //CHECK IF ACCOUNT DATA IS NULL
+                    if (response.body().getData().getTokens() != null) {
+
+                        if (!mSessionManager.getPreferenceBoolean(Constants.IS_FIRST_TIME_ACCOUNT_SYNC)) {
+
+                            //UPDATE FLAG
+                            mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_TIME_ACCOUNT_SYNC, true);
+
+                            //GET INITIAL VALUES IN DOLLAR
+                            mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE, "" + response.body().getData().getTokens().get(0).getInUsd());
+                            mSessionManager.updatePreferenceString(Constants.ACCOUNT_CURRENCY_TYPE, "USD");
+
+                        }
+                    } else {
+
+                        //GET INITIAL VALUES IN DOLLAR
+                        mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE, "0.0");
+                        mSessionManager.updatePreferenceString(Constants.ACCOUNT_CURRENCY_TYPE, "USD");
+
+
+                    }
+
+                    //CLEAR TABLE
+                    mDatabaseHelper.clearCurrencyListTable();
+
+                    // ADD CURRENCY LIST IN TO DATABASE
+                    if (response.body().getData().getTokens().get(0).getValues().size() != 0) {
+
+                        for (int i = 0; i < response.body().getData().getTokens().get(0).getValues().size(); i++) {
+
+                            mDatabaseHelper.insertCurrencyListData(response.body().getData().getTokens().get(0).getValues().get(i).getSymbol(),
+                                    response.body().getData().getTokens().get(0).getValues().get(i).getValue(),
+                                    response.body().getData().getTokens().get(0).getValues().get(i).getIcon(),
+                                    response.body().getData().getTokens().get(0).getValues().get(i).getName());
+
+                            //REFRESH LATEST ACCOUNT DETAILS
+                            if(mSessionManager.getPreference(Constants.ACCOUNT_CURRENCY_TYPE).equals(response.body().getData().getTokens().get(0).getValues().get(i).getSymbol())){
+                                mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE, response.body().getData().getTokens().get(0).getValues().get(i).getValue());
+                            }
+                        }
+                    }
 
 
                     //CALL REWARD HISTORY
                     callRewardHistory(0);
 
-                }else {
+                } else {
 
-                    CommonMethods.buildDialog(mContext,getResources().getString(R.string.strSomethingWentWrong));
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
                 }
             }
 
             @Override
             public void onFailure(Call<GetAccountDetailsModel> call, Throwable t) {
 
-                CommonMethods.printLogE("Response @ callWalletDetails : " ,""+t);
+                CommonMethods.printLogE("Response @ callWalletDetails : ", "" + t);
 
 
-                CommonMethods.buildDialog(mContext,getResources().getString(R.string.strSomethingWentWrong));
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 
 
                 CommonMethods.closeDialog();
@@ -268,8 +354,6 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     private void callRewardHistory(int i) {
 
-        //DISPLAY DIALOG
-        CommonMethods.showDialog(mContext);
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -314,8 +398,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 //CLOSE DIALOG
                 CommonMethods.closeDialog();
 
-                CommonMethods.printLogE("Response @ callRewardHistory : ","" + response.isSuccessful());
-                CommonMethods.printLogE("Response @ callRewardHistory : " ,""+ response.code());
+                CommonMethods.printLogE("Response @ callRewardHistory : ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callRewardHistory : ", "" + response.code());
 
 
                 if (response.code() == Constants.API_SUCCESS) {
@@ -325,7 +409,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                             .serializeNulls()
                             .create();
 
-                    CommonMethods.printLogE("Response @ callRewardHistory : " ,""+ gson.toJson(response.body()));
+                    CommonMethods.printLogE("Response @ callRewardHistory : ", "" + gson.toJson(response.body()));
 
                     //CLEAR TABLE
                     mDatabaseHelper.clearRewardTable();
@@ -334,12 +418,12 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                     intTotalPageCount = response.body().getMeta().getTotal();
 
                     //SAVE DATA IN TO DATABASE
-                    if (response.body().getData().size() != 0){
+                    if (response.body().getData().size() != 0) {
 
-                        for (int i =0 ; i < response.body().getData().size() ; i++) {
-                            mDatabaseHelper.insertRewardHistoryData(""+response.body().getData().get(i).getAmount(),
-                                    ""+response.body().getData().get(i).getAction(),
-                                    ""+response.body().getData().get(i).getDisplayDate());
+                        for (int i = 0; i < response.body().getData().size(); i++) {
+                            mDatabaseHelper.insertRewardHistoryData("" + response.body().getData().get(i).getAmount(),
+                                    "" + response.body().getData().get(i).getAction(),
+                                    "" + response.body().getData().get(i).getDisplayDate());
                         }
                     }
 
@@ -375,10 +459,9 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         });
 
     }
+
     private void apiGetMoreRewardData(int intPageCount) {
 
-        //DISPLAY DIALOG
-        CommonMethods.showDialog(mContext);
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -420,11 +503,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             public void onResponse(Call<RewardHistoryModel> call, retrofit2.Response<RewardHistoryModel> response) {
 
 
-                //CLOSE DIALOG
-                CommonMethods.closeDialog();
-
-                CommonMethods.printLogE("Response @ apiGetMoreRewardData : ","" + response.isSuccessful());
-                CommonMethods.printLogE("Response @ apiGetMoreRewardData : " ,""+ response.code());
+                CommonMethods.printLogE("Response @ apiGetMoreRewardData : ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ apiGetMoreRewardData : ", "" + response.code());
 
 
                 if (response.code() == Constants.API_SUCCESS) {
@@ -434,23 +514,21 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                             .serializeNulls()
                             .create();
 
-                    CommonMethods.printLogE("Response @ apiGetMoreRewardData : " ,""+ gson.toJson(response.body()));
+                    CommonMethods.printLogE("Response @ apiGetMoreRewardData : ", "" + gson.toJson(response.body()));
 
 
                     //SAVE DATA IN TO DATABASE
-                    if (response.body().getData().size() != 0){
+                    if (response.body().getData().size() != 0) {
 
-                        for (int i =0 ; i < response.body().getData().size() ; i++) {
-                            mDatabaseHelper.insertRewardHistoryData(""+response.body().getData().get(i).getAmount(),
-                                    ""+response.body().getData().get(i).getAction(),
-                                    ""+response.body().getData().get(i).getDisplayDate());
+                        for (int i = 0; i < response.body().getData().size(); i++) {
+                            mDatabaseHelper.insertRewardHistoryData("" + response.body().getData().get(i).getAmount(),
+                                    "" + response.body().getData().get(i).getAction(),
+                                    "" + response.body().getData().get(i).getDisplayDate());
                         }
 
                         //UPDATE UI
                         updateRewardHistoryUI();
                     }
-
-
 
 
                 } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
@@ -471,9 +549,6 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onFailure(Call<RewardHistoryModel> call, Throwable t) {
 
-                //CLOSE DIALOG
-                CommonMethods.closeDialog();
-
                 CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 
 
@@ -485,11 +560,17 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private void updateRewardHistoryUI() {
 
 
+        //UPDATE UI
+        relativeAccountDetails.setVisibility(View.VISIBLE);
+        txtAccountName.setText(strAccountName);
+        txtAmount.setText(mSessionManager.getPreference(Constants.ACCOUNT_BALANCE));
+        txtCurrencyType.setText(mSessionManager.getPreference(Constants.ACCOUNT_CURRENCY_TYPE));
+
         //VISIBLE UI
         linearRewardHistory.setVisibility(View.VISIBLE);
 
         //SET ADAPTER
-        mRewardSummeryListAdapter2 = new RewardSummeryListAdapter2(mContext,mActivity,mDatabaseHelper.gettRewardHistoryData());
+        mRewardSummeryListAdapter2 = new RewardSummeryListAdapter2(mContext, mActivity, mDatabaseHelper.gettRewardHistoryData());
         recycleRewardHistory.setAdapter(mRewardSummeryListAdapter2);
 
 
@@ -499,7 +580,6 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     public class RewardSummeryListAdapter2 extends RecyclerView.Adapter<RewardSummeryListAdapter2.ViewHolder> {
 
 
-
         private View view;
         private Context mContext;
         private Activity mActivity;
@@ -507,17 +587,16 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         private ArrayList<RewardHistoryDatabaseModel.Datum> rewardHistoryDataList = new ArrayList<>();
 
 
-
         public RewardSummeryListAdapter2(Context mContext, Activity mActivity, ArrayList<RewardHistoryDatabaseModel.Datum> rewardHistoryDataList) {
-            this.mContext= mContext;
-            this.mActivity= mActivity;
-            this.rewardHistoryDataList =rewardHistoryDataList;
+            this.mContext = mContext;
+            this.mActivity = mActivity;
+            this.rewardHistoryDataList = rewardHistoryDataList;
 
         }
 
-        public  class ViewHolder extends RecyclerView.ViewHolder {
+        public class ViewHolder extends RecyclerView.ViewHolder {
 
-            private final TextView txtType,txtWhen ,txtAmount,txtLoadMore;
+            private final TextView txtType, txtWhen, txtAmount, txtLoadMore;
 
 
             public ViewHolder(View mView) {
@@ -548,13 +627,13 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         @Override
         public void onBindViewHolder(RewardSummeryListAdapter2.ViewHolder holder, final int position) {
 
-            holder.txtType.setText(""+rewardHistoryDataList.get(position).getAction());
-            holder.txtAmount.setText(""+rewardHistoryDataList.get(position).getAmount());
-            holder.txtWhen.setText(""+rewardHistoryDataList.get(position).getDisplayDate());
+            holder.txtType.setText("" + rewardHistoryDataList.get(position).getAction());
+            holder.txtAmount.setText("" + rewardHistoryDataList.get(position).getAmount());
+            holder.txtWhen.setText("" + rewardHistoryDataList.get(position).getDisplayDate());
 
-            if (position == (rewardHistoryDataList.size() -1) && intPageCount != intTotalPageCount){
+            if (position == (rewardHistoryDataList.size() - 1) && intPageCount != intTotalPageCount) {
                 holder.txtLoadMore.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 holder.txtLoadMore.setVisibility(View.GONE);
             }
 
@@ -562,8 +641,11 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
 
+                    //CHANGE TEXT
+                    holder.txtLoadMore.setText(mContext.getResources().getString(R.string.strFetchingData));
+
                     //INCREASE PAGE COUNT
-                    intPageCount ++;
+                    intPageCount++;
 
                     apiGetMoreRewardData(intPageCount);
                 }
@@ -580,6 +662,109 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     }
 
 
+    public class CurrencyListAdapter extends RecyclerView.Adapter<CurrencyListAdapter.ViewHolder> {
+
+
+        private View view;
+        private Context mContext;
+        private Activity mActivity;
+        private CurrencyListAdapter.ViewHolder viewHolder;
+        private ArrayList<GetAccountDetailsModel.Token.Values> currencyList = new ArrayList<>();
+        private Dialog dialog;
+
+
+        public CurrencyListAdapter(Context mContext, Activity mActivity, ArrayList<GetAccountDetailsModel.Token.Values> currencyList, Dialog dialog) {
+            this.mContext = mContext;
+            this.mActivity = mActivity;
+            this.currencyList = currencyList;
+            this.dialog = dialog;
+
+            Collections.sort(this.currencyList, new Comparator() {
+                @Override
+                public int compare(Object alphacurrency, Object softDrinkTwo) {
+                    return ((GetAccountDetailsModel.Token.Values)alphacurrency).getSymbol()
+                            .compareTo(((GetAccountDetailsModel.Token.Values)softDrinkTwo).getSymbol());
+                }
+            });
+
+
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+
+            private final TextView txtName,txtCurrencyTitle;
+            private final ImageView imgCurrencyIcon;
+            private final LinearLayout linearMain;
+
+
+            public ViewHolder(View mView) {
+
+                super(mView);
+
+                imgCurrencyIcon = (ImageView) mView.findViewById(R.id.imgCurrencyIcon);
+                txtCurrencyTitle = (TextView) mView.findViewById(R.id.txtCurrencyTitle);
+                txtName = (TextView) mView.findViewById(R.id.txtName);
+                linearMain = (LinearLayout) mView.findViewById(R.id.linearMain);
+
+
+            }
+        }
+
+        @Override
+        public CurrencyListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            view = LayoutInflater.from(mActivity).inflate(R.layout.raw_currency_selection_list, parent, false);
+
+            view.setTag(viewHolder);
+            viewHolder = new CurrencyListAdapter.ViewHolder(view);
+
+
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(CurrencyListAdapter.ViewHolder holder, final int position) {
+
+            holder.txtCurrencyTitle.setText(currencyList.get(position).getSymbol());
+            holder.txtName.setText(currencyList.get(position).getName());
+
+            //SET BITE IMAGE
+            Glide.with(mActivity)
+                    .load(currencyList.get(position).getIcon())
+                    .into(holder.imgCurrencyIcon);
+
+            if (mSessionManager.getPreference(Constants.ACCOUNT_CURRENCY_TYPE).equals(currencyList.get(position).getSymbol())) {
+                //TINT IMAGE ICON ON THE BASIS OF ALREADY SELECTION
+                holder.txtCurrencyTitle.setTextColor(mContext.getResources().getColor(R.color.colorCurrency));
+                holder.txtName.setTextColor(mContext.getResources().getColor(R.color.colorCurrency));
+
+            }
+
+            holder.linearMain.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //DISMISS DIALOG
+                    dialog.cancel();
+
+                    //SET BALANCE AMOUNT AND SYMBOL
+                    txtAmount.setText(currencyList.get(position).getValue());
+                    txtCurrencyType.setText(currencyList.get(position).getSymbol());
+
+                    //GET INITIAL VALUES IN DOLLAR
+                    mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE, currencyList.get(position).getValue());
+                    mSessionManager.updatePreferenceString(Constants.ACCOUNT_CURRENCY_TYPE, currencyList.get(position).getSymbol());
+                }
+            });
+        }
+
+
+        @Override
+        public int getItemCount() {
+
+            return currencyList.size();
+        }
+    }
 
 
 }

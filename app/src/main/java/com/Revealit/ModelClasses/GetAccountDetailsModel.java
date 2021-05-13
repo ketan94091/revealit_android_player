@@ -37,7 +37,7 @@ public class GetAccountDetailsModel {
 
     }
 
-    public class Token {
+    public static class Token {
 
         private String token_icon;
         private String symbol;
@@ -48,6 +48,15 @@ public class GetAccountDetailsModel {
         private String in_usd_icon;
         private String in_btc;
         private String in_btc_icon;
+        private List<Values> values = null;
+
+        public List<Values> getValues() {
+            return values;
+        }
+
+        public void setValues(List<Values> values) {
+            this.values = values;
+        }
 
         public String getTokenIcon() {
             return token_icon;
@@ -120,7 +129,53 @@ public class GetAccountDetailsModel {
         public void setInBtcIcon(String in_btc_icon) {
             this.in_btc_icon = in_btc_icon;
         }
+
+
+        public static class Values {
+
+            private String symbol;
+            private String value;
+            private String icon;
+            private String name;
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getSymbol() {
+                return symbol;
+            }
+
+            public void setSymbol(String symbol) {
+                this.symbol = symbol;
+            }
+
+            public String getValue() {
+                return value;
+            }
+
+            public void setValue(String value) {
+                this.value = value;
+            }
+
+            public String getIcon() {
+                return icon;
+            }
+
+            public void setIcon(String icon) {
+                this.icon = icon;
+            }
+        }
+
     }
+
+
+
+
 }
 
 

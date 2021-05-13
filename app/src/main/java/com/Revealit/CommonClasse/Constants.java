@@ -43,6 +43,9 @@ public class Constants {
     public static final String IS_ALLOW_BIOMETRIC = "isUserAllowBioMetric";
     public static final String IS_FIRST_LOGIN = "isFirstLogin";
     public static final String PROTON_ACCOUNT_NAME = "protonAccountNAme";
+    public static final String IS_FIRST_TIME_ACCOUNT_SYNC = "isFirstTimeAccountSync";
+    public static final String ACCOUNT_BALANCE = "accountBalance";
+    public static final String ACCOUNT_CURRENCY_TYPE = "CurrencyType";
 
 
 

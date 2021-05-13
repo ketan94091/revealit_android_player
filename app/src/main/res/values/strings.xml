@@ -31,6 +31,7 @@
     <string name="strAmount">Amount</string>
     <string name="strWhen">When</string>
     <string name="strLoadMore">Load More...</string>
+    <string name="strCurrencySelection">Select Currency</string>
 
     <string name="strWarningTitleOne">Minimum password length 6</string>
     <string name="strWarningTitleTwo">Minimum 1 Digit, Lowercase, Uppercase</string>
@@ -53,6 +54,7 @@
     <string name="strBiomatricPermissionTwo">Revealit need excess for you to authenticate with TouchId or FaceId</string>
     <string name="strDontAllow">Dont allow</string>
     <string name="strAccount">Account</string>
+    <string name="strFetchingData">Fetching Data....</string>
 
 
     <string name="strEnterUserName">Please enter username!</string>

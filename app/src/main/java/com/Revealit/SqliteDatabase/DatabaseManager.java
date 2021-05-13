@@ -33,6 +33,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(tableCategoryList());
         db.execSQL(tableCategoryWisePlayList());
         db.execSQL(tableRewardHistory());
+        db.execSQL(tableCurrencyList());
 
     }
 
@@ -70,6 +71,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 + DatabaseHelper.KEY_CATEGORY_WISE_PLAY_MEDIA_URL + " text, "
                 + DatabaseHelper.KEY_CATEGORY_WISE_PLAY_MEDIA_COVER_ART + " text);";
     }
+
     private String tableRewardHistory() {
 
         return "CREATE TABLE IF NOT EXISTS " + DatabaseHelper.TABLE_REWARD_HISTORY
@@ -79,6 +81,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 + DatabaseHelper.KEY_REWARD_HISTORY_DISPLAY_DATE + " text);";
     }
 
+    private String tableCurrencyList() {
+
+        return "CREATE TABLE IF NOT EXISTS " + DatabaseHelper.TABLE_CURRENCY_LIST
+                + " ( " + DatabaseHelper.KEY_ID + " INTEGER PRIMARY KEY,"
+                + DatabaseHelper.KEY_CURRENCY_TITLE + " text, "
+                + DatabaseHelper.KEY_CURRENCY_AMOUNT + " text, "
+                + DatabaseHelper.KEY_CURRENCY_ICON_URL + " text, "
+                + DatabaseHelper.KEY_CURRENCY_NAME + " text);";
+    }
 
 
 }

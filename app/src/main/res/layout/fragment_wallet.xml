@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    android:orientation="vertical"
-   >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,8 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:background="@drawable/round_corner_wallet_scree"
-           android:visibility="gone"
-            >
+           >
 
 
             <LinearLayout
@@ -40,8 +38,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:src="@mipmap/refresh"
-                        android:padding="5dp"/>
+                        android:padding="5dp"
+                        android:src="@mipmap/refresh" />
 
                     <TextView
                         android:id="@+id/titleAcount"
@@ -49,8 +47,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/strAccount"
                         android:textAllCaps="true"
-                        android:textSize="13dp"
-                        android:textColor="@color/colorWalletText"/>
+                        android:textColor="@color/colorWalletText"
+                        android:textSize="13dp" />
 
                     <TextView
                         android:id="@+id/txtAccountName"
@@ -58,9 +56,9 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/titleAcount"
                         android:capitalize="characters"
+                        android:textColor="@color/colorCurrency"
                         android:textSize="20dp"
-                        android:textStyle="bold"
-                        android:textColor="@color/colorCurrency"/>
+                        android:textStyle="bold" />
 
 
                 </RelativeLayout>
@@ -93,9 +91,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textAllCaps="true"
+                                android:textColor="@color/colorAmountAndSymbol"
                                 android:textSize="20dp"
-                                android:textStyle="bold"
-                                android:textColor="@color/colorAmountAndSymbol"/>
+                                android:textStyle="bold" />
 
 
                             <TextView
@@ -104,15 +102,15 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/txtAmount"
                                 android:text="@string/strBalance"
-                                android:textSize="13dp"
                                 android:textAllCaps="true"
                                 android:textColor="@color/colorWalletText"
-                              />
+                                android:textSize="13dp" />
 
                         </LinearLayout>
 
 
                         <LinearLayout
+                            android:id="@+id/linearCurrency"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -120,14 +118,14 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/txtCurrncyType"
+                                android:id="@+id/txtCurrencyType"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="USD"
                                 android:textAllCaps="true"
+                                android:textColor="@color/colorCurrency"
                                 android:textSize="20dp"
-                                android:textStyle="bold"
-                                android:textColor="@color/colorCurrency"/>
+                                android:textStyle="bold" />
 
 
                             <TextView
@@ -136,10 +134,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/txtAmount"
                                 android:text="@string/strCurrency"
-                                android:textSize="13dp"
                                 android:textAllCaps="true"
                                 android:textColor="@color/colorWalletText"
-                                 />
+                                android:textSize="13dp" />
 
                         </LinearLayout>
                     </LinearLayout>
@@ -154,11 +151,11 @@
             android:id="@+id/linearRewardHistory"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:layout_below="@+id/relativeAccountDetails"
-            android:layout_marginTop="25dp"
             android:layout_marginLeft="25dp"
+            android:layout_marginTop="25dp"
             android:layout_marginRight="25dp"
+            android:orientation="vertical"
             android:visibility="gone">
 
             <TextView
@@ -167,58 +164,56 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtAmount"
                 android:text="@string/strRewardHistory"
-                android:textSize="20dp"
                 android:textAllCaps="true"
                 android:textColor="@color/colorWalletText"
-                />
+                android:textSize="20dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:weightSum="3">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtAmount"
+                    android:layout_weight="1"
                     android:text="@string/strType"
-                    android:textSize="13dp"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorWalletText"
-                    android:layout_weight="1"
                     android:textAlignment="textStart"
-                    />
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorWalletText"
+                    android:textSize="13dp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtAmount"
+                    android:layout_weight="1"
                     android:text="@string/strAmount"
-                    android:textSize="13dp"
+                    android:textAlignment="center"
                     android:textAllCaps="true"
                     android:textColor="@color/colorWalletText"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    />
+                    android:textSize="13dp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtAmount"
+                    android:layout_weight="1"
                     android:text="@string/strWhen"
-                    android:textSize="13dp"
+                    android:textAlignment="textEnd"
                     android:textAllCaps="true"
                     android:textColor="@color/colorWalletText"
-                    android:layout_weight="1"
-                    android:textAlignment="textEnd"
-                    />
+                    android:textSize="13dp" />
             </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycleRewardHistory"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
+                android:layout_height="match_parent" />
 
         </LinearLayout>
     </RelativeLayout>
