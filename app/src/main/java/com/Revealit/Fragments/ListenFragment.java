@@ -1,21 +1,52 @@
 package com.Revealit.Fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Activities.BiomatricAuthenticationActivity;
+import com.Revealit.Activities.GettingStartedActivity;
+import com.Revealit.Activities.SplashScreen;
+import com.Revealit.Adapter.MyRevealItListAdapter;
+import com.Revealit.CommonClasse.CommonMethods;
+import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
+import com.Revealit.CustomViews.RippleBackground;
+import com.Revealit.ModelClasses.CategoryWisePlayListModel;
 import com.Revealit.R;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 
 public class ListenFragment extends Fragment implements View.OnClickListener {
@@ -29,6 +60,17 @@ public class ListenFragment extends Fragment implements View.OnClickListener {
     private GridLayoutManager mGridLayoutManager;
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
+    private ImageView imgListen;
+    private TextView txtRevealCount;
+    private RecyclerView recycleRevealList;
+    private LinearLayoutManager recylerViewLayoutManager;
+    private MyRevealItListAdapter mMyRevealItListAdapter;
+    public static final Integer RecordAudioRequestCode = 1;
+    private SpeechRecognizer speechRecognizer;
+    private RippleBackground rippleBackground;
+    private int tapCount = 2;// IGONORE FIRST COUNT AND THEN START GETTING DATA FROM ITEMS TO END ITEMS.
+    private ArrayList<CategoryWisePlayListModel.DataBean> mCategoryWisePlayListModel = new ArrayList<>();
+    private ArrayList<Long> mLongRevealTime = new ArrayList<>();
 
     @Override
     public void onAttach(Context context) {
@@ -41,16 +83,11 @@ public class ListenFragment extends Fragment implements View.OnClickListener {
         ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
         mView = inflater.inflate(R.layout.fragment_listen, container, false);
 
-        return mView;
-
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
         setIds();
         setOnClicks();
+
+        return mView;
+
     }
 
     private void setIds() {
@@ -64,21 +101,118 @@ public class ListenFragment extends Fragment implements View.OnClickListener {
         mDatabaseHelper = new DatabaseHelper(mContext);
         mDatabaseHelper.open();
 
+        imgListen = (ImageView) mView.findViewById(R.id.imgListen);
+
+        txtRevealCount = (TextView) mView.findViewById(R.id.txtRevealCount);
+
+        rippleBackground = (RippleBackground) mView.findViewById(R.id.content);
 
 
-    }
+        recycleRevealList = (RecyclerView) mView.findViewById(R.id.recycleRevealList);
+        recylerViewLayoutManager = new LinearLayoutManager(mActivity);
+        recycleRevealList.setLayoutManager(recylerViewLayoutManager);
 
 
-    private void setOnClicks() {
+        //GET WATCH DATA FROM DATABASE
+        mCategoryWisePlayListModel = mDatabaseHelper.getCategoryWisePlayList();
+
+        mLongRevealTime = new ArrayList<>();
+        mLongRevealTime.clear();
+
+        tapCount = 2;
+
+        updateUI(0, 0);
+
+
 
     }
 
     @Override
-    public void onClick(View mView) {
+    public void onResume() {
+        super.onResume();
 
-        switch (mView.getId()){
+
+        //SET IDS
+        setIds();
+        setOnClicks();
+
+
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+
+        if (isVisibleToUser) {
+
+            //SET IDS
+            setIds();
+            setOnClicks();
 
         }
+
+
+    }
+
+    private void setOnClicks() {
+
+        imgListen.setOnClickListener(this);
+    }
+
+
+    @Override
+    public void onClick(View mView) {
+
+        switch (mView.getId()) {
+
+            case R.id.imgListen:
+
+
+                if(tapCount < (mDatabaseHelper.getCategoryWisePlayList().size()+1)) {
+
+                    //START ANIMATION
+                    rippleBackground.startRippleAnimation();
+
+
+                    new Handler().postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            //ADD CURRENT TIME IN ARRAYLIST
+                            mLongRevealTime.add(System.currentTimeMillis());
+
+                            updateUI(1, tapCount);
+
+                            //INCREASE TAP COUNT
+                            tapCount++;
+
+                            //START ANIMATION
+                            rippleBackground.stopRippleAnimation();
+
+
+                        }
+                    }, 3000);
+
+                }
+
+                break;
+
+
+        }
+
+    }
+
+    private void updateUI(int from, int to) {
+
+
+        //SET CATEGORY LIST
+        mMyRevealItListAdapter = new MyRevealItListAdapter(mContext, mActivity, mCategoryWisePlayListModel.subList(from, to), mDatabaseHelper,mLongRevealTime);
+        recycleRevealList.setAdapter(mMyRevealItListAdapter);
+
+        //SET SIZE TO REVEAL IT
+        txtRevealCount.setText(""+mCategoryWisePlayListModel.subList(from, to).size()+" reveals");
 
     }
 

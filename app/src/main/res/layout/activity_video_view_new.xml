@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBlack"
@@ -10,153 +9,157 @@
 
 
     <RelativeLayout
-        android:id="@+id/relativeVideoView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
-
-        <RelativeLayout
-            android:id="@+id/mFramVideoView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true">
-
-            <VideoView
-                android:id="@+id/mVideoView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
-
-            <ProgressBar
-                android:id="@+id/mProgress"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerInParent="true" />
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativeHeaderFooter"
+        android:id="@+id/relatviewMainVideoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/relativeHeaderView"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_alignParentTop="true"
-            android:background="@color/colorAppTheme"
-            android:padding="10dp">
+            android:id="@+id/relativeVideoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
 
-            <ImageView
-                android:id="@+id/imgBackArrow"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/left_arrow" />
 
-            <TextView
-                android:id="@+id/txtTitle"
+            <RelativeLayout
+                android:id="@+id/mFramVideoView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/imgBackArrow"
-                android:text="@string/app_name"
-                android:textColor="@color/colorWhite"
-                android:textSize="20dp" />
+                android:layout_centerInParent="true">
+
+                <VideoView
+                    android:id="@+id/mVideoView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+
+                <ProgressBar
+                    android:id="@+id/mProgress"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/relativeControllerMain"
+            android:id="@+id/relativeHeaderFooter"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:background="#CC000000">
+            android:layout_height="match_parent">
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/relativeHeaderView"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_alignParentTop="true"
+                android:background="@color/colorAppTheme"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/imgBackArrow"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/left_arrow" />
+
+                <ImageView
+                    android:id="@+id/imgShare"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/bc_gray_light"
+                    android:src="@drawable/share"
+                    android:visibility="gone" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeControllerMain"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_toLeftOf="@+id/imgVoulume"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp">
+                android:layout_alignParentBottom="true"
+                android:background="#CC000000">
 
                 <LinearLayout
-                    android:id="@+id/linearControls"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="50dp"
+                    android:layout_toLeftOf="@+id/imgVoulume"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
 
-                    <ImageView
-                        android:id="@+id/imgPlayPause"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/linearControls"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:src="@drawable/ic_media_pause" />
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/txtCurrentTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:paddingRight="5dp"
-                        android:text="00:00"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                        <ImageView
+                            android:id="@+id/imgPlayPause"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:src="@drawable/ic_media_pause" />
+
+                        <TextView
+                            android:id="@+id/txtCurrentTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:paddingRight="5dp"
+                            android:text="00:00"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <SeekBar
+                            android:id="@+id/ckVideoProgress"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="0dip"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:id="@+id/txtTotalTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:paddingLeft="5dp"
+                            android:text="00:00"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
 
                     <SeekBar
-                        android:id="@+id/ckVideoProgress"
+                        android:id="@+id/ckVolumeBar"
                         style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="0dip"
+                        android:layout_width="match_parent"
                         android:layout_height="35dp"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1" />
 
-                    <TextView
-                        android:id="@+id/txtTotalTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="5dp"
-                        android:paddingLeft="5dp"
-                        android:text="00:00"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+
                 </LinearLayout>
 
+                <ImageView
+                    android:id="@+id/imgVoulume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="2dp"
+                    android:background="@null"
+                    android:src="@drawable/volume" />
 
-                <SeekBar
-                    android:id="@+id/ckVolumeBar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1" />
-
-
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/imgVoulume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@null"
-                android:layout_marginRight="2dp"
-                android:src="@drawable/volume" />
+            </RelativeLayout>
 
         </RelativeLayout>
-
-    </RelativeLayout>
 
         <FrameLayout
             android:id="@+id/frameOverlay"
@@ -164,6 +167,101 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@color/colorTransperent"
-            android:visibility="gone"/>
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeShareView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="60dp"
+        android:visibility="gone">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            card_view:cardCornerRadius="12dp"
+            card_view:cardElevation="0dp">
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/relativeHeaderShareView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/colorWhite">
+
+                    <TextView
+                        android:id="@+id/txtCancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:background="@color/colorShareBackground"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="5dp"
+                        android:text="@string/strCancel"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/txtShare"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:background="@color/colorShareBackground"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="5dp"
+                        android:text="@string/strShare"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="15dp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relativeCaptureImageWithText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeHeaderShareView">
+
+                    <ImageView
+                        android:id="@+id/imgShareImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/bite_templet" />
+
+                    <EditText
+                        android:id="@+id/edtTextOnCaptureImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="20dp"
+                        android:hint="Place your text here"
+                        android:textColorHint="@color/colorWhiteHint"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:textAlignment="center"
+                        android:background="@null"/>
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

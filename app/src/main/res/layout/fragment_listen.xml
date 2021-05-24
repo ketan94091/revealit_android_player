@@ -11,14 +11,99 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Listen"
-            android:textAlignment="center"
-            android:textColor="@color/colorBlueBottomBar"
-            android:textSize="30dp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="5">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:orientation="vertical">
+
+                <com.Revealit.CustomViews.RippleBackground
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:rb_color="@color/colorMainLogo"
+                    app:rb_duration="1000"
+                    app:rb_radius="30dp"
+                    app:rb_rippleAmount="6"
+                    app:rb_scale="5"
+                    android:layout_centerInParent="true">
+
+                    <ImageView
+                        android:id="@+id/imgListen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@mipmap/listen_icn" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/imgListen"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="25dp"
+                        android:text="@string/strTapToRevealit"
+                        android:textColor="@color/colorGrayLight"
+                        android:textSize="15dp"
+                        android:textStyle="bold" />
+
+                </com.Revealit.CustomViews.RippleBackground>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <LinearLayout
+                    android:id="@+id/linearRevealTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/strMyReveals"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/txtRevealCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="0 reveals"
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/colorGrayLight"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycleRevealList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/linearRevealTitle"
+                    android:layout_marginTop="10dp" />
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
 
 
     </RelativeLayout>

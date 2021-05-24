@@ -39,7 +39,6 @@ import java.util.ArrayList;
 public class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<PlayIndividualCategoryListAdapter.ViewHolder> {
 
 
-
     private View view;
     private Context mContext;
     private Activity mActivity;
@@ -48,15 +47,15 @@ public class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Play
 
 
     public PlayIndividualCategoryListAdapter(Context mContext, Activity mActivity, ArrayList<CategoryWisePlayListModel.DataBean> strCategoryList) {
-        this.mContext= mContext;
-        this.mActivity= mActivity;
-        this.strCategoryList= strCategoryList;
+        this.mContext = mContext;
+        this.mActivity = mActivity;
+        this.strCategoryList = strCategoryList;
 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView imgVideo ;
+        private final ImageView imgVideo;
         private final RelativeLayout relativeLayout;
         private final ProgressBar progressImgLoad;
 
@@ -64,9 +63,9 @@ public class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Play
 
             super(mView);
 
-           imgVideo = (ImageView) mView.findViewById(R.id.imgVideo);
+            imgVideo = (ImageView) mView.findViewById(R.id.imgVideo);
             relativeLayout = (RelativeLayout) mView.findViewById(R.id.relativeLayout);
-            progressImgLoad = (ProgressBar)mView.findViewById(R.id.progressImgLoad);
+            progressImgLoad = (ProgressBar) mView.findViewById(R.id.progressImgLoad);
 
 
         }
@@ -88,12 +87,12 @@ public class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Play
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         //SET TWO ITEMS IN SCREEN
-        holder.relativeLayout.getLayoutParams().width = (int) ((getScreenWidth()-30) / 2);
+        holder.relativeLayout.getLayoutParams().width = (int) ((getScreenWidth() - 30) / 2);
 
 
         //LOAD COVER IMAGE WITH GLIDE
         Glide.with(mActivity)
-                .load(""+strCategoryList.get(position).getMediaCoverArt())
+                .load("" + strCategoryList.get(position).getMediaCoverArt())
                 .apply(new RequestOptions().override(800, 400).transform(new CenterCrop(), new RoundedCorners(16)))
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -107,10 +106,7 @@ public class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Play
                         holder.progressImgLoad.setVisibility(View.GONE);
                         return false;
                     }
-                })
-                .into(holder.imgVideo);
-
-
+                }).into(holder.imgVideo);
 
 
         holder.imgVideo.setOnClickListener(new View.OnClickListener() {
@@ -118,9 +114,9 @@ public class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Play
             public void onClick(View v) {
 
                 Intent mIntent = new Intent(mActivity, VideoViewActivity.class);
-                mIntent.putExtra(Constants.MEDIA_URL ,""+strCategoryList.get(position).getMediaUrl());
-                mIntent.putExtra(Constants.MEDIA_ID ,""+strCategoryList.get(position).getMediaID());
-                mIntent.putExtra(Constants.VIDEO_NAME ,""+strCategoryList.get(position).getMediaShowTitle());
+                mIntent.putExtra(Constants.MEDIA_URL, "" + strCategoryList.get(position).getMediaUrl());
+                mIntent.putExtra(Constants.MEDIA_ID, "" + strCategoryList.get(position).getMediaID());
+                mIntent.putExtra(Constants.VIDEO_NAME, "" + strCategoryList.get(position).getMediaShowTitle());
                 mActivity.startActivity(mIntent);
 
                 //CommonMethods.displayToast(mContext, "CLICKED ON : "+position);
@@ -135,6 +131,7 @@ public class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Play
 
         return strCategoryList.size();
     }
+
     public int getScreenWidth() {
 
         WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);

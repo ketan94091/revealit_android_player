@@ -23,6 +23,7 @@ public class DatabaseHelper {
     public static String TABLE_CATEGORY_WISE_PLAY_LIST = "tableCategoryWisePlayList";
     public static String TABLE_REWARD_HISTORY = "tableRewardHistory";
     public static String TABLE_CURRENCY_LIST = "tableCurrencyList";
+    public static String TABLE_LISTEN_SCREEN_LIST= "tableListenScreenList";
 
     //FIELD TABLE_CATEGORY_NAMES
     public static String KEY_ID = "keyID";
@@ -47,6 +48,14 @@ public class DatabaseHelper {
     public static String KEY_CURRENCY_AMOUNT = "value";
     public static String KEY_CURRENCY_ICON_URL = "icon";
     public static String KEY_CURRENCY_NAME = "name";
+
+    //FIELD TABLE_LISTEN_SCREEN_LIST
+    public static String KEY_LISTEN_MEDIA_ID = "keyCategoryWisePlayMediaID";
+    public static String KEY_LISTEN_MEDIA_SHOW_TITLE = "keyCategoryWisePlayMediaShowTitle";
+    public static String KEY_LISTEN_MEDIA_TITLE = "keyCategoryWisePlayMediaTitle";
+    public static String KEY_LISTEN_MEDIA_TYPE = "keyCategoryWisePlayMediaType";
+    public static String KEY_LISTEN_MEDIA_URL = "keyCategoryWisePlayMediaIUrl";
+    public static String KEY_LISTEN_MEDIA_COVER_ART = "keyCategoryWisePlayMediaCoverArt";
 
 
     DatabaseManager dbManager;

@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.Activities.LoginActivityActivity;
-import com.Revealit.Adapter.RewardSummeryListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -154,7 +153,6 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     }
 
-
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -226,6 +224,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     }
 
     private void callWalletDetails() {
+
         //DISPLAY DIALOG
         CommonMethods.showDialog(mContext);
 
@@ -735,8 +734,10 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
             if (mSessionManager.getPreference(Constants.ACCOUNT_CURRENCY_TYPE).equals(currencyList.get(position).getSymbol())) {
                 //TINT IMAGE ICON ON THE BASIS OF ALREADY SELECTION
+                holder.imgCurrencyIcon.setColorFilter(ContextCompat.getColor(mContext, R.color.colorButtonEnabled), android.graphics.PorterDuff.Mode.MULTIPLY);
                 holder.txtCurrencyTitle.setTextColor(mContext.getResources().getColor(R.color.colorCurrency));
-                holder.txtName.setTextColor(mContext.getResources().getColor(R.color.colorCurrency));
+                holder.txtName.setTextColor(mContext.getResources().getColor(R.color.colorCurrencyNameSelected));
+                holder.linearMain.setBackground(mContext.getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
 
             }
 

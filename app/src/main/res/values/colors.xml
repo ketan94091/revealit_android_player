@@ -6,6 +6,7 @@
 
 
     <color name="colorWhite">#FFF</color>
+    <color name="colorWhiteHint">#80FFFFFF</color>
     <color name="colorBlack">#000</color>
     <color name="colorGrayDark">#696969</color>
     <color name="colorGrayLight">#BFA9A9A9</color>
@@ -40,6 +41,13 @@
     <color name="colorWalletBorderLight">#B0CBD5E1</color>
     <color name="colorWalletText">#64748B</color>
     <color name="colorCurrency">#22C55E</color>
+    <color name="colorCurrencyNameSelected">#4ADE80</color>
+    <color name="colorSelectedBackground">#F0FDF4 </color>
+    <color name="colorProducatHighlighter">#84C14A </color>
+    <color name="colorProducatHighlighterLight">#8084C14A</color>
+    <color name="colorProducatTextBackground">#41A7A8A6</color>
+    <color name="colorShareBackground">#7ebbff</color>
+    <color name="colorSharingMedia">#58657C</color>
 
 
 </resources>

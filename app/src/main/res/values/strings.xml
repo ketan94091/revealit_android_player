@@ -55,6 +55,13 @@
     <string name="strDontAllow">Dont allow</string>
     <string name="strAccount">Account</string>
     <string name="strFetchingData">Fetching Data....</string>
+    <string name="strTapToRevealit">Tap to revealit</string>
+    <string name="strMyReveals">My Reveals</string>
+    <string name="strCancel">Cancel</string>
+    <string name="strShare">Share</string>
+    <string name="strFacebook">Facebook</string>
+    <string name="strTwitter">Twitter</string>
+    <string name="strInstagram">Instagram</string>
 
 
     <string name="strEnterUserName">Please enter username!</string>
@@ -65,6 +72,9 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="facebook_app_id">775588833322803</string>
+    <string name="strFbNotInstalled">Facebook not installed.</string>
+
 
 
 </resources>

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
@@ -221,6 +223,42 @@ public class CommonMethods {
         Matcher m = p.matcher(strPassword);
 
         return m.matches();
+    }
+
+    public static String timeDifference(Long lngTimeone){
+
+        String strTimeString = "0 Seconds ago";
+
+        long diff = lngTimeone - System.currentTimeMillis();
+        long seconds = diff / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+
+        Log.e("Time : ", "HOUR :"+hours +"MINUTES :"+minutes + "SECOND :"+ seconds );
+
+        if (hours != 0){
+            strTimeString = hours +" Hours ago";
+            return strTimeString.replace("-","");
+        }else if(minutes != 0){
+            strTimeString = minutes +" Minutes ago";
+            return strTimeString.replace("-","");
+        }else if(seconds != 0){
+            strTimeString = seconds +" Seconds ago";
+            return strTimeString.replace("-","");
+        }else {
+            return strTimeString;
+        }
+
+    }
+
+    public static boolean isFbInstalled(Context mContext){
+        try{
+            ApplicationInfo info = mContext.getPackageManager().getApplicationInfo("com.facebook.katana", 0 );
+            return true;
+        } catch( PackageManager.NameNotFoundException e ){
+            return false;
+        }
     }
 
 

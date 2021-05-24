@@ -1,10 +1,12 @@
 package com.Revealit.Activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,9 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 
 import com.Revealit.CommonClasse.CommonMethods;
@@ -55,8 +60,9 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
     private WebView webView;
-    private EditText edtPassword,edtUsername;
+    private EditText edtPassword, edtUsername;
     private TextView txtLogin;
+
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -91,6 +97,7 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
         edtPassword = (EditText) findViewById(R.id.edtPassword);
         txtLogin = (TextView) findViewById(R.id.txtLogin);
 
+
     }
 
 
@@ -103,25 +110,28 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
     @Override
     public void onClick(View mView) {
 
-        switch (mView.getId()){
+        switch (mView.getId()) {
 
             case R.id.txtLogin:
 
-                if(checkValidation()){
+
+                if (checkValidation()) {
 
                     //IF FIRST LOGIN DONE = DONT ASK FOR BIOMETRIC
                     //ELSE ASK FOR BIO METRIC ONLY ONCE
-                    if (!mSessionManager.getPreferenceBoolean(Constants.IS_FIRST_LOGIN)){
+                    if (!mSessionManager.getPreferenceBoolean(Constants.IS_FIRST_LOGIN)) {
                         openBiomatricPermissionDialog();
-                    }else {
+                    } else {
                         callAuthenticationAPI();
                     }
+
 
                 }
 
                 break;
         }
     }
+
     private void openBiomatricPermissionDialog() {
 
         android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
@@ -140,7 +150,7 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
             public void onClick(View v) {
 
                 //UPDATE FLAG IF USER ALLOW BIOMETRIC AUTHENTICATION
-                mSessionManager.updatePreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC , false);
+                mSessionManager.updatePreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC, false);
 
                 mAlertDialog.dismiss();
 
@@ -154,7 +164,7 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
             public void onClick(View v) {
 
                 //UPDATE FLAG IF USER ALLOW BIOMETRIC AUTHENTICATION
-                mSessionManager.updatePreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC , true);
+                mSessionManager.updatePreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC, true);
 
                 mAlertDialog.dismiss();
 
@@ -168,106 +178,112 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
 
     private void callAuthenticationAPI() {
 
-            //DISPLAY DIALOG
-            CommonMethods.showDialog(mContext);
+        //DISPLAY DIALOG
+        CommonMethods.showDialog(mContext);
 
 
-            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-            httpClient.addInterceptor(new Interceptor() {
-                @Override
-                public okhttp3.Response intercept(Chain chain) throws IOException {
-                    okhttp3.Request original = chain.request();
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
 
-                    okhttp3.Request request = original.newBuilder()
-                            .header("Content-Type", "application/json")
-                            .method(original.method(), original.body())
-                            .build();
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .method(original.method(), original.body())
+                        .build();
 
-                    return chain.proceed(request);
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.API_END_POINTS_STAGING)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+        JsonObject paramObject = new JsonObject();
+        paramObject.addProperty(Constants.AUTH_USERNAME, edtUsername.getText().toString());
+        paramObject.addProperty(Constants.AUTH_PASSWORD, edtPassword.getText().toString());
+
+        Call<LoginAuthModel> call = patchService1.loginAuth(paramObject);
+
+        call.enqueue(new Callback<LoginAuthModel>() {
+            @Override
+            public void onResponse(Call<LoginAuthModel> call, Response<LoginAuthModel> response) {
+
+                CommonMethods.printLogE("Response @ Login: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ Login: ", "" + response.code());
+
+                //CLOSE DIALOG
+                CommonMethods.closeDialog();
+
+
+                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+
+                    Gson gson = new GsonBuilder()
+                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                            .serializeNulls()
+                            .create();
+
+                    CommonMethods.printLogE("Response @ Login: ", "" + gson.toJson(response.body()));
+
+                    //SAVE AUTHENTICATION DATA
+                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN, response.body().getAccessToken());
+                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE, response.body().getTokenType());
+                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_EXPIRES_IN, response.body().getExpiresIn());
+                    mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, true);
+                    mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, true);
+                    mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN, true);
+
+                    Intent mIntent = new Intent(LoginActivityActivity.this, HomeScreenTabLayout.class);
+                    startActivity(mIntent);
+                    finish();
+
+                } else {
+
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strUsernamePasswordWrong));
                 }
-            });
+            }
 
-            Gson gson = new GsonBuilder()
-                    .setLenient()
-                    .create();
-
-            final OkHttpClient client = httpClient.build();
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.API_END_POINTS_STAGING)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
-                    .build();
-
-            UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
-            JsonObject paramObject = new JsonObject();
-            paramObject.addProperty(Constants.AUTH_USERNAME, edtUsername.getText().toString());
-            paramObject.addProperty(Constants.AUTH_PASSWORD, edtPassword.getText().toString());
-
-            Call<LoginAuthModel> call = patchService1.loginAuth(paramObject);
-
-            call.enqueue(new Callback<LoginAuthModel>() {
-                @Override
-                public void onResponse(Call<LoginAuthModel> call, Response<LoginAuthModel> response) {
-
-                    CommonMethods.printLogE("Response @ Login: ","" + response.isSuccessful());
-                    CommonMethods.printLogE("Response @ Login: " ,""+ response.code());
-
-                    //CLOSE DIALOG
-                    CommonMethods.closeDialog();
+            @Override
+            public void onFailure(Call<LoginAuthModel> call, Throwable t) {
 
 
-                    if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
-
-                        Gson gson = new GsonBuilder()
-                                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-                                .serializeNulls()
-                                .create();
-
-                        CommonMethods.printLogE("Response @ Login: " ,""+ gson.toJson(response.body()));
-
-                        //SAVE AUTHENTICATION DATA
-                        mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN ,response.body().getAccessToken());
-                        mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE ,response.body().getTokenType());
-                        mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_EXPIRES_IN ,response.body().getExpiresIn());
-                        mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
-                        mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
-                        mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
-
-                        Intent mIntent = new Intent(LoginActivityActivity.this, HomeScreenTabLayout.class);
-                        startActivity(mIntent);
-                        finish();
-
-                    }else {
-
-                        CommonMethods.buildDialog(mContext,getResources().getString(R.string.strUsernamePasswordWrong));
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<LoginAuthModel> call, Throwable t) {
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 
 
-                    CommonMethods.buildDialog(mContext,getResources().getString(R.string.strSomethingWentWrong));
+                CommonMethods.closeDialog();
 
-
-                    CommonMethods.closeDialog();
-
-                }
-            });
+            }
+        });
 
     }
 
     private boolean checkValidation() {
-        
-        if(edtUsername.getText().toString().isEmpty()){
+
+        if (edtUsername.getText().toString().isEmpty()) {
             CommonMethods.displayToast(mContext, getResources().getString(R.string.strEnterUserName));
             return false;
-        }else if(edtPassword.getText().toString().isEmpty()){
+        } else if (edtPassword.getText().toString().isEmpty()) {
             CommonMethods.displayToast(mContext, getResources().getString(R.string.strEnterPassword));
             return false;
-        }else {
+        } else {
             return true;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
     }
 }
 

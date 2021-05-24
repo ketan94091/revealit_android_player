@@ -55,7 +55,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
     private Activity mActivity;
     private Context mContext;
-    private static final String TAG = "HomeFragment";
+    private static final String TAG = "PlayFragment";
 
     private View mView;
 

@@ -1,21 +1,28 @@
 package com.Revealit.Activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.opengl.Visibility;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.Html;
 import android.util.DisplayMetrics;
@@ -28,9 +35,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsoluteLayout;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -40,22 +49,34 @@ import android.widget.VideoView;
 
 import androidx.annotation.Dimension;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.widget.ImageViewCompat;
 
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
+import com.Revealit.CommonClasse.Screenshot;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -77,23 +98,33 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
     private VideoView mVideoView;
-    private ImageView imgBackArrow, imgVoulume, imgPlayPause;
+    private ImageView imgShareImage, imgShare, imgBackArrow, imgVoulume, imgPlayPause;
     private ProgressBar mProgress;
-    private TextView txtCurrentTime, txtTitle,txtTotalTime;
+    private TextView txtCurrentTime, txtShare, txtCancel, txtTitle, txtTotalTime;
     private SeekBar ckVolumeBar, ckVideoProgress;
     private boolean isPlayButtonClicked = false;
     private int intTotalDuration, intCurrentPosition;
     private LinearLayout linearControls;
     private AudioManager audioManager;
-    private RelativeLayout relativeControllerMain, relativeHeaderView, relativeHeaderFooter;
+    private RelativeLayout relativeCaptureImageWithText, relativeShareView, relativeControllerMain, relativeHeaderView, relativeHeaderFooter;
     private FrameLayout frameOverlay;
 
     private ImageView imgDynamicCoordinateView;
     private int minusHight, minusWidth;
     private int heightVideo, widthVideo;
     private int videoPauseTime = 0;
-    private String strMediaURL = "", strMediaID = "", strMediaTitle="";
+    private String strMediaURL = "", strMediaID = "", strMediaTitle = "";
     private TextView txtVendorName;
+    private List<DotsLocationsModel.Datum> locationData = new ArrayList<>();
+    private MediaMetadataRetriever mediaMetadataRetriever;
+    private EditText edtTextOnCaptureImage;
+    String[] PERMISSIONS = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+
+    };
+    private Bitmap savedBitMap;
+    private PopupWindow popup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,12 +159,18 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         imgPlayPause = (ImageView) findViewById(R.id.imgPlayPause);
         imgVoulume = (ImageView) findViewById(R.id.imgVoulume);
         imgBackArrow = (ImageView) findViewById(R.id.imgBackArrow);
+        imgShare = (ImageView) findViewById(R.id.imgShare);
+        imgShareImage = (ImageView) findViewById(R.id.imgShareImage);
 
         mProgress = (ProgressBar) findViewById(R.id.mProgress);
 
         txtCurrentTime = (TextView) findViewById(R.id.txtCurrentTime);
         txtTotalTime = (TextView) findViewById(R.id.txtTotalTime);
         txtTitle = (TextView) findViewById(R.id.txtTitle);
+        txtCancel = (TextView) findViewById(R.id.txtCancel);
+        txtShare = (TextView) findViewById(R.id.txtShare);
+
+        edtTextOnCaptureImage = (EditText) findViewById(R.id.edtTextOnCaptureImage);
 
         ckVideoProgress = (SeekBar) findViewById(R.id.ckVideoProgress);
         ckVolumeBar = (SeekBar) findViewById(R.id.ckVolumeBar);
@@ -143,14 +180,22 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         relativeHeaderFooter = (RelativeLayout) findViewById(R.id.relativeHeaderFooter);
         relativeHeaderView = (RelativeLayout) findViewById(R.id.relativeHeaderView);
         relativeControllerMain = (RelativeLayout) findViewById(R.id.relativeControllerMain);
+        relativeShareView = (RelativeLayout) findViewById(R.id.relativeShareView);
+        relativeCaptureImageWithText = (RelativeLayout) findViewById(R.id.relativeCaptureImageWithText);
 
         frameOverlay = (FrameLayout) findViewById(R.id.frameOverlay);
 
         mVideoView.setVideoPath(strMediaURL);
 
+
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
+
+                mediaMetadataRetriever = new MediaMetadataRetriever();
+                //mediaMetadataRetriever.setDataSource(strMediaURL);
+                mediaMetadataRetriever.setDataSource(strMediaURL, new HashMap<String, String>());
+
 
                 //GET VIDEO HEIGHT AND WIDTH
                 widthVideo = mp.getVideoWidth();
@@ -201,6 +246,20 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         });
 
 
+        imgShareImage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                edtTextOnCaptureImage.setFocusable(true);
+                edtTextOnCaptureImage.setVisibility(View.VISIBLE);
+
+                return true;
+
+
+            }
+        });
+
+
     }
 
     private void setOnClicks() {
@@ -208,6 +267,9 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         imgPlayPause.setOnClickListener(this);
         imgVoulume.setOnClickListener(this);
         imgBackArrow.setOnClickListener(this);
+        imgShare.setOnClickListener(this);
+        txtCancel.setOnClickListener(this);
+        txtShare.setOnClickListener(this);
     }
 
     @Override
@@ -225,8 +287,8 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
                 if (mVideoView.isPlaying()) {
 
-                    //REMOVE ALL VIEWS
-                    frameOverlay.removeAllViews();
+                    //SET SHARE BUTTON VISIBILITY ON PLAY PAUSE
+                    imgShare.setVisibility(View.VISIBLE);
 
                     //PAUSE VIDOE
                     mVideoView.pause();
@@ -247,6 +309,13 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
 
                 } else {
+
+                    //ON VIDEO PLAYING SHARE VIEW SHOULD BE HIDE
+                    relativeShareView.setVisibility(View.GONE);
+
+                    //SET SHARE BUTTON VISIBILITY ON PLAY PAUSE
+                    imgShare.setVisibility(View.GONE);
+
                     mVideoView.start();
                     frameOverlay.setVisibility(View.GONE);
                     relativeHeaderView.setVisibility(View.VISIBLE);
@@ -275,16 +344,112 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
 
                 break;
+            case R.id.imgShare:
+
+                //GET CAPTURE SCREEN HEIGHT AND WIDTH
+                Bitmap bmFrame = mediaMetadataRetriever.getFrameAtTime(mVideoView.getCurrentPosition() * 1000); //unit in microsecond
+                int widthBitmap = bmFrame.getWidth();
+                int heightBitmap = bmFrame.getHeight();
+
+                //SET CAPTURE HEIGHT WITH TO IMAGEVIEW
+                relativeCaptureImageWithText.getLayoutParams().height = heightBitmap;
+                relativeCaptureImageWithText.getLayoutParams().width = widthBitmap;
+                relativeCaptureImageWithText.requestLayout();
+
+                //SET CAPTURE IMAGE
+                imgShareImage.setImageBitmap(bmFrame);
+
+                //VISIBLE VIEW
+                relativeShareView.setVisibility(View.VISIBLE);
+
+                break;
+            case R.id.txtCancel:
+
+                relativeShareView.setVisibility(View.GONE);
+
+                //CLOSE POPUP WINDOW
+                popup.dismiss();
+
+
+            case R.id.txtShare:
+
+                relativeCaptureImageWithText.setDrawingCacheEnabled(true);
+
+                relativeCaptureImageWithText.buildDrawingCache();
+
+                savedBitMap = relativeCaptureImageWithText.getDrawingCache();
+
+                //OPEN ANCHOR VIEW
+                displayPopupWindow(txtShare);
+
+                break;
+
+            case R.id.txtFacebook:
+
+                //CHEK IF FACEBOOK INSTALLED OR NOT
+                if (CommonMethods.isFbInstalled(mContext)) {
+                    SharePhoto photo = new SharePhoto.Builder().setBitmap(savedBitMap).build();
+                    SharePhotoContent content = new SharePhotoContent.Builder().addPhoto(photo).build();
+                    ShareDialog dialog = new ShareDialog(this);
+                    if (dialog.canShow(SharePhotoContent.class)) {
+                        dialog.show(content);
+                    } else {
+                        CommonMethods.displayToast(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                    }
+                } else {
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strFbNotInstalled));
+                }
+
+                //CLOSE POPUP WINDOW
+                popup.dismiss();
+
+                break;
+
+            case R.id.txtTwitter:
+
+                CommonMethods.displayToast(mContext, "BUTTON CLICKED: TWITTER");
+
+                //CLOSE POPUP WINDOW
+                popup.dismiss();
+
+                break;
+            case R.id.txtInstagram:
+
+                CommonMethods.displayToast(mContext, "BUTTON CLICKED: INSTA");
+
+                //CLOSE POPUP WINDOW
+                popup.dismiss();
+
+                break;
         }
 
     }
 
+
+    private void displayPopupWindow(View anchorView) {
+
+        popup = new PopupWindow(VideoViewActivity.this);
+        View layout = getLayoutInflater().inflate(R.layout.share_anchor_view_popup_content, null);
+        popup.setContentView(layout);
+        popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        popup.setOutsideTouchable(true);
+        popup.setFocusable(true);
+        popup.setBackgroundDrawable(new BitmapDrawable());
+        popup.showAsDropDown(anchorView);
+
+        TextView txtFacebook = (TextView) layout.findViewById(R.id.txtFacebook);
+        TextView txtTwitter = (TextView) layout.findViewById(R.id.txtTwitter);
+        TextView txtInstagram = (TextView) layout.findViewById(R.id.txtInstagram);
+        txtFacebook.setOnClickListener(this);
+        txtTwitter.setOnClickListener(this);
+        txtInstagram.setOnClickListener(this);
+    }
+
+
     private void callLocationApi(int duration) {
 
         CommonMethods.printLogE("Response @ callLocationApi TIME IN SECOND : ", "" + duration);
-
-        //DISPLAY DIALOG
-        CommonMethods.showDialog(mContext);
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -310,7 +475,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS)
+                .baseUrl(Constants.API_END_POINTS_STAGING)
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -339,13 +504,13 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
 
                     //DISPLAY COORDINATES FOR DOTS
-                    displayCoordinates(response.body().getData());
+                    displayCoordinates(response.body().getData(), false, 0);
+
+                    //SET LOCATION DATA INTO STATIC ARRAY
+                    locationData = response.body().getData();
 
 
                 } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
-
-                    //CLOSE DIALOG
-                    CommonMethods.closeDialog();
 
                     Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
                     mActivity.startActivity(mLoginIntent);
@@ -353,12 +518,9 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
                 } else {
 
-                    //CLOSE DIALOG
-                    CommonMethods.closeDialog();
 
                     CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 
-                    mActivity.finish();
                 }
 
             }
@@ -366,12 +528,8 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onFailure(Call<DotsLocationsModel> call, Throwable t) {
 
-                //CLOSE DIALOG
-                CommonMethods.closeDialog();
-
                 CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 
-                mActivity.finish();
 
             }
         });
@@ -379,35 +537,66 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    private void displayCoordinates(List<DotsLocationsModel.Datum> data) {
+    private void displayCoordinates(List<DotsLocationsModel.Datum> data, boolean isFromLongPress, int longPressItemID) {
+
+        //REMOVE ALL VIEWS
+        frameOverlay.removeAllViews();
+
+        if (!isFromLongPress) {
+
+            for (int i = 0; i < data.size(); i++) {
+
+                //ADD DYNAMIC IMAGE VIEW
+                imgDynamicCoordinateView = new ImageView(this);
+                imgDynamicCoordinateView.setImageResource(R.mipmap.icon_product);
+                imgDynamicCoordinateView.setTag(i);
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(45, 45);
+                layoutParams.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))) + 30);
+                layoutParams.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))));
+
+                //SET DARK COLOR FOR FIRST 3 ITEMS
+                if (i < 3) {
+                    ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor("#84C14A")));
+                } else {
+                    ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor("#8084C14A")));
+                }
+
+                frameOverlay.addView(imgDynamicCoordinateView, layoutParams);
+
+                //ADD DYNAMIC TEXT VIEW FOR VENDOR AND ITEM NAME
+                txtVendorName = new TextView(this);
+
+                //VISIBLE ONLY FIRST THREE TEXT
+                if (i < 3) {
+                    txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getVendor());
+                    txtVendorName.setTextColor(Color.parseColor("#ffffff"));
+                } else {
+                    txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getVendor());
+                    txtVendorName.setTextColor(Color.parseColor("#ffffff"));
+                    txtVendorName.setVisibility(View.GONE);
+                }
+
+                txtVendorName.setTextSize(9);
+                txtVendorName.setTag(i);
+                txtVendorName.setBackgroundResource(R.drawable.bc_video_item_text);
+                FrameLayout.LayoutParams layoutParamsVendor = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParamsVendor.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))) + 80);
+                layoutParamsVendor.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))));
+                frameOverlay.addView(txtVendorName, layoutParamsVendor);
 
 
-        for (int i = 0; i < data.size(); i++) {
+                //ON LONG PRESS VISIBLE ONLY LONG PRESS ITEMS ELSE DISPLAY IN LIGHT COLOR
+                imgDynamicCoordinateView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View mView) {
 
-            //ADD DYNAMIC IMAGE VIEW
-            imgDynamicCoordinateView = new ImageView(this);
-            imgDynamicCoordinateView.setImageResource(R.drawable.dots);
-            imgDynamicCoordinateView.setTag(i);
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(45, 45);
-            layoutParams.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))));
-            layoutParams.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))) + 10);
-            ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor(""+data.get(i).getItemDotColor())));
-            frameOverlay.addView(imgDynamicCoordinateView, layoutParams);
+                        displayCoordinates(locationData, true, ((int) mView.getTag()));
 
-           /* //ADD DYNAMIC TEXT VIEW FOR VENDOR AND ITEM NAME
-            txtVendorName = new TextView(this);
-            txtVendorName.setText(" "+data.get(i).getItemName() +" \n "+data.get(i).getVendor());
-           // txtVendorName.setTextColor(Color.parseColor(""+data.get(i).getItemLabelColor()));
-            txtVendorName.setTextColor(Color.parseColor("#ffffff"));
-            txtVendorName.setTextSize(9);
-            txtVendorName.setTag(i);
-            FrameLayout.LayoutParams layoutParamsVendor = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParamsVendor.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))) + 50);
-            layoutParamsVendor.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))) + 10);
-            frameOverlay.addView(txtVendorName, layoutParamsVendor);
-*/
+                        return true;
+                    }
+                });
 
-            imgDynamicCoordinateView.setOnClickListener(new View.OnClickListener() {
+            /*imgDynamicCoordinateView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View mView) {
 
@@ -428,28 +617,65 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
                 }
             });
+*/
 
-           /* txtVendorName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View mView) {
+            }
+        } else {
 
-                    // Toast.makeText(mContext ,""+ items[(int) mView.getTag()],Toast.LENGTH_LONG).show();
+            for (int i = 0; i < data.size(); i++) {
 
-                    AlertDialog alertDialog = new AlertDialog.Builder(VideoViewActivity.this).create(); //Read Update
-                    alertDialog.setTitle("Revealit");
-                    //alertDialog.setMessage("You Clicked On Dot : "+items[(int) mView.getTag()]);
-                    alertDialog.setMessage("You Clicked On Dot : " + ((int) mView.getTag() + 1));
+                //ADD DYNAMIC IMAGE VIEW
+                imgDynamicCoordinateView = new ImageView(this);
+                imgDynamicCoordinateView.setImageResource(R.mipmap.icon_product);
+                imgDynamicCoordinateView.setTag(i);
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(45, 45);
+                layoutParams.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))) + 30);
+                layoutParams.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))));
 
-                    alertDialog.setButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            alertDialog.dismiss();
-                        }
-                    });
-
-                    alertDialog.show();
-
+                //SET DARK COLOR FOR FIRST 3 ITEMS
+                if (i == longPressItemID) {
+                    ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor("#84C14A")));
+                } else {
+                    ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor("#8084C14A")));
                 }
-            });*/
+
+                frameOverlay.addView(imgDynamicCoordinateView, layoutParams);
+
+                //ADD DYNAMIC TEXT VIEW FOR VENDOR AND ITEM NAME
+                txtVendorName = new TextView(this);
+
+                //VISIBLE ONLY FIRST THREE TEXT
+                if (i == longPressItemID) {
+                    txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getVendor());
+                    txtVendorName.setTextColor(Color.parseColor("#ffffff"));
+                } else {
+                    txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getVendor());
+                    txtVendorName.setTextColor(Color.parseColor("#ffffff"));
+                    txtVendorName.setVisibility(View.GONE);
+                }
+
+                txtVendorName.setTextSize(9);
+                txtVendorName.setTag(i);
+                txtVendorName.setBackgroundResource(R.drawable.bc_video_item_text);
+                FrameLayout.LayoutParams layoutParamsVendor = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParamsVendor.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))) + 80);
+                layoutParamsVendor.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))));
+                frameOverlay.addView(txtVendorName, layoutParamsVendor);
+
+
+                //ON LONG PRESS VISIBLE ONLY LONG PRESS ITEMS ELSE DISPLAY IN LIGHT COLOR
+                imgDynamicCoordinateView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View mView) {
+
+                        displayCoordinates(locationData, true, ((int) mView.getTag()));
+
+                        return true;
+                    }
+                });
+
+
+            }
 
         }
 
