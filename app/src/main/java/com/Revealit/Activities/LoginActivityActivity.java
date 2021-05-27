@@ -239,6 +239,7 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
                     mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN, response.body().getAccessToken());
                     mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE, response.body().getTokenType());
                     mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_EXPIRES_IN, response.body().getExpiresIn());
+                   // mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME ,response.body().getProton_account_name());
                     mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, true);
                     mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, true);
                     mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN, true);

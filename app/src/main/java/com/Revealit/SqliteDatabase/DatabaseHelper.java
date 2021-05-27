@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.Revealit.ModelClasses.CategoryNamesListModel;
 import com.Revealit.ModelClasses.CategoryWisePlayListModel;
 import com.Revealit.ModelClasses.GetAccountDetailsModel;
+import com.Revealit.ModelClasses.ImageModel;
 import com.Revealit.ModelClasses.RewardHistoryDatabaseModel;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class DatabaseHelper {
     public static String TABLE_REWARD_HISTORY = "tableRewardHistory";
     public static String TABLE_CURRENCY_LIST = "tableCurrencyList";
     public static String TABLE_LISTEN_SCREEN_LIST= "tableListenScreenList";
+    public static String TABLE_TEST= "tableTest";
 
     //FIELD TABLE_CATEGORY_NAMES
     public static String KEY_ID = "keyID";
@@ -56,6 +58,9 @@ public class DatabaseHelper {
     public static String KEY_LISTEN_MEDIA_TYPE = "keyCategoryWisePlayMediaType";
     public static String KEY_LISTEN_MEDIA_URL = "keyCategoryWisePlayMediaIUrl";
     public static String KEY_LISTEN_MEDIA_COVER_ART = "keyCategoryWisePlayMediaCoverArt";
+
+
+    public static String KEY_BYTE_ARRY = "keyByteArry";
 
 
     DatabaseManager dbManager;

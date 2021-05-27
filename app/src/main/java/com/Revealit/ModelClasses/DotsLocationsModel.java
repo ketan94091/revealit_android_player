@@ -39,13 +39,13 @@ public class DotsLocationsModel {
         private String armodel;
         private String armodelUrl;
         private Integer armodelId;
-        private String armodelSponsor;
+        private String armodel_sponsor;
         private String armodelSponsorImgUrl;
         private ItemWiki itemWiki;
         private String blueDotColor;
         private List<BlueDotMetum> blueDotMeta = null;
         private Integer order;
-        private String arDotColor;
+        private String ar_dot_color;
         private Float leftRatio;
         private Float topRatio;
         private Float rightRatio;
@@ -230,11 +230,11 @@ public class DotsLocationsModel {
         }
 
         public String getArmodelSponsor() {
-            return armodelSponsor;
+            return armodel_sponsor;
         }
 
-        public void setArmodelSponsor(String armodelSponsor) {
-            this.armodelSponsor = armodelSponsor;
+        public void setArmodelSponsor(String armodel_sponsor) {
+            this.armodel_sponsor = armodel_sponsor;
         }
 
         public String getArmodelSponsorImgUrl() {
@@ -278,11 +278,11 @@ public class DotsLocationsModel {
         }
 
         public String getArDotColor() {
-            return arDotColor;
+            return ar_dot_color;
         }
 
-        public void setArDotColor(String arDotColor) {
-            this.arDotColor = arDotColor;
+        public void setArDotColor(String ar_dot_color) {
+            this.ar_dot_color = ar_dot_color;
         }
 
         public Float getLeftRatio() {

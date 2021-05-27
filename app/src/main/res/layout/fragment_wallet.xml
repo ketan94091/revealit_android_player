@@ -19,8 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:background="@drawable/round_corner_wallet_scree"
-            android:visibility="gone"
-           >
+            android:visibility="gone">
 
 
             <LinearLayout
@@ -216,8 +215,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
+
         </LinearLayout>
+
+
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txtVersionName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:textColor="@color/colorWalletText"
+        android:textSize="12dp" />
 
 
 </RelativeLayout>

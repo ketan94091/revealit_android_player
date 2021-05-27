@@ -173,25 +173,24 @@
 
     <RelativeLayout
         android:id="@+id/relativeShareView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="60dp"
         android:visibility="gone">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             card_view:cardCornerRadius="12dp"
             card_view:cardElevation="0dp">
 
-
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <RelativeLayout
                     android:id="@+id/relativeHeaderShareView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:layout_alignParentTop="true"
                     android:background="@color/colorWhite">
@@ -229,14 +228,15 @@
 
                 <RelativeLayout
                     android:id="@+id/relativeCaptureImageWithText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_below="@+id/relativeHeaderShareView">
 
                     <ImageView
                         android:id="@+id/imgShareImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
                         android:scaleType="fitXY"
                         android:src="@drawable/bite_templet" />
 
@@ -255,10 +255,11 @@
                         android:visibility="gone"
                         android:textAlignment="center"
                         android:background="@null"/>
+
                 </RelativeLayout>
 
-
             </RelativeLayout>
+
         </androidx.cardview.widget.CardView>
 
     </RelativeLayout>

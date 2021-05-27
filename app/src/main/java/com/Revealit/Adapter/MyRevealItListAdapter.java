@@ -115,15 +115,20 @@ public class MyRevealItListAdapter extends RecyclerView.Adapter<MyRevealItListAd
                 })
                 .into(holder.imgCoverArt);
 
-        String str = testList.get(position).getMediaTitle();
+        holder.txtVideoName.setText(testList.get(position).getMediaTitle());
+        holder.txtVideoNameSubTitle.setText(testList.get(position).getMediaShowTitle());
+
+        /*String str = testList.get(position).getMediaTitle();
         str = str.replaceAll("u0027" , "'");
-        str = str.replaceAll("'\'","");
+        //str = str.replace("'\'", "");
+        //str = str.replaceAll("'\\\'","");
+        str = str.replaceAll("\\\\", "");
         holder.txtVideoName.setText(str);
 
         String strSubTitle = testList.get(position).getMediaShowTitle();
         strSubTitle = strSubTitle.replaceAll("u0027" , "'");
         strSubTitle = strSubTitle.replaceAll("'\'","");
-        holder.txtVideoNameSubTitle.setText(strSubTitle);
+        holder.txtVideoNameSubTitle.setText(strSubTitle);*/
         holder.txtTime.setText(""+ CommonMethods.timeDifference(mLongRevealTime.get(position)));
 
         holder.relatativeMain.setOnClickListener(new View.OnClickListener() {

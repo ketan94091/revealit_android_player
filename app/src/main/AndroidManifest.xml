@@ -55,8 +55,10 @@
 
         <activity
             android:name=".Activities.VideoViewActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="landscape" />
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|uiMode|smallestScreenSize|layoutDirection"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:persistent="true"/>
         <activity
             android:name=".Activities.GettingStartedActivity"
             android:screenOrientation="portrait" />
@@ -77,6 +79,10 @@
             android:name=".Activities.BiomatricAuthenticationActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".Activities.SharingActivity"
+            android:screenOrientation="portrait" />
+
 
         <service
             android:name=".CommonClasse.GlobalLocationService"
@@ -94,6 +100,8 @@
         <provider android:authorities="com.facebook.app.FacebookContentProvider775588833322803"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true" />
+
+
 
 
     </application>

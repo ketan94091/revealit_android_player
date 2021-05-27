@@ -82,7 +82,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private LinearLayoutManager recylerViewLayoutManager;
     private RewardSummeryListAdapter2 mRewardSummeryListAdapter2;
     private ImageView imgRefresh;
-    private TextView txtCurrencyType, txtAmount, txtAccountName;
+    private TextView txtVersionName,txtCurrencyType, txtAmount, txtAccountName;
     private RelativeLayout relativeAccountDetails;
     private LinearLayout linearCurrency, linearRewardHistory;
     private int intPageCount = 0;
@@ -131,6 +131,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         txtAccountName = (TextView) mView.findViewById(R.id.txtAccountName);
         txtAmount = (TextView) mView.findViewById(R.id.txtAmount);
         txtCurrencyType = (TextView) mView.findViewById(R.id.txtCurrencyType);
+        txtVersionName = (TextView) mView.findViewById(R.id.txtVersionName);
 
         relativeAccountDetails = (RelativeLayout) mView.findViewById(R.id.relativeAccountDetails);
 
@@ -150,6 +151,9 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         txtAmount.setText("");
         txtCurrencyType.setText("");
         txtAccountName.setText("");
+
+        //SET APPLICATION INSTALLED VERSION NAME
+        txtVersionName.setText(CommonMethods.installedAppVersion(mContext));
 
     }
 
@@ -260,6 +264,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
 
+        //Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
         Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails("garry");
 
         call.enqueue(new Callback<GetAccountDetailsModel>() {
@@ -268,7 +273,6 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                 CommonMethods.printLogE("Response @ callWalletDetails : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callWalletDetails : ", "" + response.code());
-
 
                 if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
 
@@ -279,55 +283,63 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                     CommonMethods.printLogE("Response @ callWalletDetails : ", "" + gson.toJson(response.body()));
 
+                    //if(!response.body().getMessage().equals("Account Not Found")) {
 
-                    //SET ACCOUNT DETAILS
-                    strAccountName = "" + response.body().getData().getAccountName();
+                        //CHECK IF ACCOUNT DATA IS NULL
+                        if (response.body().getData().getTokens() != null) {
 
-                    //CHECK IF ACCOUNT DATA IS NULL
-                    if (response.body().getData().getTokens() != null) {
+                            //SET ACCOUNT DETAILS
+                            strAccountName = "" + response.body().getData().getAccountName();
 
-                        if (!mSessionManager.getPreferenceBoolean(Constants.IS_FIRST_TIME_ACCOUNT_SYNC)) {
+                            if (!mSessionManager.getPreferenceBoolean(Constants.IS_FIRST_TIME_ACCOUNT_SYNC)) {
 
-                            //UPDATE FLAG
-                            mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_TIME_ACCOUNT_SYNC, true);
+                                //UPDATE FLAG
+                                mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_TIME_ACCOUNT_SYNC, true);
+
+                                //GET INITIAL VALUES IN DOLLAR
+                                mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE, "" + response.body().getData().getTokens().get(0).getInUsd());
+                                mSessionManager.updatePreferenceString(Constants.ACCOUNT_CURRENCY_TYPE, "USD");
+
+                            }
+                        } else {
 
                             //GET INITIAL VALUES IN DOLLAR
-                            mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE, "" + response.body().getData().getTokens().get(0).getInUsd());
+                            mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE, "0.0");
                             mSessionManager.updatePreferenceString(Constants.ACCOUNT_CURRENCY_TYPE, "USD");
 
+
                         }
-                    } else {
 
-                        //GET INITIAL VALUES IN DOLLAR
-                        mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE, "0.0");
-                        mSessionManager.updatePreferenceString(Constants.ACCOUNT_CURRENCY_TYPE, "USD");
+                        //CLEAR TABLE
+                        mDatabaseHelper.clearCurrencyListTable();
 
+                        // ADD CURRENCY LIST IN TO DATABASE
+                        if (response.body().getData().getTokens().get(0).getValues().size() != 0) {
 
-                    }
+                            for (int i = 0; i < response.body().getData().getTokens().get(0).getValues().size(); i++) {
 
-                    //CLEAR TABLE
-                    mDatabaseHelper.clearCurrencyListTable();
+                                mDatabaseHelper.insertCurrencyListData(response.body().getData().getTokens().get(0).getValues().get(i).getSymbol(),
+                                        response.body().getData().getTokens().get(0).getValues().get(i).getValue(),
+                                        response.body().getData().getTokens().get(0).getValues().get(i).getIcon(),
+                                        response.body().getData().getTokens().get(0).getValues().get(i).getName());
 
-                    // ADD CURRENCY LIST IN TO DATABASE
-                    if (response.body().getData().getTokens().get(0).getValues().size() != 0) {
-
-                        for (int i = 0; i < response.body().getData().getTokens().get(0).getValues().size(); i++) {
-
-                            mDatabaseHelper.insertCurrencyListData(response.body().getData().getTokens().get(0).getValues().get(i).getSymbol(),
-                                    response.body().getData().getTokens().get(0).getValues().get(i).getValue(),
-                                    response.body().getData().getTokens().get(0).getValues().get(i).getIcon(),
-                                    response.body().getData().getTokens().get(0).getValues().get(i).getName());
-
-                            //REFRESH LATEST ACCOUNT DETAILS
-                            if(mSessionManager.getPreference(Constants.ACCOUNT_CURRENCY_TYPE).equals(response.body().getData().getTokens().get(0).getValues().get(i).getSymbol())){
-                                mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE, response.body().getData().getTokens().get(0).getValues().get(i).getValue());
+                                //REFRESH LATEST ACCOUNT DETAILS
+                                if (mSessionManager.getPreference(Constants.ACCOUNT_CURRENCY_TYPE).equals(response.body().getData().getTokens().get(0).getValues().get(i).getSymbol())) {
+                                    mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE, response.body().getData().getTokens().get(0).getValues().get(i).getValue());
+                                }
                             }
                         }
-                    }
 
 
-                    //CALL REWARD HISTORY
-                    callRewardHistory(0);
+                        //CALL REWARD HISTORY
+                        callRewardHistory(0);
+                    /*}else {
+
+                        CommonMethods.closeDialog();
+
+                        CommonMethods.buildDialog(mContext, getResources().getString(R.string.strNoDataFound));
+
+                    }*/
 
                 } else {
 

@@ -6,15 +6,20 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.Revealit.BuildConfig;
 import com.Revealit.R;
 
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -252,14 +257,30 @@ public class CommonMethods {
 
     }
 
-    public static boolean isFbInstalled(Context mContext){
+    public static boolean isAppInstalled(Context mContext,String packageName){
         try{
-            ApplicationInfo info = mContext.getPackageManager().getApplicationInfo("com.facebook.katana", 0 );
+            ApplicationInfo info = mContext.getPackageManager().getApplicationInfo(packageName, 0 );
             return true;
         } catch( PackageManager.NameNotFoundException e ){
             return false;
         }
     }
+
+
+    public static String installedAppVersion(Context mContext){
+
+        String versionName = BuildConfig.VERSION_NAME;
+
+        return "App Version : "+versionName;
+
+    }
+    public static Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
 
 
 }

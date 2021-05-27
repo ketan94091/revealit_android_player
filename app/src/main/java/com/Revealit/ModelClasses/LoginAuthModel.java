@@ -5,6 +5,8 @@ public class LoginAuthModel {
     private String access_token;
     private String token_type;
     private String expires_in;
+    private String proton_account_name;
+
 
     public String getAccessToken() {
         return access_token;
@@ -28,5 +30,13 @@ public class LoginAuthModel {
 
     public void setExpiresIn(String expires_in) {
         this.expires_in = expires_in;
+    }
+
+    public String getProton_account_name() {
+        return proton_account_name;
+    }
+
+    public void setProton_account_name(String proton_account_name) {
+        this.proton_account_name = proton_account_name;
     }
 }

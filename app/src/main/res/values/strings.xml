@@ -73,6 +73,9 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="strFbNotInstalled">Facebook not installed.</string>
+    <string name="strTwitterNotInstalled">Twitter not installed.</string>
+    <string name="strInstagramNotInstalled">Instagram not installed.</string>
+    <string name="strNoDataFound">No data found</string>
 
 
     <string name="key_testfairy_android">SDK-5f7VDJMC</string>
