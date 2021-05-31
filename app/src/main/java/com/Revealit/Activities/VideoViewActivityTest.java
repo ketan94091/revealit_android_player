@@ -1,44 +1,28 @@
 package com.Revealit.Activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.PersistableBundle;
-import android.os.PowerManager;
-import android.text.Html;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AbsoluteLayout;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -51,37 +35,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import androidx.annotation.Dimension;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.widget.ImageViewCompat;
 
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.OnSwipeTouchListener;
-import com.Revealit.CommonClasse.Screenshot;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
-import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -95,7 +67,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class VideoViewActivity extends AppCompatActivity implements View.OnClickListener {
+public class VideoViewActivityTest extends AppCompatActivity implements View.OnClickListener {
 
     private Activity mActivity;
     private Context mContext;
@@ -164,8 +136,8 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
     private void setIds() {
 
 
-        mActivity = VideoViewActivity.this;
-        mContext = VideoViewActivity.this;
+        mActivity = VideoViewActivityTest.this;
+        mContext = VideoViewActivityTest.this;
 
         mSessionManager = new SessionManager(mContext);
         mSessionManager.openSettings();
@@ -320,8 +292,8 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                 if (mVideoView.isPlaying()) {
 
                     //SET SHARE BUTTON VISIBILITY ON PLAY PAUSE
-                    imgShare.setVisibility(View.VISIBLE);
-                   // txtFbTest.setVisibility(View.VISIBLE);
+                    //imgShare.setVisibility(View.VISIBLE);
+                    txtFbTest.setVisibility(View.VISIBLE);
 
                     //PAUSE VIDOE
                     mVideoView.pause();
@@ -347,8 +319,8 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                     relativeShareView.setVisibility(View.GONE);
 
                     //SET SHARE BUTTON VISIBILITY ON PLAY PAUSE
-                   imgShare.setVisibility(View.GONE);
-                   // txtFbTest.setVisibility(View.GONE);
+                    //imgShare.setVisibility(View.GONE);
+                    txtFbTest.setVisibility(View.GONE);
 
                     mVideoView.start();
                     frameOverlay.setVisibility(View.GONE);
@@ -404,7 +376,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                 //DISPLAY CAPTURED BIT MAP
                 imgShareImage.setImageBitmap(bmFrame1);
 
-                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("image/*");
                 shareIntent.putExtra(Intent.EXTRA_STREAM, CommonMethods.getImageUri(mContext, bmFrame1));
                 shareIntent.setPackage("com.instagram.android");
@@ -525,11 +497,8 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
     private void displayPopupWindow(View anchorView) {
 
-        popup = new PopupWindow(VideoViewActivity.this);
+        popup = new PopupWindow(VideoViewActivityTest.this);
         View layout = getLayoutInflater().inflate(R.layout.share_anchor_view_popup_content, null);
-        layout.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec. UNSPECIFIED);
-        layout.measure(spec, spec);
         popup.setContentView(layout);
         popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -604,6 +573,11 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
 
                     //DISPLAY COORDINATES FOR DOTS
+                    //SWITCH CASE
+                    //CASE : 1 = NORMAL GREEN DOTS
+                    //CASE : 2 = LONG PRESS
+                    //CASE : 3 = AMBER DOTS
+
                     displayCoordinates(response.body().getData(), 1, 0);
 
                     //SET LOCATION DATA INTO STATIC ARRAY
@@ -638,12 +612,6 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void displayCoordinates(List<DotsLocationsModel.Datum> data, int intCase, int longPressItemID) {
-
-        //SWITCH CASE
-        //CASE : 1 = NORMAL GREEN DOTS
-        //CASE : 2 = LONG PRESS
-        //CASE : 3 = AMBER DOTS
-        //CASE : 4 = BLUE DOTS
 
         //REMOVE ALL VIEWS
         frameOverlay.removeAllViews();
@@ -807,51 +775,6 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                     }
 
                 }
-                break;
-
-            case 4:
-
-                for (int i = 0; i < data.size(); i++) {
-
-                    if (data.get(i).getBlueDotMeta() != null) {
-
-                        //ADD DYNAMIC IMAGE VIEW
-                        imgDynamicCoordinateView = new ImageView(this);
-                        imgDynamicCoordinateView.setImageResource(R.mipmap.icon_product);
-                        imgDynamicCoordinateView.setTag(i);
-                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(45, 45);
-                        layoutParams.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))) + 30);
-                        layoutParams.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))));
-                        ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor(data.get(i).getBlueDotColor())));
-                        frameOverlay.addView(imgDynamicCoordinateView, layoutParams);
-
-                        //ADD DYNAMIC TEXT VIEW FOR VENDOR AND ITEM NAME
-                        txtVendorName = new TextView(this);
-
-                        txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getArmodelSponsor());
-                        txtVendorName.setTextColor(Color.parseColor("#ffffff"));
-                        txtVendorName.setTextSize(7);
-                        txtVendorName.setTag(i);
-                        txtVendorName.setBackgroundResource(R.drawable.bc_video_item_text);
-                        FrameLayout.LayoutParams layoutParamsVendor = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        layoutParamsVendor.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))) + 80);
-                        layoutParamsVendor.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))) - 10);
-                        frameOverlay.addView(txtVendorName, layoutParamsVendor);
-
-
-
-                        imgDynamicCoordinateView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View mView) {
-                                View result = frameOverlay.findViewWithTag(mView.getTag());
-                                displayPopupWindow(result);
-
-                            }
-                        });
-
-                    }
-
-                }
 
 
                 break;
@@ -872,22 +795,24 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
     private void setOverLayTouch() {
 
-        frameOverlay.setOnTouchListener(new OnSwipeTouchListener(VideoViewActivity.this) {
+        frameOverlay.setOnTouchListener(new OnSwipeTouchListener(VideoViewActivityTest.this) {
             @Override
             public void onSwipeLeft() {
                 super.onSwipeLeft();
-                displayCoordinates(locationData, 4, ((int) 0));
+                Toast.makeText(VideoViewActivityTest.this, "Swipe Left gesture detected", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onSwipeRight() {
                 super.onSwipeRight();
+                Toast.makeText(VideoViewActivityTest.this, "Swipe Right gesture detected", Toast.LENGTH_SHORT).show();
                 displayCoordinates(locationData, 3, ((int) 0));
             }
 
             @Override
             public void onSwipeDown() {
                 super.onSwipeRight();
+                Toast.makeText(VideoViewActivityTest.this, "DOWN", Toast.LENGTH_SHORT).show();
                 if (relativeHeaderFooter.getVisibility() == View.VISIBLE) {
                     relativeHeaderFooter.setVisibility(View.GONE);
                 } else {
@@ -909,6 +834,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                         relativeHeaderFooter.setVisibility(View.VISIBLE);
 
                     }
+
 
                 }
                 return true;

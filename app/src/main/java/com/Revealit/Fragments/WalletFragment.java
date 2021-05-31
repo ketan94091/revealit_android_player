@@ -264,12 +264,15 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
 
-        //Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
-        Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails("garry");
+        Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+       // Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails("garry");
 
         call.enqueue(new Callback<GetAccountDetailsModel>() {
             @Override
             public void onResponse(Call<GetAccountDetailsModel> call, Response<GetAccountDetailsModel> response) {
+
+
+                CommonMethods.closeDialog();
 
                 CommonMethods.printLogE("Response @ callWalletDetails : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callWalletDetails : ", "" + response.code());
@@ -283,7 +286,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                     CommonMethods.printLogE("Response @ callWalletDetails : ", "" + gson.toJson(response.body()));
 
-                    //if(!response.body().getMessage().equals("Account Not Found")) {
+                   if(!response.body().getMessage().equals("Account Not Found")) {
 
                         //CHECK IF ACCOUNT DATA IS NULL
                         if (response.body().getData().getTokens() != null) {
@@ -330,20 +333,19 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                             }
                         }
 
-
                         //CALL REWARD HISTORY
                         callRewardHistory(0);
-                    /*}else {
+                    }else {
 
                         CommonMethods.closeDialog();
 
                         CommonMethods.buildDialog(mContext, getResources().getString(R.string.strNoDataFound));
 
-                    }*/
+                    }
 
                 } else {
 
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                    CommonMethods.buildDialog(mContext, "Account Not Found");
                 }
             }
 
