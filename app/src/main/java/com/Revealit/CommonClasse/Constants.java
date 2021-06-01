@@ -46,6 +46,8 @@ public class Constants {
     public static final String IS_FIRST_TIME_ACCOUNT_SYNC = "isFirstTimeAccountSync";
     public static final String ACCOUNT_BALANCE = "accountBalance";
     public static final String ACCOUNT_CURRENCY_TYPE = "CurrencyType";
+    public static final String RESEARCH_URL = "researchURL";
+    public static final String RESEARCH_URL_SPONSER = "researchURLSponser";
 
 
 

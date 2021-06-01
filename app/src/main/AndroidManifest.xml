@@ -28,14 +28,18 @@
         android:requestLegacyExternalStorage="true">
 
         <activity
-            android:name=".Activities.SplashScreen"
-            android:screenOrientation="portrait">
+            android:name=".Activities.ExoPlayerActivity"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".Activities.SplashScreen"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".Activities.LoginActivityActivity"
@@ -55,10 +59,17 @@
 
         <activity
             android:name=".Activities.VideoViewActivity"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".Activities.VideoViewActivityTest"
+            android:screenOrientation="landscape"/>
+
+      <!--  <activity
+            android:name=".Activities.VideoViewActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|uiMode|smallestScreenSize|layoutDirection"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
-            android:persistent="true"/>
+            android:persistent="true"/>-->
         <activity
             android:name=".Activities.GettingStartedActivity"
             android:screenOrientation="portrait" />
@@ -81,6 +92,10 @@
 
         <activity
             android:name=".Activities.SharingActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".Activities.WebViewScreen"
             android:screenOrientation="portrait" />
 
 

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Revealit.Activities.VideoViewActivity;
+import com.Revealit.Activities.VideoViewActivityTest;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.ModelClasses.CategoryWisePlayListModel;
@@ -113,7 +114,8 @@ public class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Play
             @Override
             public void onClick(View v) {
 
-                Intent mIntent = new Intent(mActivity, VideoViewActivity.class);
+                //Intent mIntent = new Intent(mActivity, VideoViewActivity.class);
+                Intent mIntent = new Intent(mActivity, VideoViewActivityTest.class);
                 mIntent.putExtra(Constants.MEDIA_URL, "" + strCategoryList.get(position).getMediaUrl());
                 mIntent.putExtra(Constants.MEDIA_ID, "" + strCategoryList.get(position).getMediaID());
                 mIntent.putExtra(Constants.VIDEO_NAME, "" + strCategoryList.get(position).getMediaShowTitle());

@@ -1,44 +1,34 @@
 package com.Revealit.Activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.PersistableBundle;
-import android.os.PowerManager;
-import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AbsoluteLayout;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -48,40 +38,41 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
-import androidx.annotation.Dimension;
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.widget.ImageViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Interfaces.BlueDotsListClicks;
+import com.Revealit.Adapter.BlueDotsMetaListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.OnSwipeTouchListener;
-import com.Revealit.CommonClasse.Screenshot;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -95,7 +86,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class VideoViewActivity extends AppCompatActivity implements View.OnClickListener {
+public class VideoViewActivity extends AppCompatActivity implements View.OnClickListener, BlueDotsListClicks {
 
     private Activity mActivity;
     private Context mContext;
@@ -149,8 +140,15 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e("onStop" ," onStop ");
+    }
+
+    @Override
     protected void onRestart() {
         super.onRestart();
+        Log.e("onRestart" ," onRestart ");
 
        /* Log.e("TIME" ," : "+ mSessionManager.getPreferenceInt("TIME"));
         Log.e("TIME PLUS" ," : "+ (mSessionManager.getPreferenceInt("TIME") *1000));
@@ -193,7 +191,6 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         txtTitle = (TextView) findViewById(R.id.txtTitle);
         txtCancel = (TextView) findViewById(R.id.txtCancel);
         txtShare = (TextView) findViewById(R.id.txtShare);
-        txtFbTest = (TextView) findViewById(R.id.txtFbTest);
 
         edtTextOnCaptureImage = (EditText) findViewById(R.id.edtTextOnCaptureImage);
 
@@ -238,7 +235,10 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                 //SET VIDEO SEEKBAR
                 setVideoProgress();
 
-                if(mSessionManager.getPreferenceBoolean("FROM_SAHRE")) {
+                //START VISEO WHEN IT PREPARE
+                mVideoView.start();
+
+              /*  if(mSessionManager.getPreferenceBoolean("FROM_SAHRE")) {
                     //START VISEO WHEN IT PREPARE
                     mVideoView.pause();
                     mSessionManager.updatePreferenceBoolean("FROM_SAHRE", false);
@@ -246,7 +246,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                     //START VISEO WHEN IT PREPARE
                     mVideoView.start();
                 }
-
+*/
                 //SET VIDEO OVERLAY TOUCH
                 setVideoViewOnTOuch();
 
@@ -301,13 +301,6 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         imgShare.setOnClickListener(this);
         txtCancel.setOnClickListener(this);
         txtShare.setOnClickListener(this);
-        txtFbTest.setOnClickListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
     }
 
     @Override
@@ -321,7 +314,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
                     //SET SHARE BUTTON VISIBILITY ON PLAY PAUSE
                     imgShare.setVisibility(View.VISIBLE);
-                   // txtFbTest.setVisibility(View.VISIBLE);
+                   //txtFbTest.setVisibility(View.VISIBLE);
 
                     //PAUSE VIDOE
                     mVideoView.pause();
@@ -348,7 +341,6 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
                     //SET SHARE BUTTON VISIBILITY ON PLAY PAUSE
                    imgShare.setVisibility(View.GONE);
-                   // txtFbTest.setVisibility(View.GONE);
 
                     mVideoView.start();
                     frameOverlay.setVisibility(View.GONE);
@@ -374,6 +366,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
             case R.id.imgBackArrow:
 
                 mVideoView.stopPlayback();
+
                 finish();
 
 
@@ -390,37 +383,9 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                 relativeShareView.setVisibility(View.VISIBLE);
 
                 break;
-            case R.id.txtFbTest:
-
-                //SAVE IN SHARE PREFRNCE
-                mSessionManager.updatePreferenceInteger("TIME" ,duration);
-                mSessionManager.updatePreferenceBoolean("FROM_SAHRE",true);
-
-                frameOverlay.setVisibility(View.GONE);
-
-                //GET CAPTURE SCREEN HEIGHT AND WIDTH
-                Bitmap bmFrame1 = mediaMetadataRetriever.getFrameAtTime(mVideoView.getCurrentPosition() * 1000); //unit in microsecond
-
-                //DISPLAY CAPTURED BIT MAP
-                imgShareImage.setImageBitmap(bmFrame1);
-
-                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                shareIntent.setType("image/*");
-                shareIntent.putExtra(Intent.EXTRA_STREAM, CommonMethods.getImageUri(mContext, bmFrame1));
-                shareIntent.setPackage("com.instagram.android");
-                startActivity(shareIntent);
-
-
-                //VISIBLE VIEW
-               // relativeShareView.setVisibility(View.VISIBLE);
-
-                break;
             case R.id.txtCancel:
 
                 relativeShareView.setVisibility(View.GONE);
-
-                //CLOSE POPUP WINDOW
-                popup.dismiss();
 
 
             case R.id.txtShare:
@@ -449,14 +414,14 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                     mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(mIntent);*/
 
-                   /* SharePhoto photo = new SharePhoto.Builder().setBitmap(savedBitMap).build();
+                    SharePhoto photo = new SharePhoto.Builder().setBitmap(savedBitMap).build();
                     SharePhotoContent content = new SharePhotoContent.Builder().addPhoto(photo).build();
                     ShareDialog dialog = new ShareDialog(this);
                     if (dialog.canShow(SharePhotoContent.class)) {
                         dialog.show(content);
                     } else {
                         CommonMethods.displayToast(mContext, getResources().getString(R.string.strSomethingWentWrong));
-                    }*/
+                    }
                 } else {
                     CommonMethods.buildDialog(mContext, getResources().getString(R.string.strFbNotInstalled));
                 }
@@ -468,7 +433,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
             case R.id.txtTwitter:
 
-               /* if (CommonMethods.isAppInstalled(mContext, "com.twitter.android")) {
+                if (CommonMethods.isAppInstalled(mContext, "com.twitter.android")) {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_SEND);
                     intent.setType("text/plain");
@@ -479,14 +444,13 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                 } else {
                     CommonMethods.buildDialog(mContext, getResources().getString(R.string.strTwitterNotInstalled));
                 }
-*/
                 //CLOSE POPUP WINDOW
                 popup.dismiss();
 
                 break;
             case R.id.txtInstagram:
 
-              /*  if (CommonMethods.isAppInstalled(mContext, "com.instagram.android")) {
+                if (CommonMethods.isAppInstalled(mContext, "com.instagram.android")) {
                     Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                     shareIntent.setType("image/*");
                     shareIntent.putExtra(Intent.EXTRA_STREAM, CommonMethods.getImageUri(mContext, savedBitMap));
@@ -494,7 +458,8 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                     startActivity(shareIntent);
                 } else {
                     CommonMethods.buildDialog(mContext, getResources().getString(R.string.strInstagramNotInstalled));
-                }*/
+                }
+
                 //CLOSE POPUP WINDOW
                 popup.dismiss();
 
@@ -544,6 +509,84 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         txtFacebook.setOnClickListener(this);
         txtTwitter.setOnClickListener(this);
         txtInstagram.setOnClickListener(this);
+    }
+
+    private void displayBlueDotsInfo(View anchorView, DotsLocationsModel.Datum blueDotMeta) {
+
+        popup = new PopupWindow(VideoViewActivity.this);
+        View layout = getLayoutInflater().inflate(R.layout.anchor_view_blue_dots_content, null);
+        layout.measure(400,500);
+        int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec. UNSPECIFIED);
+        layout.measure(spec, spec);
+        popup.setContentView(layout);
+        popup.setHeight(500);
+        popup.setWidth(400);
+        popup.setOutsideTouchable(true);
+        popup.setFocusable(true);
+        popup.setBackgroundDrawable(new BitmapDrawable());
+        popup.showAsDropDown(anchorView);
+
+        RecyclerView recycleBlueDotsMeta = (RecyclerView) layout.findViewById(R.id.recycleBlueDotsMeta);
+        ImageView imgSponsorLogo = (ImageView) layout.findViewById(R.id.imgSponsorLogo);
+
+        //LAYOUT MANAGER FOR BLUE DOTS META
+        LinearLayoutManager recylerViewLayoutManager = new LinearLayoutManager(mActivity);
+        recycleBlueDotsMeta.setLayoutManager(recylerViewLayoutManager);
+
+        BlueDotsMetaListAdapter mBlueDotsMetaListAdapter = new BlueDotsMetaListAdapter(mContext, VideoViewActivity.this,blueDotMeta.getBlueDotMeta(),blueDotMeta.getItemWiki().getSponsorName());
+        recycleBlueDotsMeta.setAdapter(mBlueDotsMetaListAdapter);
+
+        //DISPLAY MAIN TITLE
+        //LOAD COVER IMAGE WITH GLIDE
+        Glide.with(mActivity)
+                .load(blueDotMeta.getItemWiki().getSponsorImageUrl())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(imgSponsorLogo);
+
+    }
+
+    public void displayWebView(final String strWebView, String strTitle) {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(VideoViewActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.activity_web_view, null);
+        dialogBuilder.setView(dialogView);
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        WebView webView = (WebView)dialogView.findViewById(R.id.webView);
+        ImageView imgBackArrow = (ImageView)dialogView.findViewById(R.id.imgBackArrow);
+        TextView txtTitle = (TextView)dialogView.findViewById(R.id.txtTitle);
+
+        WebSettings webSettings = webView.getSettings();
+        webView.setWebViewClient(new MyBrowser());
+        webView.getSettings().setJavaScriptEnabled(true);
+
+        webView.getSettings().setLoadsImagesAutomatically(true);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        webView .loadUrl(strWebView);
+
+        //SET TITLE
+        txtTitle.setText(strTitle);
+
+        imgBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+            }
+        });
+
+        mAlertDialog.show();
     }
 
 
@@ -838,13 +881,12 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                         layoutParamsVendor.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))) - 10);
                         frameOverlay.addView(txtVendorName, layoutParamsVendor);
 
-
-
+                        int finalI = i;
                         imgDynamicCoordinateView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View mView) {
                                 View result = frameOverlay.findViewWithTag(mView.getTag());
-                                displayPopupWindow(result);
+                                displayBlueDotsInfo(result,data.get(finalI));
 
                             }
                         });
@@ -886,8 +928,8 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
             }
 
             @Override
-            public void onSwipeDown() {
-                super.onSwipeRight();
+            public void onClick() {
+                super.onClick();
                 if (relativeHeaderFooter.getVisibility() == View.VISIBLE) {
                     relativeHeaderFooter.setVisibility(View.GONE);
                 } else {
@@ -961,13 +1003,6 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-        int orientation = this.getResources().getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            relativeHeaderFooter.setVisibility(View.VISIBLE);
-        } else {
-            relativeHeaderFooter.setVisibility(View.GONE);
-
-        }
     }
 
     public String timeConversion(long value) {
@@ -1048,6 +1083,20 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         Log.e("NEW Y : ",""+yAxis);*/
 
         return yAxis;
+    }
+
+    @Override
+    public void blueDotsItemsClicks(String strURL, String title) {
+
+        displayWebView(strURL,title);
+    }
+
+    private class MyBrowser extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
     }
 
 }

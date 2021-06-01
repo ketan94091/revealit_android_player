@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Revealit.Activities.VideoViewActivity;
+import com.Revealit.Activities.VideoViewActivityTest;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.ModelClasses.CategoryNamesListModel;
@@ -136,6 +137,7 @@ public class MyRevealItListAdapter extends RecyclerView.Adapter<MyRevealItListAd
             public void onClick(View v) {
 
                 Intent mIntent = new Intent(mActivity, VideoViewActivity.class);
+                //Intent mIntent = new Intent(mActivity, VideoViewActivityTest.class);
                 mIntent.putExtra(Constants.MEDIA_URL ,""+testList.get(position).getMediaUrl());
                 mIntent.putExtra(Constants.MEDIA_ID ,""+testList.get(position).getMediaID());
                 mIntent.putExtra(Constants.VIDEO_NAME ,""+testList.get(position).getMediaShowTitle());

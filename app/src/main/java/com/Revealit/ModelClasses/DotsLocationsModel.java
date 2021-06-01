@@ -41,7 +41,7 @@ public class DotsLocationsModel {
         private Integer armodelId;
         private String armodel_sponsor;
         private String armodelSponsorImgUrl;
-        private ItemWiki itemWiki;
+        private ItemWiki item_wiki;
         private String blue_dot_color;
         private List<BlueDotMetum> blue_dot_meta = null;
         private Integer order;
@@ -246,11 +246,11 @@ public class DotsLocationsModel {
         }
 
         public ItemWiki getItemWiki() {
-            return itemWiki;
+            return item_wiki;
         }
 
-        public void setItemWiki(ItemWiki itemWiki) {
-            this.itemWiki = itemWiki;
+        public void setItemWiki(ItemWiki item_wiki) {
+            this.item_wiki = item_wiki;
         }
 
         public String getBlueDotColor() {
@@ -411,8 +411,8 @@ public class DotsLocationsModel {
     public class ItemWiki {
 
         private Integer id;
-        private String sponsorName;
-        private String sponsorImageUrl;
+        private String sponsor_name;
+        private String sponsor_image_url;
 
         public Integer getId() {
             return id;
@@ -423,19 +423,19 @@ public class DotsLocationsModel {
         }
 
         public String getSponsorName() {
-            return sponsorName;
+            return sponsor_name;
         }
 
-        public void setSponsorName(String sponsorName) {
-            this.sponsorName = sponsorName;
+        public void setSponsorName(String sponsor_name) {
+            this.sponsor_name = sponsor_name;
         }
 
         public String getSponsorImageUrl() {
-            return sponsorImageUrl;
+            return sponsor_image_url;
         }
 
-        public void setSponsorImageUrl(String sponsorImageUrl) {
-            this.sponsorImageUrl = sponsorImageUrl;
+        public void setSponsorImageUrl(String sponsor_image_url) {
+            this.sponsor_image_url = sponsor_image_url;
         }
 
     }
