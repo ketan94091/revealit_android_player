@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.VideoViewActivity;
 import com.Revealit.Activities.VideoViewActivityTest;
 import com.Revealit.CommonClasse.CommonMethods;
@@ -115,7 +116,7 @@ public class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Play
             public void onClick(View v) {
 
                 //Intent mIntent = new Intent(mActivity, VideoViewActivity.class);
-                Intent mIntent = new Intent(mActivity, VideoViewActivityTest.class);
+                Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
                 mIntent.putExtra(Constants.MEDIA_URL, "" + strCategoryList.get(position).getMediaUrl());
                 mIntent.putExtra(Constants.MEDIA_ID, "" + strCategoryList.get(position).getMediaID());
                 mIntent.putExtra(Constants.VIDEO_NAME, "" + strCategoryList.get(position).getMediaShowTitle());

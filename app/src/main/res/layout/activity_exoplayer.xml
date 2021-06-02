@@ -7,37 +7,34 @@
     android:background="@color/colorBlack"
     android:orientation="vertical">
 
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/exoPlayer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true"
-        app:surface_type="texture_view" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_centerInParent="true"
-       />
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/exoPlayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            app:controller_layout_id="@layout/custom_exo_controller_view"
+            app:surface_type="texture_view"
+            />
 
-    <TextView
-        android:id="@+id/txtTest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorBlue"
-        android:padding="10dp"
-        android:text="facebook share"
-        android:textColor="@color/colorWhite"
-        android:textSize="15dp" />
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true" />
 
+    </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/imgTest"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_toRightOf="@+id/txtTest"
-        android:background="@color/colorWhite"
-        android:visibility="gone"/>
+    <FrameLayout
+        android:id="@+id/frameOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorTransperent"
+        android:visibility="gone"
+        />
+
 </RelativeLayout>

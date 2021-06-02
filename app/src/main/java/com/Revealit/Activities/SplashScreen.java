@@ -113,7 +113,7 @@ public class SplashScreen extends AppCompatActivity {
             public void run() {
                 //INTENT
                 //CHECK IF USER IS ALRADY LOGGED IN OR NOT
-               /* if (!mSessionManager.getPreferenceBoolean(Constants.USER_LOGGED_IN)) {
+                if (!mSessionManager.getPreferenceBoolean(Constants.USER_LOGGED_IN)) {
                     Intent mIntent = new Intent(SplashScreen.this, GettingStartedActivity.class);
                     startActivity(mIntent);
                     finish();
@@ -121,7 +121,7 @@ public class SplashScreen extends AppCompatActivity {
                     Intent mIntent = new Intent(SplashScreen.this, BiomatricAuthenticationActivity.class);
                     startActivity(mIntent);
                     finish();
-                }*/
+                }
             }
         }, 3000);
     }
