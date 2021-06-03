@@ -86,10 +86,11 @@ dependencies {
     implementation 'com.testfairy:testfairy-android-sdk:1.+@aar'
 
     //EXO PLAYER
-    implementation 'com.google.android.exoplayer:exoplayer:2.6.0'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.6.0'
-    implementation 'com.google.android.exoplayer:exoplayer-dash:2.6.0'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.6.0'
+    implementation 'com.google.android.exoplayer:exoplayer:2.6.1'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.6.1'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.6.1'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.6.1'
+    implementation 'com.google.android.exoplayer:exoplayer-hls:2.6.1'
 
 }
 

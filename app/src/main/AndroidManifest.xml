@@ -98,6 +98,10 @@
             android:name=".Activities.WebViewScreen"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".Activities.TestActivity"
+            android:screenOrientation="landscape" />
+
 
         <service
             android:name=".CommonClasse.GlobalLocationService"

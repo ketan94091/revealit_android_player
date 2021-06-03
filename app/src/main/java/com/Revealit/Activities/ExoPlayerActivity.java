@@ -8,14 +8,18 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.TextureView;
@@ -23,10 +27,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -34,9 +40,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.ImageViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Adapter.BlueDotsMetaListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.OnSwipeTouchListener;
@@ -45,6 +55,10 @@ import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
@@ -77,6 +91,8 @@ import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -102,7 +118,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     private SimpleExoPlayerView exoPlayer;
     private SimpleExoPlayer player;
     private ProgressBar progress;
-    private ImageView imgVoulume,imgBackArrow,imgShare;
+    private ImageView imgShareImage,imgVoulume,imgBackArrow,imgShare;
     private LinearLayout linearMainBottomController;
     private SeekBar ckVolumeBar;
     private AudioManager audioManager;
@@ -112,7 +128,11 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     private List<DotsLocationsModel.Datum> locationData;
     private TextView txtVendorName;
     private int heightVideo, widthVideo;
-    private int SurfaceViewheightVideo, SurfaceViewwidthVideo;
+    private RelativeLayout relativeCaptureImageWithText,relativeShareView;
+    private EditText edtTextOnCaptureImage;
+    private TextView txtCancel, txtShare;
+    private Bitmap savedBitMap;
+    private PopupWindow popupBlueDots,popupShareSocialMedia;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,12 +171,23 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         imgShare=(ImageView)findViewById(R.id.imgShare);
         imgBackArrow=(ImageView)findViewById(R.id.imgBackArrow);
         imgVoulume=(ImageView)findViewById(R.id.imgVoulume);
+        imgShareImage = (ImageView) findViewById(R.id.imgShareImage);
+
 
         ckVolumeBar =(SeekBar)findViewById(R.id.ckVolumeBar);
 
         linearMainBottomController= (LinearLayout)findViewById(R.id.linearMainBottomController);
 
         frameOverlay = (FrameLayout)findViewById(R.id.frameOverlay);
+
+        relativeShareView = (RelativeLayout) findViewById(R.id.relativeShareView);
+        relativeCaptureImageWithText = (RelativeLayout) findViewById(R.id.relativeCaptureImageWithText);
+
+        edtTextOnCaptureImage = (EditText) findViewById(R.id.edtTextOnCaptureImage);
+
+        txtCancel = (TextView) findViewById(R.id.txtCancel);
+        txtShare = (TextView) findViewById(R.id.txtShare);
+
 
 
         //SET AUDIO MANAGER WITH SEEK BAR
@@ -179,14 +210,19 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-        frameOverlay.setOnTouchListener(new View.OnTouchListener() {
+        imgShareImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
+                edtTextOnCaptureImage.setFocusable(true);
+                edtTextOnCaptureImage.setVisibility(View.VISIBLE);
 
                 return true;
+
+
             }
         });
+
 
         //INITIALIZE EXO PLAYER
         initializePlayer();
@@ -198,6 +234,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         imgShare.setOnClickListener(this);
         imgBackArrow.setOnClickListener(this);
         imgVoulume.setOnClickListener(this);
+        txtCancel.setOnClickListener(this);
+        txtShare.setOnClickListener(this);
 
     }
 
@@ -209,18 +247,14 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
             case R.id.imgShare:
 
+                //GET CAPTURE SCREEN HEIGHT AND WIDTH
                 TextureView textureView = (TextureView) exoPlayer.getVideoSurfaceView();
-                //imgTest.setImageBitmap(textureView.getBitmap());
 
-                SharePhoto photo = new SharePhoto.Builder().setBitmap(textureView.getBitmap()).build();
-                SharePhotoContent content = new SharePhotoContent.Builder().addPhoto(photo).build();
-                ShareDialog dialog = new ShareDialog(this);
-                if (dialog.canShow(SharePhotoContent.class)) {
-                    dialog.show(content);
-                } else {
-                    CommonMethods.displayToast(mContext, getResources().getString(R.string.strSomethingWentWrong));
-                }
+                //DISPLAY CAPTURED BIT MAP
+                imgShareImage.setImageBitmap(textureView.getBitmap());
 
+                //VISIBLE VIEW
+                relativeShareView.setVisibility(View.VISIBLE);
 
                 break;
             case R.id.imgBackArrow:
@@ -248,6 +282,91 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 
                 break;
 
+            case R.id.txtCancel:
+
+                relativeShareView.setVisibility(View.GONE);
+
+
+            case R.id.txtShare:
+
+
+
+                relativeCaptureImageWithText.setDrawingCacheEnabled(true);
+
+                relativeCaptureImageWithText.buildDrawingCache();
+
+                savedBitMap = relativeCaptureImageWithText.getDrawingCache();
+
+                //SAVE IMAGE
+                storeImage(savedBitMap);
+
+                //OPEN ANCHOR VIEW
+                displayPopupWindow(txtShare);
+
+                break;
+
+            case R.id.txtFacebook:
+
+                //CHEK IF FACEBOOK INSTALLED OR NOT
+                if (CommonMethods.isAppInstalled(mContext, "com.facebook.katana")) {
+
+                    SharePhoto photo = new SharePhoto.Builder().setBitmap(savedBitMap).build();
+                    SharePhotoContent content = new SharePhotoContent.Builder().addPhoto(photo).build();
+                    ShareDialog dialog = new ShareDialog(this);
+                    if (dialog.canShow(SharePhotoContent.class)) {
+                        dialog.show(content);
+                    } else {
+                        CommonMethods.displayToast(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                    }
+                } else {
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strFbNotInstalled));
+                }
+
+                //CLOSE POPUP WINDOW
+                popupShareSocialMedia.dismiss();
+
+                break;
+
+            case R.id.txtTwitter:
+
+                if (CommonMethods.isAppInstalled(mContext, "com.twitter.android")) {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_STREAM, CommonMethods.getImageUri(mContext, savedBitMap));
+                    intent.setType("image/*");
+                    intent.setPackage("com.twitter.android");
+                    startActivity(intent);
+                } else {
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strTwitterNotInstalled));
+                }
+                //CLOSE POPUP WINDOW
+                popupShareSocialMedia.dismiss();
+
+                break;
+            case R.id.txtInstagram:
+
+                if (CommonMethods.isAppInstalled(mContext, "com.instagram.android")) {
+                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    shareIntent.setType("image/*");
+
+                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                    StrictMode.setVmPolicy(builder.build());
+                    File media = new File(Environment.getExternalStorageDirectory()+"/share.jpg");
+
+                    shareIntent.putExtra(Intent.EXTRA_STREAM,Uri.fromFile(media));
+                    shareIntent.setPackage("com.instagram.android");
+                    startActivity(shareIntent);
+                } else {
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strInstagramNotInstalled));
+                }
+
+                //CLOSE POPUP WINDOW
+                popupShareSocialMedia.dismiss();
+
+                break;
+
+
         }
     }
 
@@ -274,16 +393,16 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
         // Create a default TrackSelector
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory =
-                new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        TrackSelector trackSelector =
-                new DefaultTrackSelector(videoTrackSelectionFactory);
+        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
+        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
 
         //Initialize the player
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
 
         //Initialize simpleExoPlayerView
         exoPlayer.setPlayer(player);
+
+        //PLAYER START WHEN IT READY
         player.setPlayWhenReady(true);
 
         // Produces DataSource instances through which media data is loaded.
@@ -293,19 +412,13 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
 
         // This is the MediaSource representing the media to be played.
-        //Uri videoUri = Uri.parse("https://apac.sgp1.digitaloceanspaces.com/video_media/_fcd2713af44521b94c45bc36cb67fcd0.mp4");
         Uri videoUri = Uri.parse(strMediaURL);
-        MediaSource videoSource = new ExtractorMediaSource(videoUri,
-                dataSourceFactory, extractorsFactory, null, null);
-
+        MediaSource videoSource = new ExtractorMediaSource(videoUri, dataSourceFactory, extractorsFactory, null, null);
 
         // Prepare the player with the source.
         player.prepare(videoSource);
 
-        //RESCALE VIDEO
-        exoPlayer.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
-        player.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT);
-
+        //ADD LISTENER FOR FURTHER USE
         player.addListener(new Player.EventListener() {
             @Override
             public void onTimelineChanged(Timeline timeline, Object manifest) {
@@ -330,6 +443,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     //HIDE WHEN PLAYER IS READY
                     progress.setVisibility(View.GONE);
                     imgShare.setVisibility(View.GONE);
+                    relativeShareView.setVisibility(View.GONE);
 
                     //HIDE OVERLAY
                     frameOverlay.setVisibility(View.GONE);
@@ -340,6 +454,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     //VISIBLE WHEN PLAYER IS BUFFERING
                     progress.setVisibility(View.VISIBLE);
                     imgShare.setVisibility(View.GONE);
+                    relativeShareView.setVisibility(View.GONE);
+
                 } else {
 
                     //HIDE AND VISIBLE WHEN PLAYER IS PAUSE
@@ -347,7 +463,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     imgShare.setVisibility(View.VISIBLE);
 
                     //API CALL GET DOTS LOCATION
-                    //callLocationApi((int)player.getCurrentPosition()/1000);
+                    // PASS ARGUMENT WITH CURRENT VIDEO IN SECONDS
+                    callLocationApi((int)player.getCurrentPosition()/1000);
                 }
             }
 
@@ -386,24 +503,48 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
 
-                TextureView textureView = (TextureView) exoPlayer.getVideoSurfaceView();
 
-                Log.e("widthK", " : " +textureView.getWidth());
-                Log.e("heightK", " : " + textureView.getHeight());
-
-                Log.e("widthVIDEO", " : " +width);
-                Log.e("heightVIDEO", " : " + height);
-
+                //GET VIDEO HEIGHT AND WIDTH
                 heightVideo = height;
                 widthVideo = width;
 
-                SurfaceViewheightVideo = textureView.getHeight();
-                SurfaceViewwidthVideo = textureView.getWidth();
+                //GET TEXTURE VIEW WHERE VIDEO WILL DISPLAY
+                //SET DYNAMIC HEIGHT WIDTH BASED ON LOADED VIDEO
+                TextureView textureView = (TextureView) exoPlayer.getVideoSurfaceView();
+                textureView.getLayoutParams().height = height;
+                textureView.getLayoutParams().width = width;
+                textureView.requestLayout();
+
+                //SET DYNAMIC GRAVITY CENTRE
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height);
+                params.gravity = Gravity.CENTER;
+                textureView.setLayoutParams(params);
 
                 //SET OVERLAY LAYOUT SAME AS VIDEO VIEW
-                frameOverlay.getLayoutParams().height = textureView.getHeight();
-                frameOverlay.getLayoutParams().width = textureView.getWidth();
+                //SET DYNAMIC HEIGHT WIDTH BASED ON LOADED VIDEO
+                frameOverlay.getLayoutParams().height = height;
+                frameOverlay.getLayoutParams().width = width;
                 frameOverlay.requestLayout();
+
+                //SET DYNAMIC GRAVITY CENTRE
+                RelativeLayout.LayoutParams ovrLayparam = new RelativeLayout.LayoutParams(width, height);
+                ovrLayparam.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                ovrLayparam.addRule(RelativeLayout.CENTER_VERTICAL);
+                frameOverlay.setLayoutParams(ovrLayparam);
+
+
+                //SET SHARE VIEW LAYOUT SAME AS VIDEO VIEW
+                //SET DYNAMIC HEIGHT WIDTH BASED ON LOADED VIDEO
+                relativeShareView.getLayoutParams().height = height;
+                relativeShareView.getLayoutParams().width = width;
+                relativeShareView.requestLayout();
+
+                //SET DYNAMIC GRAVITY CENTRE
+                RelativeLayout.LayoutParams shareViewParam = new RelativeLayout.LayoutParams(width, height);
+                shareViewParam.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                shareViewParam.addRule(RelativeLayout.CENTER_VERTICAL);
+                relativeShareView.setLayoutParams(shareViewParam);
+
 
                 //VISIBLE FRAMLAYOUT FOR DOTS
                 frameOverlay.setVisibility(View.GONE);
@@ -414,6 +555,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
             }
         });
+
+
 
     }
 
@@ -473,11 +616,11 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     CommonMethods.printLogE("Response @ callLocationApi : ", "" + gson.toJson(response.body()));
 
 
-                    //DISPLAY COORDINATES FOR DOTS
-                    displayCoordinates(response.body().getData(), 1, 0);
-
                     //SET LOCATION DATA INTO STATIC ARRAY
                     locationData = response.body().getData();
+
+                    //DISPLAY COORDINATES FOR DOTS
+                    displayCoordinates(response.body().getData(), 1, 0);
 
 
                 } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
@@ -509,7 +652,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
         //SWITCH CASE
         //CASE : 1 = NORMAL GREEN DOTS
-        //CASE : 2 = LONG PRESS
+        //CASE : 2 = LONG PRESS // DISPLAY ONLY PRESSED DOTS DATA
         //CASE : 3 = AMBER DOTS
         //CASE : 4 = BLUE DOTS
 
@@ -555,7 +698,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     txtVendorName.setTag(i);
                     txtVendorName.setBackgroundResource(R.drawable.bc_video_item_text);
                     FrameLayout.LayoutParams layoutParamsVendor = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    layoutParamsVendor.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))) + 50);
+                    layoutParamsVendor.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))) +50);
                     layoutParamsVendor.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))));
                     frameOverlay.addView(txtVendorName, layoutParamsVendor);
 
@@ -711,7 +854,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             @Override
                             public void onClick(View mView) {
                                 View result = frameOverlay.findViewWithTag(mView.getTag());
-                                //displayBlueDotsInfo(result,data.get(finalI));
+                                displayBlueDotsInfo(result,data.get(finalI));
 
                             }
                         });
@@ -758,17 +901,101 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         });
     }
 
+    private void storeImage(Bitmap savedBitMap) {
+
+        String root = Environment.getExternalStorageDirectory().toString();
+        String fname = "share.jpg";
+
+        File file = new File(root, fname);
+        if (file.exists()) file.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            savedBitMap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void displayPopupWindow(View anchorView) {
+
+        popupShareSocialMedia = new PopupWindow(ExoPlayerActivity.this);
+        View layout = getLayoutInflater().inflate(R.layout.share_anchor_view_popup_content, null);
+        layout.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec. UNSPECIFIED);
+        layout.measure(spec, spec);
+        popupShareSocialMedia.setContentView(layout);
+        popupShareSocialMedia.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupShareSocialMedia.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupShareSocialMedia.setOutsideTouchable(true);
+        popupShareSocialMedia.setFocusable(true);
+        popupShareSocialMedia.setBackgroundDrawable(new BitmapDrawable());
+        popupShareSocialMedia.showAsDropDown(anchorView);
+
+        TextView txtFacebook = (TextView) layout.findViewById(R.id.txtFacebook);
+        TextView txtTwitter = (TextView) layout.findViewById(R.id.txtTwitter);
+        TextView txtInstagram = (TextView) layout.findViewById(R.id.txtInstagram);
+        txtFacebook.setOnClickListener(this);
+        txtTwitter.setOnClickListener(this);
+        txtInstagram.setOnClickListener(this);
+    }
+
+    private void displayBlueDotsInfo(View anchorView, DotsLocationsModel.Datum blueDotMeta) {
+
+        popupBlueDots = new PopupWindow(ExoPlayerActivity.this);
+        View layout = getLayoutInflater().inflate(R.layout.anchor_view_blue_dots_content, null);
+        layout.measure(400,500);
+        int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec. UNSPECIFIED);
+        layout.measure(spec, spec);
+        popupBlueDots.setContentView(layout);
+        popupBlueDots.setHeight(500);
+        popupBlueDots.setWidth(400);
+        popupBlueDots.setOutsideTouchable(true);
+        popupBlueDots.setFocusable(true);
+        popupBlueDots.setBackgroundDrawable(new BitmapDrawable());
+        popupBlueDots.showAsDropDown(anchorView);
+
+        RecyclerView recycleBlueDotsMeta = (RecyclerView) layout.findViewById(R.id.recycleBlueDotsMeta);
+        ImageView imgSponsorLogo = (ImageView) layout.findViewById(R.id.imgSponsorLogo);
+
+        //LAYOUT MANAGER FOR BLUE DOTS META
+        LinearLayoutManager recylerViewLayoutManager = new LinearLayoutManager(mActivity);
+        recycleBlueDotsMeta.setLayoutManager(recylerViewLayoutManager);
+
+        BlueDotsMetaListAdapter mBlueDotsMetaListAdapter = new BlueDotsMetaListAdapter(mContext, ExoPlayerActivity.this,blueDotMeta.getBlueDotMeta(),blueDotMeta.getItemWiki().getSponsorName());
+        recycleBlueDotsMeta.setAdapter(mBlueDotsMetaListAdapter);
+
+        //DISPLAY MAIN TITLE
+        //LOAD COVER IMAGE WITH GLIDE
+        Glide.with(mActivity)
+                .load(blueDotMeta.getItemWiki().getSponsorImageUrl())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(imgSponsorLogo);
+
+    }
 
     public float pxToDp(float px) {
         float density = mContext.getResources().getDisplayMetrics().density;
         float dp = px / density;
         return dp;
     }
+
     public float getScreenResolutionX(Context context, float x) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
 
         /*video image device
         720(video height) = 1250(vido width)
@@ -782,16 +1009,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         //x = x Axis coordinate in terms of video height
         //xAxis = new X Axis in terms of device resolution matrix height
 
-        //float xAxis = (x * SurfaceViewheightVideo) / (heightVideo);
-        float xAxis = (x * SurfaceViewwidthVideo) / (widthVideo);
+        float xAxis = (x * width) / widthVideo;
 
-
-        /*Log.e("VIDEO HEIGHT : ",""+heightVideo);
-        Log.e("VIDEO WIDTH : ",""+widthVideo);
-        Log.e("DEVICE HEIGHT : ",""+height);
-        Log.e("DEVICE WIDTH : ",""+width);
-        Log.e("OLD X : ",""+x);
-        Log.e("NEW X : ",""+xAxis);*/
 
         return xAxis;
     }
@@ -801,21 +1020,15 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
 
         // width = device screen with
         //widthVideo = width of provided video
         //y = y Axis coordinate in terms of video with
         //yAxis = new Y Axis in terms of device resolution matrix width
 
-       // float yAxis = (y * SurfaceViewwidthVideo) / widthVideo;
-        float yAxis = (y * SurfaceViewheightVideo) / heightVideo;
-        /*Log.e("OLD Y : ",""+y);
-        Log.e("NEW Y : ",""+yAxis);*/
-
-       /* E/widthK:  : 2047
-        2021-06-02 14:41:06.416 12733-12733/com.Revealit E/heightK:  : 1080
-        2021-06-02 14:41:06.417 12733-12733/com.Revealit E/widthVIDEO:  : 1280
-        2021-06-02 14:41:06.417 12733-12733/com.Revealit E/heightVIDEO:  : 720*/
+        float yAxis = (y * height) / heightVideo;
 
 
         return yAxis;

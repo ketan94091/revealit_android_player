@@ -258,12 +258,26 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                     //INSERT CATEGORY NAMES
                                     mDatabaseHelper.insertCategoryNames(strCategoryName, strSlug);
 
+                                    String strMediaShowTitle ,strMediaTitle;
+
 
                                     for (int j = 0; j < Integer.valueOf(gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().size())); j++) {
 
                                         int intMediaID = Integer.valueOf(gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_id")).replaceAll("^\"|\"$", ""));
-                                        String strMediaShowTitle = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_show_title")).replaceAll("^\"|\"$", "").replaceAll("u0027" , "'").replaceAll("\\\\", "");
-                                        String strMediaTitle = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_title")).replaceAll("^\"|\"$", "").replaceAll("u0027" , "'").replaceAll("\\\\", "");
+
+
+                                        if(!gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_show_title")).equalsIgnoreCase("null")) {
+                                             strMediaShowTitle = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_show_title")).replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "");
+                                        }else {
+                                            strMediaShowTitle ="";
+                                        }
+
+                                        if(!gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_title")).equalsIgnoreCase("null")) {
+                                             strMediaTitle = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_title")).replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "");
+                                        }else {
+                                            strMediaTitle ="";
+                                        }
+
                                         String strMediaType = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_type")).replaceAll("^\"|\"$", "");
                                         String strMediaUrl = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_url")).replaceAll("^\"|\"$", "");
                                         String strMediaCoverArt = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_cover_art")).replaceAll("^\"|\"$", "");

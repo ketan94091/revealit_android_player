@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.VideoViewActivity;
 import com.Revealit.Activities.VideoViewActivityTest;
 import com.Revealit.CommonClasse.CommonMethods;
@@ -39,27 +40,26 @@ import java.util.List;
 public class MyRevealItListAdapter extends RecyclerView.Adapter<MyRevealItListAdapter.ViewHolder> {
 
 
-
     private View view;
     private Context mContext;
     private Activity mActivity;
     private ViewHolder viewHolder;
-   // private  ArrayList<CategoryWisePlayListModel.DataBean> testList   = new ArrayList<>();
+    // private  ArrayList<CategoryWisePlayListModel.DataBean> testList   = new ArrayList<>();
     private List<CategoryWisePlayListModel.DataBean> testList = new ArrayList<>();
     private ArrayList<Long> mLongRevealTime = new ArrayList<>();
 
     public MyRevealItListAdapter(Context mContext, Activity mActivity, List<CategoryWisePlayListModel.DataBean> testList, DatabaseHelper mDatabaseHelper, ArrayList<Long> mLongRevealTime) {
 
-        this.mContext= mContext;
-        this.mActivity= mActivity;
-        this.testList= testList;
-        this.mLongRevealTime= mLongRevealTime;
+        this.mContext = mContext;
+        this.mActivity = mActivity;
+        this.testList = testList;
+        this.mLongRevealTime = mLongRevealTime;
 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView txtVideoName,txtVideoNameSubTitle ,txtTime;
+        private final TextView txtVideoName, txtVideoNameSubTitle, txtTime;
         private final ImageView imgCoverArt;
         private final ProgressBar progressImgLoad;
         private final RelativeLayout relatativeMain;
@@ -69,14 +69,13 @@ public class MyRevealItListAdapter extends RecyclerView.Adapter<MyRevealItListAd
 
             super(mView);
 
-            imgCoverArt = (ImageView)mView.findViewById(R.id.imgCoverArt);
+            imgCoverArt = (ImageView) mView.findViewById(R.id.imgCoverArt);
 
             txtVideoName = (TextView) mView.findViewById(R.id.txtVideoName);
             txtVideoNameSubTitle = (TextView) mView.findViewById(R.id.txtVideoNameSubTitle);
             txtTime = (TextView) mView.findViewById(R.id.txtTime);
-            progressImgLoad = (ProgressBar)mView.findViewById(R.id.progressImgLoad);
-            relatativeMain =(RelativeLayout)mView.findViewById(R.id.relatativeMain);
-
+            progressImgLoad = (ProgressBar) mView.findViewById(R.id.progressImgLoad);
+            relatativeMain = (RelativeLayout) mView.findViewById(R.id.relatativeMain);
 
 
         }
@@ -95,11 +94,11 @@ public class MyRevealItListAdapter extends RecyclerView.Adapter<MyRevealItListAd
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         //LOAD COVER IMAGE WITH GLIDE
         Glide.with(mActivity)
-                .load(""+testList.get(position).getMediaCoverArt())
+                .load("" + testList.get(position).getMediaCoverArt())
                 .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(10)))
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -119,32 +118,20 @@ public class MyRevealItListAdapter extends RecyclerView.Adapter<MyRevealItListAd
         holder.txtVideoName.setText(testList.get(position).getMediaTitle());
         holder.txtVideoNameSubTitle.setText(testList.get(position).getMediaShowTitle());
 
-        /*String str = testList.get(position).getMediaTitle();
-        str = str.replaceAll("u0027" , "'");
-        //str = str.replace("'\'", "");
-        //str = str.replaceAll("'\\\'","");
-        str = str.replaceAll("\\\\", "");
-        holder.txtVideoName.setText(str);
 
-        String strSubTitle = testList.get(position).getMediaShowTitle();
-        strSubTitle = strSubTitle.replaceAll("u0027" , "'");
-        strSubTitle = strSubTitle.replaceAll("'\'","");
-        holder.txtVideoNameSubTitle.setText(strSubTitle);*/
-        holder.txtTime.setText(""+ CommonMethods.timeDifference(mLongRevealTime.get(position)));
+        holder.txtTime.setText("" + CommonMethods.timeDifference(mLongRevealTime.get(position)));
 
         holder.relatativeMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent mIntent = new Intent(mActivity, VideoViewActivity.class);
-                //Intent mIntent = new Intent(mActivity, VideoViewActivityTest.class);
-                mIntent.putExtra(Constants.MEDIA_URL ,""+testList.get(position).getMediaUrl());
-                mIntent.putExtra(Constants.MEDIA_ID ,""+testList.get(position).getMediaID());
-                mIntent.putExtra(Constants.VIDEO_NAME ,""+testList.get(position).getMediaShowTitle());
+                Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
+                mIntent.putExtra(Constants.MEDIA_URL, "" + testList.get(position).getMediaUrl());
+                mIntent.putExtra(Constants.MEDIA_ID, "" + testList.get(position).getMediaID());
+                mIntent.putExtra(Constants.VIDEO_NAME, "" + testList.get(position).getMediaShowTitle());
                 mActivity.startActivity(mIntent);
             }
         });
-
 
 
     }

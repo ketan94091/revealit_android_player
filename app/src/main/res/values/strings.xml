@@ -76,6 +76,8 @@
     <string name="strTwitterNotInstalled">Twitter not installed.</string>
     <string name="strInstagramNotInstalled">Instagram not installed.</string>
     <string name="strNoDataFound">No data found</string>
+    <string name="strloginHintUsername">Enter email address</string>
+    <string name="strloginHintPassword">Enter password</string>
 
 
     <string name="key_testfairy_android">SDK-5f7VDJMC</string>

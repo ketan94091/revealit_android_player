@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.VideoViewActivity;
 import com.Revealit.Activities.WebViewScreen;
 import com.Revealit.CommonClasse.CommonMethods;
@@ -41,13 +42,13 @@ public class BlueDotsMetaListAdapter extends RecyclerView.Adapter<BlueDotsMetaLi
 
     private View view;
     private Context mContext;
-    private VideoViewActivity mActivity;
+    private Activity mActivity;
     private ViewHolder viewHolder;
     List<DotsLocationsModel.BlueDotMetum> blueDotMeta = new ArrayList<>();
     String sponsorName = "";
 
 
-    public BlueDotsMetaListAdapter(Context mContext, VideoViewActivity mActivity, List<DotsLocationsModel.BlueDotMetum> blueDotMeta, String sponsorName) {
+    public BlueDotsMetaListAdapter(Context mContext, Activity mActivity, List<DotsLocationsModel.BlueDotMetum> blueDotMeta, String sponsorName) {
 
         this.mContext= mContext;
         this.mActivity= mActivity;
@@ -100,8 +101,6 @@ public class BlueDotsMetaListAdapter extends RecyclerView.Adapter<BlueDotsMetaLi
                 mIntent.putExtra(Constants.RESEARCH_URL ,""+blueDotMeta.get(position).getUrl());
                 mIntent.putExtra(Constants.RESEARCH_URL_SPONSER ,""+sponsorName);
                 mActivity.startActivity(mIntent);
-
-               // mActivity.blueDotsItemsClicks(blueDotMeta.get(position).getUrl(),sponsorName);
 
             }
         });

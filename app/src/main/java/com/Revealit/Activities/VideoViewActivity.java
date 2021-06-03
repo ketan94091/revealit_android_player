@@ -121,7 +121,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
     };
     private Bitmap savedBitMap;
-    private PopupWindow popup;
+    private PopupWindow popupBlueDots , popupShareSocialMedia;
     private int time = 0;
     private int duration = 0;
     private float x1, x2;
@@ -409,11 +409,6 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                 //CHEK IF FACEBOOK INSTALLED OR NOT
                 if (CommonMethods.isAppInstalled(mContext, "com.facebook.katana")) {
 
-                    /*Intent mIntent = new Intent(VideoViewActivity.this, SharingActivity.class);
-                    mIntent.putExtra("TYPE", "FB");
-                    mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(mIntent);*/
-
                     SharePhoto photo = new SharePhoto.Builder().setBitmap(savedBitMap).build();
                     SharePhotoContent content = new SharePhotoContent.Builder().addPhoto(photo).build();
                     ShareDialog dialog = new ShareDialog(this);
@@ -427,7 +422,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                 }
 
                 //CLOSE POPUP WINDOW
-                popup.dismiss();
+                popupShareSocialMedia.dismiss();
 
                 break;
 
@@ -445,7 +440,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                     CommonMethods.buildDialog(mContext, getResources().getString(R.string.strTwitterNotInstalled));
                 }
                 //CLOSE POPUP WINDOW
-                popup.dismiss();
+                popupShareSocialMedia.dismiss();
 
                 break;
             case R.id.txtInstagram:
@@ -461,7 +456,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
                 }
 
                 //CLOSE POPUP WINDOW
-                popup.dismiss();
+                popupShareSocialMedia.dismiss();
 
                 break;
         }
@@ -490,18 +485,18 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
     private void displayPopupWindow(View anchorView) {
 
-        popup = new PopupWindow(VideoViewActivity.this);
+        popupShareSocialMedia = new PopupWindow(VideoViewActivity.this);
         View layout = getLayoutInflater().inflate(R.layout.share_anchor_view_popup_content, null);
         layout.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec. UNSPECIFIED);
         layout.measure(spec, spec);
-        popup.setContentView(layout);
-        popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popup.setOutsideTouchable(true);
-        popup.setFocusable(true);
-        popup.setBackgroundDrawable(new BitmapDrawable());
-        popup.showAsDropDown(anchorView);
+        popupShareSocialMedia.setContentView(layout);
+        popupShareSocialMedia.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupShareSocialMedia.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupShareSocialMedia.setOutsideTouchable(true);
+        popupShareSocialMedia.setFocusable(true);
+        popupShareSocialMedia.setBackgroundDrawable(new BitmapDrawable());
+        popupShareSocialMedia.showAsDropDown(anchorView);
 
         TextView txtFacebook = (TextView) layout.findViewById(R.id.txtFacebook);
         TextView txtTwitter = (TextView) layout.findViewById(R.id.txtTwitter);
@@ -513,18 +508,18 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
 
     private void displayBlueDotsInfo(View anchorView, DotsLocationsModel.Datum blueDotMeta) {
 
-        popup = new PopupWindow(VideoViewActivity.this);
+        popupBlueDots = new PopupWindow(VideoViewActivity.this);
         View layout = getLayoutInflater().inflate(R.layout.anchor_view_blue_dots_content, null);
         layout.measure(400,500);
         int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec. UNSPECIFIED);
         layout.measure(spec, spec);
-        popup.setContentView(layout);
-        popup.setHeight(500);
-        popup.setWidth(400);
-        popup.setOutsideTouchable(true);
-        popup.setFocusable(true);
-        popup.setBackgroundDrawable(new BitmapDrawable());
-        popup.showAsDropDown(anchorView);
+        popupBlueDots.setContentView(layout);
+        popupBlueDots.setHeight(500);
+        popupBlueDots.setWidth(400);
+        popupBlueDots.setOutsideTouchable(true);
+        popupBlueDots.setFocusable(true);
+        popupBlueDots.setBackgroundDrawable(new BitmapDrawable());
+        popupBlueDots.showAsDropDown(anchorView);
 
         RecyclerView recycleBlueDotsMeta = (RecyclerView) layout.findViewById(R.id.recycleBlueDotsMeta);
         ImageView imgSponsorLogo = (ImageView) layout.findViewById(R.id.imgSponsorLogo);

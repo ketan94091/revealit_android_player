@@ -33,11 +33,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_square_gray"
-                android:padding="8dp"
+                android:padding="10dp"
                 android:drawableLeft="@drawable/user"
                 android:textColor="@color/colorWhite"
                 android:drawablePadding="5dp"
                 android:singleLine="true"
+                android:hint="@string/strloginHintUsername"
+                android:textColorHint="@color/colorGrayLight"
                 android:maxEms="50"
                 />
 
@@ -48,11 +50,13 @@
                 android:layout_marginTop="10dp"
                 android:drawableLeft="@drawable/key"
                 android:background="@drawable/border_square_gray"
-                android:padding="8dp"
+                android:padding="10dp"
                 android:drawablePadding="5dp"
                 android:textColor="@color/colorWhite"
                 android:singleLine="true"
                 android:inputType="textPassword"
+                android:hint="@string/strloginHintPassword"
+                android:textColorHint="@color/colorGrayLight"
                 android:maxEms="50"
                />
 
