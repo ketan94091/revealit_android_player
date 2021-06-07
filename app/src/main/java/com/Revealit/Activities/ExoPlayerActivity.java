@@ -27,6 +27,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.TextureView;
@@ -54,19 +55,25 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.Revealit.Adapter.BlueDotsMetaListAdapter;
+import com.Revealit.Adapter.ViewPagerProductImagesAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.OnSwipeTouchListener;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.ModelClasses.DotsLocationsModel;
+import com.Revealit.ModelClasses.GetProductDetailsModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
@@ -150,6 +157,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     String[] PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
+    private ViewPagerProductImagesAdapter mAdapter;
+    private ProgressBar progressLoadData;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,8 +218,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
         //SET AUDIO MANAGER WITH SEEK BAR
         audioManager = (AudioManager) mActivity.getSystemService(Context.AUDIO_SERVICE);
+        int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int currentVolumePercentage = (100 * currentVolume)/maxVolume;
+        ckVolumeBar.setProgress(currentVolumePercentage);
         ckVolumeBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-        ckVolumeBar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+
         ckVolumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar arg0) {
@@ -222,8 +235,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
             @Override
             public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
-                        progress, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+                ckVolumeBar.setProgress(progress);
+
             }
         });
 
@@ -239,7 +253,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             }
 
             @Override
-            public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) { audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+            public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) {
 
                 edtTextOnCaptureImage.setTextSize(progress);
 
@@ -290,6 +304,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 //SET DEFAULT SIZE
                 edtTextOnCaptureImage.setTextSize(15);
 
+                //CLEAR EDIT TEXT ON EACH SHARE
+                edtTextOnCaptureImage.setText("");
 
                 //GET CAPTURE SCREEN HEIGHT AND WIDTH
                 TextureView textureView = (TextureView) exoPlayer.getVideoSurfaceView();
@@ -731,6 +747,15 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                         }
                     });
 
+                    //ON TOUCH PURCHASE ITEMS DIALOG VISIBLE
+                    int finalI = i;
+                    imgDynamicCoordinateView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            openProductPurchaseDialog(data.get(finalI).getItemId());
+                        }
+                    });
                 }
                 break;
             case 2:
@@ -985,15 +1010,13 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 if (CommonMethods.isAppInstalled(mContext, "com.twitter.android")) {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_SEND);
-                    intent.setType("text/plain");
+                    intent.setType("image/*");
 
                     StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                     StrictMode.setVmPolicy(builder.build());
                     File media = new File(Environment.getExternalStorageDirectory() + "/" + shareImageFileName);
 
                     intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(media));
-                    //intent.putExtra(Intent.EXTRA_STREAM, CommonMethods.getImageUri(mContext, savedBitMap));
-                    intent.setType("image/*");
                     intent.setPackage("com.twitter.android");
                     startActivity(intent);
                 } else {
@@ -1123,6 +1146,243 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         return yAxis;
     }
 
+    private void openProductPurchaseDialog(String itemId) {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ExoPlayerActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.alert_dialog_product_purchase, null);
+        dialogBuilder.setView(dialogView);
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+
+
+        progressLoadData = (ProgressBar)dialogView.findViewById(R.id.progressLoadData);
+
+        //GET PRODUCT DETAILS
+        callGetProductData(dialogView ,itemId ,mAlertDialog);
+
+        mAlertDialog.show();
+
+    }
+
+    private void callGetProductData(View dialogView, String itemId, AlertDialog mAlertDialog) {
+
+        CommonMethods.printLogE("Response @ callGetProductData ITEM ID : ", "" + itemId);
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+
+                okhttp3.Request requestOriginal = chain.request();
+
+                okhttp3.Request request = requestOriginal.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(requestOriginal.method(), requestOriginal.body())
+                        .build();
+
+
+                return chain.proceed(request);
+            }
+        });
+        final OkHttpClient httpClient1 = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.API_END_POINTS_STAGING)
+                .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient1)
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+
+        Call<GetProductDetailsModel> call = patchService1.getProductDetails(Constants.API_GET_PRODUCT_DETAILS+""+itemId);
+
+        call.enqueue(new Callback<GetProductDetailsModel>() {
+            @Override
+            public void onResponse(Call<GetProductDetailsModel> call, retrofit2.Response<GetProductDetailsModel> response) {
+
+
+                CommonMethods.printLogE("Response @ callGetProductData : ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callGetProductData : ", "" + response.code());
+
+                if (response.code() == Constants.API_SUCCESS) {
+
+                    Gson gson = new GsonBuilder()
+                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                            .serializeNulls()
+                            .create();
+
+                    CommonMethods.printLogE("Response @ callGetProductData : ", "" + gson.toJson(response.body()));
+
+                    //UPDATE UI
+                    updateProductDetailsUI(dialogView ,response.body().getData());
+
+
+                } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
+
+                    progressLoadData.setVisibility(View.GONE);
+                    mAlertDialog.dismiss();
+
+                    Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
+                    mActivity.startActivity(mLoginIntent);
+                    mActivity.finish();
+
+                } else {
+                    progressLoadData.setVisibility(View.GONE);
+                    mAlertDialog.dismiss();
+
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<GetProductDetailsModel> call, Throwable t) {
+
+                progressLoadData.setVisibility(View.GONE);
+                mAlertDialog.dismiss();
+
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+
+            }
+        });
+
+
+
+    }
+
+    private void updateProductDetailsUI(View dialogView, GetProductDetailsModel.Data data) {
+
+        //LOAD HEADER IMAGE
+        ImageView imgHeaderViewDialogView = (ImageView)dialogView.findViewById(R.id.imgHeaderView);
+        Glide.with(mActivity)
+                .load(data.getHeader())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
+
+                        return false;
+                    }
+                }).into(imgHeaderViewDialogView);
+
+
+
+        //SET PRODUCT NAME
+        TextView txtProductNameDialogView = (TextView) dialogView.findViewById(R.id.txtProductName);
+        txtProductNameDialogView.setText(data.getProductName());
+
+
+        //SET DISCOUNT
+        TextView txtDiscountDialogView = (TextView) dialogView.findViewById(R.id.txtDiscount);
+        txtDiscountDialogView.setText(data.getOffers().getData().get(0).getOfferText());
+
+
+        //SET SPONSOR LOGO
+        ImageView imgSponsorLogoDialogView = (ImageView)dialogView.findViewById(R.id.imgSponsorLogo);
+        Glide.with(mActivity)
+                .load(data.getArmodelSponsorImgUrl())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
+
+                        return false;
+                    }
+                }).into(imgSponsorLogoDialogView);
+
+
+        //SET PRODUCT IMAGES IN VIEW PAGER WITH INDICATOR
+        ViewPager  viewPager = (ViewPager) dialogView.findViewById(R.id.viewPager);
+        LinearLayout viewPagerCountDots = (LinearLayout) dialogView.findViewById(R.id.viewPagerCountDots);
+
+        //SET VIEW PAGER ADAPTER
+        ViewPagerProductImagesAdapter mAdapter = new ViewPagerProductImagesAdapter(ExoPlayerActivity.this, data.getImages().getData());
+        viewPager.setAdapter(mAdapter);
+        viewPager.setCurrentItem(0);
+
+       //GET TOTAL COUNT OF IMAGES LIST
+       int dotsCount = mAdapter.getCount();
+
+       //CREATE DYNAMIC IMAGE VIEW FOR INDICATOR AND ADD IT IN TO LINEAR LAYOUT
+       ImageView[] dots = new ImageView[dotsCount];
+
+        for (int i = 0; i < dotsCount; i++) {
+            dots[i] = new ImageView(this);
+            dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+
+            params.setMargins(4, 0, 4, 0);
+
+            viewPagerCountDots.addView(dots[i], params);
+        }
+
+        dots[0].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
+
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                for (int i = 0; i < dotsCount; i++) {
+                    dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
+                }
+
+                dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+
+        TextView txtPurchaseDialogView = (TextView) dialogView.findViewById(R.id.txtPurchase);
+        LinearLayout linearImgCancelDialogView = (LinearLayout)dialogView.findViewById(R.id.linearImgCancel);
+        LinearLayout linearImgARviewDialogView = (LinearLayout)dialogView.findViewById(R.id.linearImgARview);
+        LinearLayout linarFavoriteDialogView = (LinearLayout)dialogView.findViewById(R.id.linarFavorite);
+        LinearLayout linearShareDialogView = (LinearLayout)dialogView.findViewById(R.id.linearShare);
+
+        RecyclerView recycleVenderListDialogView=(RecyclerView)dialogView.findViewById(R.id.recycleVenderList);
+
+
+        RelativeLayout relativeContentDialogView =(RelativeLayout)dialogView.findViewById(R.id.relativeContent);
+        relativeContentDialogView.setVisibility(View.VISIBLE);
+
+        //HIDE PROGRESS AFTER SETTING ALL DATA
+        progressLoadData.setVisibility(View.GONE);
+
+
+    }
+
     private void readWriteExternalStoragePermission() {
 
         if (ContextCompat.checkSelfPermission(ExoPlayerActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -1173,5 +1433,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         }
 
     }
+
 
 }

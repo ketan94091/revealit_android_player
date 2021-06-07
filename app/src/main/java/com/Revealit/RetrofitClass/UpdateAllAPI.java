@@ -7,6 +7,7 @@ import com.Revealit.CommonClasse.Constants;
 import com.Revealit.ModelClasses.CheckEmailModel;
 import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.ModelClasses.GetAccountDetailsModel;
+import com.Revealit.ModelClasses.GetProductDetailsModel;
 import com.Revealit.ModelClasses.LoginAuthModel;
 import com.Revealit.ModelClasses.RewardHistoryModel;
 import com.Revealit.ModelClasses.UserRegistrationModel;
@@ -71,4 +72,8 @@ public interface UpdateAllAPI {
     //GET MORE REWARD DATA
     @POST(Constants.API_GET_MORE_REWARD_HISTORY)
     Call<RewardHistoryModel> getMoreRewardData(@Query("page") int page);
+
+    //GET PRODUCT DETAILS
+    @GET()
+    Call<GetProductDetailsModel> getProductDetails(@Url String url);
 }

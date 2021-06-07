@@ -18,7 +18,7 @@ public class DotsLocationsModel {
     public class Datum {
 
         private Integer frameId;
-        private String itemId;
+        private String item_id;
         private Float x_Axis;
         private Float y_Axis;
         private Float xRight;
@@ -62,11 +62,11 @@ public class DotsLocationsModel {
         }
 
         public String getItemId() {
-            return itemId;
+            return item_id;
         }
 
-        public void setItemId(String itemId) {
-            this.itemId = itemId;
+        public void setItemId(String item_id) {
+            this.item_id = item_id;
         }
 
         public Float getxAxis() {

@@ -59,6 +59,7 @@
     <string name="strMyReveals">My Reveals</string>
     <string name="strCancel">Cancel</string>
     <string name="strShare">Share</string>
+    <string name="strFavorite">Favorite</string>
     <string name="strFacebook">Facebook</string>
     <string name="strTwitter">Twitter</string>
     <string name="strInstagram">Instagram</string>
@@ -80,11 +81,13 @@
     <string name="strloginHintPassword">Enter password</string>
     <string name="strPermissionNeeded">Permission Needed</string>
     <string name="strPermissionNeededMsg">Permission is needed to access files from your device...</string>
+    <string name="strPurchase">Purchase</string>
 
 
     <string name="key_testfairy_android">SDK-5f7VDJMC</string>
     <string name="key_testfairy_android_pvt_key">5f8216034f7b9cb7327d84aa34f4c2301c794960</string>
-    <string name="facebook_app_id">775588833322803</string>
+    <!--<string name="facebook_app_id">775588833322803</string>-->
+    <string name="facebook_app_id">2113685165530675</string>
 
 
 </resources>
