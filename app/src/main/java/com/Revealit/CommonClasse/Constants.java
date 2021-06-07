@@ -48,6 +48,7 @@ public class Constants {
     public static final String ACCOUNT_CURRENCY_TYPE = "CurrencyType";
     public static final String RESEARCH_URL = "researchURL";
     public static final String RESEARCH_URL_SPONSER = "researchURLSponser";
+    public static final String READ_WRITE_PERMISSION = "readWritePermission";
 
 
 

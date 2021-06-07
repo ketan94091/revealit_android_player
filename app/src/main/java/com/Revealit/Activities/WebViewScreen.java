@@ -18,6 +18,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ public class WebViewScreen extends AppCompatActivity implements View.OnClickList
     private WebView webView;
     private ImageView imgBackArrow;
     private TextView txtTitle;
+    private ProgressBar progressbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +69,12 @@ public class WebViewScreen extends AppCompatActivity implements View.OnClickList
         mDatabaseHelper.open();
 
         webView = (WebView)findViewById(R.id.webView);
+
         imgBackArrow = (ImageView)findViewById(R.id.imgBackArrow);
+
         txtTitle = (TextView)findViewById(R.id.txtTitle);
+
+        progressbar = (ProgressBar)findViewById(R.id.progressbar);
 
         WebSettings webSettings = webView.getSettings();
         webView.setWebViewClient(new MyBrowser());
@@ -81,6 +87,13 @@ public class WebViewScreen extends AppCompatActivity implements View.OnClickList
 
         //SET TITLE
         txtTitle.setText(getIntent().getStringExtra(Constants.RESEARCH_URL_SPONSER));
+        webView.setWebViewClient(new WebViewClient() {
+
+            public void onPageFinished(WebView view, String url) {
+
+                progressbar.setVisibility(View.GONE);
+            }
+        });
 
     }
 

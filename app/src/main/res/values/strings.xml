@@ -78,6 +78,8 @@
     <string name="strNoDataFound">No data found</string>
     <string name="strloginHintUsername">Enter email address</string>
     <string name="strloginHintPassword">Enter password</string>
+    <string name="strPermissionNeeded">Permission Needed</string>
+    <string name="strPermissionNeededMsg">Permission is needed to access files from your device...</string>
 
 
     <string name="key_testfairy_android">SDK-5f7VDJMC</string>

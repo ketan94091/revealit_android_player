@@ -45,6 +45,7 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
+
        >
 
         <androidx.cardview.widget.CardView
@@ -78,6 +79,17 @@
                         android:text="@string/strCancel"
                         android:textColor="@color/colorWhite"
                         android:textSize="15dp" />
+
+                    <SeekBar
+                        android:id="@+id/seekFontSize"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_toRightOf="@+id/txtCancel"
+                        android:layout_toLeftOf="@+id/txtShare"
+                        android:padding="5dp"
+                        android:min="15"
+                        android:max="50"
+                        />
 
                     <TextView
                         android:id="@+id/txtShare"
@@ -114,16 +126,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:layout_centerInParent="true"
-                        android:layout_margin="10dp"
+                        android:layout_margin="20dp"
+                        android:layout_centerHorizontal="true"
                         android:textColor="@color/colorWhite"
                         android:textSize="20dp"
                         android:hint="Place your text here"
                         android:textColorHint="@color/colorWhiteHint"
                         android:textStyle="bold"
-                        android:visibility="gone"
                         android:textAlignment="center"
-                        android:background="@null"/>
+                        android:background="@null"
+                        android:visibility="gone"/>
 
                 </RelativeLayout>
 

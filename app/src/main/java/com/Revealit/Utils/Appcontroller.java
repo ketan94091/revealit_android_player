@@ -35,10 +35,10 @@ public class Appcontroller extends MultiDexApplication {
 
 
         //TEST FAIRY SDK
-        //TestFairy.begin(this, "SDK-5f7VDJMC");
+        TestFairy.begin(this, "SDK-5f7VDJMC");
 
         //SHAKE FEATURE
-        //TestFairy.enableFeedbackForm("shake");
+        TestFairy.enableFeedbackForm("shake");
 
 
     }

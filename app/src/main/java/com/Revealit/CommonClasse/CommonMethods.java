@@ -283,8 +283,6 @@ public class CommonMethods {
             return Uri.parse(path);
         }else {
 
-            Log.e("NULL" ,"NULL");
-
             return null;
         }
 
