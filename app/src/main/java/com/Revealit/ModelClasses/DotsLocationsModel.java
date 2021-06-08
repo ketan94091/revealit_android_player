@@ -341,7 +341,7 @@ public class DotsLocationsModel {
         private String title;
         private String url;
         private List<Item> items = null;
-        private Integer typeId;
+        private Integer type_id;
 
         public Integer getId() {
             return id;
@@ -376,11 +376,11 @@ public class DotsLocationsModel {
         }
 
         public Integer getTypeId() {
-            return typeId;
+            return type_id;
         }
 
-        public void setTypeId(Integer typeId) {
-            this.typeId = typeId;
+        public void setTypeId(Integer type_id) {
+            this.type_id = type_id;
         }
 
     }

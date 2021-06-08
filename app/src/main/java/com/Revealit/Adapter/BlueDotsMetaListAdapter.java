@@ -39,7 +39,6 @@ import java.util.List;
 public class BlueDotsMetaListAdapter extends RecyclerView.Adapter<BlueDotsMetaListAdapter.ViewHolder> {
 
 
-
     private View view;
     private Context mContext;
     private Activity mActivity;
@@ -50,8 +49,8 @@ public class BlueDotsMetaListAdapter extends RecyclerView.Adapter<BlueDotsMetaLi
 
     public BlueDotsMetaListAdapter(Context mContext, Activity mActivity, List<DotsLocationsModel.BlueDotMetum> blueDotMeta, String sponsorName) {
 
-        this.mContext= mContext;
-        this.mActivity= mActivity;
+        this.mContext = mContext;
+        this.mActivity = mActivity;
         this.blueDotMeta = blueDotMeta;
         this.sponsorName = sponsorName;
 
@@ -70,7 +69,7 @@ public class BlueDotsMetaListAdapter extends RecyclerView.Adapter<BlueDotsMetaLi
 
             txtTitle = (TextView) mView.findViewById(R.id.txtTitle);
             relatativeMain = (RelativeLayout) mView.findViewById(R.id.relatativeMain);
-            imgType = (ImageView)mView.findViewById(R.id.imgType);
+            imgType = (ImageView) mView.findViewById(R.id.imgType);
 
 
         }
@@ -93,18 +92,32 @@ public class BlueDotsMetaListAdapter extends RecyclerView.Adapter<BlueDotsMetaLi
 
         holder.txtTitle.setText(blueDotMeta.get(position).getTitle());
 
+        switch (blueDotMeta.get(position).getTypeId()) {
+
+            case 1:
+                holder.imgType.setImageResource(R.mipmap.video_play);
+                break;
+            case 2:
+                holder.imgType.setImageResource(R.mipmap.weblink);
+                break;
+            case 3:
+                holder.imgType.setImageResource(R.mipmap.wiki);
+                break;
+
+
+        }
+
         holder.relatativeMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent mIntent = new Intent(mActivity, WebViewScreen.class);
-                mIntent.putExtra(Constants.RESEARCH_URL ,""+blueDotMeta.get(position).getUrl());
-                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER ,""+sponsorName);
+                mIntent.putExtra(Constants.RESEARCH_URL, "" + blueDotMeta.get(position).getUrl());
+                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" + sponsorName);
                 mActivity.startActivity(mIntent);
 
             }
         });
-
 
 
     }

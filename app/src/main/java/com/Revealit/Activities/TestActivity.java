@@ -72,25 +72,24 @@ public class TestActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_test);
 
-        /*Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
-        Uri intentUri =
-                null;
-        intentUri = Uri.parse("https://arvr.google.com/scene-viewer/1.0").buildUpon()
+        Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
+        Uri intentUri = null;
+        intentUri = Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
 
-                .appendQueryParameter("file",getIntent().getStringExtra("URL"))
+                //.appendQueryParameter("file",getIntent().getStringExtra("URL"))
                 //.appendQueryParameter("file", "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf")
-              // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/2a.KitchenAid_StandMixer_CARED_680569095664_4a1b7a00a5bb0a1baf460475c5d335df.glb")
-               // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/7a.Blue%20Bowl_Small_fb30838353a3ff1c5de00aebcc8c1e54.glb")
-                //.appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/KitcheAid_Blender_cfd009624c77d60978e93715776a6d5b.glb")
+                // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/2a.KitchenAid_StandMixer_CARED_680569095664_4a1b7a00a5bb0a1baf460475c5d335df.glb")
+                // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/7a.Blue%20Bowl_Small_fb30838353a3ff1c5de00aebcc8c1e54.glb")
+                .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/KitcheAid_Blender_cfd009624c77d60978e93715776a6d5b.glb")
                 .appendQueryParameter("mode", "ar_only")
                 .build();
         sceneViewerIntent.setData(intentUri);
         sceneViewerIntent.setPackage("com.google.ar.core");
         startActivity(sceneViewerIntent);
-        finish();*/
+        finish();
 
 
-        mActivity = TestActivity.this;
+ /*       mActivity = TestActivity.this;
         mContext = TestActivity.this;
 
         mSessionManager = new SessionManager(mContext);
@@ -114,7 +113,7 @@ public class TestActivity extends AppCompatActivity {
         imgTest.getLayoutParams().width = 1280;
         imgTest.requestLayout();
 
-        callLocationApi(5);
+        callLocationApi(5)*/;
 
     }
     private void callLocationApi(int duration) {

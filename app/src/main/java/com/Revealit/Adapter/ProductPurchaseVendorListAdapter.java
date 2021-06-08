@@ -3,6 +3,7 @@ package com.Revealit.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Revealit.Activities.WebViewScreen;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.ModelClasses.DotsLocationsModel;
+import com.Revealit.ModelClasses.GetProductDetailsModel;
 import com.Revealit.R;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,33 +35,32 @@ public class ProductPurchaseVendorListAdapter extends RecyclerView.Adapter<Produ
     private Context mContext;
     private Activity mActivity;
     private ViewHolder viewHolder;
-    List<DotsLocationsModel.BlueDotMetum> blueDotMeta = new ArrayList<>();
-    String sponsorName = "";
+    private List<GetProductDetailsModel.DataOffers> offersArrayList = new ArrayList<>();
 
 
-    public ProductPurchaseVendorListAdapter(Context mContext, Activity mActivity, List<DotsLocationsModel.BlueDotMetum> blueDotMeta, String sponsorName) {
+    public ProductPurchaseVendorListAdapter(Context mContext, Activity mActivity, List<GetProductDetailsModel.DataOffers> offersArrayList) {
 
         this.mContext= mContext;
         this.mActivity= mActivity;
-        this.blueDotMeta = blueDotMeta;
-        this.sponsorName = sponsorName;
-
+        this.offersArrayList =offersArrayList;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView txtTitle;
+        private final TextView txtVendorName,txtDiscountByVendor,txtVendorURL;
         private final RelativeLayout relatativeMain;
-        private final ImageView imgType;
+        private final ImageView imgVendorLogo;
 
 
         public ViewHolder(View mView) {
 
             super(mView);
 
-            txtTitle = (TextView) mView.findViewById(R.id.txtTitle);
+            txtVendorName = (TextView) mView.findViewById(R.id.txtVendorName);
+            txtDiscountByVendor = (TextView) mView.findViewById(R.id.txtDiscountByVendor);
+            txtVendorURL = (TextView) mView.findViewById(R.id.txtVendorURL);
             relatativeMain = (RelativeLayout) mView.findViewById(R.id.relatativeMain);
-            imgType = (ImageView)mView.findViewById(R.id.imgType);
+            imgVendorLogo = (ImageView)mView.findViewById(R.id.imgVendorLogo);
 
 
         }
@@ -63,7 +69,7 @@ public class ProductPurchaseVendorListAdapter extends RecyclerView.Adapter<Produ
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        view = LayoutInflater.from(mActivity).inflate(R.layout.raw_blue_dots_meta_list, parent, false);
+        view = LayoutInflater.from(mActivity).inflate(R.layout.raw_vendor_list, parent, false);
 
         view.setTag(viewHolder);
         viewHolder = new ViewHolder(view);
@@ -75,15 +81,33 @@ public class ProductPurchaseVendorListAdapter extends RecyclerView.Adapter<Produ
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        holder.txtTitle.setText(blueDotMeta.get(position).getTitle());
+        holder.txtVendorName.setText(offersArrayList.get(position).getVendorName());
+        holder.txtDiscountByVendor.setText(offersArrayList.get(position).getOfferText());
+        holder.txtVendorURL.setText(offersArrayList.get(position).getOfferUrl());
+
+        Glide.with(mContext)
+                .load(""+offersArrayList.get(position).getVendorLogoUrl())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(holder.imgVendorLogo);
+
+
 
         holder.relatativeMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent mIntent = new Intent(mActivity, WebViewScreen.class);
-                mIntent.putExtra(Constants.RESEARCH_URL ,""+blueDotMeta.get(position).getUrl());
-                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER ,""+sponsorName);
+                mIntent.putExtra(Constants.RESEARCH_URL ,""+offersArrayList.get(position).getOfferUrl());
+                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER ,""+offersArrayList.get(position).getVendorName());
                 mActivity.startActivity(mIntent);
 
             }
@@ -97,6 +121,6 @@ public class ProductPurchaseVendorListAdapter extends RecyclerView.Adapter<Produ
     @Override
     public int getItemCount() {
 
-        return blueDotMeta.size();
+        return offersArrayList.size();
     }
 }

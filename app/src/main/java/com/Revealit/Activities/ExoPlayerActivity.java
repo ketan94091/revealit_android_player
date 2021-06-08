@@ -58,6 +58,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.Revealit.Adapter.BlueDotsMetaListAdapter;
+import com.Revealit.Adapter.MyRevealItListAdapter;
+import com.Revealit.Adapter.ProductPurchaseVendorListAdapter;
 import com.Revealit.Adapter.ViewPagerProductImagesAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
@@ -140,7 +142,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     private ProgressBar progress;
     private ImageView imgShareImage, imgVoulume, imgBackArrow, imgShare;
     private LinearLayout linearMainBottomController;
-    private SeekBar seekFontSize,ckVolumeBar;
+    private SeekBar seekFontSize, ckVolumeBar;
     private AudioManager audioManager;
     private FrameLayout frameOverlay;
     private String shareImageFileName = "RevealitShareImage.jpg", strMediaURL = "", strMediaID = "", strMediaTitle = "", strColorWhite = "#ffffff", strGreenDarkColor = "#84C14A", strGreenLightColor = "#5084C14A";
@@ -157,8 +159,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     String[] PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
-    private ViewPagerProductImagesAdapter mAdapter;
+    private ViewPagerProductImagesAdapter mViewPagerProductImagesAdapter;
     private ProgressBar progressLoadData;
+    private int dotsCount;
+    private ImageView[] dots;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +173,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
         setIds();
         setOnClicks();
+
+        Log.e("onCreate", "onCreate");
 
     }
 
@@ -220,7 +226,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         audioManager = (AudioManager) mActivity.getSystemService(Context.AUDIO_SERVICE);
         int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        int currentVolumePercentage = (100 * currentVolume)/maxVolume;
+        int currentVolumePercentage = (100 * currentVolume) / maxVolume;
         ckVolumeBar.setProgress(currentVolumePercentage);
         ckVolumeBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
 
@@ -385,9 +391,24 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("onResume", "onResume");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        player.stop();
+        player.release();
+
+        finish();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
-
         Log.e("onPause", "onPause");
     }
 
@@ -405,7 +426,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
     private void initializePlayer() {
 
-      // Create a default TrackSelector
+        // Create a default TrackSelector
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
         TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
@@ -432,7 +453,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         // Prepare the player with the source.
         player.prepare(videoSource);
 
-       //ADD LISTENER FOR FURTHER USE
+        //ADD LISTENER FOR FURTHER USE
         player.addListener(new Player.EventListener() {
             @Override
             public void onTimelineChanged(Timeline timeline, Object manifest) {
@@ -965,11 +986,11 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
         PopupWindow popupShareSocialMedia = new PopupWindow(ExoPlayerActivity.this);
         View layout = getLayoutInflater().inflate(R.layout.share_anchor_view_popup_content, null);
-        layout.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layout.measure(ViewGroup.LayoutParams.WRAP_CONTENT, 450);
         int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         layout.measure(spec, spec);
         popupShareSocialMedia.setContentView(layout);
-        popupShareSocialMedia.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupShareSocialMedia.setHeight(450);
         popupShareSocialMedia.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupShareSocialMedia.setOutsideTouchable(true);
         popupShareSocialMedia.setFocusable(true);
@@ -1156,10 +1177,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         final AlertDialog mAlertDialog = dialogBuilder.create();
 
 
-        progressLoadData = (ProgressBar)dialogView.findViewById(R.id.progressLoadData);
+        progressLoadData = (ProgressBar) dialogView.findViewById(R.id.progressLoadData);
 
         //GET PRODUCT DETAILS
-        callGetProductData(dialogView ,itemId ,mAlertDialog);
+        callGetProductData(dialogView, itemId, mAlertDialog);
 
         mAlertDialog.show();
 
@@ -1201,7 +1222,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
 
-        Call<GetProductDetailsModel> call = patchService1.getProductDetails(Constants.API_GET_PRODUCT_DETAILS+""+itemId);
+        Call<GetProductDetailsModel> call = patchService1.getProductDetails(Constants.API_GET_PRODUCT_DETAILS + "" + itemId);
 
         call.enqueue(new Callback<GetProductDetailsModel>() {
             @Override
@@ -1221,7 +1242,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     CommonMethods.printLogE("Response @ callGetProductData : ", "" + gson.toJson(response.body()));
 
                     //UPDATE UI
-                    updateProductDetailsUI(dialogView ,response.body().getData());
+                    updateProductDetailsUI(dialogView, response.body().getData(), mAlertDialog);
 
 
                 } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
@@ -1255,13 +1276,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         });
 
 
-
     }
 
-    private void updateProductDetailsUI(View dialogView, GetProductDetailsModel.Data data) {
+    private void updateProductDetailsUI(View dialogView, GetProductDetailsModel.Data data, AlertDialog mAlertDialog) {
 
         //LOAD HEADER IMAGE
-        ImageView imgHeaderViewDialogView = (ImageView)dialogView.findViewById(R.id.imgHeaderView);
+        ImageView imgHeaderViewDialogView = (ImageView) dialogView.findViewById(R.id.imgHeaderView);
         Glide.with(mActivity)
                 .load(data.getHeader())
                 .listener(new RequestListener<Drawable>() {
@@ -1279,7 +1299,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 }).into(imgHeaderViewDialogView);
 
 
-
         //SET PRODUCT NAME
         TextView txtProductNameDialogView = (TextView) dialogView.findViewById(R.id.txtProductName);
         txtProductNameDialogView.setText(data.getProductName());
@@ -1291,7 +1310,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
 
         //SET SPONSOR LOGO
-        ImageView imgSponsorLogoDialogView = (ImageView)dialogView.findViewById(R.id.imgSponsorLogo);
+        ImageView imgSponsorLogoDialogView = (ImageView) dialogView.findViewById(R.id.imgSponsorLogo);
         Glide.with(mActivity)
                 .load(data.getArmodelSponsorImgUrl())
                 .listener(new RequestListener<Drawable>() {
@@ -1310,19 +1329,139 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
 
         //SET PRODUCT IMAGES IN VIEW PAGER WITH INDICATOR
-        ViewPager  viewPager = (ViewPager) dialogView.findViewById(R.id.viewPager);
+        ViewPager viewPager = (ViewPager) dialogView.findViewById(R.id.viewPager);
         LinearLayout viewPagerCountDots = (LinearLayout) dialogView.findViewById(R.id.viewPagerCountDots);
 
         //SET VIEW PAGER ADAPTER
-        ViewPagerProductImagesAdapter mAdapter = new ViewPagerProductImagesAdapter(ExoPlayerActivity.this, data.getImages().getData());
-        viewPager.setAdapter(mAdapter);
+        mViewPagerProductImagesAdapter = new ViewPagerProductImagesAdapter(ExoPlayerActivity.this, data.getImages().getData());
+        viewPager.setAdapter(mViewPagerProductImagesAdapter);
         viewPager.setCurrentItem(0);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-       //GET TOTAL COUNT OF IMAGES LIST
-       int dotsCount = mAdapter.getCount();
+                for (int i = 0; i < dotsCount; i++) {
+                    dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
+                }
 
-       //CREATE DYNAMIC IMAGE VIEW FOR INDICATOR AND ADD IT IN TO LINEAR LAYOUT
-       ImageView[] dots = new ImageView[dotsCount];
+                dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        setUiPageViewController(viewPagerCountDots);
+
+        //SET OFFERS LIST
+        RecyclerView recycleVenderListDialogView = (RecyclerView) dialogView.findViewById(R.id.recycleVenderList);
+        LinearLayoutManager recylerViewLayoutManager = new LinearLayoutManager(mActivity);
+        recycleVenderListDialogView.setLayoutManager(recylerViewLayoutManager);
+
+        //SET CATEGORY LIST
+        ProductPurchaseVendorListAdapter mProductPurchaseVendorListAdapter = new ProductPurchaseVendorListAdapter(mContext, mActivity, data.getOffers().getData());
+        recycleVenderListDialogView.setAdapter(mProductPurchaseVendorListAdapter);
+
+        //DISMISS ALERT DIALOG
+        LinearLayout linearImgCancelDialogView = (LinearLayout) dialogView.findViewById(R.id.linearImgCancel);
+        linearImgCancelDialogView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+            }
+        });
+
+        //SHARE VIEW DIALOG
+        LinearLayout linearShareDialogView = (LinearLayout) dialogView.findViewById(R.id.linearShare);
+        linearShareDialogView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if (mSessionManager.getPreferenceBoolean(Constants.READ_WRITE_PERMISSION)) {
+
+                    //SAVE IT IN LOCAL STORAGE AND THEN SHARE
+                    imgHeaderViewDialogView.invalidate();
+                    BitmapDrawable drawable = (BitmapDrawable) imgHeaderViewDialogView.getDrawable();
+                    Bitmap savedBitMap = drawable.getBitmap();
+
+                    //SAVE IMAGE
+                    storeImage(savedBitMap);
+
+                    //OPEN ANCHOR VIEW
+                    displayPopupWindow(linearShareDialogView);
+
+                } else {
+
+                    readWriteExternalStoragePermission();
+                }
+            }
+        });
+
+
+        //CLICK ON PURCHASE TEXT FOR BUY THIS PRODUCT
+        TextView txtPurchaseDialogView = (TextView) dialogView.findViewById(R.id.txtPurchase);
+        txtPurchaseDialogView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent mIntent = new Intent(mActivity, WebViewScreen.class);
+                mIntent.putExtra(Constants.RESEARCH_URL, "" + data.getVendorUrl());
+                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" + data.getVendor());
+                startActivity(mIntent);
+            }
+        });
+
+        //CLICK ON PURCHASE TEXT FOR BUY THIS PRODUCT
+        LinearLayout linearImgARviewDialogView = (LinearLayout) dialogView.findViewById(R.id.linearImgARview);
+        linearImgARviewDialogView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
+                Uri intentUri = null;
+                intentUri = Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
+
+                        //.appendQueryParameter("file",getIntent().getStringExtra("URL"))
+                        //.appendQueryParameter("file", "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf")
+                        // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/2a.KitchenAid_StandMixer_CARED_680569095664_4a1b7a00a5bb0a1baf460475c5d335df.glb")
+                        // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/7a.Blue%20Bowl_Small_fb30838353a3ff1c5de00aebcc8c1e54.glb")
+                        .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/KitcheAid_Blender_cfd009624c77d60978e93715776a6d5b.glb")
+                        .appendQueryParameter("mode", "ar_only")
+                        .appendQueryParameter("link ", "" + data.getVendorUrl())
+                        .appendQueryParameter("title ", "" + data.getProductName())
+                        .build();
+                sceneViewerIntent.setData(intentUri);
+                sceneViewerIntent.setPackage("com.google.ar.core");
+                startActivity(sceneViewerIntent);
+
+        }
+    });
+
+
+    LinearLayout linarFavoriteDialogView = (LinearLayout) dialogView.findViewById(R.id.linarFavorite);
+
+
+    RelativeLayout relativeContentDialogView = (RelativeLayout) dialogView.findViewById(R.id.relativeContent);
+        relativeContentDialogView.setVisibility(View.VISIBLE);
+
+    //HIDE PROGRESS AFTER SETTING ALL DATA
+        progressLoadData.setVisibility(View.GONE);
+
+
+}
+
+    private void setUiPageViewController(LinearLayout viewPagerCountDots) {
+
+        dotsCount = mViewPagerProductImagesAdapter.getCount();
+        dots = new ImageView[dotsCount];
 
         for (int i = 0; i < dotsCount; i++) {
             dots[i] = new ImageView(this);
@@ -1339,48 +1478,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         }
 
         dots[0].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
-
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-                for (int i = 0; i < dotsCount; i++) {
-                    dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
-                }
-
-                dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-
-        TextView txtPurchaseDialogView = (TextView) dialogView.findViewById(R.id.txtPurchase);
-        LinearLayout linearImgCancelDialogView = (LinearLayout)dialogView.findViewById(R.id.linearImgCancel);
-        LinearLayout linearImgARviewDialogView = (LinearLayout)dialogView.findViewById(R.id.linearImgARview);
-        LinearLayout linarFavoriteDialogView = (LinearLayout)dialogView.findViewById(R.id.linarFavorite);
-        LinearLayout linearShareDialogView = (LinearLayout)dialogView.findViewById(R.id.linearShare);
-
-        RecyclerView recycleVenderListDialogView=(RecyclerView)dialogView.findViewById(R.id.recycleVenderList);
-
-
-        RelativeLayout relativeContentDialogView =(RelativeLayout)dialogView.findViewById(R.id.relativeContent);
-        relativeContentDialogView.setVisibility(View.VISIBLE);
-
-        //HIDE PROGRESS AFTER SETTING ALL DATA
-        progressLoadData.setVisibility(View.GONE);
-
-
     }
 
     private void readWriteExternalStoragePermission() {

@@ -43,17 +43,19 @@ public class ViewPagerProductImagesAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view == ((RelativeLayout) object);
+        return view == ((LinearLayout) object);
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
+
         View itemView = LayoutInflater.from(mContext).inflate(R.layout.pager_product_images, container, false);
 
         ImageView imageView = (ImageView) itemView.findViewById(R.id.pagerItems);
         ProgressBar progressImageLoad = (ProgressBar) itemView.findViewById(R.id.progressImageLoad);
+
         Glide.with(mContext)
-                .load(mImagesList.get(position).getUrl())
+                .load(""+mImagesList.get(position).getUrl())
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -75,6 +77,6 @@ public class ViewPagerProductImagesAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((RelativeLayout) object);
+        container.removeView((LinearLayout) object);
     }
 }

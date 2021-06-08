@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+
     <uses-feature
         android:name="android.hardware.camera.ar"
         android:required="true" />
@@ -39,7 +40,9 @@
 
         <activity
             android:name=".Activities.ExoPlayerActivity"
-            android:screenOrientation="landscape" />
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|uiMode|smallestScreenSize|layoutDirection"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"/>
 
         <activity
             android:name=".Activities.LoginActivityActivity"
