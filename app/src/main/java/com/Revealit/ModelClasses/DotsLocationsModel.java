@@ -35,9 +35,9 @@ public class DotsLocationsModel {
         private Integer transition;
         private String item_name;
         private String vendor;
-        private String vendorUrl;
+        private String vendor_url;
         private String armodel;
-        private String armodelUrl;
+        private String armodel_url;
         private Integer armodelId;
         private String armodel_sponsor;
         private String armodelSponsorImgUrl;
@@ -198,11 +198,11 @@ public class DotsLocationsModel {
         }
 
         public String getVendorUrl() {
-            return vendorUrl;
+            return vendor_url;
         }
 
-        public void setVendorUrl(String vendorUrl) {
-            this.vendorUrl = vendorUrl;
+        public void setVendorUrl(String vendor_url) {
+            this.vendor_url = vendor_url;
         }
 
         public String getArmodel() {
@@ -214,11 +214,11 @@ public class DotsLocationsModel {
         }
 
         public String getArmodelUrl() {
-            return armodelUrl;
+            return armodel_url;
         }
 
-        public void setArmodelUrl(String armodelUrl) {
-            this.armodelUrl = armodelUrl;
+        public void setArmodelUrl(String armodel_url) {
+            this.armodel_url = armodel_url;
         }
 
         public Integer getArmodelId() {

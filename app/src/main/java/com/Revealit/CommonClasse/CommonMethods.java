@@ -290,4 +290,10 @@ public class CommonMethods {
 
     }
 
+    public static boolean isDeviceSupportAR(Activity mActivity){
+
+     return false;
+
+    }
+
 }

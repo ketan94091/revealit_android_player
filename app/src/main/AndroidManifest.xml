@@ -11,9 +11,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 
-    <uses-feature
+    <!--<uses-feature
         android:name="android.hardware.camera.ar"
-        android:required="true" />
+        android:required="true" />-->
 
     <application
         android:name=".Utils.Appcontroller"
@@ -105,6 +105,10 @@
             android:name=".Activities.TestActivity"
             android:screenOrientation="landscape" />
 
+        <activity
+            android:name=".Activities.ProductBuyingScreenActivity"
+            android:screenOrientation="portrait" />
+
 
         <service
             android:name=".CommonClasse.GlobalLocationService"
@@ -112,7 +116,7 @@
 
         <meta-data
             android:name="com.google.ar.core"
-            android:value="required" />
+            android:value="optional" />
 
 
 

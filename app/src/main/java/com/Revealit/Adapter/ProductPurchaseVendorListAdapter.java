@@ -43,6 +43,9 @@ public class ProductPurchaseVendorListAdapter extends RecyclerView.Adapter<Produ
         this.mContext= mContext;
         this.mActivity= mActivity;
         this.offersArrayList =offersArrayList;
+
+        //REMOVE FIRST OBJECT
+        this.offersArrayList.remove(0);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

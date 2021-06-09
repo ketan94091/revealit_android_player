@@ -774,9 +774,28 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                         @Override
                         public void onClick(View v) {
 
-                            openProductPurchaseDialog(data.get(finalI).getItemId());
+                            Intent mIntent = new Intent(ExoPlayerActivity.this, ProductBuyingScreenActivity.class);
+                            mIntent.putExtra("ITEM_ID" ,data.get(finalI).getItemId());
+                            startActivity(mIntent);
+
+                            //openProductPurchaseDialog(data.get(finalI).getItemId());
                         }
                     });
+
+                    txtVendorName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent mIntent = new Intent(mActivity, WebViewScreen.class);
+                            mIntent.putExtra(Constants.RESEARCH_URL, "" +data.get(finalI).getVendorUrl());
+                            mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" +data.get(finalI).getVendor());
+                            startActivity(mIntent);
+
+                        }
+                    });
+
+
+
                 }
                 break;
             case 2:
@@ -821,6 +840,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     layoutParamsVendor.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))));
                     frameOverlay.addView(txtVendorName, layoutParamsVendor);
 
+                    int finalI = i;
 
                     //ON LONG PRESS VISIBLE ONLY LONG PRESS ITEMS ELSE DISPLAY IN LIGHT COLOR
                     imgDynamicCoordinateView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -830,6 +850,18 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             displayCoordinates(locationData, 2, ((int) mView.getTag()));
 
                             return true;
+                        }
+                    });
+
+                    txtVendorName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent mIntent = new Intent(mActivity, WebViewScreen.class);
+                            mIntent.putExtra(Constants.RESEARCH_URL, "" +data.get(finalI).getVendorUrl());
+                            mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" +data.get(finalI).getVendor());
+                            startActivity(mIntent);
+
                         }
                     });
 
@@ -867,14 +899,27 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                         layoutParamsVendor.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))));
                         frameOverlay.addView(txtVendorName, layoutParamsVendor);
 
+                        int finalI = i;
+
                         //ON LONG PRESS VISIBLE ONLY LONG PRESS ITEMS ELSE DISPLAY IN LIGHT COLOR
-                        imgDynamicCoordinateView.setOnLongClickListener(new View.OnLongClickListener() {
+                        imgDynamicCoordinateView.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public boolean onLongClick(View mView) {
+                            public void onClick(View v) {
 
-                                //displayCoordinates(locationData, 2, ((int) mView.getTag()));
+                                loadArView(data.get(finalI));
+                            }
+                        });
 
-                                return true;
+
+                        txtVendorName.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Intent mIntent = new Intent(mActivity, WebViewScreen.class);
+                                mIntent.putExtra(Constants.RESEARCH_URL, "" +data.get(finalI).getVendorUrl());
+                                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" +data.get(finalI).getVendor());
+                                startActivity(mIntent);
+
                             }
                         });
 
@@ -913,11 +958,25 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                         frameOverlay.addView(txtVendorName, layoutParamsVendor);
 
                         int finalI = i;
+
                         imgDynamicCoordinateView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View mView) {
+
                                 View result = frameOverlay.findViewWithTag(mView.getTag());
                                 displayBlueDotsInfo(result, data.get(finalI));
+
+                            }
+                        });
+
+                        txtVendorName.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Intent mIntent = new Intent(mActivity, WebViewScreen.class);
+                                mIntent.putExtra(Constants.RESEARCH_URL, "" +data.get(finalI).getVendorUrl());
+                                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" +data.get(finalI).getVendor());
+                                startActivity(mIntent);
 
                             }
                         });
@@ -940,6 +999,23 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         //CLOSE DIALOG
         CommonMethods.closeDialog();
 
+    }
+
+    private void loadArView(DotsLocationsModel.Datum mData) {
+
+
+        Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
+        Uri intentUri = null;
+        intentUri = Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
+                //.appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/KitcheAid_Blender_cfd009624c77d60978e93715776a6d5b.glb")
+                .appendQueryParameter("file",  ""+mData.getArmodelUrl())
+                .appendQueryParameter("mode", "ar_only")
+                .appendQueryParameter("link ", "" + mData.getVendorUrl())
+                .appendQueryParameter("title ", "" + mData.getVendor())
+                .build();
+        sceneViewerIntent.setData(intentUri);
+        sceneViewerIntent.setPackage("com.google.ar.core");
+        startActivity(sceneViewerIntent);
     }
 
     private void setOverLayTouch() {
@@ -1425,22 +1501,23 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onClick(View v) {
 
-                Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
-                Uri intentUri = null;
-                intentUri = Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
+                    Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
+                    Uri intentUri = null;
+                    intentUri = Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
 
-                        //.appendQueryParameter("file",getIntent().getStringExtra("URL"))
-                        //.appendQueryParameter("file", "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf")
-                        // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/2a.KitchenAid_StandMixer_CARED_680569095664_4a1b7a00a5bb0a1baf460475c5d335df.glb")
-                        // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/7a.Blue%20Bowl_Small_fb30838353a3ff1c5de00aebcc8c1e54.glb")
-                        .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/KitcheAid_Blender_cfd009624c77d60978e93715776a6d5b.glb")
-                        .appendQueryParameter("mode", "ar_only")
-                        .appendQueryParameter("link ", "" + data.getVendorUrl())
-                        .appendQueryParameter("title ", "" + data.getProductName())
-                        .build();
-                sceneViewerIntent.setData(intentUri);
-                sceneViewerIntent.setPackage("com.google.ar.core");
-                startActivity(sceneViewerIntent);
+                            //.appendQueryParameter("file",getIntent().getStringExtra("URL"))
+                            //.appendQueryParameter("file", "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf")
+                            // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/2a.KitchenAid_StandMixer_CARED_680569095664_4a1b7a00a5bb0a1baf460475c5d335df.glb")
+                            // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/7a.Blue%20Bowl_Small_fb30838353a3ff1c5de00aebcc8c1e54.glb")
+                            .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/KitcheAid_Blender_cfd009624c77d60978e93715776a6d5b.glb")
+                            .appendQueryParameter("mode", "ar_only")
+                            .appendQueryParameter("link ", "" + data.getVendorUrl())
+                            .appendQueryParameter("title ", "" + data.getProductName())
+                            .build();
+                    sceneViewerIntent.setData(intentUri);
+                    sceneViewerIntent.setPackage("com.google.ar.core");
+                    startActivity(sceneViewerIntent);
+
 
         }
     });
