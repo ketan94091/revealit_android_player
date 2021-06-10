@@ -7,20 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.Display;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,14 +26,11 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.os.CancellationSignal;
-import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -49,9 +39,7 @@ import com.Revealit.Adapter.ProductPurchaseVendorListAdapter;
 import com.Revealit.Adapter.ViewPagerProductImagesAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
-import com.Revealit.CommonClasse.OnSwipeTouchListener;
 import com.Revealit.CommonClasse.SessionManager;
-import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.ModelClasses.GetProductDetailsModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
@@ -70,7 +58,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -82,7 +69,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class ProductBuyingScreenActivity extends AppCompatActivity {
+public class RecipesScreenActivity extends AppCompatActivity {
 
 
     private FrameLayout frameOverlay;
@@ -108,7 +95,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_product_buying_screen);
+        setContentView(R.layout.activity_recipes_screen);
 
         setIds();
 
@@ -117,8 +104,8 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
     private void setIds() {
 
-        mActivity = ProductBuyingScreenActivity.this;
-        mContext = ProductBuyingScreenActivity.this;
+        mActivity = RecipesScreenActivity.this;
+        mContext = RecipesScreenActivity.this;
 
         mSessionManager = new SessionManager(mContext);
         mSessionManager.openSettings();
@@ -132,7 +119,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
     private void openProductPurchaseDialog(String itemId) {
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ProductBuyingScreenActivity.this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(RecipesScreenActivity.this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.alert_dialog_product_purchase, null);
         dialogBuilder.setView(dialogView);
@@ -328,7 +315,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
         LinearLayout viewPagerCountDots = (LinearLayout) dialogView.findViewById(R.id.viewPagerCountDots);
 
         //SET VIEW PAGER ADAPTER
-        mViewPagerProductImagesAdapter = new ViewPagerProductImagesAdapter(ProductBuyingScreenActivity.this, data.getImages().getData());
+        mViewPagerProductImagesAdapter = new ViewPagerProductImagesAdapter(RecipesScreenActivity.this, data.getImages().getData());
         viewPager.setAdapter(mViewPagerProductImagesAdapter);
         viewPager.setCurrentItem(0);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -466,8 +453,8 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
     private void readWriteExternalStoragePermission() {
 
-        if (ContextCompat.checkSelfPermission(ProductBuyingScreenActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(ProductBuyingScreenActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (ContextCompat.checkSelfPermission(RecipesScreenActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(RecipesScreenActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
@@ -488,7 +475,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
                     .setPositiveButton(getResources().getString(R.string.strOk), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(ProductBuyingScreenActivity.this, PERMISSIONS, REQUEST_PERMISSION);
+                            ActivityCompat.requestPermissions(RecipesScreenActivity.this, PERMISSIONS, REQUEST_PERMISSION);
                         }
                     })
                     .setNegativeButton(getResources().getString(R.string.strCancel), new DialogInterface.OnClickListener() {
@@ -532,7 +519,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
     }
     private void displayPopupWindow(View anchorView) {
 
-        PopupWindow popupShareSocialMedia = new PopupWindow(ProductBuyingScreenActivity.this);
+        PopupWindow popupShareSocialMedia = new PopupWindow(RecipesScreenActivity.this);
         View layout = getLayoutInflater().inflate(R.layout.share_anchor_view_popup_content, null);
         layout.measure(ViewGroup.LayoutParams.WRAP_CONTENT, 450);
         int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -557,7 +544,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
                     SharePhoto photo = new SharePhoto.Builder().setBitmap(savedBitMap).build();
                     SharePhotoContent content = new SharePhotoContent.Builder().addPhoto(photo).build();
-                    ShareDialog dialog = new ShareDialog(ProductBuyingScreenActivity.this);
+                    ShareDialog dialog = new ShareDialog(RecipesScreenActivity.this);
                     if (dialog.canShow(SharePhotoContent.class)) {
                         dialog.show(content);
                     } else {
@@ -601,7 +588,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (CommonMethods.isAppInstalled(mContext, "com.instagram.android")) {
-                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("image/*");
 
                     StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();

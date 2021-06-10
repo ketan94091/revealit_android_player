@@ -63,7 +63,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_alignParentTop="true"
-                    android:background="@color/colorWhite">
+                    android:background="@color/colorWhite"
+                    >
 
                     <TextView
                         android:id="@+id/txtCancel"
@@ -111,7 +112,8 @@
                     android:id="@+id/relativeCaptureImageWithText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/relativeHeaderShareView">
+                    android:layout_below="@+id/relativeHeaderShareView"
+                   >
 
                     <ImageView
                         android:id="@+id/imgShareImage"

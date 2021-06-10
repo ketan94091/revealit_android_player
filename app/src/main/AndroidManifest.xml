@@ -109,6 +109,9 @@
             android:name=".Activities.ProductBuyingScreenActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".Activities.RecipesScreenActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".CommonClasse.GlobalLocationService"

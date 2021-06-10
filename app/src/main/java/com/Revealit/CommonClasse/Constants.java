@@ -20,6 +20,7 @@ public class Constants {
     public static final String API_GET_REWARD_HISTORY = "/api/rewards/history";
     public static final String API_GET_MORE_REWARD_HISTORY = "/api/rewards/history";
     public static final String API_GET_PRODUCT_DETAILS = "api/items/fetch/";
+    public static final String API_GET_RECIPES_DETAILS = "/api/videos/";
 
 
     public static final String AUTH_TOKEN = "access_token";

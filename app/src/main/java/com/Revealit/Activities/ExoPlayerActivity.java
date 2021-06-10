@@ -60,6 +60,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.Revealit.Adapter.BlueDotsMetaListAdapter;
 import com.Revealit.Adapter.MyRevealItListAdapter;
 import com.Revealit.Adapter.ProductPurchaseVendorListAdapter;
+import com.Revealit.Adapter.RecipesListAdapter;
 import com.Revealit.Adapter.ViewPagerProductImagesAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
@@ -67,6 +68,7 @@ import com.Revealit.CommonClasse.OnSwipeTouchListener;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.ModelClasses.GetProductDetailsModel;
+import com.Revealit.ModelClasses.GetRecipesDetails;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
@@ -140,8 +142,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     private SimpleExoPlayerView exoPlayer;
     private SimpleExoPlayer player;
     private ProgressBar progress;
-    private ImageView imgShareImage, imgVoulume, imgBackArrow, imgShare;
-    private LinearLayout linearMainBottomController;
+    private ImageView imgShareImage, imgVoulume, imgBackArrow, imgRecipe, imgInfluencer, imgShare;
+    private LinearLayout linearRecipeShareInfluencer, linearMainBottomController;
     private SeekBar seekFontSize, ckVolumeBar;
     private AudioManager audioManager;
     private FrameLayout frameOverlay;
@@ -201,6 +203,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         progress = (ProgressBar) findViewById(R.id.progress);
 
         imgShare = (ImageView) findViewById(R.id.imgShare);
+        imgRecipe = (ImageView) findViewById(R.id.imgRecipe);
+        imgInfluencer = (ImageView) findViewById(R.id.imgInfluencer);
         imgBackArrow = (ImageView) findViewById(R.id.imgBackArrow);
         imgVoulume = (ImageView) findViewById(R.id.imgVoulume);
         imgShareImage = (ImageView) findViewById(R.id.imgShareImage);
@@ -210,6 +214,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         seekFontSize = (SeekBar) findViewById(R.id.seekFontSize);
 
         linearMainBottomController = (LinearLayout) findViewById(R.id.linearMainBottomController);
+        linearRecipeShareInfluencer = (LinearLayout) findViewById(R.id.linearRecipeShareInfluencer);
 
         frameOverlay = (FrameLayout) findViewById(R.id.frameOverlay);
 
@@ -282,6 +287,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         });
 
 
+        //CALL CHECK IF RECIPE AVAILABLE
+        callCheckIfRecipeAvailable(strMediaID);
+
         //INITIALIZE EXO PLAYER
         initializePlayer();
 
@@ -292,6 +300,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     private void setOnClicks() {
 
         imgShare.setOnClickListener(this);
+        imgInfluencer.setOnClickListener(this);
+        imgRecipe.setOnClickListener(this);
         imgBackArrow.setOnClickListener(this);
         imgVoulume.setOnClickListener(this);
         txtCancel.setOnClickListener(this);
@@ -305,6 +315,18 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
         switch (v.getId()) {
 
+            case R.id.imgInfluencer:
+
+
+                Toast.makeText(mContext ,"CLICKED" , Toast.LENGTH_LONG).show();
+
+                break;
+
+            case R.id.imgRecipe:
+
+                openRecipesDialoge(strMediaID);
+
+                break;
             case R.id.imgShare:
 
                 //SET DEFAULT SIZE
@@ -477,7 +499,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                     //HIDE WHEN PLAYER IS READY
                     progress.setVisibility(View.GONE);
-                    imgShare.setVisibility(View.GONE);
+                    linearRecipeShareInfluencer.setVisibility(View.GONE);
                     relativeShareView.setVisibility(View.GONE);
 
                     //HIDE OVERLAY
@@ -488,7 +510,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                     //VISIBLE WHEN PLAYER IS BUFFERING
                     progress.setVisibility(View.VISIBLE);
-                    imgShare.setVisibility(View.GONE);
+                    linearRecipeShareInfluencer.setVisibility(View.GONE);
                     relativeShareView.setVisibility(View.GONE);
 
                     //HIDE OVERLAY
@@ -498,7 +520,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                     //HIDE AND VISIBLE WHEN PLAYER IS PAUSE
                     progress.setVisibility(View.GONE);
-                    imgShare.setVisibility(View.VISIBLE);
+                    linearRecipeShareInfluencer.setVisibility(View.VISIBLE);
 
                     //API CALL GET DOTS LOCATION
                     // PASS ARGUMENT WITH CURRENT VIDEO IN SECONDS
@@ -558,6 +580,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 params.gravity = Gravity.CENTER;
                 textureView.setLayoutParams(params);
 
+
                 //SET OVERLAY LAYOUT SAME AS VIDEO VIEW
                 //SET DYNAMIC HEIGHT WIDTH BASED ON LOADED VIDEO
                 frameOverlay.getLayoutParams().height = height;
@@ -578,10 +601,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 relativeShareView.requestLayout();
 
                 //SET DYNAMIC GRAVITY CENTRE
-                RelativeLayout.LayoutParams shareViewParam = new RelativeLayout.LayoutParams((width - 50), (height - 50));
-                shareViewParam.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                shareViewParam.addRule(RelativeLayout.CENTER_VERTICAL);
-                relativeShareView.setLayoutParams(shareViewParam);
+                RelativeLayout.LayoutParams shareView = new RelativeLayout.LayoutParams((width - 50), (height - 50));
+                shareView.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                shareView.addRule(RelativeLayout.CENTER_VERTICAL);
+                relativeShareView.setLayoutParams(shareView);
 
 
                 //VISIBLE FRAMLAYOUT FOR DOTS
@@ -775,10 +798,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                         public void onClick(View v) {
 
                             Intent mIntent = new Intent(ExoPlayerActivity.this, ProductBuyingScreenActivity.class);
-                            mIntent.putExtra("ITEM_ID" ,data.get(finalI).getItemId());
+                            mIntent.putExtra("ITEM_ID", data.get(finalI).getItemId());
                             startActivity(mIntent);
 
-                            //openProductPurchaseDialog(data.get(finalI).getItemId());
                         }
                     });
 
@@ -787,13 +809,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                         public void onClick(View v) {
 
                             Intent mIntent = new Intent(mActivity, WebViewScreen.class);
-                            mIntent.putExtra(Constants.RESEARCH_URL, "" +data.get(finalI).getVendorUrl());
-                            mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" +data.get(finalI).getVendor());
+                            mIntent.putExtra(Constants.RESEARCH_URL, "" + data.get(finalI).getVendorUrl());
+                            mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" + data.get(finalI).getVendor());
                             startActivity(mIntent);
 
                         }
                     });
-
 
 
                 }
@@ -858,8 +879,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                         public void onClick(View v) {
 
                             Intent mIntent = new Intent(mActivity, WebViewScreen.class);
-                            mIntent.putExtra(Constants.RESEARCH_URL, "" +data.get(finalI).getVendorUrl());
-                            mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" +data.get(finalI).getVendor());
+                            mIntent.putExtra(Constants.RESEARCH_URL, "" + data.get(finalI).getVendorUrl());
+                            mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" + data.get(finalI).getVendor());
                             startActivity(mIntent);
 
                         }
@@ -916,8 +937,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             public void onClick(View v) {
 
                                 Intent mIntent = new Intent(mActivity, WebViewScreen.class);
-                                mIntent.putExtra(Constants.RESEARCH_URL, "" +data.get(finalI).getVendorUrl());
-                                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" +data.get(finalI).getVendor());
+                                mIntent.putExtra(Constants.RESEARCH_URL, "" + data.get(finalI).getVendorUrl());
+                                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" + data.get(finalI).getVendor());
                                 startActivity(mIntent);
 
                             }
@@ -974,8 +995,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             public void onClick(View v) {
 
                                 Intent mIntent = new Intent(mActivity, WebViewScreen.class);
-                                mIntent.putExtra(Constants.RESEARCH_URL, "" +data.get(finalI).getVendorUrl());
-                                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" +data.get(finalI).getVendor());
+                                mIntent.putExtra(Constants.RESEARCH_URL, "" + data.get(finalI).getVendorUrl());
+                                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" + data.get(finalI).getVendor());
                                 startActivity(mIntent);
 
                             }
@@ -1008,7 +1029,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         Uri intentUri = null;
         intentUri = Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
                 //.appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/KitcheAid_Blender_cfd009624c77d60978e93715776a6d5b.glb")
-                .appendQueryParameter("file",  ""+mData.getArmodelUrl())
+                .appendQueryParameter("file", "" + mData.getArmodelUrl())
                 .appendQueryParameter("mode", "ar_only")
                 .appendQueryParameter("link ", "" + mData.getVendorUrl())
                 .appendQueryParameter("title ", "" + mData.getVendor())
@@ -1243,28 +1264,30 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         return yAxis;
     }
 
-    private void openProductPurchaseDialog(String itemId) {
+    private void openRecipesDialoge(String itemId) {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ExoPlayerActivity.this);
         LayoutInflater inflater = getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.alert_dialog_product_purchase, null);
+        final View dialogView = inflater.inflate(R.layout.alert_dialog_recipes, null);
         dialogBuilder.setView(dialogView);
 
         final AlertDialog mAlertDialog = dialogBuilder.create();
+        mAlertDialog.setCancelable(false);
 
 
+        //SET CURRENT PROGRESSBAR
         progressLoadData = (ProgressBar) dialogView.findViewById(R.id.progressLoadData);
 
-        //GET PRODUCT DETAILS
-        callGetProductData(dialogView, itemId, mAlertDialog);
+        //GET RECIPES DETAILS DETAILS
+        callGetRecipeData(dialogView, itemId, mAlertDialog);
 
         mAlertDialog.show();
 
     }
 
-    private void callGetProductData(View dialogView, String itemId, AlertDialog mAlertDialog) {
+    private void callGetRecipeData(View dialogView, String itemId, AlertDialog mAlertDialog) {
 
-        CommonMethods.printLogE("Response @ callGetProductData ITEM ID : ", "" + itemId);
+        CommonMethods.printLogE("Response @ callGetRecipeData ITEM ID : ", "" + itemId);
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -1298,15 +1321,15 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
 
-        Call<GetProductDetailsModel> call = patchService1.getProductDetails(Constants.API_GET_PRODUCT_DETAILS + "" + itemId);
+        Call<GetRecipesDetails> call = patchService1.getRecipesDetails(Constants.API_GET_RECIPES_DETAILS + itemId + "/recipe");
 
-        call.enqueue(new Callback<GetProductDetailsModel>() {
+        call.enqueue(new Callback<GetRecipesDetails>() {
             @Override
-            public void onResponse(Call<GetProductDetailsModel> call, retrofit2.Response<GetProductDetailsModel> response) {
+            public void onResponse(Call<GetRecipesDetails> call, retrofit2.Response<GetRecipesDetails> response) {
 
 
-                CommonMethods.printLogE("Response @ callGetProductData : ", "" + response.isSuccessful());
-                CommonMethods.printLogE("Response @ callGetProductData : ", "" + response.code());
+                CommonMethods.printLogE("Response @ callGetRecipeData : ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callGetRecipeData : ", "" + response.code());
 
                 if (response.code() == Constants.API_SUCCESS) {
 
@@ -1315,7 +1338,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             .serializeNulls()
                             .create();
 
-                    CommonMethods.printLogE("Response @ callGetProductData : ", "" + gson.toJson(response.body()));
+                    CommonMethods.printLogE("Response @ callGetRecipeData : ", "" + gson.toJson(response.body()));
 
                     //UPDATE UI
                     updateProductDetailsUI(dialogView, response.body().getData(), mAlertDialog);
@@ -1334,19 +1357,19 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     progressLoadData.setVisibility(View.GONE);
                     mAlertDialog.dismiss();
 
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strNoDataFound));
 
                 }
 
             }
 
             @Override
-            public void onFailure(Call<GetProductDetailsModel> call, Throwable t) {
+            public void onFailure(Call<GetRecipesDetails> call, Throwable t) {
 
                 progressLoadData.setVisibility(View.GONE);
                 mAlertDialog.dismiss();
 
-                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strNoDataFound));
 
             }
         });
@@ -1354,99 +1377,80 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    private void updateProductDetailsUI(View dialogView, GetProductDetailsModel.Data data, AlertDialog mAlertDialog) {
+    private void callCheckIfRecipeAvailable(String itemId) {
 
-        //LOAD HEADER IMAGE
-        ImageView imgHeaderViewDialogView = (ImageView) dialogView.findViewById(R.id.imgHeaderView);
-        Glide.with(mActivity)
-                .load(data.getHeader())
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+        CommonMethods.printLogE("Response @ callCheckIfRecipeAvailable ITEM ID : ", "" + itemId);
 
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
-
-                        return false;
-                    }
-                }).into(imgHeaderViewDialogView);
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
 
-        //SET PRODUCT NAME
-        TextView txtProductNameDialogView = (TextView) dialogView.findViewById(R.id.txtProductName);
-        txtProductNameDialogView.setText(data.getProductName());
-
-
-        //SET DISCOUNT
-        TextView txtDiscountDialogView = (TextView) dialogView.findViewById(R.id.txtDiscount);
-        txtDiscountDialogView.setText(data.getOffers().getData().get(0).getOfferText());
-
-
-        //SET SPONSOR LOGO
-        ImageView imgSponsorLogoDialogView = (ImageView) dialogView.findViewById(R.id.imgSponsorLogo);
-        Glide.with(mActivity)
-                .load(data.getArmodelSponsorImgUrl())
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
-
-                        return false;
-                    }
-                }).into(imgSponsorLogoDialogView);
-
-
-        //SET PRODUCT IMAGES IN VIEW PAGER WITH INDICATOR
-        ViewPager viewPager = (ViewPager) dialogView.findViewById(R.id.viewPager);
-        LinearLayout viewPagerCountDots = (LinearLayout) dialogView.findViewById(R.id.viewPagerCountDots);
-
-        //SET VIEW PAGER ADAPTER
-        mViewPagerProductImagesAdapter = new ViewPagerProductImagesAdapter(ExoPlayerActivity.this, data.getImages().getData());
-        viewPager.setAdapter(mViewPagerProductImagesAdapter);
-        viewPager.setCurrentItem(0);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public okhttp3.Response intercept(Chain chain) throws IOException {
 
-                for (int i = 0; i < dotsCount; i++) {
-                    dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
+                okhttp3.Request requestOriginal = chain.request();
+
+                okhttp3.Request request = requestOriginal.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(requestOriginal.method(), requestOriginal.body())
+                        .build();
+
+
+                return chain.proceed(request);
+            }
+        });
+        final OkHttpClient httpClient1 = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.API_END_POINTS_STAGING)
+                .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient1)
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+
+        Call<GetRecipesDetails> call = patchService1.getRecipesDetails(Constants.API_GET_RECIPES_DETAILS + itemId + "/recipe");
+
+        call.enqueue(new Callback<GetRecipesDetails>() {
+            @Override
+            public void onResponse(Call<GetRecipesDetails> call, retrofit2.Response<GetRecipesDetails> response) {
+
+
+                CommonMethods.printLogE("Response @ callCheckIfRecipeAvailable : ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callCheckIfRecipeAvailable : ", "" + response.code());
+
+                if (response.code() == Constants.API_SUCCESS) {
+
+                    //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
+                    imgRecipe.setVisibility(View.VISIBLE);
                 }
 
-                dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
             }
 
             @Override
-            public void onPageSelected(int position) {
+            public void onFailure(Call<GetRecipesDetails> call, Throwable t) {
 
-            }
+                CommonMethods.printLogE("Response @ callCheckIfRecipeAvailable : ERROR", "" + t);
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
+
+                //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
+             imgRecipe.setVisibility(View.GONE);
 
             }
         });
-        setUiPageViewController(viewPagerCountDots);
 
-        //SET OFFERS LIST
-        RecyclerView recycleVenderListDialogView = (RecyclerView) dialogView.findViewById(R.id.recycleVenderList);
-        LinearLayoutManager recylerViewLayoutManager = new LinearLayoutManager(mActivity);
-        recycleVenderListDialogView.setLayoutManager(recylerViewLayoutManager);
 
-        //SET CATEGORY LIST
-        ProductPurchaseVendorListAdapter mProductPurchaseVendorListAdapter = new ProductPurchaseVendorListAdapter(mContext, mActivity, data.getOffers().getData());
-        recycleVenderListDialogView.setAdapter(mProductPurchaseVendorListAdapter);
+    }
 
-        //DISMISS ALERT DIALOG
-        LinearLayout linearImgCancelDialogView = (LinearLayout) dialogView.findViewById(R.id.linearImgCancel);
-        linearImgCancelDialogView.setOnClickListener(new View.OnClickListener() {
+    private void updateProductDetailsUI(View dialogView, List<GetRecipesDetails.Data> recipesListData, AlertDialog mAlertDialog) {
+
+        //CLOSE DIALOGE
+        ImageView imgCloseDailoge = (ImageView) dialogView.findViewById(R.id.imgCloseDailoge);
+        imgCloseDailoge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -1454,108 +1458,24 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-        //SHARE VIEW DIALOG
-        LinearLayout linearShareDialogView = (LinearLayout) dialogView.findViewById(R.id.linearShare);
-        linearShareDialogView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        //SET RECIPES LIST
+        RecyclerView recyclerViewRecipesList = (RecyclerView) dialogView.findViewById(R.id.recycleRecipesList);
+        LinearLayoutManager recylerViewLayoutManager = new LinearLayoutManager(mActivity);
+        recyclerViewRecipesList.setLayoutManager(recylerViewLayoutManager);
+
+        RecipesListAdapter mRecipesListAdapter = new RecipesListAdapter(mContext, mActivity, recipesListData);
+        recyclerViewRecipesList.setAdapter(mRecipesListAdapter);
 
 
-                if (mSessionManager.getPreferenceBoolean(Constants.READ_WRITE_PERMISSION)) {
-
-                    //SAVE IT IN LOCAL STORAGE AND THEN SHARE
-                    imgHeaderViewDialogView.invalidate();
-                    BitmapDrawable drawable = (BitmapDrawable) imgHeaderViewDialogView.getDrawable();
-                    Bitmap savedBitMap = drawable.getBitmap();
-
-                    //SAVE IMAGE
-                    storeImage(savedBitMap);
-
-                    //OPEN ANCHOR VIEW
-                    displayPopupWindow(linearShareDialogView);
-
-                } else {
-
-                    readWriteExternalStoragePermission();
-                }
-            }
-        });
-
-
-        //CLICK ON PURCHASE TEXT FOR BUY THIS PRODUCT
-        TextView txtPurchaseDialogView = (TextView) dialogView.findViewById(R.id.txtPurchase);
-        txtPurchaseDialogView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent mIntent = new Intent(mActivity, WebViewScreen.class);
-                mIntent.putExtra(Constants.RESEARCH_URL, "" + data.getVendorUrl());
-                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" + data.getVendor());
-                startActivity(mIntent);
-            }
-        });
-
-        //CLICK ON PURCHASE TEXT FOR BUY THIS PRODUCT
-        LinearLayout linearImgARviewDialogView = (LinearLayout) dialogView.findViewById(R.id.linearImgARview);
-        linearImgARviewDialogView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                    Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
-                    Uri intentUri = null;
-                    intentUri = Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
-
-                            //.appendQueryParameter("file",getIntent().getStringExtra("URL"))
-                            //.appendQueryParameter("file", "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf")
-                            // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/2a.KitchenAid_StandMixer_CARED_680569095664_4a1b7a00a5bb0a1baf460475c5d335df.glb")
-                            // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/7a.Blue%20Bowl_Small_fb30838353a3ff1c5de00aebcc8c1e54.glb")
-                            .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/KitcheAid_Blender_cfd009624c77d60978e93715776a6d5b.glb")
-                            .appendQueryParameter("mode", "ar_only")
-                            .appendQueryParameter("link ", "" + data.getVendorUrl())
-                            .appendQueryParameter("title ", "" + data.getProductName())
-                            .build();
-                    sceneViewerIntent.setData(intentUri);
-                    sceneViewerIntent.setPackage("com.google.ar.core");
-                    startActivity(sceneViewerIntent);
-
-
-        }
-    });
-
-
-    LinearLayout linarFavoriteDialogView = (LinearLayout) dialogView.findViewById(R.id.linarFavorite);
-
-
-    RelativeLayout relativeContentDialogView = (RelativeLayout) dialogView.findViewById(R.id.relativeContent);
+        RelativeLayout relativeContentDialogView = (RelativeLayout) dialogView.findViewById(R.id.relativeContent);
         relativeContentDialogView.setVisibility(View.VISIBLE);
 
-    //HIDE PROGRESS AFTER SETTING ALL DATA
+        //HIDE PROGRESS AFTER SETTING ALL DATA
         progressLoadData.setVisibility(View.GONE);
 
 
-}
-
-    private void setUiPageViewController(LinearLayout viewPagerCountDots) {
-
-        dotsCount = mViewPagerProductImagesAdapter.getCount();
-        dots = new ImageView[dotsCount];
-
-        for (int i = 0; i < dotsCount; i++) {
-            dots[i] = new ImageView(this);
-            dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-
-            params.setMargins(4, 0, 4, 0);
-
-            viewPagerCountDots.addView(dots[i], params);
-        }
-
-        dots[0].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
     }
+
 
     private void readWriteExternalStoragePermission() {
 

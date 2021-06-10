@@ -48,6 +48,9 @@
     <color name="colorProducatTextBackground">#41A7A8A6</color>
     <color name="colorShareBackground">#7ebbff</color>
     <color name="colorSharingMedia">#58657C</color>
+    <color name="colorRecipeIngredients">#e9f7ff</color>
+    <color name="colorRecipePurchaseButton">#ffdc39</color>
+    <color name="colorChefNameBackground">#5552e1</color>
 
 
 </resources>

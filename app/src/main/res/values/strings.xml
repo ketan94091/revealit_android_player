@@ -60,6 +60,8 @@
     <string name="strCancel">Cancel</string>
     <string name="strShare">Share</string>
     <string name="strFavorite">Favorite</string>
+    <string name="strIngredient">Ingredients</string>
+    <string name="strInstructions">Instructions</string>
     <string name="strFacebook">Facebook</string>
     <string name="strTwitter">Twitter</string>
     <string name="strInstagram">Instagram</string>
