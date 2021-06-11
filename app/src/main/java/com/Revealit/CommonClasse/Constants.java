@@ -21,6 +21,7 @@ public class Constants {
     public static final String API_GET_MORE_REWARD_HISTORY = "/api/rewards/history";
     public static final String API_GET_PRODUCT_DETAILS = "api/items/fetch/";
     public static final String API_GET_RECIPES_DETAILS = "/api/videos/";
+    public static final String API_GET_INFLUENCERS_DETAILS = "/api/video/";
 
 
     public static final String AUTH_TOKEN = "access_token";
@@ -51,6 +52,9 @@ public class Constants {
     public static final String RESEARCH_URL = "researchURL";
     public static final String RESEARCH_URL_SPONSER = "researchURLSponser";
     public static final String READ_WRITE_PERMISSION = "readWritePermission";
+    public static final String AR_VIEW_URL = "arViewURL";
+    public static final String AR_VIEW_MODEL_NAME = "arViewModelURL";
+    public static final String AR_VIEW_MODEL_URL = "arViewModelURL";
 
 
 

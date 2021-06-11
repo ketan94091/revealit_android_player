@@ -24,15 +24,16 @@
                 android:padding="5dp"
                 android:textAlignment="textStart"
                 android:textColor="@color/colorGrayBottomBar"
-                android:textSize="18dp"
+                android:textSize="20dp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtRecipeShorDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:paddingLeft="5dp"
                 android:textAlignment="textStart"
+                android:textStyle="bold"
                 android:textColor="@color/colorGrayBottomBar"
                 android:textSize="15dp"/>
         </LinearLayout>

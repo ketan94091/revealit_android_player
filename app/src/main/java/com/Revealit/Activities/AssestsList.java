@@ -1,7 +1,6 @@
 package com.Revealit.Activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -67,7 +66,7 @@ public class AssestsList extends AppCompatActivity implements View.OnClickListen
 
             case R.id.btnMixer:
 
-                Intent mIntent = new Intent(this, TestActivity.class);
+                Intent mIntent = new Intent(this, ARviewActivity.class);
                 mIntent.putExtra("URL", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/2a.KitchenAid_StandMixer_CARED_680569095664_4a1b7a00a5bb0a1baf460475c5d335df.glb");
                 startActivity(mIntent);
 
@@ -75,7 +74,7 @@ public class AssestsList extends AppCompatActivity implements View.OnClickListen
 
             case R.id.btnbowl:
 
-                Intent mIntentOne = new Intent(this, TestActivity.class);
+                Intent mIntentOne = new Intent(this, ARviewActivity.class);
                 mIntentOne.putExtra("URL", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/7a.Blue%20Bowl_Small_fb30838353a3ff1c5de00aebcc8c1e54.glb");
                 startActivity(mIntentOne);
 
@@ -83,14 +82,14 @@ public class AssestsList extends AppCompatActivity implements View.OnClickListen
 
             case R.id.btnblender:
 
-                Intent mIntentTwo = new Intent(this, TestActivity.class);
+                Intent mIntentTwo = new Intent(this, ARviewActivity.class);
                 mIntentTwo.putExtra("URL", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/KitcheAid_Blender_cfd009624c77d60978e93715776a6d5b.glb");
                 startActivity(mIntentTwo);
 
                 break;
             case R.id.btnButcherBlock:
 
-                Intent mIntentThree = new Intent(this, TestActivity.class);
+                Intent mIntentThree = new Intent(this, ARviewActivity.class);
                 mIntentThree.putExtra("URL", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/1a.JohnBoos_ButcherBlock3_Black_662969282615_033a5d8be38bc65ace32de2ce21a333f.glb");
                 startActivity(mIntentThree);
 

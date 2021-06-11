@@ -409,22 +409,13 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
-                Uri intentUri = null;
-                intentUri = Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
+              //OPEN AR VIEW
+              Intent mARviewIntent = new Intent(ProductBuyingScreenActivity.this, ARviewActivity.class);
+              mARviewIntent.putExtra(Constants.AR_VIEW_URL , data.getArmodelUrl());
+              mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME , data.getProductName());
+              mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL , data.getVendorUrl());
+              startActivity(mARviewIntent);
 
-                        //.appendQueryParameter("file",getIntent().getStringExtra("URL"))
-                        //.appendQueryParameter("file", "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf")
-                        // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/2a.KitchenAid_StandMixer_CARED_680569095664_4a1b7a00a5bb0a1baf460475c5d335df.glb")
-                        // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/7a.Blue%20Bowl_Small_fb30838353a3ff1c5de00aebcc8c1e54.glb")
-                        .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/KitcheAid_Blender_cfd009624c77d60978e93715776a6d5b.glb")
-                        .appendQueryParameter("mode", "ar_only")
-                        .appendQueryParameter("link ", "" + data.getVendorUrl())
-                        .appendQueryParameter("title ", "" + data.getProductName())
-                        .build();
-                sceneViewerIntent.setData(intentUri);
-                sceneViewerIntent.setPackage("com.google.ar.core");
-                startActivity(sceneViewerIntent);
 
 
             }

@@ -15,23 +15,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.Revealit.Activities.ExoPlayerActivity;
-import com.Revealit.Activities.VideoViewActivity;
 import com.Revealit.Activities.WebViewScreen;
-import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
-import com.Revealit.ModelClasses.CategoryWisePlayListModel;
 import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.R;
-import com.Revealit.SqliteDatabase.DatabaseHelper;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 import java.util.List;

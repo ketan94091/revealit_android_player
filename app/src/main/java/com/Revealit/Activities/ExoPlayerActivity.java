@@ -12,6 +12,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -58,6 +59,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.Revealit.Adapter.BlueDotsMetaListAdapter;
+import com.Revealit.Adapter.InfluencersListAdapter;
 import com.Revealit.Adapter.MyRevealItListAdapter;
 import com.Revealit.Adapter.ProductPurchaseVendorListAdapter;
 import com.Revealit.Adapter.RecipesListAdapter;
@@ -69,6 +71,7 @@ import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.ModelClasses.GetProductDetailsModel;
 import com.Revealit.ModelClasses.GetRecipesDetails;
+import com.Revealit.ModelClasses.InfluencersModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
@@ -290,6 +293,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         //CALL CHECK IF RECIPE AVAILABLE
         callCheckIfRecipeAvailable(strMediaID);
 
+        //CALL CHECK IF INFLUENCERS AVAILABLE
+        callCheckIfInfluencersAvailable(strMediaID);
+
         //INITIALIZE EXO PLAYER
         initializePlayer();
 
@@ -317,13 +323,14 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
             case R.id.imgInfluencer:
 
-
-                Toast.makeText(mContext ,"CLICKED" , Toast.LENGTH_LONG).show();
+                //OPEN INFLUENCERS DAILOGE
+                openInfluencerDialoge(strMediaID);
 
                 break;
 
             case R.id.imgRecipe:
 
+                //OPEN RECIPES DAILOGE
                 openRecipesDialoge(strMediaID);
 
                 break;
@@ -927,7 +934,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             @Override
                             public void onClick(View v) {
 
-                                loadArView(data.get(finalI));
+                                //OPEN AR VIEW
+                                Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ARviewActivity.class);
+                                mARviewIntent.putExtra(Constants.AR_VIEW_URL , data.get(finalI).getArmodelUrl());
+                                mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME , data.get(finalI).getVendor());
+                                mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL , data.get(finalI).getVendorUrl());
+                                startActivity(mARviewIntent);
                             }
                         });
 
@@ -1020,23 +1032,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         //CLOSE DIALOG
         CommonMethods.closeDialog();
 
-    }
-
-    private void loadArView(DotsLocationsModel.Datum mData) {
-
-
-        Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
-        Uri intentUri = null;
-        intentUri = Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
-                //.appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/KitcheAid_Blender_cfd009624c77d60978e93715776a6d5b.glb")
-                .appendQueryParameter("file", "" + mData.getArmodelUrl())
-                .appendQueryParameter("mode", "ar_only")
-                .appendQueryParameter("link ", "" + mData.getVendorUrl())
-                .appendQueryParameter("title ", "" + mData.getVendor())
-                .build();
-        sceneViewerIntent.setData(intentUri);
-        sceneViewerIntent.setPackage("com.google.ar.core");
-        startActivity(sceneViewerIntent);
     }
 
     private void setOverLayTouch() {
@@ -1264,6 +1259,26 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         return yAxis;
     }
 
+    private void openInfluencerDialoge(String itemId) {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ExoPlayerActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.alert_dialog_influencers, null);
+        dialogBuilder.setView(dialogView);
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        mAlertDialog.setCancelable(false);
+
+        //SET CURRENT PROGRESSBAR
+        progressLoadData = (ProgressBar) dialogView.findViewById(R.id.progressLoadData);
+
+        //GET RECIPES DETAILS DETAILS
+        callGetInfluencerData(dialogView, itemId, mAlertDialog);
+
+        mAlertDialog.show();
+
+    }
+
     private void openRecipesDialoge(String itemId) {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ExoPlayerActivity.this);
@@ -1274,7 +1289,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         final AlertDialog mAlertDialog = dialogBuilder.create();
         mAlertDialog.setCancelable(false);
 
-
         //SET CURRENT PROGRESSBAR
         progressLoadData = (ProgressBar) dialogView.findViewById(R.id.progressLoadData);
 
@@ -1282,6 +1296,97 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         callGetRecipeData(dialogView, itemId, mAlertDialog);
 
         mAlertDialog.show();
+
+    }
+    private void callGetInfluencerData(View dialogView, String itemId, AlertDialog mAlertDialog) {
+
+        CommonMethods.printLogE("Response @ callGetInfluencerData ITEM ID : ", "" + itemId);
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+
+                okhttp3.Request requestOriginal = chain.request();
+
+                okhttp3.Request request = requestOriginal.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(requestOriginal.method(), requestOriginal.body())
+                        .build();
+
+
+                return chain.proceed(request);
+            }
+        });
+        final OkHttpClient httpClient1 = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.API_END_POINTS_STAGING)
+                .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient1)
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+
+        Call<InfluencersModel> call = patchService1.getInfluencers(Constants.API_GET_INFLUENCERS_DETAILS + itemId + "/influencers");
+
+        call.enqueue(new Callback<InfluencersModel>() {
+            @Override
+            public void onResponse(Call<InfluencersModel> call, retrofit2.Response<InfluencersModel> response) {
+
+
+                CommonMethods.printLogE("Response @ callGetInfluencerData : ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callGetInfluencerData : ", "" + response.code());
+
+
+                if (response.code() == Constants.API_SUCCESS) {
+
+                    Gson gson = new GsonBuilder()
+                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                            .serializeNulls()
+                            .create();
+
+                    CommonMethods.printLogE("Response @ callGetInfluencerData : ", "" + gson.toJson(response.body()));
+
+                    //UPDATE UI
+                  updateInfluencerUI(dialogView, response.body().getData(), mAlertDialog);
+
+
+                } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
+
+                    progressLoadData.setVisibility(View.GONE);
+                    mAlertDialog.dismiss();
+
+                    Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
+                    mActivity.startActivity(mLoginIntent);
+                    mActivity.finish();
+
+                } else {
+                    progressLoadData.setVisibility(View.GONE);
+                    mAlertDialog.dismiss();
+
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strNoDataFound));
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<InfluencersModel> call, Throwable t) {
+
+                progressLoadData.setVisibility(View.GONE);
+                mAlertDialog.dismiss();
+
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strNoDataFound));
+
+            }
+        });
+
 
     }
 
@@ -1377,6 +1482,76 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
     }
 
+    private void callCheckIfInfluencersAvailable(String itemId) {
+
+        CommonMethods.printLogE("Response @ callCheckIfInfluencersAvailable ITEM ID : ", "" + itemId);
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+
+                okhttp3.Request requestOriginal = chain.request();
+
+                okhttp3.Request request = requestOriginal.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(requestOriginal.method(), requestOriginal.body())
+                        .build();
+
+
+                return chain.proceed(request);
+            }
+        });
+        final OkHttpClient httpClient1 = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.API_END_POINTS_STAGING)
+                .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient1)
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+
+        Call<InfluencersModel> call = patchService1.getInfluencers(Constants.API_GET_INFLUENCERS_DETAILS + itemId + "/influencers");
+
+        call.enqueue(new Callback<InfluencersModel>() {
+            @Override
+            public void onResponse(Call<InfluencersModel> call, retrofit2.Response<InfluencersModel> response) {
+
+
+                CommonMethods.printLogE("Response @ callCheckIfInfluencersAvailable : ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callCheckIfInfluencersAvailable : ", "" + response.code());
+
+                if (response.code() == Constants.API_SUCCESS && response.body().getData().size() != 0) {
+
+                    //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
+                    imgInfluencer.setVisibility(View.VISIBLE);
+                }else {
+                    //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
+                    imgInfluencer.setVisibility(View.GONE);
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<InfluencersModel> call, Throwable t) {
+
+                //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
+                imgInfluencer.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+
+    }
+
+
     private void callCheckIfRecipeAvailable(String itemId) {
 
         CommonMethods.printLogE("Response @ callCheckIfRecipeAvailable ITEM ID : ", "" + itemId);
@@ -1423,10 +1598,13 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 CommonMethods.printLogE("Response @ callCheckIfRecipeAvailable : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callCheckIfRecipeAvailable : ", "" + response.code());
 
-                if (response.code() == Constants.API_SUCCESS) {
+                if (response.code() == Constants.API_SUCCESS && response.body().getData().size() != 0) {
 
                     //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
                     imgRecipe.setVisibility(View.VISIBLE);
+                }else {
+                    //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
+                    imgRecipe.setVisibility(View.GONE);
                 }
 
             }
@@ -1434,10 +1612,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onFailure(Call<GetRecipesDetails> call, Throwable t) {
 
-                CommonMethods.printLogE("Response @ callCheckIfRecipeAvailable : ERROR", "" + t);
 
-
-                //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
+            //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
              imgRecipe.setVisibility(View.GONE);
 
             }
@@ -1465,6 +1641,36 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
         RecipesListAdapter mRecipesListAdapter = new RecipesListAdapter(mContext, mActivity, recipesListData);
         recyclerViewRecipesList.setAdapter(mRecipesListAdapter);
+
+
+        RelativeLayout relativeContentDialogView = (RelativeLayout) dialogView.findViewById(R.id.relativeContent);
+        relativeContentDialogView.setVisibility(View.VISIBLE);
+
+        //HIDE PROGRESS AFTER SETTING ALL DATA
+        progressLoadData.setVisibility(View.GONE);
+
+
+    }
+
+    private void updateInfluencerUI(View dialogView, List<InfluencersModel.Data> influencersData, AlertDialog mAlertDialog) {
+
+        //CLOSE DIALOGE
+        ImageView imgCloseDailoge = (ImageView) dialogView.findViewById(R.id.imgCloseDailoge);
+        imgCloseDailoge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+            }
+        });
+
+        //SET INFLUENCERS LIST
+        RecyclerView recycleviewInfluencerList = (RecyclerView) dialogView.findViewById(R.id.recycleInfluencerList);
+        LinearLayoutManager recylerViewLayoutManager = new LinearLayoutManager(mActivity);
+        recycleviewInfluencerList.setLayoutManager(recylerViewLayoutManager);
+
+        InfluencersListAdapter mInfluencersListAdapter = new InfluencersListAdapter(mContext, mActivity, influencersData);
+        recycleviewInfluencerList.setAdapter(mInfluencersListAdapter);
 
 
         RelativeLayout relativeContentDialogView = (RelativeLayout) dialogView.findViewById(R.id.relativeContent);

@@ -9,6 +9,7 @@ import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.ModelClasses.GetAccountDetailsModel;
 import com.Revealit.ModelClasses.GetProductDetailsModel;
 import com.Revealit.ModelClasses.GetRecipesDetails;
+import com.Revealit.ModelClasses.InfluencersModel;
 import com.Revealit.ModelClasses.LoginAuthModel;
 import com.Revealit.ModelClasses.RewardHistoryModel;
 import com.Revealit.ModelClasses.UserRegistrationModel;
@@ -81,4 +82,8 @@ public interface UpdateAllAPI {
     //GET RECIPES DEATILS
     @GET()
     Call<GetRecipesDetails> getRecipesDetails(@Url String url);
+
+    //GET INFLUENCERS DEATILS
+    @GET()
+    Call<InfluencersModel> getInfluencers(@Url String url);
 }

@@ -18,6 +18,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Activities.ARviewActivity;
+import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.WebViewScreen;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.ModelClasses.GetProductDetailsModel;
@@ -225,6 +227,22 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
 
             }
         });
+
+        holder.imgARview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //OPEN AR VIEW
+                Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
+                mARviewIntent.putExtra(Constants.AR_VIEW_URL , recipesListData.get(position).getArmodel_url());
+                mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME , recipesListData.get(position).getArmodel_name());
+                mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL , recipesListData.get(position).getArmodel_sponsor());
+                mActivity.startActivity(mARviewIntent);
+
+            }
+        });
+
+
 
 
     }

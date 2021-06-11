@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.LoginActivityActivity;
 import com.Revealit.Activities.VideoViewActivity;
 import com.Revealit.Adapter.PlayCategoryListAdapter;
@@ -152,7 +153,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.txtPlay:
 
-                Intent mIntent = new Intent(mActivity, VideoViewActivity.class);
+                Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
                 mIntent.putExtra(Constants.MEDIA_URL ,""+mDatabaseHelper.getCategoryWisePlayList().get(0).getMediaUrl());
                 mIntent.putExtra(Constants.MEDIA_ID ,""+mDatabaseHelper.getCategoryWisePlayList().get(0).getMediaID());
                 mIntent.putExtra(Constants.VIDEO_NAME ,""+mDatabaseHelper.getCategoryWisePlayList().get(0).getMediaShowTitle());

@@ -40,7 +40,6 @@ public class Appcontroller extends MultiDexApplication {
         //SHAKE FEATURE
         TestFairy.enableFeedbackForm("shake");
 
-
     }
 
     public static synchronized Appcontroller getInstance() {

@@ -17,7 +17,6 @@ public class GetRecipesDetails {
 
     public class Data{
 
-
         private Integer id;
         private String name;
         private String video_id;

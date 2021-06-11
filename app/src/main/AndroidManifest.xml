@@ -102,7 +102,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".Activities.TestActivity"
+            android:name=".Activities.ARviewActivity"
             android:screenOrientation="landscape" />
 
         <activity
