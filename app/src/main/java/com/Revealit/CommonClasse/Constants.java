@@ -3,10 +3,17 @@ package com.Revealit.CommonClasse;
 public class Constants {
 
 
-    //API_END POINT
-    public static String API_END_POINTS_STAGING = "https://staging.api.revealit.io/";
-    public static String API_END_POINTS = "https://scapi.revealit.io/";
-    public static String API_END_POINTS_IVA_TEST = "https://tcapi.revealit.io/";
+  //API_END POINT STAGING GROUP(ZACH & GARRY) //S CURATOR
+   /* public static String API_END_POINTS_MOBILE = "https://staging.api.revealit.io/";
+    public static String API_END_POINTS_REGISTRATION = "https://scapi.revealit.io/";*/
+
+      //API_END POINT ALPHA GROUP(RIDDHI) //T CURATOR
+    public static String API_END_POINTS_MOBILE = "https://alpha.revealit.io/";
+    public static String API_END_POINTS_REGISTRATION = "https://tcapi.revealit.io/";
+
+    //API_END POINT BETA GROUP(JOHN) // B CURATOR
+   /* public static String API_END_POINTS_MOBILE = "https://beta.revealit.io";
+    public static String API_END_POINTS_REGISTRATION = "https://bcapi.revealit.io/";*/
 
     //API'S
     public static final String API_AUTHENTICATION = "auth/login";

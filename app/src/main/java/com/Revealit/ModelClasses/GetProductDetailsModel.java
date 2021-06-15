@@ -51,6 +51,7 @@ public class GetProductDetailsModel {
         private Object type;
         private String armodel;
         private String armodel_url;
+        private String glb_model_url;
         private Integer armodel_id;
         private Object armodel_name;
         private String armodel_sponsor;
@@ -59,6 +60,14 @@ public class GetProductDetailsModel {
         private String header_color;
         private Offers offers;
         private Images images;
+
+        public String getGlb_model_url() {
+            return glb_model_url;
+        }
+
+        public void setGlb_model_url(String glb_model_url) {
+            this.glb_model_url = glb_model_url;
+        }
 
         public Integer getItemId() {
             return item_id;

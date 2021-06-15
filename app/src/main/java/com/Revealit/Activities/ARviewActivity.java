@@ -40,8 +40,8 @@ public class ARviewActivity extends AppCompatActivity {
         Uri intentUri = null;
         intentUri = Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
 
-                .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/KitcheAid_Blender_cfd009624c77d60978e93715776a6d5b.glb")
-                //.appendQueryParameter("file", getIntent().getStringExtra(Constants.AR_VIEW_URL))
+                //.appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/KitcheAid_Blender_cfd009624c77d60978e93715776a6d5b.glb")
+                .appendQueryParameter("file", getIntent().getStringExtra(Constants.AR_VIEW_URL))
                 .appendQueryParameter("mode", "ar_only")
                 .appendQueryParameter("link ",getIntent().getStringExtra(Constants.AR_VIEW_MODEL_URL))
                 .appendQueryParameter("title ", getIntent().getStringExtra(Constants.AR_VIEW_MODEL_NAME))

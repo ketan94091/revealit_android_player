@@ -6,9 +6,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.PeriodicSync;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -16,36 +16,31 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.StrictMode;
-import android.support.v4.media.MediaBrowserCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,12 +51,9 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import com.Revealit.Adapter.BlueDotsMetaListAdapter;
 import com.Revealit.Adapter.InfluencersListAdapter;
-import com.Revealit.Adapter.MyRevealItListAdapter;
-import com.Revealit.Adapter.ProductPurchaseVendorListAdapter;
 import com.Revealit.Adapter.RecipesListAdapter;
 import com.Revealit.Adapter.ViewPagerProductImagesAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
@@ -69,7 +61,6 @@ import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.OnSwipeTouchListener;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.ModelClasses.DotsLocationsModel;
-import com.Revealit.ModelClasses.GetProductDetailsModel;
 import com.Revealit.ModelClasses.GetRecipesDetails;
 import com.Revealit.ModelClasses.InfluencersModel;
 import com.Revealit.R;
@@ -77,19 +68,12 @@ import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
-import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -100,29 +84,26 @@ import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
-import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -160,6 +141,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     private Bitmap savedBitMap;
     private int REQUEST_PERMISSION = 100;
     private boolean isPermissionGranted = false;
+    private int dialogHight = 0, dialogWidth = 0;
 
     String[] PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -168,6 +150,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     private ProgressBar progressLoadData;
     private int dotsCount;
     private ImageView[] dots;
+    private AlertDialog mAlertDialogRecipe;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -342,6 +325,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 //CLEAR EDIT TEXT ON EACH SHARE
                 edtTextOnCaptureImage.setText("");
 
+                //RESET SEEKBAR
+                seekFontSize.setProgress(0);
+
                 //GET CAPTURE SCREEN HEIGHT AND WIDTH
                 TextureView textureView = (TextureView) exoPlayer.getVideoSurfaceView();
 
@@ -417,6 +403,19 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
         }
 
+    }
+
+    @Override
+    public void onConfigurationChanged(@NotNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        //IF RECIPE DIALOG IS VISIBLE THEN CHANGE ORIENTATION OF THAT DIALOGE SAME AS DISPLAY IN INITIAL MODE
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (mAlertDialogRecipe != null && mAlertDialogRecipe.isShowing()) {
+                mAlertDialogRecipe.getWindow().setLayout(dialogWidth, dialogHight);
+            }
+        }
     }
 
     @Override
@@ -569,21 +568,22 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         player.addVideoListener(new SimpleExoPlayer.VideoListener() {
             @Override
             public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
-
+                
 
                 //GET VIDEO HEIGHT AND WIDTH
                 heightVideo = height;
                 widthVideo = width;
+                
 
                 //GET TEXTURE VIEW WHERE VIDEO WILL DISPLAY
                 //SET DYNAMIC HEIGHT WIDTH BASED ON LOADED VIDEO
                 TextureView textureView = (TextureView) exoPlayer.getVideoSurfaceView();
-                textureView.getLayoutParams().height = height;
+                textureView.getLayoutParams().height =height;
                 textureView.getLayoutParams().width = width;
                 textureView.requestLayout();
 
                 //SET DYNAMIC GRAVITY CENTRE
-                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height);
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height) ;
                 params.gravity = Gravity.CENTER;
                 textureView.setLayoutParams(params);
 
@@ -671,7 +671,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_STAGING)
+                .baseUrl(Constants.API_END_POINTS_MOBILE)
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -934,12 +934,17 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             @Override
                             public void onClick(View v) {
 
+
                                 //OPEN AR VIEW
-                                Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ARviewActivity.class);
-                                mARviewIntent.putExtra(Constants.AR_VIEW_URL , data.get(finalI).getArmodelUrl());
-                                mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME , data.get(finalI).getVendor());
-                                mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL , data.get(finalI).getVendorUrl());
-                                startActivity(mARviewIntent);
+                                if(data.get(finalI).getGlb_model_url() != null) {
+                                    Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ARviewActivity.class);
+                                    mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.get(finalI).getGlb_model_url());
+                                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
+                                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.get(finalI).getVendorUrl());
+                                    startActivity(mARviewIntent);
+                                }else{
+                                    CommonMethods.displayToast(mContext , getResources().getString(R.string.strNoARproduct));
+                                }
                             }
                         });
 
@@ -965,7 +970,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                 for (int i = 0; i < data.size(); i++) {
 
-                    if (data.get(i).getBlueDotMeta() != null) {
+                    if (data.get(i).getBlueDotMeta().size() != 0) {
 
                         //ADD DYNAMIC IMAGE VIEW
                         imgDynamicCoordinateView = new ImageView(this);
@@ -1286,18 +1291,35 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         final View dialogView = inflater.inflate(R.layout.alert_dialog_recipes, null);
         dialogBuilder.setView(dialogView);
 
-        final AlertDialog mAlertDialog = dialogBuilder.create();
-        mAlertDialog.setCancelable(false);
+        mAlertDialogRecipe = dialogBuilder.create();
+        mAlertDialogRecipe.setCancelable(false);
 
         //SET CURRENT PROGRESSBAR
         progressLoadData = (ProgressBar) dialogView.findViewById(R.id.progressLoadData);
 
-        //GET RECIPES DETAILS DETAILS
-        callGetRecipeData(dialogView, itemId, mAlertDialog);
+        final View decorView = mAlertDialogRecipe.getWindow().getDecorView();
+        decorView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        decorView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-        mAlertDialog.show();
+                        //GET HIGHT WIDTH OF THE DIALOG WHICH WE WILL USE FOR RESIZING THE VIEW
+                        dialogWidth = decorView.getMeasuredWidth();
+                        dialogHight = decorView.getMeasuredHeight();
+
+                    }
+
+                });
+
+        //GET RECIPES DETAILS DETAILS
+        callGetRecipeData(dialogView, itemId, mAlertDialogRecipe);
+
+
+        mAlertDialogRecipe.show();
 
     }
+
     private void callGetInfluencerData(View dialogView, String itemId, AlertDialog mAlertDialog) {
 
         CommonMethods.printLogE("Response @ callGetInfluencerData ITEM ID : ", "" + itemId);
@@ -1325,7 +1347,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_STAGING)
+                .baseUrl(Constants.API_END_POINTS_MOBILE)
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -1354,7 +1376,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     CommonMethods.printLogE("Response @ callGetInfluencerData : ", "" + gson.toJson(response.body()));
 
                     //UPDATE UI
-                  updateInfluencerUI(dialogView, response.body().getData(), mAlertDialog);
+                    updateInfluencerUI(dialogView, response.body().getData(), mAlertDialog);
 
 
                 } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
@@ -1418,7 +1440,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_STAGING)
+                .baseUrl(Constants.API_END_POINTS_MOBILE)
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -1509,7 +1531,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_STAGING)
+                .baseUrl(Constants.API_END_POINTS_MOBILE)
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -1531,7 +1553,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                     //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
                     imgInfluencer.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
                     imgInfluencer.setVisibility(View.GONE);
                 }
@@ -1580,7 +1602,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_STAGING)
+                .baseUrl(Constants.API_END_POINTS_MOBILE)
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -1602,7 +1624,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                     //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
                     imgRecipe.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
                     imgRecipe.setVisibility(View.GONE);
                 }
@@ -1613,8 +1635,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             public void onFailure(Call<GetRecipesDetails> call, Throwable t) {
 
 
-            //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
-             imgRecipe.setVisibility(View.GONE);
+                //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
+                imgRecipe.setVisibility(View.GONE);
 
             }
         });

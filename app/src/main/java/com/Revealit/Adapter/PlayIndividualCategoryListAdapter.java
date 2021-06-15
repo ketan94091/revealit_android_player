@@ -95,6 +95,7 @@ public class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Play
         //LOAD COVER IMAGE WITH GLIDE
         Glide.with(mActivity)
                 .load("" + strCategoryList.get(position).getMediaCoverArt())
+                .placeholder(R.drawable.placeholder)
                 .apply(new RequestOptions().override(800, 400).transform(new CenterCrop(), new RoundedCorners(16)))
                 .listener(new RequestListener<Drawable>() {
                     @Override

@@ -41,6 +41,7 @@ public class DotsLocationsModel {
         private Integer armodelId;
         private String armodel_sponsor;
         private String armodelSponsorImgUrl;
+        private String glb_model_url;
         private ItemWiki item_wiki;
         private String blue_dot_color;
         private List<BlueDotMetum> blue_dot_meta = null;
@@ -52,6 +53,14 @@ public class DotsLocationsModel {
         private Float bottomRatio;
         private Float xRatio;
         private Float yRatio;
+
+        public String getGlb_model_url() {
+            return glb_model_url;
+        }
+
+        public void setGlb_model_url(String glb_model_url) {
+            this.glb_model_url = glb_model_url;
+        }
 
         public Integer getFrameId() {
             return frameId;

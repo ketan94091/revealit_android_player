@@ -30,6 +30,7 @@ public class GetRecipesDetails {
         private Chef chef;
         private String armodel;
         private String armodel_url;
+        private String glb_model_url;
         private Integer armodel_id;
         private String armodel_name;
         private String armodel_sponsor;
@@ -38,6 +39,14 @@ public class GetRecipesDetails {
         private List<Object> ingredients = null;
         private List<Object> directions = null;
 
+
+        public String getGlb_model_url() {
+            return glb_model_url;
+        }
+
+        public void setGlb_model_url(String glb_model_url) {
+            this.glb_model_url = glb_model_url;
+        }
 
         public Integer getId() {
             return id;

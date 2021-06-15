@@ -24,7 +24,6 @@ import com.Revealit.ModelClasses.CheckEmailModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
-import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -299,7 +298,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements View.
 
             final OkHttpClient client = httpClient.build();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.API_END_POINTS)
+                    .baseUrl(Constants.API_END_POINTS_REGISTRATION)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
                     .build();

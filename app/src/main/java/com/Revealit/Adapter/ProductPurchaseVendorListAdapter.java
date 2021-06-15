@@ -90,6 +90,7 @@ public class ProductPurchaseVendorListAdapter extends RecyclerView.Adapter<Produ
 
         Glide.with(mContext)
                 .load(""+offersArrayList.get(position).getVendorLogoUrl())
+                .placeholder(R.drawable.placeholder)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

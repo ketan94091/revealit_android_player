@@ -71,7 +71,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true"
-        android:background="#CC000000">
+        android:background="@color/colorAppTheme">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -88,7 +88,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_alignParentBottom="true"
-                android:background="@color/colorAppTheme"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 

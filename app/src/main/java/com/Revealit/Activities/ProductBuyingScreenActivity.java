@@ -7,20 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.Display;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,14 +26,11 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.os.CancellationSignal;
-import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -49,9 +39,7 @@ import com.Revealit.Adapter.ProductPurchaseVendorListAdapter;
 import com.Revealit.Adapter.ViewPagerProductImagesAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
-import com.Revealit.CommonClasse.OnSwipeTouchListener;
 import com.Revealit.CommonClasse.SessionManager;
-import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.ModelClasses.GetProductDetailsModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
@@ -70,7 +58,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -157,7 +144,6 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     private void callGetProductData(View dialogView, String itemId, AlertDialog mAlertDialog) {
@@ -188,7 +174,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_STAGING)
+                .baseUrl(Constants.API_END_POINTS_MOBILE)
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -217,7 +203,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
 
                     //SAVE DATA
-                     mProductData = response.body().getData();
+                    mProductData = response.body().getData();
 
 
                     //UPDATE UI
@@ -257,7 +243,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
     }
 
-    private void updateProductDetailsUI(View dialogView,final GetProductDetailsModel.Data data, AlertDialog mAlertDialog) {
+    private void updateProductDetailsUI(View dialogView, final GetProductDetailsModel.Data data, AlertDialog mAlertDialog) {
 
         //LOAD HEADER IMAGE
         ImageView imgHeaderViewDialogView = (ImageView) dialogView.findViewById(R.id.imgHeaderView);
@@ -297,8 +283,8 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent mIntent = new Intent(mActivity, WebViewScreen.class);
-                mIntent.putExtra(Constants.RESEARCH_URL, "" +url);
-                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" +name);
+                mIntent.putExtra(Constants.RESEARCH_URL, "" + url);
+                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" + name);
                 startActivity(mIntent);
             }
         });
@@ -402,20 +388,24 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
         });
 
 
-
         //CLICK ON PURCHASE TEXT FOR BUY THIS PRODUCT
         LinearLayout linearImgARviewDialogView = (LinearLayout) dialogView.findViewById(R.id.linearImgARview);
         linearImgARviewDialogView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-              //OPEN AR VIEW
-              Intent mARviewIntent = new Intent(ProductBuyingScreenActivity.this, ARviewActivity.class);
-              mARviewIntent.putExtra(Constants.AR_VIEW_URL , data.getArmodelUrl());
-              mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME , data.getProductName());
-              mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL , data.getVendorUrl());
-              startActivity(mARviewIntent);
+                //OPEN AR VIEW
+                if (data.getGlb_model_url() != null) {
 
+                    Intent mARviewIntent = new Intent(ProductBuyingScreenActivity.this, ARviewActivity.class);
+                    mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.getGlb_model_url());
+                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProductName());
+                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.getVendorUrl());
+                    startActivity(mARviewIntent);
+
+                } else {
+                    CommonMethods.displayToast(mContext, getResources().getString(R.string.strNoARproduct));
+                }
 
 
             }
@@ -433,6 +423,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
 
     }
+
     private void setUiPageViewController(LinearLayout viewPagerCountDots) {
 
         dotsCount = mViewPagerProductImagesAdapter.getCount();
@@ -505,6 +496,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
         }
 
     }
+
     private void storeImage(Bitmap savedBitMap) {
 
         String root = Environment.getExternalStorageDirectory().toString();
@@ -521,6 +513,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     private void displayPopupWindow(View anchorView) {
 
         PopupWindow popupShareSocialMedia = new PopupWindow(ProductBuyingScreenActivity.this);

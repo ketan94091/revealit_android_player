@@ -168,6 +168,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener {
 
             case R.id.imgListen:
 
+                //SET IMAGE CLICKBLE FALSE
+                imgListen.setClickable(false);
 
                 if(tapCount < (mDatabaseHelper.getCategoryWisePlayList().size()+1)) {
 
@@ -214,6 +216,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener {
         //SET SIZE TO REVEAL IT
         txtRevealCount.setText(""+mCategoryWisePlayListModel.subList(from, to).size()+" reveals");
 
+        //SET IMAGE CLICKBLE TRUE
+        imgListen.setClickable(true);
     }
 
 

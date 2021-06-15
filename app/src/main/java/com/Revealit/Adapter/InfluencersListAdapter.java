@@ -85,16 +85,26 @@ public class InfluencersListAdapter extends RecyclerView.Adapter<InfluencersList
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        holder.txtChefName.setText(influencersDataList.get(position).getName());
+        if(influencersDataList.get(position).getName() !=  null) {
+            holder.txtChefName.setText(influencersDataList.get(position).getName());
+        }else {
+            holder.txtChefName.setText("");
+        }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            holder.txtHTMLInfluecersDetalis.setText(Html.fromHtml(influencersDataList.get(position).getBio(), Html.FROM_HTML_MODE_COMPACT));
-        } else {
-            holder.txtHTMLInfluecersDetalis.setText(Html.fromHtml(influencersDataList.get(position).getBio()));
+        if(influencersDataList.get(position).getBio() !=  null) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                holder.txtHTMLInfluecersDetalis.setText(Html.fromHtml(influencersDataList.get(position).getBio(), Html.FROM_HTML_MODE_COMPACT));
+            } else {
+                holder.txtHTMLInfluecersDetalis.setText(Html.fromHtml(influencersDataList.get(position).getBio()));
+            }
+        }else{
+            holder.txtHTMLInfluecersDetalis.setText("");
         }
 
         Glide.with(mContext)
                 .load(""+influencersDataList.get(position).getInfluencer_image())
+                .placeholder(R.drawable.placeholder)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

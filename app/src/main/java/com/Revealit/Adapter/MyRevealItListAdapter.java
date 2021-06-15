@@ -100,6 +100,7 @@ public class MyRevealItListAdapter extends RecyclerView.Adapter<MyRevealItListAd
         Glide.with(mActivity)
                 .load("" + testList.get(position).getMediaCoverArt())
                 .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(10)))
+                .placeholder(R.drawable.placeholder)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

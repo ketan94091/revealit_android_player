@@ -72,7 +72,8 @@
                         android:layout_alignParentBottom="true"
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="5dp"
-                        android:layout_toLeftOf="@+id/imgARview" />
+                        android:layout_toLeftOf="@+id/imgARview"
+                        />
 
                     <ImageView
                         android:id="@+id/imgARview"

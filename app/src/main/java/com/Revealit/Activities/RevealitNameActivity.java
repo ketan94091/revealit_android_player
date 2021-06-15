@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Trace;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -26,7 +25,6 @@ import com.Revealit.ModelClasses.UserRegistrationModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
-import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -241,7 +239,7 @@ public class RevealitNameActivity extends AppCompatActivity implements View.OnCl
 
         final OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS)
+                .baseUrl(Constants.API_END_POINTS_REGISTRATION)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
                 .build();
@@ -291,7 +289,7 @@ public class RevealitNameActivity extends AppCompatActivity implements View.OnCl
                         mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
 
                         Intent mIntent = new Intent(RevealitNameActivity.this, HomeScreenTabLayout.class);
-                        mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(mIntent);
 
                     }
