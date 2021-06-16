@@ -390,21 +390,24 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
         //CLICK ON PURCHASE TEXT FOR BUY THIS PRODUCT
         LinearLayout linearImgARviewDialogView = (LinearLayout) dialogView.findViewById(R.id.linearImgARview);
+
+
+        //AR VIEW ICON HIDE IF NO AR MODEL AVAILABLE
+        if (data.getGlb_model_url() == null) {
+            linearImgARviewDialogView.setVisibility(View.INVISIBLE);
+        }
+
         linearImgARviewDialogView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 //OPEN AR VIEW
-                if (data.getGlb_model_url() != null) {
-
+                if( CommonMethods.isDeviceSupportAR(mActivity)) {
                     Intent mARviewIntent = new Intent(ProductBuyingScreenActivity.this, ARviewActivity.class);
                     mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.getGlb_model_url());
                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProductName());
                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.getVendorUrl());
                     startActivity(mARviewIntent);
-
-                } else {
-                    CommonMethods.displayToast(mContext, getResources().getString(R.string.strNoARproduct));
                 }
 
 

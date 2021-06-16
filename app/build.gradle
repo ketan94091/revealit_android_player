@@ -8,7 +8,7 @@ android {
         targetSdkVersion 29
         multiDexEnabled true
         versionCode 1
-        versionName "0.0.8"
+        versionName "0.0.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -46,7 +46,7 @@ dependencies {
     implementation 'com.android.support:design:29.0.0'
 
 
-//to check internet connectivity
+    //to check internet connectivity
     implementation 'com.job:droidnet:2.0.0'
 
     //AppCompate support design lib
@@ -92,6 +92,8 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.6.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.6.1'
     implementation 'com.google.android.exoplayer:exoplayer-hls:2.6.1'
+
+    implementation 'com.google.ar:core:1.18.0'
 
 }
 

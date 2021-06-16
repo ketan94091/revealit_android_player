@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import com.Revealit.BuildConfig;
 import com.Revealit.R;
+import com.google.ar.core.ArCoreApk;
+import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
+import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
 
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
@@ -290,9 +293,60 @@ public class CommonMethods {
 
     }
 
-    public static boolean isDeviceSupportAR(Activity mActivity){
+    public static boolean isDeviceSupportAR(Activity mActivity) {
 
-     return false;
+        ArCoreApk.Availability availability = ArCoreApk.getInstance().checkAvailability(mActivity);
+
+        switch (availability) {
+            case UNSUPPORTED_DEVICE_NOT_CAPABLE:
+
+                displayToast(mActivity, "The device is not supported this feature");
+
+                return false;
+            case SUPPORTED_NOT_INSTALLED:
+
+                return isUpdatedARserviceInstalled(mActivity);
+
+            case SUPPORTED_INSTALLED:
+
+                return true;
+
+        }
+        return false;
+    }
+
+    public static boolean isUpdatedARserviceInstalled(Activity mActivity) {
+
+        try {
+
+            switch (ArCoreApk.getInstance().requestInstall(mActivity, true)) {
+                case INSTALLED:
+                    // Success: Safe to create the AR session.
+
+                    return true;
+                case INSTALL_REQUESTED:
+                    // When this method returns `INSTALL_REQUESTED`:
+                    // 1. ARCore pauses this activity.
+                    // 2. ARCore prompts the user to install or update Google Play
+                    //    Services for AR (market://details?id=com.google.ar.core).
+                    // 3. ARCore downloads the latest device profile data.
+                    // 4. ARCore resumes this activity. The next invocation of
+                    //    requestInstall() will either return `INSTALLED` or throw an
+                    //    exception if the installation or update did not succeed.
+                    return false;
+            }
+
+        } catch (UnavailableUserDeclinedInstallationException e) {
+            displayToast(mActivity, "User decline installation of Google Play Service!");
+            return false;
+        } catch (UnavailableDeviceNotCompatibleException e) {
+            displayToast(mActivity, "The device is not supported this feature!xxx");
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+
 
     }
 

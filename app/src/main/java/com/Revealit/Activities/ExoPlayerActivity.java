@@ -140,16 +140,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     private TextView txtVendorName, txtCancel, txtShare;
     private Bitmap savedBitMap;
     private int REQUEST_PERMISSION = 100;
-    private boolean isPermissionGranted = false;
     private int dialogHight = 0, dialogWidth = 0;
 
     String[] PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
-    private ViewPagerProductImagesAdapter mViewPagerProductImagesAdapter;
     private ProgressBar progressLoadData;
-    private int dotsCount;
-    private ImageView[] dots;
     private AlertDialog mAlertDialogRecipe;
 
 
@@ -161,8 +157,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
         setIds();
         setOnClicks();
-
-        Log.e("onCreate", "onCreate");
 
     }
 
@@ -238,6 +232,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
+        //INCREASED FONT SIZE WITH PROGRESSING SEEKBAR
         seekFontSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
@@ -262,6 +257,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
+                //VISIBLE EDIT TEXT ON TOUCH OF SNAP SHOT IMAGE
                 edtTextOnCaptureImage.setFocusable(true);
                 edtTextOnCaptureImage.setVisibility(View.VISIBLE);
 
@@ -306,14 +302,14 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
             case R.id.imgInfluencer:
 
-                //OPEN INFLUENCERS DAILOGE
+                //OPEN INFLUENCERS DIALOG
                 openInfluencerDialoge(strMediaID);
 
                 break;
 
             case R.id.imgRecipe:
 
-                //OPEN RECIPES DAILOGE
+                //OPEN RECIPES DIALOG
                 openRecipesDialoge(strMediaID);
 
                 break;
@@ -340,6 +336,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.imgBackArrow:
 
+                //STOP AND RELEASE PLAYER
                 player.stop();
                 player.release();
 
@@ -349,7 +346,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
             case R.id.imgVoulume:
 
-                //VOLUME CONTROL BASED ON CLICK OF VOLUME ICON
+                //VOLUME CONTROLLER BASED ON CLICK OF VOLUME ICON
                 if (linearMainBottomController.getVisibility() == View.VISIBLE) {
 
                     linearMainBottomController.setVisibility(View.GONE);
@@ -369,11 +366,13 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 relativeShareView.setVisibility(View.GONE);
 
                 //CLEAR EDIT TEXT
+                //SO EVERY SHARE VIEW IT'S SHOULD START FROM ZERO
                 edtTextOnCaptureImage.setText("");
 
                 break;
             case R.id.txtShare:
 
+                //CHECK IF EXTERNAL PERMISSION IS GRANTED OR NOT
                 if (mSessionManager.getPreferenceBoolean(Constants.READ_WRITE_PERMISSION)) {
 
                     //EDIT TEXT VISIBILITY GONE IN CASE OF THERE IS NO TEXT
@@ -395,6 +394,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                 } else {
 
+                    //OPNE PERMISSION DIALOG
                     readWriteExternalStoragePermission();
                 }
 
@@ -421,13 +421,14 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("onResume", "onResume");
+
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
 
+        //RELEASE PLAYER IN CASE BACK BUTTON PRESS
         player.stop();
         player.release();
 
@@ -437,19 +438,19 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onPause() {
         super.onPause();
-        Log.e("onPause", "onPause");
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.e("onStop", "onStop");
+
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.e("onRestart", "onRestart");
+
     }
 
     private void initializePlayer() {
@@ -528,7 +529,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     progress.setVisibility(View.GONE);
                     linearRecipeShareInfluencer.setVisibility(View.VISIBLE);
 
-                    //API CALL GET DOTS LOCATION
+                    //API CALL TO GET DOTS LOCATION
                     // PASS ARGUMENT WITH CURRENT VIDEO IN SECONDS
                     callLocationApi((int) player.getCurrentPosition() / 1000);
                 }
@@ -582,7 +583,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 textureView.getLayoutParams().width = width;
                 textureView.requestLayout();
 
-                //SET DYNAMIC GRAVITY CENTRE
+                //SET DYNAMIC GRAVITY CENTRE FOR TEXTURE VIEW
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height) ;
                 params.gravity = Gravity.CENTER;
                 textureView.setLayoutParams(params);
@@ -594,7 +595,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 frameOverlay.getLayoutParams().width = width;
                 frameOverlay.requestLayout();
 
-                //SET DYNAMIC GRAVITY CENTRE
+                //SET DYNAMIC GRAVITY CENTRE FOR FRAME LAYOUT ABOVE EXACTLY VIDEO SURFACE VIEW
                 RelativeLayout.LayoutParams ovrLayparam = new RelativeLayout.LayoutParams(width, height);
                 ovrLayparam.addRule(RelativeLayout.CENTER_HORIZONTAL);
                 ovrLayparam.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -608,13 +609,14 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 relativeShareView.requestLayout();
 
                 //SET DYNAMIC GRAVITY CENTRE
+                //LAYOUT MARGIN SO SHARE VIEW LOOKS SMALLER THAN ACTUAL VIDEO VIEW
                 RelativeLayout.LayoutParams shareView = new RelativeLayout.LayoutParams((width - 50), (height - 50));
                 shareView.addRule(RelativeLayout.CENTER_HORIZONTAL);
                 shareView.addRule(RelativeLayout.CENTER_VERTICAL);
                 relativeShareView.setLayoutParams(shareView);
 
 
-                //VISIBLE FRAMLAYOUT FOR DOTS
+                //INITIAL VISIBLITY OF FRAM LAYOUT
                 frameOverlay.setVisibility(View.GONE);
             }
 
@@ -902,7 +904,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                 for (int i = 0; i < data.size(); i++) {
 
-                    if (data.get(i).getArmodel() != null) {
+                    if (data.get(i).getGlb_model_url() != null) {
 
                         //ADD DYNAMIC IMAGE VIEW
                         imgDynamicCoordinateView = new ImageView(this);
@@ -935,16 +937,15 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             public void onClick(View v) {
 
 
-                                //OPEN AR VIEW
-                                if(data.get(finalI).getGlb_model_url() != null) {
+                                if( CommonMethods.isDeviceSupportAR(mActivity)) {
+                                    //OPEN AR VIEW
                                     Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ARviewActivity.class);
                                     mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.get(finalI).getGlb_model_url());
                                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
                                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.get(finalI).getVendorUrl());
                                     startActivity(mARviewIntent);
-                                }else{
-                                    CommonMethods.displayToast(mContext , getResources().getString(R.string.strNoARproduct));
                                 }
+
                             }
                         });
 
@@ -1030,8 +1031,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         frameOverlay.invalidate();
 
 
+        //FRAM OVEY VISIBLE AFTER DYNAMICALLY ADDED VIEW
         frameOverlay.setVisibility(View.VISIBLE);
 
+        //SET FRAM OVER LAY TOUCH FOR FURTHER FUNCTIONALITY
         setOverLayTouch();
 
         //CLOSE DIALOG
@@ -1101,7 +1104,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onClick(View v) {
 
-                //CHEK IF FACEBOOK INSTALLED OR NOT
+                //CHECK IF FACEBOOK INSTALLED OR NOT
                 if (CommonMethods.isAppInstalled(mContext, "com.facebook.katana")) {
 
                     SharePhoto photo = new SharePhoto.Builder().setBitmap(savedBitMap).build();
@@ -1304,7 +1307,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     public void onGlobalLayout() {
                         decorView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                        //GET HIGHT WIDTH OF THE DIALOG WHICH WE WILL USE FOR RESIZING THE VIEW
+                        //GET HEIGHT & WIDTH OF THE DIALOG WHICH WE WILL USE FOR RESIZING THE VIEW
                         dialogWidth = decorView.getMeasuredWidth();
                         dialogHight = decorView.getMeasuredHeight();
 

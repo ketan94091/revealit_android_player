@@ -11,22 +11,20 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 
-    <!--<uses-feature
-        android:name="android.hardware.camera.ar"
-        android:required="true" />-->
-
     <application
         android:name=".Utils.Appcontroller"
         android:allowBackup="true"
         android:icon="@drawable/app_icon_main"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        tools:node="merge"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
-        android:requestLegacyExternalStorage="true">
+        >
 
         <activity
             android:name=".Activities.SplashScreen"
@@ -42,7 +40,7 @@
             android:name=".Activities.ExoPlayerActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|uiMode|smallestScreenSize|layoutDirection"
             android:launchMode="singleTop"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
 
         <activity
             android:name=".Activities.LoginActivityActivity"
@@ -62,17 +60,17 @@
 
         <activity
             android:name=".Activities.VideoViewActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Activities.VideoViewActivityTest"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
 
-      <!--  <activity
-            android:name=".Activities.VideoViewActivity"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|uiMode|smallestScreenSize|layoutDirection"
-            android:launchMode="singleTop"
-            android:screenOrientation="landscape"
-            android:persistent="true"/>-->
+        <!--  <activity
+              android:name=".Activities.VideoViewActivity"
+              android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|uiMode|smallestScreenSize|layoutDirection"
+              android:launchMode="singleTop"
+              android:screenOrientation="landscape"
+              android:persistent="true"/>-->
         <activity
             android:name=".Activities.GettingStartedActivity"
             android:screenOrientation="portrait" />
@@ -117,20 +115,19 @@
             android:name=".CommonClasse.GlobalLocationService"
             android:enabled="true" />
 
-        <meta-data
-            android:name="com.google.ar.core"
+
+        <meta-data android:name="com.google.ar.core"
             android:value="optional" />
 
 
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
-
-        <provider android:authorities="com.facebook.app.FacebookContentProvider2113685165530675"
+        <provider
             android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider2113685165530675"
             android:exported="true" />
-
-
 
 
     </application>

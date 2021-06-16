@@ -212,7 +212,7 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
 
 
         //HIDE SHOW AR VIEW ICON
-        if(recipesListData.get(position).getArmodel_url() != null){
+        if(recipesListData.get(position).getGlb_model_url() != null){
             holder.imgARview.setVisibility(View.VISIBLE);
         }else {
             holder.imgARview.setVisibility(View.INVISIBLE);
@@ -260,14 +260,12 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
             public void onClick(View v) {
 
                 //OPEN AR VIEW
-                if(recipesListData.get(position).getGlb_model_url() != null) {
+                if( CommonMethods.isDeviceSupportAR(mActivity)) {
                     Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
                     mARviewIntent.putExtra(Constants.AR_VIEW_URL, recipesListData.get(position).getGlb_model_url());
                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, recipesListData.get(position).getArmodel_name());
                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, recipesListData.get(position).getArmodel_sponsor());
                     mActivity.startActivity(mARviewIntent);
-                }else {
-                    CommonMethods.displayToast(mContext , mContext.getResources().getString(R.string.strNoARproduct));
                 }
 
             }
