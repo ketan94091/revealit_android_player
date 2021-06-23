@@ -82,7 +82,6 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
     private int REQUEST_PERMISSION = 100;
     private int dotsCount;
     private ImageView[] dots;
-    private String shareImageFileName = "RevealitShareImage.jpg";
     String[] PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
@@ -502,10 +501,15 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
     private void storeImage(Bitmap savedBitMap) {
 
+        //DELET OLF FILES
         String root = Environment.getExternalStorageDirectory().toString();
+        File deletOldFiles = new File(root, mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
+        if (deletOldFiles.exists()) deletOldFiles.delete();
 
+        //SHARE IMAGE FILE NAME IN SESSION MANAGER SO WE CAN USE IT FURTHER FOR SOCIAL MEDIA SHARING
+        mSessionManager.updatePreferenceString(Constants.SAVED_IMAGE_FILE_NAME , ""+System.currentTimeMillis()+".jpg");
 
-        File file = new File(root, shareImageFileName);
+        File file = new File(root, mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
         if (file.exists()) file.delete();
         try {
             FileOutputStream out = new FileOutputStream(file);
@@ -570,7 +574,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
                     StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                     StrictMode.setVmPolicy(builder.build());
-                    File media = new File(Environment.getExternalStorageDirectory() + "/" + shareImageFileName);
+                    File media = new File(Environment.getExternalStorageDirectory() + "/" + mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
 
                     intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(media));
                     intent.setPackage("com.twitter.android");
@@ -593,7 +597,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
                     StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                     StrictMode.setVmPolicy(builder.build());
-                    File media = new File(Environment.getExternalStorageDirectory() + "/" + shareImageFileName);
+                    File media = new File(Environment.getExternalStorageDirectory() + "/" + mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
 
                     shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(media));
                     shareIntent.setPackage("com.instagram.android");

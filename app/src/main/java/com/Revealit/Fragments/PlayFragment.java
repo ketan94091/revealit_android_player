@@ -67,6 +67,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     private LinearLayoutManager recylerViewLayoutManager;
     private RecyclerView recycleCategoryList;
     private RelativeLayout ralativeMain;
+    private String strFetureMediaurl, strFetureMediaTitle, strFeatureImage;
+    private int intFeaturedMediaID =0;
 
     @Override
     public void onAttach(Context context) {
@@ -151,13 +153,17 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.txtPlay:
 
-                Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
-                mIntent.putExtra(Constants.MEDIA_URL ,""+mDatabaseHelper.getCategoryWisePlayList().get(0).getMediaUrl());
-                mIntent.putExtra(Constants.MEDIA_ID ,""+mDatabaseHelper.getCategoryWisePlayList().get(0).getMediaID());
-                mIntent.putExtra(Constants.VIDEO_NAME ,""+mDatabaseHelper.getCategoryWisePlayList().get(0).getMediaShowTitle());
-                mActivity.startActivity(mIntent);
+                if(intFeaturedMediaID != 0) {
 
-                //CommonMethods.displayToast(mContext, "CLICKED ON : SAVE BUTTON");
+                    Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
+                    mIntent.putExtra(Constants.MEDIA_URL, strFetureMediaurl);
+                    mIntent.putExtra(Constants.MEDIA_ID, "" + intFeaturedMediaID);
+                    mIntent.putExtra(Constants.VIDEO_NAME, "" + strFetureMediaTitle);
+                    mActivity.startActivity(mIntent);
+                }else {
+
+                   CommonMethods.displayToast(mContext, getResources().getString(R.string.strNoFeatureVideos));
+                }
 
                 break;
 
@@ -248,14 +254,14 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                     //INSERT DATA IN TO DATABASE
                                     //FURTHER WE WILL ONLY USE IT FROM DATABASE
 
-
-
                                     String strSlug = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("slug")).replaceAll("^\"|\"$", "");
 
                                     //CommonMethods.printLogE("SLUG : ", "" + strSlug);
 
                                     //INSERT CATEGORY NAMES
-                                    mDatabaseHelper.insertCategoryNames(strCategoryName, strSlug);
+                                    if(!strCategoryName.equalsIgnoreCase("New Mums")) {
+                                        mDatabaseHelper.insertCategoryNames(strCategoryName, strSlug);
+                                    }
 
                                     String strMediaShowTitle ,strMediaTitle;
 
@@ -290,14 +296,24 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                         //CommonMethods.printLogE("MEDIA COVER ART : ", "" + strMediaCoverArt);
 
 
-                                        mDatabaseHelper.insertCategoryWisePlayData(strCategoryName,
-                                                strSlug,
-                                                intMediaID,
-                                                strMediaShowTitle,
-                                                strMediaTitle,
-                                                strMediaType,
-                                                strMediaUrl,
-                                                strMediaCoverArt);
+                                        if(!strCategoryName.equalsIgnoreCase("New Mums")) {
+                                            mDatabaseHelper.insertCategoryWisePlayData(strCategoryName,
+                                                    strSlug,
+                                                    intMediaID,
+                                                    strMediaShowTitle,
+                                                    strMediaTitle,
+                                                    strMediaType,
+                                                    strMediaUrl,
+                                                    strMediaCoverArt);
+                                        }else if(strCategoryName.equalsIgnoreCase("New Mums")){
+
+                                            strFeatureImage = strMediaCoverArt;
+                                            strFetureMediaTitle = strMediaTitle;
+                                            strFetureMediaurl = strMediaUrl;
+                                            intFeaturedMediaID = intMediaID;
+
+                                        }
+
 
 
                                     }
@@ -363,15 +379,17 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
             mPlayCategoryListAdapter = new PlayCategoryListAdapter(mContext, mActivity, mDatabaseHelper.getCategoryList(), mDatabaseHelper);
             recycleCategoryList.setAdapter(mPlayCategoryListAdapter);
 
-            //SET BITE IMAGE
-            Glide.with(mActivity)
-                    .load(""+mDatabaseHelper.getCategoryWisePlayList().get(0).getMediaCoverArt())
-                    .apply(new RequestOptions().override(1000, 500))
-                    .placeholder(getResources().getDrawable(R.drawable.bite_templet))
-                    .into(imgBiteBanner);
+             //SET BITE IMAGE
+                Glide.with(mActivity)
+                        .load(strFeatureImage)
+                        .apply(new RequestOptions().override(1000, 500))
+                        .placeholder(getResources().getDrawable(R.drawable.bite_templet))
+                        .into(imgBiteBanner);
 
-            //SET BUT NAME
-            txtBiteTitle.setText(""+mDatabaseHelper.getCategoryWisePlayList().get(0).getMediaShowTitle());
+
+                //SET BUT NAME
+                txtBiteTitle.setText(strFetureMediaTitle);
+
 
         }
 

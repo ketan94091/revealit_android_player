@@ -29,6 +29,9 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.concurrent.Executor;
 
+import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
+import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
+
 public class BiomatricAuthenticationActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Activity mActivity;
@@ -80,7 +83,7 @@ public class BiomatricAuthenticationActivity extends AppCompatActivity implement
         //CHECK IF BIOMETRIC HARDWARE AVAILABLE OR NOT
         //ALSO USER ALLOW TO USE BIOMETRIC WHILE REGISTRAION OR FIRST LOGIN
         BiometricManager biometricManager = BiometricManager.from(mContext);
-        if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS && mSessionManager.getPreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC)) {
+        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK | BIOMETRIC_STRONG | DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS && mSessionManager.getPreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC)) {
 
             relativeMain.setVisibility(View.VISIBLE);
 

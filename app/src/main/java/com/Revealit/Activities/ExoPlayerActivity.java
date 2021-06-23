@@ -49,9 +49,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Adapter.ArModelColorListAdapter;
 import com.Revealit.Adapter.BlueDotsMetaListAdapter;
 import com.Revealit.Adapter.InfluencersListAdapter;
 import com.Revealit.Adapter.RecipesListAdapter;
@@ -131,7 +133,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     private SeekBar seekFontSize, ckVolumeBar;
     private AudioManager audioManager;
     private FrameLayout frameOverlay;
-    private String shareImageFileName = "RevealitShareImage.jpg", strMediaURL = "", strMediaID = "", strMediaTitle = "", strColorWhite = "#ffffff", strGreenDarkColor = "#84C14A", strGreenLightColor = "#5084C14A";
+    private String  strMediaURL = "", strMediaID = "", strMediaTitle = "", strColorWhite = "#ffffff", strGreenDarkColor = "#84C14A", strGreenLightColor = "#5084C14A";
     private ImageView imgDynamicCoordinateView;
     private List<DotsLocationsModel.Datum> locationData;
     private int heightVideo, widthVideo;
@@ -934,8 +936,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                         //ON LONG PRESS VISIBLE ONLY LONG PRESS ITEMS ELSE DISPLAY IN LIGHT COLOR
                         imgDynamicCoordinateView.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View v) {
+                            public void onClick(View mView) {
 
+                                View result = frameOverlay.findViewWithTag(mView.getTag());
+                                //selectArModelColors(result, finalI);
 
                                 if( CommonMethods.isDeviceSupportAR(mActivity)) {
                                     //OPEN AR VIEW
@@ -945,7 +949,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.get(finalI).getVendorUrl());
                                     startActivity(mARviewIntent);
                                 }
-
                             }
                         });
 
@@ -1067,10 +1070,16 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
     private void storeImage(Bitmap savedBitMap) {
 
+        //DELET OLF FILES
         String root = Environment.getExternalStorageDirectory().toString();
+        File deletOldFiles = new File(root, mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
+        if (deletOldFiles.exists()) deletOldFiles.delete();
+
+        //SHARE IMAGE FILE NAME IN SESSION MANAGER SO WE CAN USE IT FURTHER FOR SOCIAL MEDIA SHARING
+        mSessionManager.updatePreferenceString(Constants.SAVED_IMAGE_FILE_NAME , ""+System.currentTimeMillis()+".jpg");
 
 
-        File file = new File(root, shareImageFileName);
+        File file = new File(root, mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
         if (file.exists()) file.delete();
         try {
             FileOutputStream out = new FileOutputStream(file);
@@ -1135,7 +1144,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                     StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                     StrictMode.setVmPolicy(builder.build());
-                    File media = new File(Environment.getExternalStorageDirectory() + "/" + shareImageFileName);
+                    File media = new File(Environment.getExternalStorageDirectory() + "/" + mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
 
                     intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(media));
                     intent.setPackage("com.twitter.android");
@@ -1158,7 +1167,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                     StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                     StrictMode.setVmPolicy(builder.build());
-                    File media = new File(Environment.getExternalStorageDirectory() + "/" + shareImageFileName);
+                    File media = new File(Environment.getExternalStorageDirectory() + "/" + mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
 
                     shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(media));
                     shareIntent.setPackage("com.instagram.android");
@@ -1275,7 +1284,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         dialogBuilder.setView(dialogView);
 
         final AlertDialog mAlertDialog = dialogBuilder.create();
-        mAlertDialog.setCancelable(false);
+        mAlertDialog.setCancelable(true);
 
         //SET CURRENT PROGRESSBAR
         progressLoadData = (ProgressBar) dialogView.findViewById(R.id.progressLoadData);
@@ -1295,7 +1304,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         dialogBuilder.setView(dialogView);
 
         mAlertDialogRecipe = dialogBuilder.create();
-        mAlertDialogRecipe.setCancelable(false);
+        mAlertDialogRecipe.setCancelable(true);
 
         //SET CURRENT PROGRESSBAR
         progressLoadData = (ProgressBar) dialogView.findViewById(R.id.progressLoadData);
@@ -1746,6 +1755,36 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         } else {
             ActivityCompat.requestPermissions(this, PERMISSIONS, REQUEST_PERMISSION);
         }
+    }
+
+    private void selectArModelColors(View anchorView,int intArModelID) {
+
+        PopupWindow popupBlueDots = new PopupWindow(ExoPlayerActivity.this);
+        View layout = getLayoutInflater().inflate(R.layout.anchor_view_select_ar_model_colors, null);
+        layout.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        layout.measure(spec, spec);
+        popupBlueDots.setContentView(layout);
+        popupBlueDots.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupBlueDots.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupBlueDots.setOutsideTouchable(true);
+        popupBlueDots.setFocusable(true);
+        popupBlueDots.setBackgroundDrawable(new BitmapDrawable());
+        popupBlueDots.showAsDropDown(anchorView);
+
+        RecyclerView recycleChooseColors = (RecyclerView) layout.findViewById(R.id.recycleChooseColors);
+
+        //LAYOUT MANAGER FOR BLUE DOTS META
+        LinearLayoutManager recylerViewLayoutManager = new LinearLayoutManager(mActivity);
+        recycleChooseColors.setLayoutManager(recylerViewLayoutManager);
+        recycleChooseColors.setLayoutManager(new GridLayoutManager(this, 2));
+
+
+        String[] strings = {"#e84d6e","#46afcf","#7ebbff","#a36cef","#BBF7D0","#82c341"};
+
+        ArModelColorListAdapter mArModelColorListAdapter = new ArModelColorListAdapter(mContext, ExoPlayerActivity.this, strings);
+        recycleChooseColors.setAdapter(mArModelColorListAdapter);
+
     }
 
     @Override

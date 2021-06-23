@@ -62,6 +62,7 @@ public class Constants {
     public static final String AR_VIEW_URL = "arViewURL";
     public static final String AR_VIEW_MODEL_NAME = "arViewModelURL";
     public static final String AR_VIEW_MODEL_URL = "arViewModelURL";
+    public static final String SAVED_IMAGE_FILE_NAME = "savedImageFileName";
 
 
 

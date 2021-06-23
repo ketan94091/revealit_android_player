@@ -68,7 +68,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener {
     public static final Integer RecordAudioRequestCode = 1;
     private SpeechRecognizer speechRecognizer;
     private RippleBackground rippleBackground;
-    private int tapCount = 2;// IGONORE FIRST COUNT AND THEN START GETTING DATA FROM ITEMS TO END ITEMS.
+    private int tapCount = 1;// IGONORE FIRST COUNT AND THEN START GETTING DATA FROM ITEMS TO END ITEMS.
     private ArrayList<CategoryWisePlayListModel.DataBean> mCategoryWisePlayListModel = new ArrayList<>();
     private ArrayList<Long> mLongRevealTime = new ArrayList<>();
 
@@ -119,7 +119,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener {
         mLongRevealTime = new ArrayList<>();
         mLongRevealTime.clear();
 
-        tapCount = 2;
+        tapCount = 1;
 
         updateUI(0, 0);
 
@@ -185,7 +185,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener {
                             //ADD CURRENT TIME IN ARRAYLIST
                             mLongRevealTime.add(System.currentTimeMillis());
 
-                            updateUI(1, tapCount);
+                            updateUI(0, tapCount);
 
                             //INCREASE TAP COUNT
                             tapCount++;

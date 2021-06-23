@@ -47,9 +47,11 @@ public class PlayCategoryListAdapter extends RecyclerView.Adapter<PlayCategoryLi
         mDatabaseHelper = new DatabaseHelper(this.mContext);
         mDatabaseHelper.open();
 
-        //REMOVE FIRST OBJECT
+        /*//REMOVE FIRST OBJECT
         //AS FIRST OBJECT WE CONSIDER AS FEATURED AND WE ARE NOT SHOWING IT IN LIST
-        this.strCategoryList.remove(0);
+        if(strCategoryList.get(0).getCategoryName().equalsIgnoreCase("New Mums")) {
+            this.strCategoryList.remove("New Mums");
+        }*/
 
     }
 
