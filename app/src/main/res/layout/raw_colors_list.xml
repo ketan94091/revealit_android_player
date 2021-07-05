@@ -3,7 +3,7 @@
     android:id="@+id/relatativeMain"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="5dp">
+    android:padding="3dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -14,12 +14,9 @@
        >
         <ImageView
             android:id="@+id/imgTest"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_gravity="center_vertical"
-            android:layout_margin="5dp"
-            android:background="@color/colorBlack"
-            android:padding="2dp"
             />
 
     </LinearLayout>

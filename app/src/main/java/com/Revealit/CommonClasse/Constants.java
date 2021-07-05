@@ -4,12 +4,13 @@ public class Constants {
 
 
   //API_END POINT STAGING GROUP(ZACH & GARRY) //S CURATOR
-   /* public static String API_END_POINTS_MOBILE = "https://staging.api.revealit.io/";
+    /*public static String API_END_POINTS_MOBILE = "https://staging.api.revealit.io/";
     public static String API_END_POINTS_REGISTRATION = "https://scapi.revealit.io/";*/
 
       //API_END POINT ALPHA GROUP(RIDDHI) //T CURATOR
     public static String API_END_POINTS_MOBILE = "https://alpha.revealit.io/";
     public static String API_END_POINTS_REGISTRATION = "https://tcapi.revealit.io/";
+
 
     //API_END POINT BETA GROUP(JOHN) // B CURATOR
    /* public static String API_END_POINTS_MOBILE = "https://beta.revealit.io";
@@ -63,6 +64,7 @@ public class Constants {
     public static final String AR_VIEW_MODEL_NAME = "arViewModelURL";
     public static final String AR_VIEW_MODEL_URL = "arViewModelURL";
     public static final String SAVED_IMAGE_FILE_NAME = "savedImageFileName";
+    public static final String AR_MODEL_URL = "arModelURL";
 
 
 

@@ -153,6 +153,21 @@ public class DatabaseHelper {
 
         return mSqLiteDatabase.insert(TABLE_CATEGORY_WISE_PLAY_LIST, null, values);
 
+
+
+    }
+
+    public void deleteFirstRow()
+    {
+
+        Cursor cursor = mSqLiteDatabase.query(TABLE_CATEGORY_WISE_PLAY_LIST, null, null, null, null, null, null);
+
+        if(cursor.moveToFirst()) {
+            String rowId = cursor.getString(cursor.getColumnIndex(KEY_ID));
+
+            mSqLiteDatabase.delete(TABLE_CATEGORY_WISE_PLAY_LIST, KEY_ID + "=?",  new String[]{"0"});
+        }
+
     }
 
     //GET CATEGORY WIS ALL PLAY LIST

@@ -8,7 +8,7 @@ android {
         targetSdkVersion 29
         multiDexEnabled true
         versionCode 1
-        versionName "0.0.11"
+        versionName "0.0.17"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -93,7 +93,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.6.1'
     implementation 'com.google.android.exoplayer:exoplayer-hls:2.6.1'
 
-    implementation 'com.google.ar:core:1.18.0'
+    implementation 'com.google.ar:core:1.25.0'
 
 
 }

@@ -38,7 +38,7 @@ import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 
-public class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<PlayIndividualCategoryListAdapter.ViewHolder> {
+public  class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<PlayIndividualCategoryListAdapter.ViewHolder> {
 
 
     private View view;
@@ -46,14 +46,17 @@ public class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Play
     private Activity mActivity;
     private ViewHolder viewHolder;
     ArrayList<CategoryWisePlayListModel.DataBean> strCategoryList;
+    private int positionOfVideoList = 0;
 
 
-    public PlayIndividualCategoryListAdapter(Context mContext, Activity mActivity, ArrayList<CategoryWisePlayListModel.DataBean> strCategoryList) {
+    public PlayIndividualCategoryListAdapter(Context mContext, Activity mActivity, ArrayList<CategoryWisePlayListModel.DataBean> strCategoryList, int positionOfVideoList) {
         this.mContext = mContext;
         this.mActivity = mActivity;
         this.strCategoryList = strCategoryList;
+        this.positionOfVideoList =positionOfVideoList;
 
     }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 

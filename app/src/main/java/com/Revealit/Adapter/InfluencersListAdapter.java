@@ -66,7 +66,6 @@ public class InfluencersListAdapter extends RecyclerView.Adapter<InfluencersList
             imgSponsorLogo = (ImageView)mView.findViewById(R.id.imgSponsorLogo);
             imgChef = (ImageView)mView.findViewById(R.id.imgChef);
 
-
         }
     }
 
@@ -119,7 +118,7 @@ public class InfluencersListAdapter extends RecyclerView.Adapter<InfluencersList
 
 
         Glide.with(mContext)
-                .load(""+influencersDataList.get(position).getInfluencer_image())
+                .load("https://apac.sgp1.digitaloceanspaces.com/glacier/9692/1e7c6277-4014-444f-be46-c37249c700e2.jpeg")
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

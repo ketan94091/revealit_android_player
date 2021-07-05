@@ -21,7 +21,7 @@ public class SessionManager {
     @SuppressLint("WrongConstant")
     public void openSettings() {
         if (settings == null) {
-            settings =mContext.getSharedPreferences("amul_ai", Context.MODE_APPEND);
+            settings =mContext.getSharedPreferences("revealit", Context.MODE_APPEND);
 
         }
     }

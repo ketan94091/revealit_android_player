@@ -824,6 +824,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" + data.get(finalI).getVendor());
                             startActivity(mIntent);
 
+
                         }
                     });
 
@@ -938,17 +939,21 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             @Override
                             public void onClick(View mView) {
 
-                                View result = frameOverlay.findViewWithTag(mView.getTag());
-                                //selectArModelColors(result, finalI);
+                                /*View result = frameOverlay.findViewWithTag(mView.getTag());
+                                selectArModelColors(result, finalI ,data.get(finalI));*/
 
                                 if( CommonMethods.isDeviceSupportAR(mActivity)) {
                                     //OPEN AR VIEW
-                                    Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ARviewActivity.class);
+                                    Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ArModelViewerWeb.class);
                                     mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.get(finalI).getGlb_model_url());
                                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
                                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.get(finalI).getVendorUrl());
-                                    startActivity(mARviewIntent);
+                                    mARviewIntent.putExtra("ID", finalI);
+                                   startActivity(mARviewIntent);
                                 }
+
+
+
                             }
                         });
 
@@ -1757,7 +1762,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void selectArModelColors(View anchorView,int intArModelID) {
+    private void selectArModelColors(View anchorView, int intArModelID, DotsLocationsModel.Datum datum) {
 
         PopupWindow popupBlueDots = new PopupWindow(ExoPlayerActivity.this);
         View layout = getLayoutInflater().inflate(R.layout.anchor_view_select_ar_model_colors, null);
@@ -1777,13 +1782,24 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         //LAYOUT MANAGER FOR BLUE DOTS META
         LinearLayoutManager recylerViewLayoutManager = new LinearLayoutManager(mActivity);
         recycleChooseColors.setLayoutManager(recylerViewLayoutManager);
-        recycleChooseColors.setLayoutManager(new GridLayoutManager(this, 2));
+        recycleChooseColors.setLayoutManager(new GridLayoutManager(this, 3));
+        String[] strings = new String[5555555];
+        String[] stringURL = new String[5555555];
 
 
-        String[] strings = {"#e84d6e","#46afcf","#7ebbff","#a36cef","#BBF7D0","#82c341"};
 
-        ArModelColorListAdapter mArModelColorListAdapter = new ArModelColorListAdapter(mContext, ExoPlayerActivity.this, strings);
-        recycleChooseColors.setAdapter(mArModelColorListAdapter);
+        if(intArModelID == 1) {
+           strings = new String[]{"#579229", "#000000", "#f3f2ed"};
+            stringURL = new String[]{"https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/1c.BoosButcherBlock_Basil_Final.glb","https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/1a.BoosButchersBlock_Black_Final.glb","https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/1b.BoosButcherBlock_White_Final.glb"};
+        }else if(intArModelID == 2){
+            strings = new String[]{"#f3f2ed", "#BB371A"};
+            stringURL = new String[]{"https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/2_KitchenAid_Mixer_Pearl.glb","https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/2a.KitchenAid_StandMixer_CARED_680569095664.glb"};
+        }else {
+            strings = new String[]{"#579229", "#000000", "#f3f2ed"};
+            stringURL = new String[]{"https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/1c.BoosButcherBlock_Basil_Final.glb","https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/1a.BoosButchersBlock_Black_Final.glb","https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/1b.BoosButcherBlock_White_Final.glb"};
+        }
+        /*ArModelColorListAdapter mArModelColorListAdapter = new ArModelColorListAdapter(mContext, ExoPlayerActivity.this, strings, datum,stringURL);
+        recycleChooseColors.setAdapter(mArModelColorListAdapter);*/
 
     }
 

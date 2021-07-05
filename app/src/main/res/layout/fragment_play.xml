@@ -38,7 +38,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="20dp"
                 android:textColor="@color/colorWhite"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:textStyle="bold" />
 
             <ImageView
@@ -121,5 +121,16 @@
 
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txtNoPublishedVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/strNoPublishedVideo"
+        android:textColor="@color/colorGrayLight"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:visibility="gone"/>
 
 </RelativeLayout>

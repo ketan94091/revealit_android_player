@@ -92,13 +92,13 @@ public class PlayCategoryListAdapter extends RecyclerView.Adapter<PlayCategoryLi
         holder.txtCategoryTitle.setText(""+strCategoryList.get(position).getCategoryName());
 
 
-
         //SET DUMMY LIST VIEW
-        PlayIndividualCategoryListAdapter mPlayCategoryListAdapter = new PlayIndividualCategoryListAdapter(mContext,mActivity, mDatabaseHelper.getCategoryWisePlayListByName(strCategoryList.get(position).getCategoryName()));
+        PlayIndividualCategoryListAdapter mPlayCategoryListAdapter = new PlayIndividualCategoryListAdapter(mContext,mActivity, mDatabaseHelper.getCategoryWisePlayListByName(strCategoryList.get(position).getCategoryName()),position);
         holder.recycleIndividualCategoryList.setAdapter(mPlayCategoryListAdapter);
 
-    }
 
+
+    }
 
     @Override
     public int getItemCount() {

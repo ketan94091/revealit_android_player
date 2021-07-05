@@ -68,13 +68,13 @@ public class WebViewScreen extends AppCompatActivity implements View.OnClickList
         mDatabaseHelper = new DatabaseHelper(mContext);
         mDatabaseHelper.open();
 
-        webView = (WebView)findViewById(R.id.webView);
+        webView = (WebView) findViewById(R.id.webView);
 
-        imgBackArrow = (ImageView)findViewById(R.id.imgBackArrow);
+        imgBackArrow = (ImageView) findViewById(R.id.imgBackArrow);
 
-        txtTitle = (TextView)findViewById(R.id.txtTitle);
+        txtTitle = (TextView) findViewById(R.id.txtTitle);
 
-        progressbar = (ProgressBar)findViewById(R.id.progressbar);
+        progressbar = (ProgressBar) findViewById(R.id.progressbar);
 
         WebSettings webSettings = webView.getSettings();
         webView.setWebViewClient(new MyBrowser());
@@ -106,7 +106,7 @@ public class WebViewScreen extends AppCompatActivity implements View.OnClickList
     public void onClick(View mView) {
 
 
-        switch (mView.getId()){
+        switch (mView.getId()) {
 
 
             case R.id.imgBackArrow:

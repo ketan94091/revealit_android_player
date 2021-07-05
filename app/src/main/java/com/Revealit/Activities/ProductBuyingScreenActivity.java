@@ -72,7 +72,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ProductBuyingScreenActivity extends AppCompatActivity {
 
 
-    private FrameLayout frameOverlay;
     private Activity mActivity;
     private Context mContext;
     private SessionManager mSessionManager;

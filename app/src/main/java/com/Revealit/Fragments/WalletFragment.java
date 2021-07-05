@@ -35,6 +35,7 @@ import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -68,8 +69,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recycleRewardHistory;
     private LinearLayoutManager recylerViewLayoutManager;
     private RewardSummeryListAdapter2 mRewardSummeryListAdapter2;
-    private ImageView imgRefresh;
-    private TextView txtVersionName,txtCurrencyType, txtAmount, txtAccountName;
+    private ImageView imgSponsor,imgRefresh;
+    private TextView txtVersionName, txtCurrencyType, txtAmount, txtAccountName;
     private RelativeLayout relativeAccountDetails;
     private LinearLayout linearCurrency, linearRewardHistory;
     private int intPageCount = 0;
@@ -114,6 +115,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         intTotalPageCount = 0;
 
         imgRefresh = (ImageView) mView.findViewById(R.id.imgRefresh);
+        imgSponsor = (ImageView) mView.findViewById(R.id.imgSponsor);
 
         txtAccountName = (TextView) mView.findViewById(R.id.txtAccountName);
         txtAmount = (TextView) mView.findViewById(R.id.txtAmount);
@@ -251,8 +253,9 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
 
-        Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
-       // Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails("garry");
+        //Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+       //Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails("garry");
+      Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails("revrewards");
 
         call.enqueue(new Callback<GetAccountDetailsModel>() {
             @Override
@@ -273,7 +276,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                     CommonMethods.printLogE("Response @ callWalletDetails : ", "" + gson.toJson(response.body()));
 
-                   if(!response.body().getMessage().equals("Account Not Found")) {
+                    if (response.body().getMessage() == null ) {
 
                         //CHECK IF ACCOUNT DATA IS NULL
                         if (response.body().getData().getTokens() != null) {
@@ -322,7 +325,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                         //CALL REWARD HISTORY
                         callRewardHistory(0);
-                    }else {
+                    } else {
 
                         CommonMethods.closeDialog();
 
@@ -569,6 +572,17 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         //VISIBLE UI
         linearRewardHistory.setVisibility(View.VISIBLE);
 
+        //UPDATE SPONSOR IMAGE
+        //SET BITE IMAGE
+        Glide.with(mActivity)
+                .load("https://apac.sgp1.digitaloceanspaces.com/glacier/9692/1e7c6277-4014-444f-be46-c37249c700e2.jpeg")
+                .apply(new RequestOptions().override(500, 225))
+               .placeholder(getResources().getDrawable(R.drawable.placeholder))
+                .into(imgSponsor);
+
+        imgSponsor.setVisibility(View.INVISIBLE);
+
+
         //SET ADAPTER
         mRewardSummeryListAdapter2 = new RewardSummeryListAdapter2(mContext, mActivity, mDatabaseHelper.gettRewardHistoryData());
         recycleRewardHistory.setAdapter(mRewardSummeryListAdapter2);
@@ -682,8 +696,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             Collections.sort(this.currencyList, new Comparator() {
                 @Override
                 public int compare(Object alphacurrency, Object softDrinkTwo) {
-                    return ((GetAccountDetailsModel.Token.Values)alphacurrency).getSymbol()
-                            .compareTo(((GetAccountDetailsModel.Token.Values)softDrinkTwo).getSymbol());
+                    return ((GetAccountDetailsModel.Token.Values) alphacurrency).getSymbol()
+                            .compareTo(((GetAccountDetailsModel.Token.Values) softDrinkTwo).getSymbol());
                 }
             });
 
@@ -692,7 +706,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            private final TextView txtName,txtCurrencyTitle;
+            private final TextView txtName, txtCurrencyTitle;
             private final ImageView imgCurrencyIcon;
             private final LinearLayout linearMain;
 

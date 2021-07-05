@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.GradientDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -88,7 +89,9 @@ public class CommonMethods {
 
 
     public static void closeDialog() {
-        pDialog.dismiss();
+        if (pDialog.isShowing()) {
+            pDialog.dismiss();
+        }
     }
 
     public static String getDeviceToken(Activity mActivity) {
@@ -317,9 +320,12 @@ public class CommonMethods {
 
     public static boolean isUpdatedARserviceInstalled(Activity mActivity) {
 
+         boolean mUserRequestedInstall = true;
+
+
         try {
 
-            switch (ArCoreApk.getInstance().requestInstall(mActivity, true)) {
+            switch (ArCoreApk.getInstance().requestInstall(mActivity, mUserRequestedInstall)) {
                 case INSTALLED:
                     // Success: Safe to create the AR session.
 
@@ -333,6 +339,8 @@ public class CommonMethods {
                     // 4. ARCore resumes this activity. The next invocation of
                     //    requestInstall() will either return `INSTALLED` or throw an
                     //    exception if the installation or update did not succeed.
+
+                    mUserRequestedInstall = false;
                     return false;
             }
 
@@ -348,6 +356,15 @@ public class CommonMethods {
         return true;
 
 
+    }
+
+    public static GradientDrawable drawCircle(int backgroundColor, int borderColor) {
+        GradientDrawable shape = new GradientDrawable();
+        shape.setShape(GradientDrawable.OVAL);
+        shape.setCornerRadii(new float[]{0, 0, 0, 0, 0, 0, 0, 0});
+        shape.setColor(backgroundColor);
+        shape.setStroke(1, borderColor);
+        return shape;
     }
 
 }

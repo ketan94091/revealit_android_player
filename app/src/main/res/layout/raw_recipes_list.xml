@@ -65,15 +65,7 @@
                         android:layout_gravity="center_horizontal"
                         android:scaleType="fitXY"/>
 
-                    <ImageView
-                        android:id="@+id/imgVendorLogo"
-                        android:layout_width="60dp"
-                        android:layout_height="40dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="5dp"
-                        android:layout_toLeftOf="@+id/imgARview"
-                        />
+
 
                     <ImageView
                         android:id="@+id/imgARview"
@@ -211,13 +203,26 @@
 
         <RelativeLayout
             android:id="@+id/relativePurchase"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
             android:layout_below="@+id/linearInstructions"
-            android:layout_alignParentRight="true"
             android:layout_margin="15dp"
-            android:background="@drawable/round_corner_recipe_purchase_button">
+           >
 
+
+            <ImageView
+                android:id="@+id/imgVendorLogo"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_alignParentLeft="true"
+                />
+
+
+            <RelativeLayout
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/round_corner_recipe_purchase_button">
             <TextView
                 android:id="@+id/txtPurchase"
                 android:layout_width="wrap_content"
@@ -229,7 +234,11 @@
                 android:textColor="@color/colorBlack"
                 android:textSize="12dp"
                 android:textAllCaps="true"
-                android:textStyle="bold" />
+                android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal"
+                android:textStyle="bold"
+                />
+            </RelativeLayout>
 
         </RelativeLayout>
 

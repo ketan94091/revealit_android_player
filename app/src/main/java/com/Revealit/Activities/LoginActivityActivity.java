@@ -253,7 +253,7 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
             public void onFailure(Call<LoginAuthModel> call, Throwable t) {
 
 
-                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strUsernamePasswordWrong));
 
 
                 CommonMethods.closeDialog();

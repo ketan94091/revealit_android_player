@@ -268,6 +268,7 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
                     mActivity.startActivity(mARviewIntent);
                 }
 
+
             }
         });
 

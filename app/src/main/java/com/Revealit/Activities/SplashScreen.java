@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -124,6 +125,22 @@ public class SplashScreen extends AppCompatActivity {
                 }
             }
         }, 3000);
+
+
+       /* Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
+        Uri intentUri = null;
+        intentUri = Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
+                //.appendQueryParameter("file", getIntent().getStringExtra(Constants.AR_VIEW_URL))
+               .appendQueryParameter("file", "https://storage.googleapis.com/ar-answers-in-search-models/static/Tiger/model.glb")
+                .appendQueryParameter("mode", "ar_only")
+                .appendQueryParameter("link ",getIntent().getStringExtra(Constants.AR_VIEW_MODEL_URL))
+                .appendQueryParameter("title ", getIntent().getStringExtra(Constants.AR_VIEW_MODEL_NAME))
+                .build();
+        sceneViewerIntent.setData(intentUri);
+        sceneViewerIntent.setPackage("com.google.ar.core");
+        startActivity(sceneViewerIntent);
+        finish();
+*/
     }
 
 }

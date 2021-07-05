@@ -83,8 +83,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener {
         ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
         mView = inflater.inflate(R.layout.fragment_listen, container, false);
 
-        setIds();
-        setOnClicks();
 
         return mView;
 
@@ -126,31 +124,24 @@ public class ListenFragment extends Fragment implements View.OnClickListener {
 
 
     }
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        if (menuVisible) {
+            //SET IDS
+            setIds();
+            setOnClicks();
+        }
+        super.setMenuVisibility(menuVisible);
+    }
+
 
     @Override
     public void onResume() {
         super.onResume();
 
-
         //SET IDS
         setIds();
         setOnClicks();
-
-
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-
-        if (isVisibleToUser) {
-
-            //SET IDS
-            setIds();
-            setOnClicks();
-
-        }
 
 
     }

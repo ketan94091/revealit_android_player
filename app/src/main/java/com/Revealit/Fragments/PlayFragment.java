@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.LoginActivityActivity;
 import com.Revealit.Adapter.PlayCategoryListAdapter;
+import com.Revealit.Adapter.PlayIndividualCategoryListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -62,13 +64,13 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
     private ImageView imgBiteBrandLogo, imgBiteBanner;
-    private TextView txtPlay, txtSubTitleThree, txtSubTitleTwo, txtSubTitleOne, txtBiteTitle;
+    private TextView txtNoPublishedVideo, txtPlay, txtSubTitleThree, txtSubTitleTwo, txtSubTitleOne, txtBiteTitle;
     private PlayCategoryListAdapter mPlayCategoryListAdapter;
     private LinearLayoutManager recylerViewLayoutManager;
     private RecyclerView recycleCategoryList;
     private RelativeLayout ralativeMain;
-    private String strFetureMediaurl, strFetureMediaTitle, strFeatureImage;
-    private int intFeaturedMediaID =0;
+    private boolean isForFirstTime = true;
+    String strFeaturedMediaCoverImage ="", strFeaturedMediaTitle = "" , strFeaturedMidiaID = "" ,strFeaturedMidiaURL = "";
 
     @Override
     public void onAttach(Context context) {
@@ -81,7 +83,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
         mView = inflater.inflate(R.layout.fragment_play, container, false);
 
-
+        //SET IDS
         setIds();
         setOnClicks();
 
@@ -89,11 +91,24 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
+        if (!isForFirstTime) {
+            //CALL HOME SCREEN PLAY DATA API
+            getVideoPlayerRawData();
+        }
+    }
 
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        if (menuVisible) {
+            if (!isForFirstTime) {
+                //CALL HOME SCREEN PLAY DATA API
+                getVideoPlayerRawData();
+            }
+        }
+        super.setMenuVisibility(menuVisible);
     }
 
     private void setIds() {
@@ -115,6 +130,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         txtSubTitleTwo = (TextView) mView.findViewById(R.id.txtSubTitleTwo);
         txtSubTitleThree = (TextView) mView.findViewById(R.id.txtSubTitleThree);
         txtPlay = (TextView) mView.findViewById(R.id.txtPlay);
+        txtNoPublishedVideo = (TextView) mView.findViewById(R.id.txtNoPublishedVideo);
 
         ralativeMain = (RelativeLayout) mView.findViewById(R.id.ralativeMain);
 
@@ -153,16 +169,17 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.txtPlay:
 
-                if(intFeaturedMediaID != 0) {
 
+                if (mDatabaseHelper.getCategoryWisePlayList().size() != 0) {
                     Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
-                    mIntent.putExtra(Constants.MEDIA_URL, strFetureMediaurl);
-                    mIntent.putExtra(Constants.MEDIA_ID, "" + intFeaturedMediaID);
-                    mIntent.putExtra(Constants.VIDEO_NAME, "" + strFetureMediaTitle);
+                    mIntent.putExtra(Constants.MEDIA_URL, strFeaturedMidiaURL);
+                    mIntent.putExtra(Constants.MEDIA_ID, strFeaturedMidiaID);
+                    mIntent.putExtra(Constants.VIDEO_NAME, strFeaturedMediaTitle);
                     mActivity.startActivity(mIntent);
-                }else {
 
-                   CommonMethods.displayToast(mContext, getResources().getString(R.string.strNoFeatureVideos));
+                } else {
+
+                    CommonMethods.displayToast(mContext, getResources().getString(R.string.strNoFeatureVideos));
                 }
 
                 break;
@@ -170,10 +187,14 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         }
 
     }
+
     private void getVideoPlayerRawData() {
 
+
         //DISPLAY DIALOG
-        CommonMethods.showDialog(mContext);
+        if (isForFirstTime) {
+            CommonMethods.showDialog(mContext);
+        }
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -246,7 +267,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                             try {
                                 if (jsonObject.get(strCategoryName) instanceof JSONObject) {
 
-                                   // CommonMethods.printLogE("KEY : ", "" + strCategoryName);
+                                    // CommonMethods.printLogE("KEY : ", "" + strCategoryName);
 
                                     // CommonMethods.printLogE(" MEDIA DATA TYPE", " : " + gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get("media_type")).replaceAll("^\"|\"$", ""));
 
@@ -259,11 +280,18 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                     //CommonMethods.printLogE("SLUG : ", "" + strSlug);
 
                                     //INSERT CATEGORY NAMES
-                                    if(!strCategoryName.equalsIgnoreCase("New Mums")) {
+                                    if(i == 0){
+                                        if(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().size() != 1){
+
+                                            //CHECK IF FIRST CATEGORY HAS ONLY ONE VIDEO WHICH SHOULD CONSIDER AS FEATURED VIDEO AND SHOULD NOT DISPLAY THIS CATEGOTY IN VIDEO LIST
+                                            //IF MORE THAN 1 VIDEO FOUND IN FIRST CATEGORY THEN DISPLAY FIRST VIDEO FROM THIS CATEGORY AS FEATURED VIDEO AND REST OF VIDEO SHOULD DISPLAY IN VIDEO LIST
+                                            mDatabaseHelper.insertCategoryNames(strCategoryName, strSlug);
+                                        }
+                                    } else {
                                         mDatabaseHelper.insertCategoryNames(strCategoryName, strSlug);
                                     }
 
-                                    String strMediaShowTitle ,strMediaTitle;
+                                    String strMediaShowTitle, strMediaTitle;
 
 
                                     for (int j = 0; j < Integer.valueOf(gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().size())); j++) {
@@ -271,16 +299,16 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                         int intMediaID = Integer.valueOf(gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_id")).replaceAll("^\"|\"$", ""));
 
 
-                                        if(!gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_show_title")).equalsIgnoreCase("null")) {
-                                             strMediaShowTitle = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_show_title")).replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "");
-                                        }else {
-                                            strMediaShowTitle ="";
+                                        if (!gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_show_title")).equalsIgnoreCase("null")) {
+                                            strMediaShowTitle = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_show_title")).replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "");
+                                        } else {
+                                            strMediaShowTitle = "";
                                         }
 
-                                        if(!gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_title")).equalsIgnoreCase("null")) {
-                                             strMediaTitle = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_title")).replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "");
-                                        }else {
-                                            strMediaTitle ="";
+                                        if (!gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_title")).equalsIgnoreCase("null")) {
+                                            strMediaTitle = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_title")).replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "");
+                                        } else {
+                                            strMediaTitle = "";
                                         }
 
                                         String strMediaType = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_type")).replaceAll("^\"|\"$", "");
@@ -295,8 +323,14 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                         //CommonMethods.printLogE("MEDIA URL : ", "" + strMediaUrl);
                                         //CommonMethods.printLogE("MEDIA COVER ART : ", "" + strMediaCoverArt);
 
+                                        if(i == 0 && j == 0) {
 
-                                        if(!strCategoryName.equalsIgnoreCase("New Mums")) {
+                                            strFeaturedMidiaURL = ""+strMediaUrl;
+                                            strFeaturedMidiaID = ""+intMediaID;
+                                            strFeaturedMediaTitle = ""+strMediaTitle;
+                                            strFeaturedMediaCoverImage = ""+strMediaCoverArt;
+                                        }else {
+
                                             mDatabaseHelper.insertCategoryWisePlayData(strCategoryName,
                                                     strSlug,
                                                     intMediaID,
@@ -305,15 +339,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                                     strMediaType,
                                                     strMediaUrl,
                                                     strMediaCoverArt);
-                                        }else if(strCategoryName.equalsIgnoreCase("New Mums")){
-
-                                            strFeatureImage = strMediaCoverArt;
-                                            strFetureMediaTitle = strMediaTitle;
-                                            strFetureMediaurl = strMediaUrl;
-                                            intFeaturedMediaID = intMediaID;
-
                                         }
-
 
 
                                     }
@@ -330,6 +356,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
                     //CLOSE DIALOG
                     CommonMethods.closeDialog();
+
 
                     //BIND UI
                     updateUI();
@@ -374,24 +401,35 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         if (mDatabaseHelper.getCategoryList().size() != 0) {
 
             ralativeMain.setVisibility(View.VISIBLE);
+            txtNoPublishedVideo.setVisibility(View.GONE);
+
+
+
+            //SET BITE IMAGE
+            Glide.with(mActivity)
+                    .load(strFeaturedMediaCoverImage)
+                    .apply(new RequestOptions().override(450, 200))
+                    .placeholder(getResources().getDrawable(R.drawable.bite_templet))
+                    .into(imgBiteBanner);
+
+
+            //SET BUT NAME
+            txtBiteTitle.setText(strFeaturedMediaTitle);
+
 
             //SET CATEGORY LIST
             mPlayCategoryListAdapter = new PlayCategoryListAdapter(mContext, mActivity, mDatabaseHelper.getCategoryList(), mDatabaseHelper);
             recycleCategoryList.setAdapter(mPlayCategoryListAdapter);
 
-             //SET BITE IMAGE
-                Glide.with(mActivity)
-                        .load(strFeatureImage)
-                        .apply(new RequestOptions().override(1000, 500))
-                        .placeholder(getResources().getDrawable(R.drawable.bite_templet))
-                        .into(imgBiteBanner);
+        } else {
 
-
-                //SET BUT NAME
-                txtBiteTitle.setText(strFetureMediaTitle);
-
-
+            //VISIBLE IF NO DATA AVAILABLE
+            txtNoPublishedVideo.setVisibility(View.VISIBLE);
+            ralativeMain.setVisibility(View.GONE);
         }
+
+        //CHANGE VALUE
+        isForFirstTime = false;
 
 
     }

@@ -35,7 +35,7 @@
                     <ImageView
                         android:id="@+id/imgChef"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="200dp"
                         android:scaleType="fitXY"
                        />
 
@@ -89,13 +89,13 @@
             android:layout_below="@+id/linearInfluencers"
             android:layout_alignParentRight="true"
             android:layout_margin="15dp"
-            android:visibility="gone">
+           >
 
             <ImageView
                 android:id="@+id/imgSponsorLogo"
-                android:layout_width="70dp"
+                android:layout_width="100dp"
                 android:layout_height="50dp"
-
+                android:visibility="gone"
                 />
 
         </RelativeLayout>
