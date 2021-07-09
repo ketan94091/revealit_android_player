@@ -1,26 +1,19 @@
 package com.Revealit.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Display;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -92,22 +85,6 @@ public class SplashScreen extends AppCompatActivity {
         }
 
 
-        /*relativeDots.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if ((event.getAction() == MotionEvent.ACTION_DOWN)) {
-
-                    int x = (int) event.getX();
-                    int y = (int) event.getY();
-
-                    Log.e("X : ", ""+x);
-                    Log.e("Y : ", ""+y);
-
-                }
-                return true;
-            }
-        });
-*/
-
         new Handler().postDelayed(new Runnable() {
 
             @Override
@@ -127,20 +104,6 @@ public class SplashScreen extends AppCompatActivity {
         }, 3000);
 
 
-       /* Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
-        Uri intentUri = null;
-        intentUri = Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
-                //.appendQueryParameter("file", getIntent().getStringExtra(Constants.AR_VIEW_URL))
-               .appendQueryParameter("file", "https://storage.googleapis.com/ar-answers-in-search-models/static/Tiger/model.glb")
-                .appendQueryParameter("mode", "ar_only")
-                .appendQueryParameter("link ",getIntent().getStringExtra(Constants.AR_VIEW_MODEL_URL))
-                .appendQueryParameter("title ", getIntent().getStringExtra(Constants.AR_VIEW_MODEL_NAME))
-                .build();
-        sceneViewerIntent.setData(intentUri);
-        sceneViewerIntent.setPackage("com.google.ar.core");
-        startActivity(sceneViewerIntent);
-        finish();
-*/
     }
 
 }

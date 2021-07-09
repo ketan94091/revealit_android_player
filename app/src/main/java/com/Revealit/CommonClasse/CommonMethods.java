@@ -8,9 +8,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.format.DateFormat;
@@ -51,18 +51,32 @@ public class CommonMethods {
     }*/
 
     public static void buildDialog(Context mContext, String strMessege) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(mContext.getResources().getString(R.string.app_name));
-        builder.setMessage(strMessege);
-        builder.setNegativeButton(mContext.getResources().getString(R.string.strOk), null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle(mContext.getResources().getString(R.string.app_name));
+                builder.setMessage(strMessege);
+                builder.setNegativeButton(mContext.getResources().getString(R.string.strOk), null);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
+
     }
 
 
     public static void displayToast(Context mContext, String strMessege) {
 
-        Toast.makeText(mContext, strMessege, Toast.LENGTH_SHORT).show();
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(mContext, strMessege, Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     public static void displayLog(Context mContext, String strTag, String strMessege) {
@@ -81,17 +95,33 @@ public class CommonMethods {
     ;
 
     public static void showDialog(Context mContext) {
-        pDialog = new ProgressDialog(mContext);
-        pDialog.setMessage(mContext.getResources().getString(R.string.strPleaseWait));
-        pDialog.setCancelable(false);
-        pDialog.show();
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                pDialog = new ProgressDialog(mContext);
+                pDialog.setMessage(mContext.getResources().getString(R.string.strPleaseWait));
+                pDialog.setCancelable(false);
+                pDialog.show();
+            }
+        });
+
+
+
     }
 
 
     public static void closeDialog() {
-        if (pDialog.isShowing()) {
-            pDialog.dismiss();
-        }
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (pDialog.isShowing()) {
+                    pDialog.dismiss();
+                }
+            }
+        });
+
     }
 
     public static String getDeviceToken(Activity mActivity) {
@@ -365,6 +395,112 @@ public class CommonMethods {
         shape.setColor(backgroundColor);
         shape.setStroke(1, borderColor);
         return shape;
+    }
+
+    public static String getHtMLdataForARmodelViewer(String strURL){
+
+        String stringHtmlforAR = "<html>\n" +
+                "    <head>\n" +
+                "        <title>&lt;model-viewer&gt; Augmented Reality</title>\n" +
+                "        <meta charset=\"utf-8\">\n" +
+                "        <meta name=\"viewport\" content=\"width=device-width, user-scalable=no,\n" +
+                "        minimum-scale=1.0, maximum-scale=1.0\">\n" +
+                "        \n" +
+                "      \n" +
+                "        <!-- \uD83D\uDC81 Include both scripts below to support all browsers! -->\n" +
+                "      \n" +
+                "        <!-- Loads <model-viewer> for modern browsers: -->\n" +
+                "        <script type=\"module\" src=\"https://unpkg.com/@google/model-viewer/dist/model-viewer.js\">\n" +
+                "        </script>\n" +
+                "      \n" +
+                "        <!-- Loads <model-viewer> for old browsers like IE11: -->\n" +
+                "        <script nomodule=\"\" src=\"https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js\">\n" +
+                "        </script>\n" +
+                "      \n" +
+                "        <!-- The following libraries and polyfills are recommended to maximize browser support -->\n" +
+                "        <!-- NOTE: you must adjust the paths as appropriate for your project -->\n" +
+                "            \n" +
+                "        <!-- \uD83D\uDEA8 REQUIRED: Web Components polyfill to support Edge and Firefox < 63 -->\n" +
+                "        <script src=\"https://unpkg.com/@webcomponents/webcomponentsjs@2.1.3/webcomponents-loader.js\"></script>\n" +
+                "      \n" +
+                "        <!-- \uD83D\uDC81 OPTIONAL: Intersection Observer polyfill for better performance in Safari and IE11 -->\n" +
+                "        <script src=\"https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js\"></script>\n" +
+                "      \n" +
+                "        <!-- \uD83D\uDC81 OPTIONAL: Resize Observer polyfill improves resize behavior in non-Chrome browsers -->\n" +
+                "        <script src=\"https://unpkg.com/resize-observer-polyfill@1.5.1/dist/ResizeObserver.js\"></script>\n" +
+                "      \n" +
+                "        <!-- \uD83D\uDC81 OPTIONAL: Fullscreen polyfill is required for experimental AR features in Canary -->\n" +
+                "        <!--<script src=\"https://unpkg.com/fullscreen-polyfill@1.0.2/dist/fullscreen.polyfill.js\"></script>-->\n" +
+                "      \n" +
+                "        <!-- \uD83D\uDC81 OPTIONAL: Include prismatic.js for Magic Leap support -->\n" +
+                "        <!--<script src=\"https://unpkg.com/@magicleap/prismatic@0.18.2/prismatic.min.js\"></script>-->\n" +
+                "      <style type=\"text/css\">\n" +
+                "        body {\n" +
+                "  margin: 1em;\n" +
+                "  padding: 0;\n" +
+                "  font-family: Google Sans, Noto, Roboto, Helvetica Neue, sans-serif;\n" +
+                "  color: #244376;\n" +
+                "}\n" +
+                "\n" +
+                "\n" +
+                "#card {\n" +
+                "  margin: 3em auto;\n" +
+                "  display: flex;\n" +
+                "  flex-direction: column;\n" +
+                "  max-width: 600px;\n" +
+                "  border-radius: 6px;\n" +
+                "  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);\n" +
+                "  overflow: hidden;\n" +
+                "}\n" +
+                "\n" +
+                "model-viewer {\n" +
+                "  width: 100%;\n" +
+                "  height: 450px;\n" +
+                "}\n" +
+                "\n" +
+                ".attribution {\n" +
+                "  display: flex;\n" +
+                "  flex-direction: row;\n" +
+                "  margin: 1em;\n" +
+                "}\n" +
+                "\n" +
+                ".attribution h1 {\n" +
+                "  margin: 0 0 0.25em;\n" +
+                "}\n" +
+                "\n" +
+                ".attribution img {\n" +
+                "  opacity: 0.5;\n" +
+                "  height: 2em;\n" +
+                "}\n" +
+                "\n" +
+                ".attribution .cc {\n" +
+                "  flex-shrink: 0;\n" +
+                "  text-decoration: none;\n" +
+                "}\n" +
+                "\n" +
+                "footer {\n" +
+                "  display: flex;\n" +
+                "  flex-direction: column;\n" +
+                "  max-width: 600px;\n" +
+                "  margin: auto;\n" +
+                "  text-align: center;\n" +
+                "  font-style: italic;\n" +
+                "  line-height: 1.5em;\n" +
+                "}\n" +
+                "      </style>\n" +
+                "      </head>\n" +
+                "    <body>\n" +
+                "        <model-viewer src=\""+strURL+"\"+  auto-rotate=\"\" camera-controls=\"\" shadow-intensity=\"1\" alt=\"A 3D model of a rocket\" background-color=\"#70BCD1\" ar-status=\"not-presenting\">\n" +
+                "                        \n" +
+                "        </model-viewer>\n" +
+                "      \n" +
+                "      \n" +
+                "    </body>\n" +
+                "</html>\n";
+
+
+        return stringHtmlforAR;
+
     }
 
 }

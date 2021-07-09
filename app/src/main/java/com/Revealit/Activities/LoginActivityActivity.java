@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
@@ -23,7 +23,6 @@ import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -40,15 +39,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class LoginActivityActivity extends YouTubeBaseActivity implements View.OnClickListener {
+public class LoginActivityActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Activity mActivity;
     private Context mContext;
     private static final String TAG = "LoginActivityActivity";
 
-    private View mView;
-
-    public NavController navController;
 
     public NavigationView navigationView;
 
@@ -56,7 +52,7 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
     private DatabaseHelper mDatabaseHelper;
     private WebView webView;
     private EditText edtPassword, edtUsername;
-    private TextView txtLogin;
+    private TextView txtLogin,txtOk ,txtDontAllow;
 
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -64,7 +60,6 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
 
         setIds();
         setOnclick();
@@ -137,8 +132,8 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
 
 
         final AlertDialog mAlertDialog = dialogBuilder.create();
-        TextView txtDontAllow = (TextView) dialogView.findViewById(R.id.txtDontAllow);
-        TextView txtOk = (TextView) dialogView.findViewById(R.id.txtOk);
+        txtDontAllow = (TextView) dialogView.findViewById(R.id.txtDontAllow);
+        txtOk = (TextView) dialogView.findViewById(R.id.txtOk);
 
         txtDontAllow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,10 +258,13 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
 
     }
 
-    private boolean checkValidation() {
+    public boolean checkValidation() {
 
         if (edtUsername.getText().toString().isEmpty()) {
             CommonMethods.displayToast(mContext, getResources().getString(R.string.strEnterUserName));
+            return false;
+        }else if(!edtUsername.getText().toString().matches(Constants.EMAIL_VALIDATION_REGEX)){
+            CommonMethods.displayToast(mContext, getResources().getString(R.string.strValidEmail));
             return false;
         } else if (edtPassword.getText().toString().isEmpty()) {
             CommonMethods.displayToast(mContext, getResources().getString(R.string.strEnterPassword));
@@ -275,6 +273,20 @@ public class LoginActivityActivity extends YouTubeBaseActivity implements View.O
             return true;
         }
     }
+
+    public boolean checkValidation(String username , String password) {
+
+        if (username.isEmpty()) {
+          CommonMethods.displayToast(mContext, getResources().getString(R.string.strEnterUserName));
+            return false;
+        } else if (password.isEmpty()) {
+            CommonMethods.displayToast(mContext, getResources().getString(R.string.strEnterPassword));
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

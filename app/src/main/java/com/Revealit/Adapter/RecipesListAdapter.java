@@ -56,7 +56,7 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView txtRecipeName,txtRecipeShorDescription,txtIngridience,txtHtmlIngidience,txtHtmlInstructionsSteps,txtInstructions,txtChefName;
-        private final RelativeLayout relativePurchase;
+        private final RelativeLayout relativePurchaseText;
         private final ImageView imgRecipeLogo,imgVendorLogo ,imgChef,imgARview;
 
 
@@ -72,7 +72,7 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
             txtInstructions = (TextView) mView.findViewById(R.id.txtInstructions);
             txtHtmlInstructionsSteps = (TextView) mView.findViewById(R.id.txtHtmlInstructionsSteps);
 
-            relativePurchase = (RelativeLayout) mView.findViewById(R.id.relativePurchase);
+            relativePurchaseText = (RelativeLayout) mView.findViewById(R.id.relativePurchaseText);
 
             imgRecipeLogo = (ImageView)mView.findViewById(R.id.imgRecipeLogo);
             imgVendorLogo = (ImageView)mView.findViewById(R.id.imgVendorLogo);
@@ -228,9 +228,9 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
 
         //HIDE PURCHASE BUTTON VIEW ICON
         if(recipesListData.get(position).getShopping_url() != null){
-            holder.relativePurchase.setVisibility(View.VISIBLE);
+            holder.relativePurchaseText.setVisibility(View.VISIBLE);
         }else {
-            holder.relativePurchase.setVisibility(View.GONE);
+            holder.relativePurchaseText.setVisibility(View.GONE);
         }
 
 
@@ -243,7 +243,7 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
 
 
 
-        holder.relativePurchase.setOnClickListener(new View.OnClickListener() {
+        holder.relativePurchaseText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

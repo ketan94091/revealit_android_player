@@ -12,7 +12,6 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -21,8 +20,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -42,7 +39,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,11 +49,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.Revealit.Adapter.ArModelColorListAdapter;
 import com.Revealit.Adapter.BlueDotsMetaListAdapter;
 import com.Revealit.Adapter.InfluencersListAdapter;
 import com.Revealit.Adapter.RecipesListAdapter;
-import com.Revealit.Adapter.ViewPagerProductImagesAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.OnSwipeTouchListener;
@@ -133,10 +127,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     private SeekBar seekFontSize, ckVolumeBar;
     private AudioManager audioManager;
     private FrameLayout frameOverlay;
-    private String  strMediaURL = "", strMediaID = "", strMediaTitle = "", strColorWhite = "#ffffff", strGreenDarkColor = "#84C14A", strGreenLightColor = "#5084C14A";
+    public String  strMediaURL, strMediaID = "", strMediaTitle = "", strColorWhite = "#ffffff", strGreenDarkColor = "#84C14A", strGreenLightColor = "#5084C14A";
     private ImageView imgDynamicCoordinateView;
     private List<DotsLocationsModel.Datum> locationData;
-    private int heightVideo, widthVideo;
+    public int heightVideo, widthVideo;
     private RelativeLayout relativeCaptureImageWithText, relativeShareView;
     private EditText edtTextOnCaptureImage;
     private TextView txtVendorName, txtCancel, txtShare;
@@ -478,6 +472,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
 
         // This is the MediaSource representing the media to be played.
+        //strMediaURL = "https://revtesting.sgp1.digitaloceanspaces.com/video_media/_02d78c5fadffc4a277f27a1002bca8ea.mp4";
+
         Uri videoUri = Uri.parse(strMediaURL);
         MediaSource videoSource = new ExtractorMediaSource(videoUri, dataSourceFactory, extractorsFactory, null, null);
 
@@ -944,7 +940,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                                 if( CommonMethods.isDeviceSupportAR(mActivity)) {
                                     //OPEN AR VIEW
-                                    Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ArModelViewerWeb.class);
+                                    Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ARviewActivity.class);
                                     mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.get(finalI).getGlb_model_url());
                                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
                                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.get(finalI).getVendorUrl());
@@ -1236,13 +1232,13 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         return dp;
     }
 
-    public float getScreenResolutionX(Context context, float x) {
+    public float getScreenResolutionX(Context context, float xCoordinate) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
         int width = metrics.widthPixels;
-        int height = metrics.heightPixels;
+
 
         /*video image device
         720(video height) = 1250(vido width)
@@ -1256,18 +1252,17 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         //x = x Axis coordinate in terms of video height
         //xAxis = new X Axis in terms of device resolution matrix height
 
-        float xAxis = (x * width) / widthVideo;
+        float xAxis = (xCoordinate * width) / widthVideo;
 
 
         return xAxis;
     }
 
-    public float getScreenResolutionY(Context context, float y) {
+    public float getScreenResolutionY(Context context, float yCoordinate) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
-        int width = metrics.widthPixels;
         int height = metrics.heightPixels;
 
         // width = device screen with
@@ -1275,7 +1270,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         //y = y Axis coordinate in terms of video with
         //yAxis = new Y Axis in terms of device resolution matrix width
 
-        float yAxis = (y * height) / heightVideo;
+        float yAxis = (yCoordinate * height) / heightVideo;
 
 
         return yAxis;
@@ -1485,7 +1480,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     CommonMethods.printLogE("Response @ callGetRecipeData : ", "" + gson.toJson(response.body()));
 
                     //UPDATE UI
-                    updateProductDetailsUI(dialogView, response.body().getData(), mAlertDialog);
+                    updateRecipeDialoge(dialogView, response.body().getData(), mAlertDialog);
 
 
                 } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
@@ -1661,7 +1656,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    private void updateProductDetailsUI(View dialogView, List<GetRecipesDetails.Data> recipesListData, AlertDialog mAlertDialog) {
+    private void updateRecipeDialoge(View dialogView, List<GetRecipesDetails.Data> recipesListData, AlertDialog mAlertDialog) {
 
         //CLOSE DIALOGE
         ImageView imgCloseDailoge = (ImageView) dialogView.findViewById(R.id.imgCloseDailoge);

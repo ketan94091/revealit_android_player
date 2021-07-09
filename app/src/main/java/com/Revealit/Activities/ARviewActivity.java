@@ -1,34 +1,18 @@
 package com.Revealit.Activities;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.Revealit.CommonClasse.Constants;
-import com.Revealit.CommonClasse.SessionManager;
-import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.R;
-import com.Revealit.SqliteDatabase.DatabaseHelper;
-
-import java.util.List;
 
 public class ARviewActivity extends AppCompatActivity {
 
-
-    private FrameLayout frameOverlay;
-    private Activity mActivity;
-    private Context mContext;
-    private SessionManager mSessionManager;
-    private DatabaseHelper mDatabaseHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -6,6 +6,7 @@
     <string name="strWarningDialogTitle">Warning Message</string>
     <string name="strOk">Ok</string>
     <string name="strNoARproduct">No AR Product Available</string>
+    <string name="strValidEmail">Please Enter Valid Emailid</string>
     <string name="strNoFeatureVideos">No feature video available</string>
     <string name="strPleaseWait">Please Wait</string>
     <string name="strButton">Play Video</string>
