@@ -1,12 +1,11 @@
 package com.Revealit.RetrofitClass;
 
 
-import android.text.PrecomputedText;
-
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.ModelClasses.CheckEmailModel;
 import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.ModelClasses.GetAccountDetailsModel;
+import com.Revealit.ModelClasses.GetMultiColorGLB;
 import com.Revealit.ModelClasses.GetProductDetailsModel;
 import com.Revealit.ModelClasses.GetRecipesDetails;
 import com.Revealit.ModelClasses.InfluencersModel;
@@ -16,11 +15,8 @@ import com.Revealit.ModelClasses.UserRegistrationModel;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import kotlin.ParameterName;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -86,4 +82,13 @@ public interface UpdateAllAPI {
     //GET INFLUENCERS DEATILS
     @GET()
     Call<InfluencersModel> getInfluencers(@Url String url);
+
+    //GENERATE REWARD DATA
+    @POST(Constants.API_GENERATE_REWARD_DATA)
+    Call<JsonElement> rewardData(@Query(Constants.REWARD_TYPE) String type,
+                                 @Query(Constants.REWARD_TYPE_ID) String ID);
+
+    //GET MULTICOLOR GLBS
+    @GET()
+    Call<GetMultiColorGLB> getMulticolorGlbs(@Url String url);
 }

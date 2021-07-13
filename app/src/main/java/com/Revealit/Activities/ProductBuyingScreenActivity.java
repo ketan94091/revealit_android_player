@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -399,14 +398,25 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //OPEN AR VIEW
+
+                CommonMethods.buildDialog(mContext ,"This feature temporary unavailable!");
+
+
+                /*//OPEN AR VIEW
                 if( CommonMethods.isDeviceSupportAR(mActivity)) {
-                    Intent mARviewIntent = new Intent(ProductBuyingScreenActivity.this, ARviewActivity.class);
+
+                    *//*Intent mARviewIntent = new Intent(ProductBuyingScreenActivity.this, ARviewActivity.class);
                     mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.getGlb_model_url());
                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProductName());
                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.getVendorUrl());
+                    startActivity(mARviewIntent);*//*
+
+                    Intent mARviewIntent = new Intent(ProductBuyingScreenActivity.this, ArModelViewerWeb.class);
+                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProductName());
+                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.getVendorUrl());
+                    mARviewIntent.putExtra(Constants.AR_MODEL_ID, data.getArmodelId());
                     startActivity(mARviewIntent);
-                }
+                }*/
 
 
             }

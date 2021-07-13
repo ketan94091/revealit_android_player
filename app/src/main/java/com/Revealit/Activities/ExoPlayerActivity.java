@@ -45,7 +45,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -93,6 +92,8 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -108,6 +109,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -127,7 +129,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     private SeekBar seekFontSize, ckVolumeBar;
     private AudioManager audioManager;
     private FrameLayout frameOverlay;
-    public String  strMediaURL, strMediaID = "", strMediaTitle = "", strColorWhite = "#ffffff", strGreenDarkColor = "#84C14A", strGreenLightColor = "#5084C14A";
+    public String strMediaURL, strMediaID = "", strMediaTitle = "", strColorWhite = "#ffffff", strGreenDarkColor = "#84C14A", strGreenLightColor = "#5084C14A";
     private ImageView imgDynamicCoordinateView;
     private List<DotsLocationsModel.Datum> locationData;
     public int heightVideo, widthVideo;
@@ -530,6 +532,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     //API CALL TO GET DOTS LOCATION
                     // PASS ARGUMENT WITH CURRENT VIDEO IN SECONDS
                     callLocationApi((int) player.getCurrentPosition() / 1000);
+
+                    //CALL REWARD API
+                    //CASE -1 ---> PAUSE THE VIDEO
+                    callUploadRewardData(1 , Integer.parseInt(strMediaID));
                 }
             }
 
@@ -567,22 +573,22 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         player.addVideoListener(new SimpleExoPlayer.VideoListener() {
             @Override
             public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
-                
+
 
                 //GET VIDEO HEIGHT AND WIDTH
                 heightVideo = height;
                 widthVideo = width;
-                
+
 
                 //GET TEXTURE VIEW WHERE VIDEO WILL DISPLAY
                 //SET DYNAMIC HEIGHT WIDTH BASED ON LOADED VIDEO
                 TextureView textureView = (TextureView) exoPlayer.getVideoSurfaceView();
-                textureView.getLayoutParams().height =height;
+                textureView.getLayoutParams().height = height;
                 textureView.getLayoutParams().width = width;
                 textureView.requestLayout();
 
                 //SET DYNAMIC GRAVITY CENTRE FOR TEXTURE VIEW
-                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height) ;
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height);
                 params.gravity = Gravity.CENTER;
                 textureView.setLayoutParams(params);
 
@@ -798,11 +804,15 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                         }
                     });
 
-                    //ON TOUCH PURCHASE ITEMS DIALOG VISIBLE
+                    //ON CLICK PURCHASE SCREEN SHOULD SEE
                     int finalI = i;
                     imgDynamicCoordinateView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
+                            //CALL REWARD API
+                            //CASE - 2 ---> CLICK ON GREEN DOTS
+                            callUploadRewardData(2 ,Integer.parseInt(data.get(finalI).getItemId()));
 
                             Intent mIntent = new Intent(ExoPlayerActivity.this, ProductBuyingScreenActivity.class);
                             mIntent.putExtra("ITEM_ID", data.get(finalI).getItemId());
@@ -935,20 +945,22 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             @Override
                             public void onClick(View mView) {
 
-                                /*View result = frameOverlay.findViewWithTag(mView.getTag());
-                                selectArModelColors(result, finalI ,data.get(finalI));*/
+                                //CALL REWARD API
+                                //CASE - 2 ---> CLICK ON AMBER DOTS
+                                callUploadRewardData(2 ,Integer.parseInt(data.get(finalI).getItemId()));
 
-                                if( CommonMethods.isDeviceSupportAR(mActivity)) {
+
+                                CommonMethods.buildDialog(mContext ,"This feature temporary unavailable!");
+
+                               /* if (CommonMethods.isDeviceSupportAR(mActivity)) {
                                     //OPEN AR VIEW
-                                    Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ARviewActivity.class);
-                                    mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.get(finalI).getGlb_model_url());
+                                    Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ArModelViewerWeb.class);
                                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
                                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.get(finalI).getVendorUrl());
-                                    mARviewIntent.putExtra("ID", finalI);
-                                   startActivity(mARviewIntent);
+                                    mARviewIntent.putExtra(Constants.AR_MODEL_ID, data.get(finalI).getArmodelId());
+                                    startActivity(mARviewIntent);
                                 }
-
-
+*/
 
                             }
                         });
@@ -1006,6 +1018,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             @Override
                             public void onClick(View mView) {
 
+                                //CALL REWARD API
+                                //CASE - 2 ---> CLICK ON BLUE DOTS
+                                callUploadRewardData(2 ,Integer.parseInt(data.get(finalI).getItemId()));
+
                                 View result = frameOverlay.findViewWithTag(mView.getTag());
                                 displayBlueDotsInfo(result, data.get(finalI));
 
@@ -1053,12 +1069,20 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             public void onSwipeLeft() {
                 super.onSwipeLeft();
                 displayCoordinates(locationData, 4, ((int) 0));
+
+                //CALL REWARD API
+                //CASE -3 ---> SWIPE DOTS
+                callUploadRewardData(3 , Integer.parseInt(strMediaID));
             }
 
             @Override
             public void onSwipeRight() {
                 super.onSwipeRight();
                 displayCoordinates(locationData, 3, ((int) 0));
+
+                //CALL REWARD API
+                //CASE -3 ---> SWIPE DOTS
+                callUploadRewardData(3 , Integer.parseInt(strMediaID));
             }
 
             @Override
@@ -1077,7 +1101,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         if (deletOldFiles.exists()) deletOldFiles.delete();
 
         //SHARE IMAGE FILE NAME IN SESSION MANAGER SO WE CAN USE IT FURTHER FOR SOCIAL MEDIA SHARING
-        mSessionManager.updatePreferenceString(Constants.SAVED_IMAGE_FILE_NAME , ""+System.currentTimeMillis()+".jpg");
+        mSessionManager.updatePreferenceString(Constants.SAVED_IMAGE_FILE_NAME, "" + System.currentTimeMillis() + ".jpg");
 
 
         File file = new File(root, mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
@@ -1388,7 +1412,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     CommonMethods.printLogE("Response @ callGetInfluencerData : ", "" + gson.toJson(response.body()));
 
                     //UPDATE UI
-                    updateInfluencerUI(dialogView, response.body().getData(), mAlertDialog);
+                    updateInfluencerUI(dialogView, response.body(), mAlertDialog);
 
 
                 } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
@@ -1686,7 +1710,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    private void updateInfluencerUI(View dialogView, List<InfluencersModel.Data> influencersData, AlertDialog mAlertDialog) {
+    private void updateInfluencerUI(View dialogView, InfluencersModel influencersData, AlertDialog mAlertDialog) {
 
         //CLOSE DIALOGE
         ImageView imgCloseDailoge = (ImageView) dialogView.findViewById(R.id.imgCloseDailoge);
@@ -1703,7 +1727,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         LinearLayoutManager recylerViewLayoutManager = new LinearLayoutManager(mActivity);
         recycleviewInfluencerList.setLayoutManager(recylerViewLayoutManager);
 
-        InfluencersListAdapter mInfluencersListAdapter = new InfluencersListAdapter(mContext, mActivity, influencersData);
+        InfluencersListAdapter mInfluencersListAdapter = new InfluencersListAdapter(mContext, mActivity, influencersData.getData(), influencersData.getSponsor().getInfluencerAdvertImgUrl());
         recycleviewInfluencerList.setAdapter(mInfluencersListAdapter);
 
 
@@ -1757,47 +1781,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void selectArModelColors(View anchorView, int intArModelID, DotsLocationsModel.Datum datum) {
-
-        PopupWindow popupBlueDots = new PopupWindow(ExoPlayerActivity.this);
-        View layout = getLayoutInflater().inflate(R.layout.anchor_view_select_ar_model_colors, null);
-        layout.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        layout.measure(spec, spec);
-        popupBlueDots.setContentView(layout);
-        popupBlueDots.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupBlueDots.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupBlueDots.setOutsideTouchable(true);
-        popupBlueDots.setFocusable(true);
-        popupBlueDots.setBackgroundDrawable(new BitmapDrawable());
-        popupBlueDots.showAsDropDown(anchorView);
-
-        RecyclerView recycleChooseColors = (RecyclerView) layout.findViewById(R.id.recycleChooseColors);
-
-        //LAYOUT MANAGER FOR BLUE DOTS META
-        LinearLayoutManager recylerViewLayoutManager = new LinearLayoutManager(mActivity);
-        recycleChooseColors.setLayoutManager(recylerViewLayoutManager);
-        recycleChooseColors.setLayoutManager(new GridLayoutManager(this, 3));
-        String[] strings = new String[5555555];
-        String[] stringURL = new String[5555555];
-
-
-
-        if(intArModelID == 1) {
-           strings = new String[]{"#579229", "#000000", "#f3f2ed"};
-            stringURL = new String[]{"https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/1c.BoosButcherBlock_Basil_Final.glb","https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/1a.BoosButchersBlock_Black_Final.glb","https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/1b.BoosButcherBlock_White_Final.glb"};
-        }else if(intArModelID == 2){
-            strings = new String[]{"#f3f2ed", "#BB371A"};
-            stringURL = new String[]{"https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/2_KitchenAid_Mixer_Pearl.glb","https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/2a.KitchenAid_StandMixer_CARED_680569095664.glb"};
-        }else {
-            strings = new String[]{"#579229", "#000000", "#f3f2ed"};
-            stringURL = new String[]{"https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/1c.BoosButcherBlock_Basil_Final.glb","https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/1a.BoosButchersBlock_Black_Final.glb","https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/0/1b.BoosButcherBlock_White_Final.glb"};
-        }
-        /*ArModelColorListAdapter mArModelColorListAdapter = new ArModelColorListAdapter(mContext, ExoPlayerActivity.this, strings, datum,stringURL);
-        recycleChooseColors.setAdapter(mArModelColorListAdapter);*/
-
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -1806,6 +1789,90 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 mSessionManager.updatePreferenceBoolean(Constants.READ_WRITE_PERMISSION, true);
             }
         }
+
+    }
+
+    private void callUploadRewardData(int type, int videoORitemID) {
+
+        //CASE 1- USER PAUSE THE VIDEO
+        //CASE-2 - USER CLICK ANY DOTS SUCH AS GREEN, BLUE OR AMBER
+        //CASE-3 - USER SWIP DOTS ANY OF THE DOTS.
+
+        String strType=" " ;
+
+        switch (type) {
+            case 1:
+                strType = Constants.REWARD_TYPE_PAUSE;
+                break;
+            case 2:
+                strType = Constants.REWARD_TYPE_INTERECTION_OR_CLICK;
+                break;
+            case 3:
+                strType = Constants.REWARD_TYPE_SWIPE;
+                break;
+        }
+
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.API_END_POINTS_MOBILE)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+        JsonObject paramObject = new JsonObject();
+        paramObject.addProperty(Constants.REWARD_TYPE, strType);
+        paramObject.addProperty(Constants.REWARD_TYPE_ID, String.valueOf(videoORitemID));
+
+        Call<JsonElement> call = patchService1.rewardData(strType, String.valueOf(videoORitemID));
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+
+                CommonMethods.printLogE("Response @ callUploadRewardData: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callUploadRewardData: ", "" + response.code());
+
+
+                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+
+
+            }
+        });
 
     }
 

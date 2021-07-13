@@ -6,6 +6,7 @@ public class GetRecipesDetails {
 
     private List<Data> data = null;
 
+
     public List<Data> getData() {
         return data;
     }
@@ -15,7 +16,7 @@ public class GetRecipesDetails {
     }
 
 
-    public class Data{
+        public class Data{
 
         private Integer id;
         private String name;
@@ -230,6 +231,8 @@ public class GetRecipesDetails {
             this.img_url = img_url;
         }
     }
+
+
 
 
 }

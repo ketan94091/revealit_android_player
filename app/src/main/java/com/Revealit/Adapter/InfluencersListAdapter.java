@@ -2,25 +2,18 @@ package com.Revealit.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.Revealit.Activities.WebViewScreen;
-import com.Revealit.CommonClasse.Constants;
-import com.Revealit.ModelClasses.GetRecipesDetails;
 import com.Revealit.ModelClasses.InfluencersModel;
 import com.Revealit.R;
 import com.bumptech.glide.Glide;
@@ -40,13 +33,15 @@ public class InfluencersListAdapter extends RecyclerView.Adapter<InfluencersList
     private Activity mActivity;
     private ViewHolder viewHolder;
     private List<InfluencersModel.Data> influencersDataList = new ArrayList<>();
+    private  String influencerAdvertImgUrl;
 
 
-    public InfluencersListAdapter(Context mContext, Activity mActivity, List<InfluencersModel.Data> influencersDataList) {
+    public InfluencersListAdapter(Context mContext, Activity mActivity, List<InfluencersModel.Data> influencersDataList, String influencerAdvertImgUrl) {
 
         this.mContext= mContext;
         this.mActivity= mActivity;
         this.influencersDataList =influencersDataList;
+        this.influencerAdvertImgUrl =influencerAdvertImgUrl;
 
     }
 
@@ -118,7 +113,7 @@ public class InfluencersListAdapter extends RecyclerView.Adapter<InfluencersList
 
 
         Glide.with(mContext)
-                .load("https://apac.sgp1.digitaloceanspaces.com/glacier/9692/1e7c6277-4014-444f-be46-c37249c700e2.jpeg")
+                .load(influencerAdvertImgUrl)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -130,6 +125,12 @@ public class InfluencersListAdapter extends RecyclerView.Adapter<InfluencersList
                         return false;
                     }
                 }).into(holder.imgSponsorLogo);
+        //IMGVIEW WILL DISPLAY ONLY IN LAST VIEW
+        if(position == (influencersDataList.size() -1)){
+            holder.imgSponsorLogo.setVisibility(View.VISIBLE);
+        }else {
+            holder.imgSponsorLogo.setVisibility(View.GONE);
+        }
 
 
     }

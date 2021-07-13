@@ -16,7 +16,8 @@ public class Constants {
    /* public static String API_END_POINTS_MOBILE = "https://beta.revealit.io";
     public static String API_END_POINTS_REGISTRATION = "https://bcapi.revealit.io/";*/
 
-    //API'S
+
+  //API'S
     public static final String API_AUTHENTICATION = "auth/login";
     public static final String API_PLAY_CATEGORIES = "api/watch";
     public static final String API_GET_DOTS_LOCATIONS = "api/locations/fetch/";
@@ -30,6 +31,8 @@ public class Constants {
     public static final String API_GET_PRODUCT_DETAILS = "api/items/fetch/";
     public static final String API_GET_RECIPES_DETAILS = "/api/videos/";
     public static final String API_GET_INFLUENCERS_DETAILS = "/api/video/";
+    public static final String API_GENERATE_REWARD_DATA = "api/rewards";
+    public static final String API_GET_MULTICOLOR_GLBS = "api/ar/glb/";
 
 
     public static final String AUTH_TOKEN = "access_token";
@@ -63,8 +66,14 @@ public class Constants {
     public static final String AR_VIEW_URL = "arViewURL";
     public static final String AR_VIEW_MODEL_NAME = "arViewModelURL";
     public static final String AR_VIEW_MODEL_URL = "arViewModelURL";
+    public static final String AR_MODEL_ID = "arModelID";
     public static final String SAVED_IMAGE_FILE_NAME = "savedImageFileName";
     public static final String AR_MODEL_URL = "arModelURL";
+    public static final String REWARD_TYPE = "type";
+    public static final String REWARD_TYPE_ID = "id";
+    public static final String REWARD_TYPE_PAUSE = "REWARD_VIDEO_PAUSED";
+    public static final String REWARD_TYPE_INTERECTION_OR_CLICK = "REWARD_DOT_CLICK";
+    public static final String REWARD_TYPE_SWIPE = "REWARD_DOT_SWIPE";
 
 
 

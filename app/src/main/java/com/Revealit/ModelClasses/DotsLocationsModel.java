@@ -38,7 +38,7 @@ public class DotsLocationsModel {
         private String vendor_url;
         private String armodel;
         private String armodel_url;
-        private Integer armodelId;
+        private Integer armodel_id;
         private String armodel_sponsor;
         private String armodelSponsorImgUrl;
         private String glb_model_url;
@@ -231,11 +231,11 @@ public class DotsLocationsModel {
         }
 
         public Integer getArmodelId() {
-            return armodelId;
+            return armodel_id;
         }
 
-        public void setArmodelId(Integer armodelId) {
-            this.armodelId = armodelId;
+        public void setArmodelId(Integer armodel_id) {
+            this.armodel_id = armodel_id;
         }
 
         public String getArmodelSponsor() {

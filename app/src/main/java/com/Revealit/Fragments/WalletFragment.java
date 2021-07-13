@@ -69,11 +69,11 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recycleRewardHistory;
     private LinearLayoutManager recylerViewLayoutManager;
     private RewardSummeryListAdapter2 mRewardSummeryListAdapter2;
-    private ImageView imgSponsor,imgRefresh;
+    private ImageView imgSponsor, imgRefresh;
     private TextView txtVersionName, txtCurrencyType, txtAmount, txtAccountName;
     private RelativeLayout relativeAccountDetails;
     private LinearLayout linearCurrency, linearRewardHistory;
-    private int intPageCount = 0;
+    private int intPageCount = 1;
     private int intTotalPageCount = 0;
     private String strAccountName = "", strAmount = "";
 
@@ -111,7 +111,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         mDatabaseHelper.open();
 
         //REFRESH INITIAL COUNT
-        intPageCount = 0;
+        intPageCount = 1;
         intTotalPageCount = 0;
 
         imgRefresh = (ImageView) mView.findViewById(R.id.imgRefresh);
@@ -176,7 +176,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             case R.id.imgRefresh:
 
                 //REFRESH INITIAL COUNT
-                intPageCount = 0;
+                intPageCount = 1;
                 intTotalPageCount = 0;
 
                 //CALL WALLET(ACCOUNTS) DETAILS
@@ -254,8 +254,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
 
         //Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
-       //Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails("garry");
-      Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails("revrewards");
+        //Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails("garry");
+        Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails("revrewards");
 
         call.enqueue(new Callback<GetAccountDetailsModel>() {
             @Override
@@ -276,9 +276,9 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                     CommonMethods.printLogE("Response @ callWalletDetails : ", "" + gson.toJson(response.body()));
 
-                    if (response.body().getMessage() == null ) {
+                    if (response.body().getMessage() == null) {
 
-                        //CHECK IF ACCOUNT DATA IS NULL
+                        //CHECK IF ACCOUNT DATA IS NOT NULL
                         if (response.body().getData().getTokens() != null) {
 
                             //SET ACCOUNT DETAILS
@@ -418,7 +418,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                     mDatabaseHelper.clearRewardTable();
 
                     //SET TOTAL PAGE COUNT
-                    intTotalPageCount = response.body().getMeta().getTotal();
+                    intTotalPageCount = response.body().getMeta().getLastPage();
 
                     //SAVE DATA IN TO DATABASE
                     if (response.body().getData().size() != 0) {
@@ -577,7 +577,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         Glide.with(mActivity)
                 .load("https://apac.sgp1.digitaloceanspaces.com/glacier/9692/1e7c6277-4014-444f-be46-c37249c700e2.jpeg")
                 .apply(new RequestOptions().override(500, 225))
-               .placeholder(getResources().getDrawable(R.drawable.placeholder))
+                .placeholder(getResources().getDrawable(R.drawable.placeholder))
                 .into(imgSponsor);
 
         imgSponsor.setVisibility(View.INVISIBLE);
@@ -645,9 +645,11 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             holder.txtAmount.setText("" + rewardHistoryDataList.get(position).getAmount());
             holder.txtWhen.setText("" + rewardHistoryDataList.get(position).getDisplayDate());
 
+            //IF TOTAL PAGE AND CURRENT PAGE ARE SAME
+            //HIDE LOAD MORE BUTTON
             if (position == (rewardHistoryDataList.size() - 1) && intPageCount != intTotalPageCount) {
                 holder.txtLoadMore.setVisibility(View.VISIBLE);
-            } else {
+            }else{
                 holder.txtLoadMore.setVisibility(View.GONE);
             }
 

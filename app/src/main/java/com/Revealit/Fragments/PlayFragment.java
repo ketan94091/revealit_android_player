@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.LoginActivityActivity;
 import com.Revealit.Adapter.PlayCategoryListAdapter;
-import com.Revealit.Adapter.PlayIndividualCategoryListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -34,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 import org.json.JSONException;
@@ -170,7 +169,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
             case R.id.txtPlay:
 
 
-                if (mDatabaseHelper.getCategoryWisePlayList().size() != 0) {
+                if (!strFeaturedMidiaURL.isEmpty()) {
                     Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
                     mIntent.putExtra(Constants.MEDIA_URL, strFeaturedMidiaURL);
                     mIntent.putExtra(Constants.MEDIA_ID, strFeaturedMidiaID);
@@ -192,6 +191,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
 
         //DISPLAY DIALOG
+        //DIALOG SHOULD DISPLAY ONLY FOR THE FIRST TIME IN SECOND TIME WHEN WE CAME BACK FROM TABLE BAR MENU ITS REFRESH BUT NOT DISPLAY ANY DIALOG
         if (isForFirstTime) {
             CommonMethods.showDialog(mContext);
         }
@@ -323,6 +323,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                         //CommonMethods.printLogE("MEDIA URL : ", "" + strMediaUrl);
                                         //CommonMethods.printLogE("MEDIA COVER ART : ", "" + strMediaCoverArt);
 
+                                        //FIRST VIDEO SHOULD CONSIDER AS FEATURED VIDEO
                                         if(i == 0 && j == 0) {
 
                                             strFeaturedMidiaURL = ""+strMediaUrl;
@@ -359,7 +360,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
 
                     //BIND UI
-                    updateUI();
+                    updateUI(response.body().getAsJsonArray());
 
                 } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
 
@@ -396,9 +397,9 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    private void updateUI() {
+    private void updateUI(JsonArray asJsonArray) {
 
-        if (mDatabaseHelper.getCategoryList().size() != 0) {
+        if (asJsonArray.size() != 0) {
 
             ralativeMain.setVisibility(View.VISIBLE);
             txtNoPublishedVideo.setVisibility(View.GONE);

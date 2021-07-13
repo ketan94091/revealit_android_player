@@ -263,10 +263,7 @@ public class LoginActivityActivity extends AppCompatActivity implements View.OnC
         if (edtUsername.getText().toString().isEmpty()) {
             CommonMethods.displayToast(mContext, getResources().getString(R.string.strEnterUserName));
             return false;
-        }else if(!edtUsername.getText().toString().matches(Constants.EMAIL_VALIDATION_REGEX)){
-            CommonMethods.displayToast(mContext, getResources().getString(R.string.strValidEmail));
-            return false;
-        } else if (edtPassword.getText().toString().isEmpty()) {
+        }else if (edtPassword.getText().toString().isEmpty()) {
             CommonMethods.displayToast(mContext, getResources().getString(R.string.strEnterPassword));
             return false;
         } else {

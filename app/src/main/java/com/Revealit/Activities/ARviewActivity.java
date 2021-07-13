@@ -25,8 +25,8 @@ public class ARviewActivity extends AppCompatActivity {
         intentUri = Uri.parse("https://arvr.google.com/scene-viewer/1.1").buildUpon()
                 .appendQueryParameter("file", getIntent().getStringExtra(Constants.AR_VIEW_URL))
                 .appendQueryParameter("mode", "ar_only")
-                //.appendQueryParameter("link",""+getIntent().getStringExtra(Constants.AR_VIEW_MODEL_URL))
-                //.appendQueryParameter("title", ""+getIntent().getStringExtra(Constants.AR_VIEW_MODEL_NAME))
+                .appendQueryParameter("link",""+getIntent().getStringExtra(Constants.AR_VIEW_MODEL_URL))
+                .appendQueryParameter("title", ""+getIntent().getStringExtra(Constants.AR_VIEW_MODEL_NAME))
                 .build();
         sceneViewerIntent.setData(intentUri);
         //sceneViewerIntent.setPackage("com.google.ar.core");

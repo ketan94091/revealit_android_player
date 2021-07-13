@@ -18,12 +18,9 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.Revealit.Activities.ARviewActivity;
-import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.WebViewScreen;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
-import com.Revealit.ModelClasses.GetProductDetailsModel;
 import com.Revealit.ModelClasses.GetRecipesDetails;
 import com.Revealit.R;
 import com.bumptech.glide.Glide;
@@ -259,14 +256,27 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
             @Override
             public void onClick(View v) {
 
-                //OPEN AR VIEW
+
+                CommonMethods.buildDialog(mContext ,"This feature temporary unavailable!");
+
+
+              /*  //OPEN AR VIEW
                 if( CommonMethods.isDeviceSupportAR(mActivity)) {
-                    Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
+
+                   *//* Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
                     mARviewIntent.putExtra(Constants.AR_VIEW_URL, recipesListData.get(position).getGlb_model_url());
                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, recipesListData.get(position).getArmodel_name());
                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, recipesListData.get(position).getArmodel_sponsor());
                     mActivity.startActivity(mARviewIntent);
-                }
+*//*
+                    Intent mARviewIntent = new Intent(mActivity, ArModelViewerWeb.class);
+                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, recipesListData.get(position).getArmodel_name());
+                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, recipesListData.get(position).getArmodel_sponsor());
+                    mARviewIntent.putExtra(Constants.AR_MODEL_ID, recipesListData.get(position).getArmodel_id());
+                    mActivity.startActivity(mARviewIntent);
+
+                }*/
+
 
 
             }
