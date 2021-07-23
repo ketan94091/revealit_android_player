@@ -134,6 +134,10 @@
             android:authorities="com.facebook.app.FacebookContentProvider491514455263066"
             android:exported="true" />
 
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
 
     </application>
 

@@ -61,7 +61,7 @@
                     <ImageView
                         android:id="@+id/imgRecipeLogo"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="160dp"
                         android:layout_gravity="center_horizontal"
                         android:scaleType="fitXY"/>
 
@@ -140,7 +140,7 @@
                     <ImageView
                         android:id="@+id/imgChef"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="180dp"
                         android:layout_gravity="center_horizontal"
                         android:scaleType="fitXY"/>
 

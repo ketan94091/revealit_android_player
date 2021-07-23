@@ -8,7 +8,7 @@ android {
         targetSdkVersion 29
         multiDexEnabled true
         versionCode 1
-        versionName "0.0.20"
+        versionName "0.0.25"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
        // testInstrumentationRunner "com.android.support.test.runner.AndroidJUnitRunner"
     }
@@ -136,6 +136,9 @@ dependencies {
 // Optional if you need to detect intents.
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:2.2.1"
 
+    implementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
+
+
 
 
 
@@ -159,5 +162,6 @@ android {
    testfairyConfig {
        apiKey '5f8216034f7b9cb7327d84aa34f4c2301c794960'
    }
+
 }
 //TestFairy end

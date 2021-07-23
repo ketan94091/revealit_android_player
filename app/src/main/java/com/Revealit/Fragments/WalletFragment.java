@@ -1,6 +1,7 @@
 package com.Revealit.Fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -24,11 +25,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Activities.GettingStartedActivity;
+import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.Activities.LoginActivityActivity;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.ModelClasses.GetAccountDetailsModel;
+import com.Revealit.ModelClasses.LoginAuthModel;
 import com.Revealit.ModelClasses.RewardHistoryDatabaseModel;
 import com.Revealit.ModelClasses.RewardHistoryModel;
 import com.Revealit.R;
@@ -38,6 +42,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
@@ -89,15 +94,14 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
         mView = inflater.inflate(R.layout.fragment_wallet, container, false);
 
+        setIds();
+        setOnClicks();
+
         return mView;
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
 
-    }
 
     private void setIds() {
 
@@ -146,7 +150,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    @Override
+   /* @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
@@ -158,6 +162,21 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             //CALL WALLET(ACCOUNTS) DETAILS
             callWalletDetails();
         }
+    }*/
+
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        if (menuVisible) {
+
+            //SET IDS
+            setIds();
+            setOnClicks();
+
+            //CALL WALLET(ACCOUNTS) DETAILS
+            callWalletDetails();
+        }
+        super.setMenuVisibility(menuVisible);
     }
 
     private void setOnClicks() {
@@ -165,6 +184,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         imgRefresh.setOnClickListener(this);
         linearCurrency.setOnClickListener(this);
+        txtVersionName.setOnClickListener(this);
     }
 
 
@@ -194,8 +214,247 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                 break;
 
+            case R.id.txtVersionName:
+
+                //OPEN END POINT SELECTION DIALOG
+                openEndPointSelectionDialog();
+
+                break;
+
         }
 
+    }
+
+    private void openEndPointSelectionDialog() {
+
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mActivity);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.alert_dialog_endpoint_selection, null);
+        dialogBuilder.setView(dialogView);
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        mAlertDialog.setCancelable(true);
+
+        //SET CURRENT PROGRESSBAR
+        ImageView imgCloseDailoge = (ImageView) dialogView.findViewById(R.id.imgCloseDailoge);
+        LinearLayout linearScurator = (LinearLayout) dialogView.findViewById(R.id.linearScurator);
+        LinearLayout linearAlphacurator = (LinearLayout) dialogView.findViewById(R.id.linearAlphacurator);
+        LinearLayout linearBetacurator = (LinearLayout) dialogView.findViewById(R.id.linearBetacurator);
+
+        TextView txtScuratorMobile = (TextView) dialogView.findViewById(R.id.txtScuratorMobile);
+        TextView txtScuratorRegistration = (TextView) dialogView.findViewById(R.id.txtScuratorRegistration);
+        TextView txtAplhaCuratorMobile = (TextView) dialogView.findViewById(R.id.txtAplhaCuratorMobile);
+        TextView txtAplhaCuratorRegistration = (TextView) dialogView.findViewById(R.id.txtAplhaCuratorRegistration);
+        TextView txtBetaCuratorMobile = (TextView) dialogView.findViewById(R.id.txtBetaCuratorMobile);
+        TextView txtBetaCuratorRegistration = (TextView) dialogView.findViewById(R.id.txtBetaCuratorRegistration);
+
+        switch (mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)) {
+            case 1:
+
+                linearScurator.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
+
+                txtScuratorMobile.setTextColor(mContext.getResources().getColor(R.color.colorCurrency));
+                txtScuratorRegistration.setTextColor(mContext.getResources().getColor(R.color.colorCurrencyNameSelected));
+
+                break;
+            case 2:
+
+                linearAlphacurator.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
+
+                txtAplhaCuratorMobile.setTextColor(mContext.getResources().getColor(R.color.colorCurrency));
+                txtAplhaCuratorRegistration.setTextColor(mContext.getResources().getColor(R.color.colorCurrencyNameSelected));
+                break;
+
+            case 3:
+
+                linearBetacurator.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
+
+                txtBetaCuratorMobile.setTextColor(mContext.getResources().getColor(R.color.colorCurrency));
+                txtBetaCuratorRegistration.setTextColor(mContext.getResources().getColor(R.color.colorCurrencyNameSelected));
+                break;
+        }
+
+        imgCloseDailoge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+            }
+        });
+
+        linearScurator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //CHANGE API END POINT TO S CURATOR
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_S_CURATOR);
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_S_CURATOR);
+                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 1);
+
+                //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
+                //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN
+                checkUserAvailable();
+
+
+                mAlertDialog.dismiss();
+            }
+        });
+
+        linearAlphacurator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //CHANGE API END POINT TO ALPHA T CURATOR
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_T_CURATOR);
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_T_CURATOR);
+                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 2);
+
+
+                //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
+                //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN
+                checkUserAvailable();
+
+                mAlertDialog.dismiss();
+            }
+        });
+        linearBetacurator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //CHANGE API END POINT TO BETA B CURATOR
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_B_CURATOR);
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_B_CURATOR);
+                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 3);
+
+                //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
+                //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN
+                checkUserAvailable();
+
+
+                mAlertDialog.dismiss();
+            }
+        });
+
+        mAlertDialog.show();
+
+
+    }
+
+    private void checkUserAvailable() {
+
+        //LOGIN API CALL TO CHECK IF USER AVAILABLE OR NOT
+        //DISPLAY DIALOG
+        CommonMethods.showDialog(mContext);
+
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+        JsonObject paramObject = new JsonObject();
+        paramObject.addProperty(Constants.AUTH_USERNAME, mSessionManager.getPreference(Constants.PROTON_EMAIL));
+        paramObject.addProperty(Constants.AUTH_PASSWORD, mSessionManager.getPreference(Constants.PROTON_PASSWORD));
+
+        Call<LoginAuthModel> call = patchService1.loginAuth(paramObject);
+
+        call.enqueue(new Callback<LoginAuthModel>() {
+            @Override
+            public void onResponse(Call<LoginAuthModel> call, Response<LoginAuthModel> response) {
+
+                CommonMethods.printLogE("Response @ Login: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ Login: ", "" + response.code());
+
+                //CLOSE DIALOG
+                CommonMethods.closeDialog();
+
+
+                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+
+                    Gson gson = new GsonBuilder()
+                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                            .serializeNulls()
+                            .create();
+
+                    CommonMethods.printLogE("Response @ Login: ", "" + gson.toJson(response.body()));
+
+                    //SAVE AUTHENTICATION DATA
+                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN, response.body().getAccessToken());
+                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE, response.body().getTokenType());
+                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_EXPIRES_IN, response.body().getExpiresIn());
+                    // mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME ,response.body().getProton_account_name());
+                    mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, true);
+                    mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN, true);
+
+                    //REFRESH USER
+                    sendUserForReLogin(2);
+
+
+                } else {
+
+                    //SEND USER TO LOGIN PAGE
+                    sendUserForReLogin(1);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginAuthModel> call, Throwable t) {
+
+
+                //SEND USER TO LOGIN PAGE
+                sendUserForReLogin(1);
+
+                //CLOSE DIALOGE
+                CommonMethods.closeDialog();
+
+
+            }
+        });
+
+    }
+
+    private void sendUserForReLogin(int intCommand) {
+
+        if(intCommand == 1){
+
+            //CHANGE VALUE IF USER NOT PRESENT IN SELECTED CURATOR
+            mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, false);
+
+            //UPDATE FLAG IF USER ALLOW BIOMETRIC AUTHENTICATION
+            mSessionManager.updatePreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC, false);
+
+        Intent mIntent = new Intent(mActivity, GettingStartedActivity.class);
+        startActivity(mIntent);
+        mActivity.finish();
+
+        }else{
+            Intent mIntent = new Intent(mActivity, HomeScreenTabLayout.class);
+            startActivity(mIntent);
+            mActivity.finish();
+        }
     }
 
     private void openCurrencySelectorDialog() {
@@ -246,7 +505,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         final OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_REGISTRATION)
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_REGISTRATION_KEY))
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
                 .build();
@@ -382,7 +641,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_MOBILE)
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -490,7 +749,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_MOBILE)
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -649,7 +908,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             //HIDE LOAD MORE BUTTON
             if (position == (rewardHistoryDataList.size() - 1) && intPageCount != intTotalPageCount) {
                 holder.txtLoadMore.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 holder.txtLoadMore.setVisibility(View.GONE);
             }
 

@@ -220,7 +220,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_MOBILE)
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -280,7 +280,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                     //CommonMethods.printLogE("SLUG : ", "" + strSlug);
 
                                     //INSERT CATEGORY NAMES
-                                    if(i == 0){
+                                   /* if(i == 0){
                                         if(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().size() != 1){
 
                                             //CHECK IF FIRST CATEGORY HAS ONLY ONE VIDEO WHICH SHOULD CONSIDER AS FEATURED VIDEO AND SHOULD NOT DISPLAY THIS CATEGOTY IN VIDEO LIST
@@ -289,7 +289,12 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                         }
                                     } else {
                                         mDatabaseHelper.insertCategoryNames(strCategoryName, strSlug);
-                                    }
+                                    }*/
+
+                                    //FEATURED VIDEO SHOULD NOT ADD IN DATABASE
+                                   if(!strSlug.equalsIgnoreCase("Featured")) {
+                                       mDatabaseHelper.insertCategoryNames(strCategoryName, strSlug);
+                                   }
 
                                     String strMediaShowTitle, strMediaTitle;
 
@@ -324,7 +329,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                         //CommonMethods.printLogE("MEDIA COVER ART : ", "" + strMediaCoverArt);
 
                                         //FIRST VIDEO SHOULD CONSIDER AS FEATURED VIDEO
-                                        if(i == 0 && j == 0) {
+                                     /*   if(i == 0 && j == 0) {
 
                                             strFeaturedMidiaURL = ""+strMediaUrl;
                                             strFeaturedMidiaID = ""+intMediaID;
@@ -332,6 +337,23 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                             strFeaturedMediaCoverImage = ""+strMediaCoverArt;
                                         }else {
 
+                                            mDatabaseHelper.insertCategoryWisePlayData(strCategoryName,
+                                                    strSlug,
+                                                    intMediaID,
+                                                    strMediaShowTitle,
+                                                    strMediaTitle,
+                                                    strMediaType,
+                                                    strMediaUrl,
+                                                    strMediaCoverArt);
+                                        }*/
+
+                                        //FEATURED VIDEO SHOULD NOT ADD IN DATABASE
+                                        if(strSlug.equalsIgnoreCase("Featured")) {
+                                            strFeaturedMidiaURL = ""+strMediaUrl;
+                                            strFeaturedMidiaID = ""+intMediaID;
+                                            strFeaturedMediaTitle = ""+strMediaTitle;
+                                            strFeaturedMediaCoverImage = ""+strMediaCoverArt;
+                                        }else {
                                             mDatabaseHelper.insertCategoryWisePlayData(strCategoryName,
                                                     strSlug,
                                                     intMediaID,

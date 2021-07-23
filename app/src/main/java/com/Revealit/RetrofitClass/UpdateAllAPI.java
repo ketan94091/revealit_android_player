@@ -91,4 +91,8 @@ public interface UpdateAllAPI {
     //GET MULTICOLOR GLBS
     @GET()
     Call<GetMultiColorGLB> getMulticolorGlbs(@Url String url);
+
+    //GET MULTICOLOR GLBS
+    @GET()
+    Call<JsonElement> test(@Url String url);
 }

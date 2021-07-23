@@ -65,11 +65,9 @@ public class SplashScreen extends AppCompatActivity {
                 md.update(signature.toByteArray());
                 Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
-        }
-        catch (PackageManager.NameNotFoundException e) {
+        } catch (PackageManager.NameNotFoundException e) {
 
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
 
         }
 
@@ -89,6 +87,34 @@ public class SplashScreen extends AppCompatActivity {
 
             @Override
             public void run() {
+
+                //FALSE == APP OPEN FIRST TIME
+                //TRUE  == APP NOT OPEN FIRST TIME
+
+                if (!mSessionManager.getPreferenceBoolean(Constants.IS_APP_OPEN_FIRST_TIME)) {
+                    //SAVE TESTING END POINTS
+                    //CHANGE API END POINT TO ALPHA T CURATOR
+                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE);
+                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION);
+
+                    switch (Constants.API_END_POINTS_MOBILE) {
+
+                        case Constants.API_END_POINTS_MOBILE_S_CURATOR:
+                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 1);
+                            break;
+                        case Constants.API_END_POINTS_MOBILE_T_CURATOR:
+                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 2);
+                            break;
+                        case Constants.API_END_POINTS_MOBILE_B_CURATOR:
+                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 3);
+                            break;
+                    }
+
+                    //CHANGE THE VALUE OF APP OPEN
+                    mSessionManager.updatePreferenceBoolean(Constants.IS_APP_OPEN_FIRST_TIME, true);
+                }
+
+
                 //INTENT
                 //CHECK IF USER IS ALRADY LOGGED IN OR NOT
                 if (!mSessionManager.getPreferenceBoolean(Constants.USER_LOGGED_IN)) {

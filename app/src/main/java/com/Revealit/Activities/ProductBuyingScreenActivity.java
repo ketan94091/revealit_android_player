@@ -171,7 +171,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_MOBILE)
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -398,26 +398,14 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
-                CommonMethods.buildDialog(mContext ,"This feature temporary unavailable!");
-
-
-                /*//OPEN AR VIEW
-                if( CommonMethods.isDeviceSupportAR(mActivity)) {
-
-                    *//*Intent mARviewIntent = new Intent(ProductBuyingScreenActivity.this, ARviewActivity.class);
-                    mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.getGlb_model_url());
-                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProductName());
-                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.getVendorUrl());
-                    startActivity(mARviewIntent);*//*
-
+                if (CommonMethods.isDeviceSupportAR(mActivity)) {
+                    //OPEN AR VIEW
                     Intent mARviewIntent = new Intent(ProductBuyingScreenActivity.this, ArModelViewerWeb.class);
                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProductName());
                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.getVendorUrl());
-                    mARviewIntent.putExtra(Constants.AR_MODEL_ID, data.getArmodelId());
+                    mARviewIntent.putExtra(Constants.AR_MODEL_ID, ""+data.getItemId());
                     startActivity(mARviewIntent);
-                }*/
-
+                }
 
             }
         });

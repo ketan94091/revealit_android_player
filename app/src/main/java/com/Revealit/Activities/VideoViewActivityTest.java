@@ -544,7 +544,7 @@ public class VideoViewActivityTest extends AppCompatActivity implements View.OnC
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_MOBILE)
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)

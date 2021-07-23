@@ -193,7 +193,7 @@ public class LoginActivityActivity extends AppCompatActivity implements View.OnC
 
         final OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_MOBILE)
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
                 .build();
@@ -233,6 +233,10 @@ public class LoginActivityActivity extends AppCompatActivity implements View.OnC
                     mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, true);
                     mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, true);
                     mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN, true);
+
+                    //SAVE AUTHENTICATION DATA
+                    mSessionManager.updatePreferenceString(Constants.PROTON_EMAIL, edtUsername.getText().toString());
+                    mSessionManager.updatePreferenceString(Constants.PROTON_PASSWORD, edtPassword.getText().toString());
 
                     Intent mIntent = new Intent(LoginActivityActivity.this, HomeScreenTabLayout.class);
                     startActivity(mIntent);

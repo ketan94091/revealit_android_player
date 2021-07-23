@@ -112,19 +112,21 @@ public class InfluencersListAdapter extends RecyclerView.Adapter<InfluencersList
                 }).into(holder.imgChef);
 
 
-        Glide.with(mContext)
-                .load(influencerAdvertImgUrl)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
+        if(influencerAdvertImgUrl != null) {
+            Glide.with(mContext)
+                    .load(influencerAdvertImgUrl)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                }).into(holder.imgSponsorLogo);
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    }).into(holder.imgSponsorLogo);
+        }
         //IMGVIEW WILL DISPLAY ONLY IN LAST VIEW
         if(position == (influencersDataList.size() -1)){
             holder.imgSponsorLogo.setVisibility(View.VISIBLE);

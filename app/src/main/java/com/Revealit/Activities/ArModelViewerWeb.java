@@ -1,10 +1,13 @@
 package com.Revealit.Activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -51,6 +54,7 @@ public class ArModelViewerWeb extends AppCompatActivity implements View.OnClickL
     private ImageView imgARview, imgCancel;
     private RecyclerView recycleChooseColors;
     private RelativeLayout relatvieMainLayout;
+    private static String strToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,23 +91,27 @@ public class ArModelViewerWeb extends AppCompatActivity implements View.OnClickL
 
         recycleChooseColors = (RecyclerView) findViewById(R.id.recycleChooseColors);
 
-        relatvieMainLayout= (RelativeLayout)findViewById(R.id.relatvieMainLayout);
+        relatvieMainLayout = (RelativeLayout) findViewById(R.id.relatvieMainLayout);
 
-        WebSettings webSettings = webView.getSettings();
-        webView.setWebViewClient(new MyBrowser());
-        webView.getSettings().setJavaScriptEnabled(true);
+        // webView.setWebViewClient(new MyBrowser());
 
         webView.getSettings().setLoadsImagesAutomatically(true);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+        webView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setAllowContentAccess(true);
         webView.getSettings().setAllowFileAccessFromFileURLs(true);
+        webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setSupportMultipleWindows(true);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        //webView.pauseTimers();
+
 
         //API CALL TO GET MULTI COLOR GLBS
-        callGetMultiColorGLBs(getIntent().getIntExtra(Constants.AR_MODEL_ID, 0));
+        callGetMultiColorGLBs(Integer.parseInt(getIntent().getStringExtra(Constants.AR_MODEL_ID)));
 
     }
+
 
 
     private void onClicks() {
@@ -120,7 +128,7 @@ public class ArModelViewerWeb extends AppCompatActivity implements View.OnClickL
             case R.id.imgARview:
 
                 Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
-                mARviewIntent.putExtra(Constants.AR_VIEW_URL,strLoadingURL);
+                mARviewIntent.putExtra(Constants.AR_VIEW_URL, strLoadingURL);
                 mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, getIntent().getStringExtra(Constants.AR_VIEW_MODEL_NAME));
                 mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, getIntent().getStringExtra(Constants.AR_VIEW_MODEL_URL));
                 startActivity(mARviewIntent);
@@ -141,23 +149,27 @@ public class ArModelViewerWeb extends AppCompatActivity implements View.OnClickL
         //PROGRESSBAR VISIBLE
         progressbar.setVisibility(View.VISIBLE);
 
-        webView.loadDataWithBaseURL(null, CommonMethods.getHtMLdataForARmodelViewer(strUrls), "text/html", "utf-8", null);
-
+        webView.loadDataWithBaseURL(null,
+                CommonMethods.getHtMLdataForARmodelViewer(strUrls),
+                "text/html", "utf-8", null);
 
         webView.setWebViewClient(new WebViewClient() {
 
-            public void onPageFinished(WebView view, String url) {
-
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 progressbar.setVisibility(View.GONE);
+                super.onPageStarted(view, url, favicon);
             }
         });
+
+
 
     }
 
     @Override
     public void selectedColorURL(String strURL) {
 
-        strLoadingURL =  strURL;
+        strLoadingURL = strURL;
 
         loadWebview(strURL);
     }
@@ -165,8 +177,15 @@ public class ArModelViewerWeb extends AppCompatActivity implements View.OnClickL
     private class MyBrowser extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
             view.loadUrl(url);
             return true;
+        }
+
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            handler.proceed();
+
         }
     }
 
@@ -202,7 +221,7 @@ public class ArModelViewerWeb extends AppCompatActivity implements View.OnClickL
 
         final OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_MOBILE)
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
                 .build();
@@ -220,10 +239,9 @@ public class ArModelViewerWeb extends AppCompatActivity implements View.OnClickL
                 CommonMethods.printLogE("Response @ callGetMultiColorGLBs: ", "" + response.code());
 
 
-
                 if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
 
-                    if(response.body().getData().size() != 0){
+                    if (response.body().getData().size() != 0) {
 
                         //ASSIGN VALUE TO LOADING URL VERIABLE
                         strLoadingURL = response.body().getData().get(0).getGlb_filename();
@@ -232,7 +250,7 @@ public class ArModelViewerWeb extends AppCompatActivity implements View.OnClickL
                         loadWebview(response.body().getData().get(0).getGlb_filename());
 
                         //LOAD COLOR LIST
-                        ArModelColorListAdapter mArModelColorListAdapter = new ArModelColorListAdapter(mSessionManager, mContext, ArModelViewerWeb.this , response.body().getData());
+                        ArModelColorListAdapter mArModelColorListAdapter = new ArModelColorListAdapter(mSessionManager, mContext, ArModelViewerWeb.this, response.body().getData());
                         recycleChooseColors.setAdapter(mArModelColorListAdapter);
 
                         //VISIBLE UI
@@ -241,7 +259,7 @@ public class ArModelViewerWeb extends AppCompatActivity implements View.OnClickL
                         //DISPLAY DIALOG
                         CommonMethods.closeDialog();
 
-                    }else {
+                    } else {
 
                         //DISPLAY DIALOG
                         CommonMethods.closeDialog();
@@ -250,6 +268,12 @@ public class ArModelViewerWeb extends AppCompatActivity implements View.OnClickL
                         finish();
                     }
 
+                } else {
+                    //DISPLAY DIALOG
+                    CommonMethods.closeDialog();
+
+                    //IF NO DATA FINISHED ACTIVITY
+                    finish();
                 }
             }
 

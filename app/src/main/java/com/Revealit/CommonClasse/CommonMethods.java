@@ -107,7 +107,6 @@ public class CommonMethods {
         });
 
 
-
     }
 
 
@@ -350,7 +349,7 @@ public class CommonMethods {
 
     public static boolean isUpdatedARserviceInstalled(Activity mActivity) {
 
-         boolean mUserRequestedInstall = true;
+        boolean mUserRequestedInstall = true;
 
 
         try {
@@ -397,7 +396,12 @@ public class CommonMethods {
         return shape;
     }
 
-    public static String getHtMLdataForARmodelViewer(String strURL){
+    public static String getHtMLdataForARmodelViewer(String strURL) {
+
+
+    //strURL ="https://mturk.sgp1.cdn.digitaloceanspaces.com/0/2a.KitchenAid_StandMixer_CARED_680569095664.glb";
+     // strURL ="https://revtesting.sgp1.digitaloceanspaces.com/iar_models/8/2_KitchenAid_Mixer_Pearl_2e1f5adc2bed7e19d1158be8519fddac.glb";
+
 
         String stringHtmlforAR = "<html>\n" +
                 "    <head>\n" +
@@ -490,7 +494,7 @@ public class CommonMethods {
                 "      </style>\n" +
                 "      </head>\n" +
                 "    <body>\n" +
-                "        <model-viewer src=\""+strURL+"\"+  auto-rotate=\"\" camera-controls=\"\" shadow-intensity=\"1\" alt=\"A 3D model of a rocket\" background-color=\"#70BCD1\" ar-status=\"not-presenting\">\n" +
+                "        <model-viewer src=\"" + strURL + "\"+  auto-rotate=\"\" camera-controls=\"\" shadow-intensity=\"1\" alt=\"A 3D model of a rocket\" background-color=\"#70BCD1\" ar-status=\"not-presenting\">\n" +
                 "                        \n" +
                 "        </model-viewer>\n" +
                 "      \n" +

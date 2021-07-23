@@ -18,8 +18,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Activities.ARviewActivity;
 import com.Revealit.Activities.WebViewScreen;
-import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.ModelClasses.GetRecipesDetails;
 import com.Revealit.R;
@@ -97,7 +97,8 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
 
         holder.txtRecipeName.setText(recipesListData.get(position).getName());
         holder.txtRecipeShorDescription.setText(recipesListData.get(position).getDescription());
-        holder.txtChefName.setText(recipesListData.get(position).getChef().getName());
+
+
 
 
 
@@ -149,32 +150,21 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
 
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            holder.txtHtmlInstructionsSteps.setText(Html.fromHtml(recipesListData.get(position).getFlat_directions(), Html.FROM_HTML_MODE_COMPACT));
-        } else {
-            holder.txtHtmlInstructionsSteps.setText(Html.fromHtml(recipesListData.get(position).getFlat_directions()));
+        if(recipesListData.get(position).getFlat_directions() != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                holder.txtHtmlInstructionsSteps.setText(Html.fromHtml(recipesListData.get(position).getFlat_directions(), Html.FROM_HTML_MODE_COMPACT));
+            } else {
+                holder.txtHtmlInstructionsSteps.setText(Html.fromHtml(recipesListData.get(position).getFlat_directions()));
+            }
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            holder.txtHtmlIngidience.setText(Html.fromHtml(recipesListData.get(position).getFlat_ingredients(), Html.FROM_HTML_MODE_COMPACT));
-        } else {
-            holder.txtHtmlIngidience.setText(Html.fromHtml(recipesListData.get(position).getFlat_ingredients()));
+        if(recipesListData.get(position).getFlat_ingredients() != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                holder.txtHtmlIngidience.setText(Html.fromHtml(recipesListData.get(position).getFlat_ingredients(), Html.FROM_HTML_MODE_COMPACT));
+            } else {
+                holder.txtHtmlIngidience.setText(Html.fromHtml(recipesListData.get(position).getFlat_ingredients()));
+            }
         }
-
-
-        Glide.with(mContext)
-                .load(""+recipesListData.get(position).getRecipe_advert_img_url())
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                }).into(holder.imgVendorLogo);
 
 
         Glide.with(mContext)
@@ -192,20 +182,32 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
                     }
                 }).into(holder.imgRecipeLogo);
 
-        Glide.with(mContext)
-                .load(""+recipesListData.get(position).getChef().getImg_url())
-                .placeholder(R.drawable.placeholder)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                }).into(holder.imgChef);
+        if(recipesListData.get(position).getChef() != null) {
+
+            holder.txtChefName.setText(recipesListData.get(position).getChef().getName());
+
+            Glide.with(mContext)
+                    .load("" + recipesListData.get(position).getChef().getImg_url())
+                    .placeholder(R.drawable.placeholder)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    }).into(holder.imgChef);
+
+
+        }else {
+            holder.txtChefName.setVisibility(View.INVISIBLE);
+            holder.imgChef.setVisibility(View.INVISIBLE);
+
+        }
 
 
         //HIDE SHOW AR VIEW ICON
@@ -218,6 +220,20 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
         //HIDE VENDOR LOGO VIEW ICON
         if(recipesListData.get(position).getRecipe_advert_img_url() != null){
             holder.imgVendorLogo.setVisibility(View.VISIBLE);
+
+            Glide.with(mContext)
+                    .load(""+recipesListData.get(position).getRecipe_advert_img_url())
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    }).into(holder.imgVendorLogo);
         }else {
             holder.imgVendorLogo.setVisibility(View.GONE);
         }
@@ -257,25 +273,12 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
             public void onClick(View v) {
 
 
-                CommonMethods.buildDialog(mContext ,"This feature temporary unavailable!");
 
-
-              /*  //OPEN AR VIEW
-                if( CommonMethods.isDeviceSupportAR(mActivity)) {
-
-                   *//* Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
-                    mARviewIntent.putExtra(Constants.AR_VIEW_URL, recipesListData.get(position).getGlb_model_url());
-                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, recipesListData.get(position).getArmodel_name());
-                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, recipesListData.get(position).getArmodel_sponsor());
-                    mActivity.startActivity(mARviewIntent);
-*//*
-                    Intent mARviewIntent = new Intent(mActivity, ArModelViewerWeb.class);
-                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, recipesListData.get(position).getArmodel_name());
-                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, recipesListData.get(position).getArmodel_sponsor());
-                    mARviewIntent.putExtra(Constants.AR_MODEL_ID, recipesListData.get(position).getArmodel_id());
-                    mActivity.startActivity(mARviewIntent);
-
-                }*/
+                Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
+                mARviewIntent.putExtra(Constants.AR_VIEW_URL, recipesListData.get(position).getGlb_model_url());
+                mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, recipesListData.get(position).getArmodel_name());
+                mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, recipesListData.get(position).getArmodel_sponsor());
+                mActivity.startActivity(mARviewIntent);
 
 
 

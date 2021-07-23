@@ -677,7 +677,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_MOBILE)
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -949,18 +949,15 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                                 //CASE - 2 ---> CLICK ON AMBER DOTS
                                 callUploadRewardData(2 ,Integer.parseInt(data.get(finalI).getItemId()));
 
-
-                                CommonMethods.buildDialog(mContext ,"This feature temporary unavailable!");
-
-                               /* if (CommonMethods.isDeviceSupportAR(mActivity)) {
+                                //OPEN AR VIEW
+                                if (CommonMethods.isDeviceSupportAR(mActivity)) {
                                     //OPEN AR VIEW
                                     Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ArModelViewerWeb.class);
                                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
                                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.get(finalI).getVendorUrl());
-                                    mARviewIntent.putExtra(Constants.AR_MODEL_ID, data.get(finalI).getArmodelId());
+                                    mARviewIntent.putExtra(Constants.AR_MODEL_ID, data.get(finalI).getItemId());
                                     startActivity(mARviewIntent);
                                 }
-*/
 
                             }
                         });
@@ -1383,7 +1380,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_MOBILE)
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -1476,7 +1473,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_MOBILE)
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -1567,7 +1564,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_MOBILE)
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -1638,7 +1635,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         });
         final OkHttpClient httpClient1 = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_MOBILE)
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient1)
@@ -1727,7 +1724,15 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         LinearLayoutManager recylerViewLayoutManager = new LinearLayoutManager(mActivity);
         recycleviewInfluencerList.setLayoutManager(recylerViewLayoutManager);
 
-        InfluencersListAdapter mInfluencersListAdapter = new InfluencersListAdapter(mContext, mActivity, influencersData.getData(), influencersData.getSponsor().getInfluencerAdvertImgUrl());
+        //CHECK IF SPONSER IMAGE OBJECT IS NULL
+        String sponserImage ="";
+        if(influencersData.getSponsor() !=  null){
+            sponserImage = influencersData.getSponsor().getInfluencerAdvertImgUrl();
+        }else {
+            sponserImage = "";
+        }
+
+        InfluencersListAdapter mInfluencersListAdapter = new InfluencersListAdapter(mContext, mActivity, influencersData.getData(),sponserImage );
         recycleviewInfluencerList.setAdapter(mInfluencersListAdapter);
 
 
@@ -1839,7 +1844,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
         final OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.API_END_POINTS_MOBILE)
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
                 .build();
