@@ -398,13 +398,26 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (CommonMethods.isDeviceSupportAR(mActivity)) {
+                //IF DEVICE SUPPORT AR VIEW
+                //IF APP ENVIRONMENT IS T-CURATOR(WHICH SUPPORT MULTIPLE GLB)
+                if (CommonMethods.isDeviceSupportAR(mActivity) && mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 2) {
                     //OPEN AR VIEW
                     Intent mARviewIntent = new Intent(ProductBuyingScreenActivity.this, ArModelViewerWeb.class);
                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProductName());
                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.getVendorUrl());
                     mARviewIntent.putExtra(Constants.AR_MODEL_ID, ""+data.getItemId());
                     startActivity(mARviewIntent);
+                }else{
+                    //IF OTHER ENVIRONMENT OTHER THAN T CURATOR SHOULD OPEN DIRECTLY IN TO AR VIEW
+                    if(CommonMethods.isDeviceSupportAR(mActivity)) {
+                        Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
+                        mARviewIntent.putExtra(Constants.AR_VIEW_URL,data.getGlb_model_url());
+                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProductName());
+                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL,  data.getVendorUrl());
+                        startActivity(mARviewIntent);
+                    }else{
+                        CommonMethods.displayToast(mContext ,"Device not support AR camera");
+                    }
                 }
 
             }

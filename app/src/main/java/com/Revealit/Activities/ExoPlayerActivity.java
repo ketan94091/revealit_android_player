@@ -135,7 +135,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     public int heightVideo, widthVideo;
     private RelativeLayout relativeCaptureImageWithText, relativeShareView;
     private EditText edtTextOnCaptureImage;
-    private TextView txtVendorName, txtCancel, txtShare;
+    private TextView txtVendorName, txtCancel, txtTitle,txtShare;
     private Bitmap savedBitMap;
     private int REQUEST_PERMISSION = 100;
     private int dialogHight = 0, dialogWidth = 0;
@@ -203,6 +203,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
         txtCancel = (TextView) findViewById(R.id.txtCancel);
         txtShare = (TextView) findViewById(R.id.txtShare);
+        txtTitle = (TextView) findViewById(R.id.txtTitle);
 
 
         //SET AUDIO MANAGER WITH SEEK BAR
@@ -265,6 +266,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
             }
         });
+
+        //SET VIDEO TITLE
+        txtTitle.setText(strMediaTitle);
 
 
         //CALL CHECK IF RECIPE AVAILABLE
@@ -949,14 +953,26 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                                 //CASE - 2 ---> CLICK ON AMBER DOTS
                                 callUploadRewardData(2 ,Integer.parseInt(data.get(finalI).getItemId()));
 
-                                //OPEN AR VIEW
-                                if (CommonMethods.isDeviceSupportAR(mActivity)) {
+                                //IF DEVICE SUPPORT AR VIEW
+                                //IF APP ENVIRONMENT IS T-CURATOR(WHICH SUPPORT MULTIPLE GLB)
+                                if (CommonMethods.isDeviceSupportAR(mActivity) && mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 2) {
                                     //OPEN AR VIEW
                                     Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ArModelViewerWeb.class);
                                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
                                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.get(finalI).getVendorUrl());
                                     mARviewIntent.putExtra(Constants.AR_MODEL_ID, data.get(finalI).getItemId());
                                     startActivity(mARviewIntent);
+                                }else{
+                                    //IF OTHER ENVIRONMENT OTHER THAN T CURATOR SHOULD OPEN DIRECTLY IN TO AR VIEW
+                                    if(CommonMethods.isDeviceSupportAR(mActivity)) {
+                                        Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
+                                        mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.get(finalI).getGlb_model_url());
+                                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
+                                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL,  data.get(finalI).getVendorUrl());
+                                        startActivity(mARviewIntent);
+                                    }else{
+                                        CommonMethods.displayToast(mContext ,"Device not support AR camera");
+                                    }
                                 }
 
                             }
