@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -50,7 +51,7 @@
                     android:id="@+id/txtBetaCuratorMobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/strBcurator"
+                    android:text="@string/strBeta"
                     android:textColor="@color/colorWalletText"
                     android:textSize="18dp"
                     android:textStyle="bold" />
@@ -59,39 +60,39 @@
                     android:id="@+id/txtBetaCuratorRegistration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/strBcuratorURL"
+                    android:text="@string/strBetaURL"
                     android:textColor="@color/colorWalletText"
                     android:textSize="14dp" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearScurator"
+                android:id="@+id/linearStaging"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="10dp">
 
                 <TextView
-                    android:id="@+id/txtScuratorMobile"
+                    android:id="@+id/txtStagingMobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/imgCloseDailoge"
-                    android:text="@string/strScurator"
+                    android:text="@string/strStaging"
                     android:textColor="@color/colorWalletText"
                     android:textSize="18dp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/txtScuratorRegistration"
+                    android:id="@+id/txtStagingRegistration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/strScuratorURL"
+                    android:text="@string/strStagingURL"
                     android:textColor="@color/colorWalletText"
                     android:textSize="14dp" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearAlphacurator"
+                android:id="@+id/linearTesting1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -99,27 +100,121 @@
                 android:padding="10dp">
 
                 <TextView
-                    android:id="@+id/txtAplhaCuratorMobile"
+                    android:id="@+id/txtTesting1Mobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/strTcurator"
+                    android:text="@string/strTesting1"
                     android:textColor="@color/colorWalletText"
                     android:textSize="18dp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/txtAplhaCuratorRegistration"
+                    android:id="@+id/txtTesting1Registration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/strTcuratorURL"
+                    android:text="@string/strTesting1URL"
+                    android:textColor="@color/colorWalletText"
+                    android:textSize="14dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearTesting2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/txtTesting2Mobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strTesting2"
+                    android:textColor="@color/colorWalletText"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtTesting2Registration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strTesting2URL"
+                    android:textColor="@color/colorWalletText"
+                    android:textSize="14dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearIntegration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/txtIntegrationMobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strIntegration"
+                    android:textColor="@color/colorWalletText"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtIntegrationRegistration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strIntegrationURL"
                     android:textColor="@color/colorWalletText"
                     android:textSize="14dp" />
             </LinearLayout>
 
 
+
+
+
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/relativeContent"
+           android:layout_centerInParent="true"
+            >
+
+            <TextView
+                android:id="@+id/txtSimulation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/strSimulation"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/colorBlack"
+                android:textSize="18dp"
+                android:layout_marginRight="10dp"/>
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchModeOfApp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:thumb="@drawable/thumb_selector"
+                app:track="@drawable/track_selector"/>
+            <TextView
+                android:id="@+id/txtLive"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/strLive"
+                android:textColor="@color/colorBlack"
+                android:textSize="18dp"
+                android:layout_marginLeft="10dp"/>
+
+        </LinearLayout>
+
+
     </RelativeLayout>
+
+
+
 
 
 </RelativeLayout>

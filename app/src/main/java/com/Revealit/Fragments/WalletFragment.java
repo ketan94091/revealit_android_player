@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -19,6 +22,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -75,12 +79,18 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private LinearLayoutManager recylerViewLayoutManager;
     private RewardSummeryListAdapter2 mRewardSummeryListAdapter2;
     private ImageView imgSponsor, imgRefresh;
-    private TextView txtVersionName, txtCurrencyType, txtAmount, txtAccountName;
+    private TextView txtUserName,txtVersionName, txtCurrencyType, txtAmount, txtAccountName;
     private RelativeLayout relativeAccountDetails;
     private LinearLayout linearCurrency, linearRewardHistory;
     private int intPageCount = 1;
     private int intTotalPageCount = 0;
     private String strAccountName = "", strAmount = "";
+    private HomeScreenTabLayout mHomeScreenTabLayout;
+
+    public WalletFragment(HomeScreenTabLayout homeScreenTabLayout) {
+
+        this.mHomeScreenTabLayout = homeScreenTabLayout;
+    }
 
 
     @Override
@@ -125,6 +135,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         txtAmount = (TextView) mView.findViewById(R.id.txtAmount);
         txtCurrencyType = (TextView) mView.findViewById(R.id.txtCurrencyType);
         txtVersionName = (TextView) mView.findViewById(R.id.txtVersionName);
+        txtUserName= (TextView) mView.findViewById(R.id.txtUserName);
 
         relativeAccountDetails = (RelativeLayout) mView.findViewById(R.id.relativeAccountDetails);
 
@@ -146,23 +157,11 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         txtAccountName.setText("");
 
         //SET APPLICATION INSTALLED VERSION NAME
-        txtVersionName.setText(CommonMethods.installedAppVersion(mContext));
+        txtVersionName.setText(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME) +" Server : "+CommonMethods.installedAppVersion(mContext));
+
+
 
     }
-
-   /* @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-
-            //SET IDS
-            setIds();
-            setOnClicks();
-
-            //CALL WALLET(ACCOUNTS) DETAILS
-            callWalletDetails();
-        }
-    }*/
 
 
     @Override
@@ -175,6 +174,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
             //CALL WALLET(ACCOUNTS) DETAILS
             callWalletDetails();
+
+
         }
         super.setMenuVisibility(menuVisible);
     }
@@ -238,40 +239,113 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         //SET CURRENT PROGRESSBAR
         ImageView imgCloseDailoge = (ImageView) dialogView.findViewById(R.id.imgCloseDailoge);
-        LinearLayout linearScurator = (LinearLayout) dialogView.findViewById(R.id.linearScurator);
-        LinearLayout linearAlphacurator = (LinearLayout) dialogView.findViewById(R.id.linearAlphacurator);
-        LinearLayout linearBetacurator = (LinearLayout) dialogView.findViewById(R.id.linearBetacurator);
 
-        TextView txtScuratorMobile = (TextView) dialogView.findViewById(R.id.txtScuratorMobile);
-        TextView txtScuratorRegistration = (TextView) dialogView.findViewById(R.id.txtScuratorRegistration);
-        TextView txtAplhaCuratorMobile = (TextView) dialogView.findViewById(R.id.txtAplhaCuratorMobile);
-        TextView txtAplhaCuratorRegistration = (TextView) dialogView.findViewById(R.id.txtAplhaCuratorRegistration);
+        SwitchCompat switchModeOfApp =(SwitchCompat) dialogView.findViewById(R.id.switchModeOfApp);
+
+        LinearLayout linearBetacurator = (LinearLayout) dialogView.findViewById(R.id.linearBetacurator);
+        LinearLayout linearStaging = (LinearLayout) dialogView.findViewById(R.id.linearStaging);
+        LinearLayout linearTesting1 = (LinearLayout) dialogView.findViewById(R.id.linearTesting1);
+        LinearLayout linearTesting2 = (LinearLayout) dialogView.findViewById(R.id.linearTesting2);
+        LinearLayout linearIntegration = (LinearLayout) dialogView.findViewById(R.id.linearIntegration);
+
         TextView txtBetaCuratorMobile = (TextView) dialogView.findViewById(R.id.txtBetaCuratorMobile);
         TextView txtBetaCuratorRegistration = (TextView) dialogView.findViewById(R.id.txtBetaCuratorRegistration);
 
+        TextView txtStagingMobile = (TextView) dialogView.findViewById(R.id.txtStagingMobile);
+        TextView txtStagingRegistration = (TextView) dialogView.findViewById(R.id.txtStagingRegistration);
+
+        TextView txtTesting1Mobile = (TextView) dialogView.findViewById(R.id.txtTesting1Mobile);
+        TextView txtTesting1Registration = (TextView) dialogView.findViewById(R.id.txtTesting1Registration);
+
+        TextView txtTesting2Mobile = (TextView) dialogView.findViewById(R.id.txtTesting2Mobile);
+        TextView txtTesting2Registration = (TextView) dialogView.findViewById(R.id.txtTesting2Registration);
+
+        TextView txtIntegrationMobile = (TextView) dialogView.findViewById(R.id.txtIntegrationMobile);
+        TextView txtIntegrationRegistration = (TextView) dialogView.findViewById(R.id.txtIntegrationRegistration);
+
+        //CHECKBOX TRUE IF APP MODE IS LIVE
+        if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+            switchModeOfApp.setChecked(true);
+        }else {
+            switchModeOfApp.setChecked(false);
+        }
+
+        switchModeOfApp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+
+
+                if (isChecked){
+                    //UPDATE FLAG FOR APPLICATION MODE
+                    mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorGrayBottomBar), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorGrayBottomBar), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorGreenDark), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorGrayBottomBar), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorGrayBottomBar) , getResources().getColor(R.color.colorGreenDark));
+                }else{
+                    //CLEAR DUMMY DATA
+                    mDatabaseHelper.clearSimulationHistoryDataTable();
+
+                    //UPDATE FLAG FOR APPLICATION MODE
+                    mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, false);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorGrayBottomBar), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorGrayBottomBar), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBlueBottomBar), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorGrayBottomBar), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorGrayBottomBar) , getResources().getColor(R.color.colorBlueBottomBar));
+                }
+
+
+            }
+
+
+        });
+
+
+
+
+
         switch (mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)) {
             case 1:
-
-                linearScurator.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
-
-                txtScuratorMobile.setTextColor(mContext.getResources().getColor(R.color.colorCurrency));
-                txtScuratorRegistration.setTextColor(mContext.getResources().getColor(R.color.colorCurrencyNameSelected));
-
-                break;
-            case 2:
-
-                linearAlphacurator.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
-
-                txtAplhaCuratorMobile.setTextColor(mContext.getResources().getColor(R.color.colorCurrency));
-                txtAplhaCuratorRegistration.setTextColor(mContext.getResources().getColor(R.color.colorCurrencyNameSelected));
-                break;
-
-            case 3:
 
                 linearBetacurator.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
 
                 txtBetaCuratorMobile.setTextColor(mContext.getResources().getColor(R.color.colorCurrency));
                 txtBetaCuratorRegistration.setTextColor(mContext.getResources().getColor(R.color.colorCurrencyNameSelected));
+
+                break;
+            case 2:
+
+                linearStaging.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
+
+                txtStagingMobile.setTextColor(mContext.getResources().getColor(R.color.colorCurrency));
+                txtStagingRegistration.setTextColor(mContext.getResources().getColor(R.color.colorCurrencyNameSelected));
+                break;
+
+            case 3:
+
+                linearTesting1.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
+
+                txtTesting1Mobile.setTextColor(mContext.getResources().getColor(R.color.colorCurrency));
+                txtTesting1Registration.setTextColor(mContext.getResources().getColor(R.color.colorCurrencyNameSelected));
+                break;
+
+            case 4:
+
+                linearTesting2.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
+
+                txtTesting2Mobile.setTextColor(mContext.getResources().getColor(R.color.colorCurrency));
+                txtTesting2Registration.setTextColor(mContext.getResources().getColor(R.color.colorCurrencyNameSelected));
+                break;
+
+            case 5:
+
+                linearIntegration.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
+
+                txtIntegrationMobile.setTextColor(mContext.getResources().getColor(R.color.colorCurrency));
+                txtIntegrationRegistration.setTextColor(mContext.getResources().getColor(R.color.colorCurrencyNameSelected));
                 break;
         }
 
@@ -283,48 +357,55 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        linearScurator.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                //CHANGE API END POINT TO S CURATOR
-                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_S_CURATOR);
-                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_S_CURATOR);
-                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 1);
-
-                //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
-                //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN
-                checkUserAvailable();
-
-
-                mAlertDialog.dismiss();
-            }
-        });
-
-        linearAlphacurator.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //CHANGE API END POINT TO ALPHA T CURATOR
-                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_T_CURATOR);
-                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_T_CURATOR);
-                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 2);
-
-
-                //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
-                //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN
-                checkUserAvailable();
-
-                mAlertDialog.dismiss();
-            }
-        });
         linearBetacurator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //CHANGE API END POINT TO BETA B CURATOR
+
+                //CHANGE API END POINT TO BETA
                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_B_CURATOR);
                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_B_CURATOR);
+                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 1);
+
+                //UPDATE END POINT NAME
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strBeta));
+
+
+                //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
+                //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN
+                checkUserAvailable();
+
+                mAlertDialog.dismiss();
+            }
+        });
+        linearStaging.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //STAGING CURATOR
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_S_CURATOR);
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_S_CURATOR);
+                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 2);
+                //UPDATE END POINT NAME
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strStaging));
+
+                //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
+                //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN
+                checkUserAvailable();
+
+                mAlertDialog.dismiss();
+            }
+        });
+        linearTesting1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //TESTING1 CURATOR
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_T1_CURATOR);
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_T1_CURATOR);
                 mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 3);
+
+                //UPDATE END POINT NAME
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strTesting1));
 
                 //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
                 //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN
@@ -334,6 +415,50 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 mAlertDialog.dismiss();
             }
         });
+
+        linearTesting2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //TESTING2 CURATOR
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_T2_CURATOR);
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_T2_CURATOR);
+                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 4);
+
+                //UPDATE END POINT NAME
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strTesting2));
+
+                //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
+                //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN
+                checkUserAvailable();
+
+
+                mAlertDialog.dismiss();
+            }
+        });
+
+        linearIntegration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //INTEGRATION CURATOR
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR);
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_INTEGRATION_CURATOR);
+                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 5);
+
+
+                //UPDATE END POINT NAME
+                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strIntegration));
+
+                //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
+                //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN
+                checkUserAvailable();
+
+
+                mAlertDialog.dismiss();
+            }
+        });
+
 
         mAlertDialog.show();
 
@@ -440,17 +565,22 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         if(intCommand == 1){
 
-            //CHANGE VALUE IF USER NOT PRESENT IN SELECTED CURATOR
-            mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, false);
+        //CHANGE VALUE IF USER NOT PRESENT IN SELECTED CURATOR
+        mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, false);
 
-            //UPDATE FLAG IF USER ALLOW BIOMETRIC AUTHENTICATION
-            mSessionManager.updatePreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC, false);
+        //UPDATE FLAG IF USER ALLOW BIOMETRIC AUTHENTICATION
+        mSessionManager.updatePreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC, false);
+
+        //IS USER FIRST LOGIN
+        mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN, false);
 
         Intent mIntent = new Intent(mActivity, GettingStartedActivity.class);
         startActivity(mIntent);
+
         mActivity.finish();
 
         }else{
+
             Intent mIntent = new Intent(mActivity, HomeScreenTabLayout.class);
             startActivity(mIntent);
             mActivity.finish();
@@ -512,9 +642,9 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
 
-        //Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
-        //Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails("garry");
-        Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails("revrewards");
+        Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+
+
 
         call.enqueue(new Callback<GetAccountDetailsModel>() {
             @Override
@@ -535,7 +665,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                     CommonMethods.printLogE("Response @ callWalletDetails : ", "" + gson.toJson(response.body()));
 
-                    if (response.body().getMessage() == null) {
+                    if (response.body().getMessage() != null  || response.body().getData() != null) {
 
                         //CHECK IF ACCOUNT DATA IS NOT NULL
                         if (response.body().getData().getTokens() != null) {
@@ -584,17 +714,22 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                         //CALL REWARD HISTORY
                         callRewardHistory(0);
+
                     } else {
 
+                        //CLOSE THE DIALOGUE
                         CommonMethods.closeDialog();
 
-                        CommonMethods.buildDialog(mContext, getResources().getString(R.string.strNoDataFound));
+                        //OPEN IF ACCOUNT NOT FOUND
+                        openAccountNotFoundDialogue();
 
                     }
 
                 } else {
 
-                    CommonMethods.buildDialog(mContext, "Account Not Found");
+                    //OPEN IF ACCOUNT NOT FOUND
+                    openAccountNotFoundDialogue();
+
                 }
             }
 
@@ -603,16 +738,40 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                 CommonMethods.printLogE("Response @ callWalletDetails : ", "" + t);
 
+                //OPEN IF ACCOUNT NOT FOUND
+                openAccountNotFoundDialogue();
 
-                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
-
-
+                //CLOSE DIALOGUE
                 CommonMethods.closeDialog();
 
             }
         });
 
     }
+    private void openAccountNotFoundDialogue() {
+
+        androidx.appcompat.app.AlertDialog alertDialog = new androidx.appcompat.app.AlertDialog.Builder(getContext())
+
+                .setTitle(Constants.APPLICATION_NAME)
+
+                .setMessage(Constants.ACCOUNT_NOT_FOUND)
+
+                .setPositiveButton(Constants.OK, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        // SEND USER TO LANDING SCREEN
+                        Intent mIntent = new Intent(mActivity, HomeScreenTabLayout.class);
+                        startActivity(mIntent);
+                        mActivity.finish();
+
+                    }
+                })
+                .show();
+    }
+
+
+
 
     private void callRewardHistory(int i) {
 
@@ -821,6 +980,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     private void updateRewardHistoryUI() {
 
+        //SET USERNAME
+        txtUserName.setText("User : "+mSessionManager.getPreference(Constants.KEY_USERNAME));
 
         //UPDATE UI
         relativeAccountDetails.setVisibility(View.VISIBLE);

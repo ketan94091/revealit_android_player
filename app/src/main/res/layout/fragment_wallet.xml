@@ -12,6 +12,16 @@
         android:layout_height="match_parent"
         android:layout_marginTop="20dp">
 
+        <TextView
+            android:id="@+id/txtUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/colorWalletText"
+            android:textSize="15dp"
+            android:textStyle="bold"/>
+
 
         <RelativeLayout
             android:id="@+id/relativeAccountDetails"
@@ -242,7 +252,6 @@
                         android:textColor="@color/colorWalletText"
                         android:textSize="12dp"
                         android:layout_centerInParent="true"
-                        android:text="teaadafda"
                         />
                 </RelativeLayout>
 

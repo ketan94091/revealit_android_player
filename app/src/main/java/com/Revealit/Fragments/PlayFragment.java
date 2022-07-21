@@ -174,6 +174,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                     mIntent.putExtra(Constants.MEDIA_URL, strFeaturedMidiaURL);
                     mIntent.putExtra(Constants.MEDIA_ID, strFeaturedMidiaID);
                     mIntent.putExtra(Constants.VIDEO_NAME, strFeaturedMediaTitle);
+                    mIntent.putExtra(Constants.VIDEO_SEEK_TO,"0");
+                    mIntent.putExtra(Constants.IS_VIDEO_SEEK, false);
                     mActivity.startActivity(mIntent);
 
                 } else {
@@ -427,13 +429,20 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
             txtNoPublishedVideo.setVisibility(View.GONE);
 
 
-
             //SET BITE IMAGE
             Glide.with(mActivity)
-                    .load(strFeaturedMediaCoverImage)
+                   // .load(strFeaturedMediaCoverImage)
+                    .load("https://beta.sgp1.digitaloceanspaces.com/featured/featured_header_iamkareno1.jpg")
                     .apply(new RequestOptions().override(450, 200))
                     .placeholder(getResources().getDrawable(R.drawable.bite_templet))
                     .into(imgBiteBanner);
+
+            //SET BITE IMAGE
+            Glide.with(mActivity)
+                    // .load(strFeaturedMediaCoverImage)
+                    .load("https://beta.sgp1.digitaloceanspaces.com/featured/sponsorship_@3x.png")
+                    .placeholder(getResources().getDrawable(R.drawable.bite_templet))
+                    .into(imgBiteBrandLogo);
 
 
             //SET BUT NAME

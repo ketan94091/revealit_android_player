@@ -53,6 +53,7 @@
                     android:textColor="@color/colorBlack"
                     android:textSize="15dp"
                     android:textStyle="bold"
+                    android:singleLine="true"
                     android:paddingBottom="2dp"/>
 
                 <LinearLayout
@@ -68,6 +69,17 @@
                         android:textAlignment="textStart"
                         android:textColor="@color/colorGrayLight"
                         android:textSize="12dp"
+                        android:visibility="gone"
+                        />
+                    <TextView
+                        android:id="@+id/txtTimeOffsetDisplay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/colorBlue"
+                        android:textSize="13dp"
+                        android:clickable="true"
+                        android:text="0.0.01"
                         />
 
                     <TextView
@@ -78,6 +90,8 @@
                         android:textAlignment="textEnd"
                         android:textColor="@color/colorGrayLight"
                         android:textSize="12dp"
+                        android:visibility="gone"
+
                         android:singleLine="true"/>
                 </LinearLayout>
 

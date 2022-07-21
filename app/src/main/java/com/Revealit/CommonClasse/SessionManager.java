@@ -1,6 +1,5 @@
 package com.Revealit.CommonClasse;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -18,13 +17,18 @@ public class SessionManager {
 
 
     //-------(open share preference settings)-------//
-    @SuppressLint("WrongConstant")
     public void openSettings() {
         if (settings == null) {
-            settings =mContext.getSharedPreferences("revealit", Context.MODE_APPEND);
+            settings = mContext.getSharedPreferences("revealit", Context.MODE_PRIVATE);
 
         }
     }
+    //-------(clear share preference )-------//
+    public void clearSharePreference() {
+        editor.clear();
+        editor.apply();
+    }
+
 
 
     //-------(update strring preferences)--------//

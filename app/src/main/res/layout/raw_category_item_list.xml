@@ -15,6 +15,7 @@
             android:layout_height="120dp"
             android:src="@drawable/bite_templet"
             android:scaleType="fitXY"
+            android:padding="5dp"
             />
         <ProgressBar
             android:id="@+id/progressImgLoad"

@@ -1,37 +1,22 @@
 package com.Revealit.Activities;
 
-import android.annotation.TargetApi;
-import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class WebViewScreen extends AppCompatActivity implements View.OnClickListener {
 
@@ -82,8 +67,10 @@ public class WebViewScreen extends AppCompatActivity implements View.OnClickList
 
         webView.getSettings().setLoadsImagesAutomatically(true);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         webView .loadUrl(getIntent().getStringExtra(Constants.RESEARCH_URL));
+        //webView .loadUrl("http://primehomedirect.com");
 
         //SET TITLE
         txtTitle.setText(getIntent().getStringExtra(Constants.RESEARCH_URL_SPONSER));
@@ -92,6 +79,14 @@ public class WebViewScreen extends AppCompatActivity implements View.OnClickList
             public void onPageFinished(WebView view, String url) {
 
                 progressbar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+
+                super.onReceivedError(view, errorCode, description, failingUrl);
             }
         });
 

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,23 +13,17 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Revealit.Activities.ExoPlayerActivity;
-import com.Revealit.Activities.VideoViewActivity;
-import com.Revealit.Activities.VideoViewActivityTest;
-import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.ModelClasses.CategoryWisePlayListModel;
 import com.Revealit.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
@@ -99,7 +92,7 @@ public  class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Pla
         Glide.with(mActivity)
                 .load("" + strCategoryList.get(position).getMediaCoverArt())
                 .placeholder(R.drawable.placeholder)
-                .apply(new RequestOptions().override(800, 400).transform(new CenterCrop(), new RoundedCorners(16)))
+                .apply(new RequestOptions().transform(new RoundedCorners(10)))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -124,6 +117,8 @@ public  class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Pla
                 mIntent.putExtra(Constants.MEDIA_URL, "" + strCategoryList.get(position).getMediaUrl());
                 mIntent.putExtra(Constants.MEDIA_ID, "" + strCategoryList.get(position).getMediaID());
                 mIntent.putExtra(Constants.VIDEO_NAME, "" + strCategoryList.get(position).getMediaShowTitle());
+                mIntent.putExtra(Constants.VIDEO_SEEK_TO, "0");
+                mIntent.putExtra(Constants.IS_VIDEO_SEEK, false);
                 mActivity.startActivity(mIntent);
 
                 //CommonMethods.displayToast(mContext, "CLICKED ON : "+position);

@@ -1,17 +1,23 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
+    sourceSets.main.jniLibs.srcDirs = ["libs"]
+
     defaultConfig {
         applicationId "com.Revealit"
         minSdkVersion 17
-        targetSdkVersion 29
+        targetSdkVersion 30
         multiDexEnabled true
         versionCode 1
-        versionName "0.0.26"
+        versionName "0.89.17"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
        // testInstrumentationRunner "com.android.support.test.runner.AndroidJUnitRunner"
+
+
     }
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -27,7 +33,9 @@ android {
     testOptions {
         unitTests.includeAndroidResources = true
     }
-    
+
+
+
 }
 
 dependencies {
@@ -35,7 +43,7 @@ dependencies {
     //ANDROID SUPPORT LIBRARY
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'com.android.support:appcompat-v7:29.0.0'
+    implementation 'com.android.support:appcompat-v7:30.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.android.support:support-annotations:28.0.0'
     implementation files('libs\\YouTubeAndroidPlayerApi.jar')
@@ -49,21 +57,21 @@ dependencies {
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
     implementation 'androidx.viewpager:viewpager:1.0.0'
     testImplementation 'junit:junit:4.12'
-    implementation 'com.android.support:design:29.0.0'
+    implementation 'com.android.support:design:30.0.0'
 
 
     //to check internet connectivity
     implementation 'com.job:droidnet:2.0.0'
 
     //AppCompate support design lib
-    implementation 'com.android.support:design:29.0.0'
+    implementation 'com.android.support:design:30.0.0'
 
     //Card view
-    implementation 'com.android.support:cardview-v7:29.0.0'
+    implementation 'com.android.support:cardview-v7:30.0.0'
 
 
     //SUPPORT RECYCLER VIEW
-    implementation 'com.android.support:recyclerview-v7:29.0.0'
+    implementation 'com.android.support:recyclerview-v7:30.0.0'
 
 
     //For retrofit web call
@@ -137,6 +145,9 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:2.2.1"
 
     implementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
+
+   //GOOGLE METERIAL DESIGN
+    implementation 'com.google.android.material:material:1.2.1'
 
 
 

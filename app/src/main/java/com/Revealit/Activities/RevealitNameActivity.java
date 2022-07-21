@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
+import com.Revealit.ModelClasses.UserDetailsModel;
 import com.Revealit.ModelClasses.UserRegistrationModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
@@ -35,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -288,9 +290,12 @@ public class RevealitNameActivity extends AppCompatActivity implements View.OnCl
                         mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
                         mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
 
-                        Intent mIntent = new Intent(RevealitNameActivity.this, HomeScreenTabLayout.class);
-                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(mIntent);
+
+                        //GET USER DETAILS FROM TOKEN
+                        getUserDetails();
+
+
+
 
                     }
 
@@ -309,6 +314,85 @@ public class RevealitNameActivity extends AppCompatActivity implements View.OnCl
 
                 CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 
+
+            }
+        });
+
+    }
+    private void getUserDetails() {
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+
+        Call<UserDetailsModel> call = patchService1.getUserDetails(Constants.API_GET_USER_DETAILS);
+
+        call.enqueue(new Callback<UserDetailsModel>() {
+            @Override
+            public void onResponse(Call<UserDetailsModel> call, Response<UserDetailsModel> response) {
+
+                CommonMethods.printLogE("Response @ getUserDetails: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ getUserDetails: ", "" + response.body().first_name);
+
+
+                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+
+                    //SAVE DATA
+                    mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME ,response.body().getProton_account_name());
+                    mSessionManager.updatePreferenceString(Constants.KEY_USERNAME ,response.body().getName());
+
+                    //UPDATE FLAG FOR APPLICATION MODE
+                    mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
+
+
+                    //MOVE TO HOME SCREEN
+                    Intent mIntent = new Intent(RevealitNameActivity.this, HomeScreenTabLayout.class);
+                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                    //FINISH THE CURRENT ACTIVITY
+                    startActivity(mIntent);
+
+                }else{
+                    CommonMethods.printLogE("Response @ Error", "Something went wrong!");
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<UserDetailsModel> call, Throwable t) {
+
+                CommonMethods.printLogE("Response @ getUserDetails Error", "" +t.getMessage());
 
             }
         });

@@ -17,9 +17,10 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -97,11 +98,13 @@ import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -117,6 +120,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ExoPlayerActivity extends AppCompatActivity implements View.OnClickListener {
 
 
+    private static final String TAG = "ExoPlayerActivity";
     private Activity mActivity;
     private Context mContext;
     private SessionManager mSessionManager;
@@ -129,7 +133,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     private SeekBar seekFontSize, ckVolumeBar;
     private AudioManager audioManager;
     private FrameLayout frameOverlay;
-    public String strMediaURL, strMediaID = "", strMediaTitle = "", strColorWhite = "#ffffff", strGreenDarkColor = "#84C14A", strGreenLightColor = "#5084C14A";
+    public String strMediaURL, strMediaID = "", strMediaTitle = "", strColorWhite = "#ffffff", strGreenDarkColor = "#84C14A", strGreenLightColor = "#5084C14A", strAmberDark="#FF9500", strAmberLight ="#4DFF9500", strBlueDark="#3498db", strBlueLight ="#4D3498DB";
+    public boolean isVideoSeek = false;
+    private  int videoSeekTo= 0;
     private ImageView imgDynamicCoordinateView;
     private List<DotsLocationsModel.Datum> locationData;
     public int heightVideo, widthVideo;
@@ -139,6 +145,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     private Bitmap savedBitMap;
     private int REQUEST_PERMISSION = 100;
     private int dialogHight = 0, dialogWidth = 0;
+    boolean isMiddleSwipe = false;
+
+
 
     String[] PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -174,6 +183,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         strMediaID = getIntent().getStringExtra(Constants.MEDIA_ID);
         strMediaURL = getIntent().getStringExtra(Constants.MEDIA_URL);
         strMediaTitle = getIntent().getStringExtra(Constants.VIDEO_NAME);
+        isVideoSeek = getIntent().getBooleanExtra(Constants.IS_VIDEO_SEEK, false);
+        videoSeekTo =Integer.parseInt(getIntent().getStringExtra(Constants.VIDEO_SEEK_TO));
 
         exoPlayer = (SimpleExoPlayerView) findViewById(R.id.exoPlayer);
 
@@ -301,6 +312,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
 
         switch (v.getId()) {
+
 
             case R.id.imgInfluencer:
 
@@ -468,8 +480,19 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         //Initialize simpleExoPlayerView
         exoPlayer.setPlayer(player);
 
-        //PLAYER START WHEN IT READY
-        player.setPlayWhenReady(true);
+        //PLAYER SEEK TO
+        //MULTIPLAY BY 100 TO CONVERT MS TO SECONDS
+        player.seekTo(videoSeekTo * 1000);
+
+        //CHECK IF PLAYER IS READY TO PLAY AND CAME FROM LISTEN SCREEN
+        //IF VIDEO IS FROM LISTEN SCREEN PAUSE VIDEO
+        //ELSE CONTINUE PLAYING
+        if (isVideoSeek){
+            player.setPlayWhenReady(false);
+        }else{
+            player.setPlayWhenReady(true);
+        }
+
 
         // Produces DataSource instances through which media data is loaded.
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "Exo2"));
@@ -486,6 +509,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         // Prepare the player with the source.
         player.prepare(videoSource);
 
+
         //ADD LISTENER FOR FURTHER USE
         player.addListener(new Player.EventListener() {
             @Override
@@ -500,6 +524,12 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
             @Override
             public void onLoadingChanged(boolean isLoading) {
+
+                if (isLoading) {
+                    progress.setVisibility(View.VISIBLE);
+                } else {
+                    progress.setVisibility(View.GONE);
+                }
 
             }
 
@@ -517,6 +547,13 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     frameOverlay.setVisibility(View.GONE);
 
 
+
+                } else if (playbackState == Player.STATE_ENDED) {
+
+                    //HIDE WHEN PLAYER IS ENDED VIDEO
+                    progress.setVisibility(View.GONE);
+
+
                 } else if (playWhenReady) {
 
                     //VISIBLE WHEN PLAYER IS BUFFERING
@@ -532,6 +569,9 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     //HIDE AND VISIBLE WHEN PLAYER IS PAUSE
                     progress.setVisibility(View.GONE);
                     linearRecipeShareInfluencer.setVisibility(View.VISIBLE);
+
+                    //UPDATE SWIPE FLAG
+                    isMiddleSwipe = false;
 
                     //API CALL TO GET DOTS LOCATION
                     // PASS ARGUMENT WITH CURRENT VIDEO IN SECONDS
@@ -577,6 +617,11 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         player.addVideoListener(new SimpleExoPlayer.VideoListener() {
             @Override
             public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
+
+
+//                Log.e("HEIGHT : ", ""+height);
+//                Log.e("WIDTH : ", ""+ width);
+//                Log.e("pixelWidthHeightRatio : ", ""+ pixelWidthHeightRatio);
 
 
                 //GET VIDEO HEIGHT AND WIDTH
@@ -749,6 +794,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         //CASE : 2 = LONG PRESS // DISPLAY ONLY PRESSED DOTS DATA
         //CASE : 3 = AMBER DOTS
         //CASE : 4 = BLUE DOTS
+        //CASE : 5 = LONG PRESS// DISPLAY ONLY ONE AMBER DOTS DATA
+        //CASE : 6 = LONG PRESS// DISPLAY ONLY ONE BLUE DOTS DATA
 
         //REMOVE ALL VIEWS
         frameOverlay.removeAllViews();
@@ -896,6 +943,22 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                         }
                     });
 
+                    //ON CLICK PURCHASE SCREEN SHOULD SEE
+                    imgDynamicCoordinateView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            //CALL REWARD API
+                            //CASE - 2 ---> CLICK ON GREEN DOTS
+                            callUploadRewardData(2 ,Integer.parseInt(data.get(finalI).getItemId()));
+
+                            Intent mIntent = new Intent(ExoPlayerActivity.this, ProductBuyingScreenActivity.class);
+                            mIntent.putExtra("ITEM_ID", data.get(finalI).getItemId());
+                            startActivity(mIntent);
+
+                        }
+                    });
+
                     txtVendorName.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -904,6 +967,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             mIntent.putExtra(Constants.RESEARCH_URL, "" + data.get(finalI).getVendorUrl());
                             mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" + data.get(finalI).getVendor());
                             startActivity(mIntent);
+
 
                         }
                     });
@@ -929,8 +993,25 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                         ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor(data.get(i).getArDotColor())));
                         frameOverlay.addView(imgDynamicCoordinateView, layoutParams);
 
+                        //SET DARK COLOR FOR FIRST 3 ITEMS
+                        if (i < 3) {
+                            ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor(strAmberDark)));
+                        } else {
+                            ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor(strAmberLight)));
+                        }
+
                         //ADD DYNAMIC TEXT VIEW FOR VENDOR AND ITEM NAME
                         txtVendorName = new TextView(this);
+
+                        //VISIBLE ONLY FIRST THREE TEXT
+                        if (i < 3) {
+                            txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getVendor());
+                            txtVendorName.setTextColor(Color.parseColor(strColorWhite));
+                        } else {
+                            txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getVendor());
+                            txtVendorName.setTextColor(Color.parseColor(strColorWhite));
+                            txtVendorName.setVisibility(View.GONE);
+                        }
 
                         txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getArmodelSponsor());
                         txtVendorName.setTextColor(Color.parseColor(strColorWhite));
@@ -991,6 +1072,17 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             }
                         });
 
+                        //ON LONG PRESS VISIBLE ONLY LONG PRESS ITEMS ELSE DISPLAY IN LIGHT COLOR
+                        imgDynamicCoordinateView.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View mView) {
+
+                                displayCoordinates(locationData, 5, ((int) mView.getTag()));
+
+                                return true;
+                            }
+                        });
+
                     }
 
                 }
@@ -1012,8 +1104,25 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                         ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor(data.get(i).getBlueDotColor())));
                         frameOverlay.addView(imgDynamicCoordinateView, layoutParams);
 
+                        //SET DARK COLOR FOR FIRST 3 ITEMS
+                        if (i < 3) {
+                            ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor(strBlueDark)));
+                        } else {
+                            ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor(strBlueLight)));
+                        }
+
                         //ADD DYNAMIC TEXT VIEW FOR VENDOR AND ITEM NAME
                         txtVendorName = new TextView(this);
+
+                        //VISIBLE ONLY FIRST THREE TEXT
+                        if (i < 3) {
+                            txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getVendor());
+                            txtVendorName.setTextColor(Color.parseColor(strColorWhite));
+                        } else {
+                            txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getVendor());
+                            txtVendorName.setTextColor(Color.parseColor(strColorWhite));
+                            txtVendorName.setVisibility(View.GONE);
+                        }
 
                         txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getArmodelSponsor());
                         txtVendorName.setTextColor(Color.parseColor(strColorWhite));
@@ -1053,7 +1162,211 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                             }
                         });
 
+                        //ON LONG PRESS VISIBLE ONLY LONG PRESS ITEMS ELSE DISPLAY IN LIGHT COLOR
+                        imgDynamicCoordinateView.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View mView) {
+
+                                displayCoordinates(locationData, 6, ((int) mView.getTag()));
+
+                                return true;
+                            }
+                        });
+
                     }
+
+                }
+                break;
+            case 5:
+
+                for (int i = 0; i < data.size(); i++) {
+
+                    //ADD DYNAMIC IMAGE VIEW
+                    imgDynamicCoordinateView = new ImageView(this);
+                    imgDynamicCoordinateView.setImageResource(R.mipmap.icon_product);
+                    imgDynamicCoordinateView.setTag(i);
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(50, 50);
+                    layoutParams.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))));
+                    layoutParams.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))));
+
+                    //SET DARK COLOR FOR FIRST 3 ITEMS
+                    if (i == longPressItemID) {
+                        ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor(strAmberDark)));
+                    } else {
+                        ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor(strAmberLight)));
+                    }
+
+                    frameOverlay.addView(imgDynamicCoordinateView, layoutParams);
+
+                    //ADD DYNAMIC TEXT VIEW FOR VENDOR AND ITEM NAME
+                    txtVendorName = new TextView(this);
+
+                    //VISIBLE ONLY FIRST THREE TEXT
+                    if (i == longPressItemID) {
+                        txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getVendor());
+                        txtVendorName.setTextColor(Color.parseColor(strColorWhite));
+                    } else {
+                        txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getVendor());
+                        txtVendorName.setTextColor(Color.parseColor(strColorWhite));
+                        txtVendorName.setVisibility(View.GONE);
+                    }
+
+                    txtVendorName.setTextSize(8);
+                    txtVendorName.setTag(i);
+                    txtVendorName.setBackgroundResource(R.drawable.bc_video_item_text);
+                    FrameLayout.LayoutParams layoutParamsVendor = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParamsVendor.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))) + 50);
+                    layoutParamsVendor.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))));
+                    frameOverlay.addView(txtVendorName, layoutParamsVendor);
+
+                    int finalI = i;
+
+                    //ON LONG PRESS VISIBLE ONLY LONG PRESS ITEMS ELSE DISPLAY IN LIGHT COLOR
+                    imgDynamicCoordinateView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View mView) {
+
+                            //CALL REWARD API
+                            //CASE - 2 ---> CLICK ON AMBER DOTS
+                            callUploadRewardData(2 ,Integer.parseInt(data.get(finalI).getItemId()));
+
+                            //IF DEVICE SUPPORT AR VIEW
+                            //IF APP ENVIRONMENT IS T-CURATOR(WHICH SUPPORT MULTIPLE GLB)
+                            if (CommonMethods.isDeviceSupportAR(mActivity) && mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 2) {
+                                //OPEN AR VIEW
+                                Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ArModelViewerWeb.class);
+                                mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
+                                mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.get(finalI).getVendorUrl());
+                                mARviewIntent.putExtra(Constants.AR_MODEL_ID, data.get(finalI).getItemId());
+                                startActivity(mARviewIntent);
+                            }else{
+                                //IF OTHER ENVIRONMENT OTHER THAN T CURATOR SHOULD OPEN DIRECTLY IN TO AR VIEW
+                                if(CommonMethods.isDeviceSupportAR(mActivity)) {
+                                    Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
+                                    mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.get(finalI).getGlb_model_url());
+                                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
+                                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL,  data.get(finalI).getVendorUrl());
+                                    startActivity(mARviewIntent);
+                                }else{
+                                    CommonMethods.displayToast(mContext ,"Device not support AR camera");
+                                }
+                            }
+
+                        }
+                    });
+
+
+                    txtVendorName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent mIntent = new Intent(mActivity, WebViewScreen.class);
+                            mIntent.putExtra(Constants.RESEARCH_URL, "" + data.get(finalI).getVendorUrl());
+                            mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" + data.get(finalI).getVendor());
+                            startActivity(mIntent);
+
+                        }
+                    });
+
+                    //ON LONG PRESS VISIBLE ONLY LONG PRESS ITEMS ELSE DISPLAY IN LIGHT COLOR
+                    imgDynamicCoordinateView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View mView) {
+
+                            displayCoordinates(locationData, 5, ((int) mView.getTag()));
+
+                            return true;
+                        }
+                    });
+
+
+
+                }
+                break;
+
+            case 6:
+
+                for (int i = 0; i < data.size(); i++) {
+
+                    //ADD DYNAMIC IMAGE VIEW
+                    imgDynamicCoordinateView = new ImageView(this);
+                    imgDynamicCoordinateView.setImageResource(R.mipmap.icon_product);
+                    imgDynamicCoordinateView.setTag(i);
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(50, 50);
+                    layoutParams.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))));
+                    layoutParams.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))));
+
+                    //SET DARK COLOR FOR FIRST 3 ITEMS
+                    if (i == longPressItemID) {
+                        ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor(strBlueDark)));
+                    } else {
+                        ImageViewCompat.setImageTintList(imgDynamicCoordinateView, ColorStateList.valueOf(Color.parseColor(strBlueLight)));
+                    }
+
+                    frameOverlay.addView(imgDynamicCoordinateView, layoutParams);
+
+                    //ADD DYNAMIC TEXT VIEW FOR VENDOR AND ITEM NAME
+                    txtVendorName = new TextView(this);
+
+                    //VISIBLE ONLY FIRST THREE TEXT
+                    if (i == longPressItemID) {
+                        txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getVendor());
+                        txtVendorName.setTextColor(Color.parseColor(strColorWhite));
+                    } else {
+                        txtVendorName.setText(" " + data.get(i).getItemName() + " \n " + data.get(i).getVendor());
+                        txtVendorName.setTextColor(Color.parseColor(strColorWhite));
+                        txtVendorName.setVisibility(View.GONE);
+                    }
+
+                    txtVendorName.setTextSize(8);
+                    txtVendorName.setTag(i);
+                    txtVendorName.setBackgroundResource(R.drawable.bc_video_item_text);
+                    FrameLayout.LayoutParams layoutParamsVendor = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParamsVendor.leftMargin = Math.round(pxToDp(getScreenResolutionX(mContext, (data.get(i).getxAxis()))) + 50);
+                    layoutParamsVendor.topMargin = Math.round(pxToDp(getScreenResolutionY(mContext, (data.get(i).getyAxis()))));
+                    frameOverlay.addView(txtVendorName, layoutParamsVendor);
+
+                    int finalI = i;
+
+
+                    //ON LONG PRESS VISIBLE ONLY LONG PRESS ITEMS ELSE DISPLAY IN LIGHT COLOR
+                    imgDynamicCoordinateView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View mView) {
+
+                            displayCoordinates(locationData, 6, ((int) mView.getTag()));
+
+                            return true;
+                        }
+                    });
+
+                    imgDynamicCoordinateView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View mView) {
+
+                            //CALL REWARD API
+                            //CASE - 2 ---> CLICK ON BLUE DOTS
+                            callUploadRewardData(2 ,Integer.parseInt(data.get(finalI).getItemId()));
+
+                            View result = frameOverlay.findViewWithTag(mView.getTag());
+                            displayBlueDotsInfo(result, data.get(finalI));
+
+                        }
+                    });
+
+                    txtVendorName.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent mIntent = new Intent(mActivity, WebViewScreen.class);
+                            mIntent.putExtra(Constants.RESEARCH_URL, "" + data.get(finalI).getVendorUrl());
+                            mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "" + data.get(finalI).getVendor());
+                            startActivity(mIntent);
+
+                        }
+                    });
+
+
 
                 }
 
@@ -1077,25 +1390,63 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
     private void setOverLayTouch() {
 
+
+
         frameOverlay.setOnTouchListener(new OnSwipeTouchListener(ExoPlayerActivity.this) {
             @Override
             public void onSwipeLeft() {
                 super.onSwipeLeft();
-                displayCoordinates(locationData, 4, ((int) 0));
 
-                //CALL REWARD API
-                //CASE -3 ---> SWIPE DOTS
-                callUploadRewardData(3 , Integer.parseInt(strMediaID));
+                // CASE 1 & 4 ---> SWIPE DOTS
+                if(isMiddleSwipe){
+                    displayCoordinates(locationData, 1, ((int) 0));
+                    //CALL REWARD API
+                    callUploadRewardData(1 , Integer.parseInt(strMediaID));
+
+                    Log.e("GREEN DOTS"," : GREEN DOTS");
+
+                    //UPDATE FLAG
+                    isMiddleSwipe = false;
+
+                }else if(!isMiddleSwipe){
+                    displayCoordinates(locationData, 4, ((int) 0));
+                    //CALL REWARD API
+                    callUploadRewardData(4 , Integer.parseInt(strMediaID));
+
+                    Log.e("BLUE DOTS"," : BLUE DOTS");
+
+                    //UPDATE FLAG
+                    isMiddleSwipe = true;
+                }
+
             }
 
             @Override
             public void onSwipeRight() {
                 super.onSwipeRight();
-                displayCoordinates(locationData, 3, ((int) 0));
 
-                //CALL REWARD API
-                //CASE -3 ---> SWIPE DOTS
-                callUploadRewardData(3 , Integer.parseInt(strMediaID));
+                // CASE 1 & 3 ---> SWIPE DOTS
+                if(isMiddleSwipe){
+                    displayCoordinates(locationData, 1, ((int) 0));
+                    //CALL REWARD API
+                    callUploadRewardData(1 , Integer.parseInt(strMediaID));
+
+                    Log.e("GREEN DOTS"," : GREEN DOTS");
+
+                    //UPDATE FLAG
+                    isMiddleSwipe = false;
+
+                }else if(!isMiddleSwipe){
+                    displayCoordinates(locationData, 3, ((int) 0));
+                    //CALL REWARD API
+                    callUploadRewardData(3 , Integer.parseInt(strMediaID));
+
+                    Log.e("AMBER DOTS"," : AMBER DOTS");
+
+                    //UPDATE FLAG
+                    isMiddleSwipe = true;
+                }
+
             }
 
             @Override
@@ -1103,25 +1454,29 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 super.onClick();
 
             }
+
+
+
         });
     }
 
     private void storeImage(Bitmap savedBitMap) {
 
-        //DELET OLF FILES
-        String root = Environment.getExternalStorageDirectory().toString();
+        //DELETE OLD FILES
+       //String root = Environment.getExternalStorageDirectory().toString();
+        String root = mActivity.getApplicationContext().getFilesDir().getPath();
         File deletOldFiles = new File(root, mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
         if (deletOldFiles.exists()) deletOldFiles.delete();
 
         //SHARE IMAGE FILE NAME IN SESSION MANAGER SO WE CAN USE IT FURTHER FOR SOCIAL MEDIA SHARING
-        mSessionManager.updatePreferenceString(Constants.SAVED_IMAGE_FILE_NAME, "" + System.currentTimeMillis() + ".jpg");
+        mSessionManager.updatePreferenceString(Constants.SAVED_IMAGE_FILE_NAME, "" + System.currentTimeMillis() + ".png");
 
 
         File file = new File(root, mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
         if (file.exists()) file.delete();
         try {
             FileOutputStream out = new FileOutputStream(file);
-            savedBitMap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            savedBitMap.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
         } catch (Exception e) {
@@ -1152,7 +1507,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             public void onClick(View v) {
 
                 //CHECK IF FACEBOOK INSTALLED OR NOT
-                if (CommonMethods.isAppInstalled(mContext, "com.facebook.katana")) {
+                if (CommonMethods.isAppInstalled(getApplicationContext(), "com.facebook.katana")) {
 
                     SharePhoto photo = new SharePhoto.Builder().setBitmap(savedBitMap).build();
                     SharePhotoContent content = new SharePhotoContent.Builder().addPhoto(photo).build();
@@ -1176,17 +1531,22 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             public void onClick(View v) {
 
                 if (CommonMethods.isAppInstalled(mContext, "com.twitter.android")) {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_SEND);
-                    intent.setType("image/*");
 
-                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                    StrictMode.setVmPolicy(builder.build());
-                    File media = new File(Environment.getExternalStorageDirectory() + "/" + mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
+                    try {
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_SEND);
+                        intent.setType("image/*");
+                        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                        StrictMode.setVmPolicy(builder.build());
+                        //File media = new File(mActivity.getApplicationContext().getFilesDir().getPath() + "/" + mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
+                        intent.putExtra(Intent.EXTRA_STREAM, getImageUri(getApplicationContext(),savedBitMap));
+                        intent.setPackage("com.twitter.android");
+                        startActivity(intent);
+                    }catch (Exception e) {
+                       CommonMethods.printLogE(TAG ,"exeception : "+ e);
+                    }
 
-                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(media));
-                    intent.setPackage("com.twitter.android");
-                    startActivity(intent);
+
                 } else {
                     CommonMethods.buildDialog(mContext, getResources().getString(R.string.strTwitterNotInstalled));
                 }
@@ -1200,16 +1560,21 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             public void onClick(View v) {
 
                 if (CommonMethods.isAppInstalled(mContext, "com.instagram.android")) {
-                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                    shareIntent.setType("image/*");
 
-                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                    StrictMode.setVmPolicy(builder.build());
-                    File media = new File(Environment.getExternalStorageDirectory() + "/" + mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
+                    try {
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_SEND);
+                        intent.setType("image/*");
+                        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                        StrictMode.setVmPolicy(builder.build());
+                        //File media = new File(mActivity.getApplicationContext().getFilesDir().getPath() + "/" + mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
+                        intent.putExtra(Intent.EXTRA_STREAM, getImageUri(getApplicationContext(),savedBitMap));
+                        intent.setPackage("com.instagram.android");
+                        startActivity(intent);
+                    }catch (Exception e) {
+                        CommonMethods.printLogE(TAG ,"exeception : "+ e);
+                    }
 
-                    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(media));
-                    shareIntent.setPackage("com.instagram.android");
-                    startActivity(shareIntent);
                 } else {
                     CommonMethods.buildDialog(mContext, getResources().getString(R.string.strInstagramNotInstalled));
                 }
@@ -1218,6 +1583,13 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 popupShareSocialMedia.dismiss();
             }
         });
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), inImage, UUID.randomUUID().toString() + ".png", "drawing");
+        return Uri.parse(path);
     }
 
     private void displayBlueDotsInfo(View anchorView, DotsLocationsModel.Datum blueDotMeta) {
@@ -1669,7 +2041,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 CommonMethods.printLogE("Response @ callCheckIfRecipeAvailable : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callCheckIfRecipeAvailable : ", "" + response.code());
 
-                if (response.code() == Constants.API_SUCCESS && response.body().getData().size() != 0) {
+                if (response.code() == Constants.API_SUCCESS && response.body().getData() != null) {
 
                     //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
                     imgRecipe.setVisibility(View.VISIBLE);

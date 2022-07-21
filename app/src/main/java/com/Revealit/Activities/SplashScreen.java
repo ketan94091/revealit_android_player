@@ -96,17 +96,24 @@ public class SplashScreen extends AppCompatActivity {
                     //CHANGE API END POINT TO ALPHA T CURATOR
                     mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE);
                     mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION);
+                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strBeta));
 
                     switch (Constants.API_END_POINTS_MOBILE) {
 
-                        case Constants.API_END_POINTS_MOBILE_S_CURATOR:
+                        case Constants.API_END_POINTS_MOBILE_B_CURATOR:
                             mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 1);
                             break;
-                        case Constants.API_END_POINTS_MOBILE_T_CURATOR:
+                        case Constants.API_END_POINTS_MOBILE_S_CURATOR:
                             mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 2);
                             break;
-                        case Constants.API_END_POINTS_MOBILE_B_CURATOR:
+                        case Constants.API_END_POINTS_MOBILE_T1_CURATOR:
                             mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 3);
+                            break;
+                        case Constants.API_END_POINTS_MOBILE_T2_CURATOR:
+                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 4);
+                            break;
+                        case Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR:
+                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 5);
                             break;
                     }
 

@@ -13,7 +13,7 @@
         android:id="@+id/ralativeMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+       >
 
         <RelativeLayout
             android:id="@+id/relativeFeatured"
@@ -37,9 +37,10 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="20dp"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorBlack"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/imgBiteBrandLogo"
@@ -60,7 +61,8 @@
             android:layout_below="@+id/relativeFeatured"
             android:orientation="horizontal"
             android:padding="10dp"
-            android:weightSum="3">
+            android:weightSum="3"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/txtSubTitleOne"
@@ -109,7 +111,8 @@
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textStyle="bold"
-            android:textColor="@color/colorWhite" />
+            android:textColor="@color/colorWhite"
+            android:layout_marginTop="15dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycleCategoryList"

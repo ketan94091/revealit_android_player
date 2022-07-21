@@ -51,6 +51,18 @@
                 android:background="@drawable/round_corner_border_black"
                 android:textSize="12dp" />
 
+        <TextView
+            android:id="@+id/txtSwappingSilo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:textSize="12dp" />
+
 
         </LinearLayout>
 

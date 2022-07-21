@@ -1,13 +1,10 @@
 package com.Revealit.Utils;
 
-import android.app.Application;
 import android.content.Context;
 
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
-import com.Revealit.R;
-import com.facebook.FacebookSdk;
 import com.testfairy.TestFairy;
 
 public class Appcontroller extends MultiDexApplication {
@@ -21,9 +18,6 @@ public class Appcontroller extends MultiDexApplication {
 
         //MULTIDEX
         MultiDex.install(this);
-
-        //FACEBOOK SDK
-        //FacebookSdk.sdkInitialize(this);
 
 
     }
@@ -39,6 +33,9 @@ public class Appcontroller extends MultiDexApplication {
 
         //SHAKE FEATURE
         TestFairy.enableFeedbackForm("shake");
+
+
+
 
     }
 

@@ -60,6 +60,23 @@
                 android:maxEms="50"
                />
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/txtSwappingSilo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:padding="10dp"
+                    android:textStyle="bold"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentLeft="true"
+                    android:textSize="12dp" />
+
             <TextView
                 android:id="@+id/txtLogin"
                 android:layout_width="wrap_content"
@@ -70,10 +87,13 @@
                 android:paddingTop="7dp"
                 android:paddingBottom="7dp"
                 android:paddingRight="15dp"
+                android:layout_alignParentRight="true"
                 android:paddingLeft="15dp"
                 android:text="@string/strLogin"
                 android:textColor="@color/colorWhite"
                 android:background="@drawable/border_square_gray"/>
+
+            </RelativeLayout>
 
         </LinearLayout>
 

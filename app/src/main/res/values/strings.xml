@@ -15,6 +15,7 @@
     <string name="strListen">Listen</string>
     <string name="strPlay">Play</string>
     <string name="strWallet">Wallet</string>
+    <string name="strLogout">Logout</string>
     <string name="strGetStarted">Get Started</string>
     <string name="strCreateAccount">Create Account</string>
     <string name="strCreateAccountTitleOne">We need some basic information to create</string>
@@ -53,7 +54,7 @@
     <string name="strEmailAlreadyRegistered">Email is already registered</string>
     <string name="strEmailAlreadyRegisteredMsg">This email is already registered with revealit would</string>
     <string name="strEmailAlreadyRegisteredMsgTwo">you like to</string>
-    <string name="strBiomatricPermissionOne">Do you want to allow Revealit to use Face ID?</string>
+    <string name="strBiomatricPermissionOne">Do you want to allow Revealit to use FaceId or FingerprintId?</string>
     <string name="strBiomatricPermissionTwo">Revealit need excess for you to authenticate with TouchId or FaceId</string>
     <string name="strDontAllow">Dont allow</string>
     <string name="strAccount">Account</string>
@@ -68,6 +69,9 @@
     <string name="strFacebook">Facebook</string>
     <string name="strTwitter">Twitter</string>
     <string name="strInstagram">Instagram</string>
+    <string name="strClearVideo">Are you sure you want to clear this video?</string>
+    <string name="strClear">Clear</string>
+    <string name="strClearAll">Clear All</string>
 
 
     <string name="strEnterUserName">Please enter username!</string>
@@ -88,15 +92,29 @@
     <string name="strPermissionNeededMsg">Permission is needed to access files from your device...</string>
     <string name="strPurchase">Purchase</string>
     <string name="strNoPublishedVideo">No Published Videos</string>
+    <string name="strNoItemFound">No Items Found</string>
     <string name="strChooseColors">Choose your color</string>
     <string name="strInfluencers">Influencers</string>
     <string name="strSelectEndPoint">Select Api End Point</string>
-    <string name="strScurator">S Curator</string>
-    <string name="strScuratorURL">https://staging.api.revealit.io</string>
-    <string name="strTcurator">T Curator</string>
-    <string name="strTcuratorURL">https://alpha.revealit.io</string>
-    <string name="strBcurator">B Curator</string>
-    <string name="strBcuratorURL">https://beta.revealit.io</string>
+    <string name="strSimulation">Simulation</string>
+    <string name="strLive">Live</string>
+
+
+    <string name="strBeta">Beta</string>
+    <string name="strBetaURL">https://beta.revealit.io</string>
+
+    <string name="strStaging">Staging</string>
+    <string name="strStagingURL">https://staging.revealit.io</string>
+
+    <string name="strTesting1">Testing1</string>
+    <string name="strTesting1URL">https://testing1.revealit.io</string>
+
+    <string name="strTesting2">Testing2</string>
+    <string name="strTesting2URL">https://testing2.revealit.io</string>
+
+    <string name="strIntegration">Integration</string>
+    <string name="strIntegrationURL">https://integration.revealit.io</string>
+
 
 
     <string name="key_testfairy_android">SDK-5f7VDJMC</string>

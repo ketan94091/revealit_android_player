@@ -9,8 +9,11 @@ import com.Revealit.ModelClasses.GetMultiColorGLB;
 import com.Revealit.ModelClasses.GetProductDetailsModel;
 import com.Revealit.ModelClasses.GetRecipesDetails;
 import com.Revealit.ModelClasses.InfluencersModel;
+import com.Revealit.ModelClasses.ItemListFromItemIdModel;
 import com.Revealit.ModelClasses.LoginAuthModel;
+import com.Revealit.ModelClasses.RevealitHistoryModel;
 import com.Revealit.ModelClasses.RewardHistoryModel;
+import com.Revealit.ModelClasses.UserDetailsModel;
 import com.Revealit.ModelClasses.UserRegistrationModel;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -95,4 +98,35 @@ public interface UpdateAllAPI {
     //GET MULTICOLOR GLBS
     @GET()
     Call<JsonElement> test(@Url String url);
+
+    //GET VIDEO DETAILS LISTEN SCREEN
+    @GET()
+    Call<JsonElement> getVideoDetailsFromACRID(@Url String url);
+
+    //GET REVEALIT HISTORY
+    @POST(Constants.API_GET_REVEALIT_HISTORY)
+    Call<RevealitHistoryModel> getRevealitHistory();
+
+    //GET VIDEO ITEMS
+    @POST(Constants.API_GET_ITEMS_FROM_ITEM_ID)
+    Call<ItemListFromItemIdModel> getItemListFromItemID(@Query(Constants.MEDIA_ID_FOR_ITEMS) int mediaID,
+                                                        @Query(Constants.PLAYBACK_OFFSET_FOR_ITEMS) int playbackOffset);
+
+
+
+    //REMOVE VIDEO FROM LISTEN HISTORY
+    @POST(Constants.API_REMOVE_LISTEN_HISTORY)
+    Call<JsonElement> removeHistory(@Query("media_id") int media_id);
+
+    //REMOVE ALL LISTEN HISTORY
+    @POST(Constants.API_REMOVE_LISTEN_HISTORY)
+    Call<JsonElement> removeWholeHistory(@Query("clear") boolean clear);
+
+    //GET USER DETAILS
+    @GET()
+    Call<UserDetailsModel> getUserDetails(@Url String url);
+
+
 }
+
+

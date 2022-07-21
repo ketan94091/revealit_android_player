@@ -34,8 +34,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(tableCategoryWisePlayList());
         db.execSQL(tableRewardHistory());
         db.execSQL(tableCurrencyList());
+        db.execSQL(tableRevealitHistoryList());
+        db.execSQL(tableRevealitHistoryListSimulation());
+
 
     }
+
+
 
 
     @Override
@@ -91,6 +96,41 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 + DatabaseHelper.KEY_CURRENCY_NAME + " text);";
     }
 
+    private String tableRevealitHistoryList() {
+
+        return "CREATE TABLE IF NOT EXISTS " + DatabaseHelper.TABLE_REVEALIT_HISTORY
+                + " ( " + DatabaseHelper.KEY_ID + " INTEGER PRIMARY KEY,"
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_MATCH_ID + " INTEGER, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_MEDIA_ID + " INTEGER, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_MEDIA_TYPE + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_MEDIA_TITLE + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_MEDIA_URL + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_MEDIA_COVER_ART + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_CURRENT_TIME + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_PLAYBACK_OFFSET + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_PLAYBACK_DISPLAY + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_MATCH_TIMESTAMP + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_ALL_TIMESTAMP + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_ALL_TIMESTAMP_OFFSET + " text);";
+    }
+
+    private String tableRevealitHistoryListSimulation() {
+
+        return "CREATE TABLE IF NOT EXISTS " + DatabaseHelper.TABLE_REVEALIT_HISTORY_SIMULATION
+                + " ( " + DatabaseHelper.KEY_ID + " INTEGER PRIMARY KEY,"
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_MATCH_ID + " INTEGER, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_MEDIA_ID + " INTEGER, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_MEDIA_TYPE + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_MEDIA_TITLE + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_MEDIA_URL + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_MEDIA_COVER_ART + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_CURRENT_TIME + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_PLAYBACK_OFFSET + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_PLAYBACK_DISPLAY + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_MATCH_TIMESTAMP + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_ALL_TIMESTAMP + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_ALL_TIMESTAMP_OFFSET + " text);";
+    }
 
 }
 

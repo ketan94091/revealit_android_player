@@ -3,18 +3,9 @@ package com.Revealit.CommonClasse;
 public class Constants {
 
 
-  //API_END POINT STAGING GROUP(ZACH & GARRY) //S CURATOR
-    /*public static String API_END_POINTS_MOBILE = "https://staging.api.revealit.io/";
-    public static String API_END_POINTS_REGISTRATION = "https://scapi.revealit.io/";*/
-
-      //API_END POINT ALPHA GROUP(RIDDHI) //T CURATOR
-    public static String API_END_POINTS_MOBILE = "https://alpha.revealit.io/";
-    public static String API_END_POINTS_REGISTRATION = "https://tcapi.revealit.io/";
-
-
-    //API_END POINT BETA GROUP(JOHN) // B CURATOR
-   /* public static String API_END_POINTS_MOBILE = "https://beta.revealit.io";
-    public static String API_END_POINTS_REGISTRATION = "https://bcapi.revealit.io/";*/
+    //B CURATOR
+    public static String API_END_POINTS_MOBILE = "https://beta.revealit.io";
+    public static String API_END_POINTS_REGISTRATION = "https://bcapi.revealit.io/";
 
 
 
@@ -22,19 +13,30 @@ public class Constants {
   //KEY
   public static final String API_END_POINTS_MOBILE_KEY = "endPointMobile";
   public static final String API_END_POINTS_REGISTRATION_KEY = "endPointRegistration";
+  public static final String API_END_POINTS_SERVER_NAME = "endPointServerName";
 
+  //BETA CURATOR
+  public static final String API_END_POINTS_MOBILE_B_CURATOR = "https://beta.revealit.io";
+  public static final String API_END_POINTS_REGISTRATION_B_CURATOR = "https://bcapi.revealit.io/";
 
+  //STAGING CURATOR
   public static final String API_END_POINTS_MOBILE_S_CURATOR = "https://staging.api.revealit.io/";
   public static final String API_END_POINTS_REGISTRATION_S_CURATOR = "https://scapi.revealit.io/";
 
-  //API_END POINT ALPHA GROUP(RIDDHI) //T CURATOR
-  public static final String API_END_POINTS_MOBILE_T_CURATOR = "https://alpha.revealit.io/";
-  public static final String API_END_POINTS_REGISTRATION_T_CURATOR = "https://tcapi.revealit.io/";
+  //TESTING1  CURATOR
+  public static final String API_END_POINTS_MOBILE_T1_CURATOR = "https://testing1.revealit.io/";
+  public static final String API_END_POINTS_REGISTRATION_T1_CURATOR = "https://tcapi.revealit.io/";
+
+  //TESTING2  CURATOR
+  public static final String API_END_POINTS_MOBILE_T2_CURATOR = "https://testing2.revealit.io/";
+  public static final String API_END_POINTS_REGISTRATION_T2_CURATOR = "https://tcapi2.revealit.io/";
+
+  //INTEGRATION  CURATOR
+  public static final String API_END_POINTS_MOBILE_INTEGRATION_CURATOR = "https://integration.revealit.io/";
+  public static final String API_END_POINTS_REGISTRATION_INTEGRATION_CURATOR = "https://icapi.revealit.io/";
 
 
-//API_END POINT BETA GROUP(JOHN) // B CURATOR
-    public static final String API_END_POINTS_MOBILE_B_CURATOR = "https://beta.revealit.io";
-    public static final String API_END_POINTS_REGISTRATION_B_CURATOR = "https://bcapi.revealit.io/";
+
 
 
   //API'S
@@ -53,6 +55,11 @@ public class Constants {
     public static final String API_GET_INFLUENCERS_DETAILS = "/api/video/";
     public static final String API_GENERATE_REWARD_DATA = "api/rewards";
     public static final String API_GET_MULTICOLOR_GLBS = "api/ar/glb/";
+    public static final String API_GET_VIDEO_DETAILS_LISTEN_SCREEN_FROM_ACRID = "api/video/acrid/";
+  public static final String API_GET_REVEALIT_HISTORY = "api/video/matchhistory";
+  public  static  final  String API_GET_ITEMS_FROM_ITEM_ID ="api/video/matchhistory/items";
+  public  static  final  String API_REMOVE_LISTEN_HISTORY ="api/video/matchhistory/remove";
+  public  static  final  String API_GET_USER_DETAILS ="user";
 
 
     public static final String AUTH_TOKEN = "access_token";
@@ -70,6 +77,8 @@ public class Constants {
     public static final String MEDIA_ID = "mediaID";
     public static final String PARAM_TIME_FOR_DOTS_LOCATIONS = "time";
     public static final String VIDEO_NAME = "videoShowTitle";
+    public  static  final  String VIDEO_SEEK_TO ="videoSeekTo";
+  public  static  final  String IS_VIDEO_SEEK ="isVideoSeek";
     public static final String PROTON_EMAIL = "email";
     public static final String PROTON_PASSWORD = "password";
     public static final String PROTON_VERIFICATION_CODE = "verify_code";
@@ -77,6 +86,7 @@ public class Constants {
     public static final String IS_ALLOW_BIOMETRIC = "isUserAllowBioMetric";
     public static final String IS_FIRST_LOGIN = "isFirstLogin";
     public static final String PROTON_ACCOUNT_NAME = "protonAccountNAme";
+    public  static  final String KEY_USERNAME ="userName";
     public static final String IS_FIRST_TIME_ACCOUNT_SYNC = "isFirstTimeAccountSync";
     public static final String ACCOUNT_BALANCE = "accountBalance";
     public static final String ACCOUNT_CURRENCY_TYPE = "CurrencyType";
@@ -98,7 +108,31 @@ public class Constants {
     public static final String LOGIN_PASSWORD = "loggedInPassword";
     public static final String TESTING_ENVIRONMENT_ID = "EnvironmentID";
     public static final String IS_APP_OPEN_FIRST_TIME = "isAppOpenFirstTime";
+  public static final String VIDEO_OFFSET_MS = "videoOffsetMS";
+  public  static  final  String SOMETHING_WENT_WRONG= "Something went wrong. Please try after sometimes!";
+  public  static  final  String MEDIA_ID_FOR_ITEMS ="media_id";
+  public  static  final  String PLAYBACK_OFFSET_FOR_ITEMS ="playback_offset";
+  public  static  final  String APPLICATION_NAME ="Revealit";
+  public  static  final  String LOGOUT_FROM_APP ="Logout from Revealit?";
+  public  static  final String YES ="YES";
+  public  static  final  String NO ="NO";
+  public  static  final  String OK ="OK";
+  public  static  final  String ACCOUNT_NOT_FOUND ="Wallet was not available";
+  public  static  final  String   SAVED_AUDIOFILE_NAME ="/savedAudio.3gp";
+  public  static  final  String AUDIO_CAN_NOT_RECORD ="Oops!! Something went wrong please try after sometimes.";
+  public  static  final  String AUDIO_NOT_RECOGNISED ="Video not recognized!";
+  public  static  final  String MICROPHONE_CANNOT_WORK ="Can not record audio!";
 
+  //ACR CLOUD SDK
+  public  static  final  String KEY_ACCESS_KEY ="access_key";
+  public  static  final  String KEY_ACCESS_SECRET ="access_secret";
+  public  static  final  String KEY_HOST ="host";
+  public  static  final  String KEY_TIMEOUT ="timeout";
+  public  static  final  String KEY_ACCESS_KEY_VALUE ="b2583183181f895ad9b2989464cb31bf";
+  public  static  final  String KEY_ACCESS_SECRET_VALUE ="OSBePAVIanAT6IsfRGRKVYbcbR5HPAnOevrbJ1rs";
+  public  static  final  String KEY_HOST_VALUE ="identify-ap-southeast-1.acrcloud.com";
+  public  static  final  int KEY_TIMEOUT_VALUE =30;
+  public  static  final  String KEY_APP_MODE ="appMode";
 
 
     public static String API_KEY = "AIzaSyC4elGdU9Oxi2DPIShG4pRW2gRBZOeE0pM";
@@ -114,6 +148,7 @@ public class Constants {
 
     //CONSTANT DATA WHICH SHOULD NOT CHANGE
     public static final int API_SUCCESS = 200;
+  public static final int API_ELEMENT_CREATED = 201;
     public static final int API_USER_UNAUTHORIZED = 401;
 
 

@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
@@ -86,7 +86,7 @@ public class CommonMethods {
 
     public static void printLogE(String strTAG, String strMessage) {
 
-        if (true) {
+        if (false) {
             Log.e(strTAG, strMessage);
         }
 
@@ -294,13 +294,25 @@ public class CommonMethods {
 
     }
 
-    public static boolean isAppInstalled(Context mContext, String packageName) {
+//    public static boolean isAppInstalled(Context mContext, String packageName) {
+//        try {
+//            ApplicationInfo pckInfo = mContext.getPackageManager().getApplicationInfo(packageName, 0);
+//            if (pckInfo != null)
+//                return true;
+//            return true;
+//        } catch (PackageManager.NameNotFoundException e) {
+//            return false;
+//        }
+//    }
+    public static boolean isAppInstalled(Context mContext, String targetPackage) {
+        PackageManager pm = mContext.getPackageManager();
         try {
-            ApplicationInfo info = mContext.getPackageManager().getApplicationInfo(packageName, 0);
-            return true;
+            PackageInfo info = pm.getPackageInfo(targetPackage, PackageManager.GET_META_DATA);
+
         } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
+        return true;
     }
 
 
@@ -308,7 +320,7 @@ public class CommonMethods {
 
         String versionName = BuildConfig.VERSION_NAME;
 
-        return "App Version : " + versionName;
+        return "" + versionName;
 
     }
 
