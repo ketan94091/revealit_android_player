@@ -10,26 +10,44 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp">
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp">
 
-        <TextView
-            android:id="@+id/txtUserName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAllCaps="false"
-            android:layout_marginLeft="20dp"
-            android:textColor="@color/colorWalletText"
-            android:textSize="15dp"
-            android:textStyle="bold"/>
+        <RelativeLayout
+            android:id="@+id/relativeTopview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imgLogo"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/app_icon_round" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/quasimoda_bold"
+                android:gravity="center_vertical"
+                android:text="@string/strMyWallet"
+                android:textColor="@color/colorBlack"
+                android:textFontWeight="700"
+                android:textSize="18dp" />
+
+        </RelativeLayout>
 
 
         <RelativeLayout
             android:id="@+id/relativeAccountDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:background="@drawable/round_corner_wallet_scree"
-            android:visibility="gone">
+            android:layout_below="@+id/relativeTopview"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/new_auth_round_button">
 
 
             <LinearLayout
@@ -49,25 +67,28 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:padding="5dp"
-                        android:src="@mipmap/refresh" />
+                        android:src="@mipmap/refresh"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/titleAcount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/quasimoda_bold"
                         android:text="@string/strAccount"
-                        android:textAllCaps="true"
-                        android:textColor="@color/colorWalletText"
-                        android:textSize="13dp" />
+                        android:textColor="@color/colorCuratorHighlightGrey"
+                        android:textFontWeight="700"
+                        android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/txtAccountName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/titleAcount"
-                        android:capitalize="characters"
-                        android:textColor="@color/colorCurrency"
-                        android:textSize="20dp"
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:textColor="@color/colorNewAppGreen"
+                        android:textFontWeight="600"
+                        android:textSize="30dp"
                         android:textStyle="bold" />
 
 
@@ -75,8 +96,10 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorWalletBorder" />
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/colorBottomBarActiveGrey" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -96,25 +119,28 @@
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/txtAmount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAllCaps="true"
-                                android:textColor="@color/colorAmountAndSymbol"
-                                android:textSize="20dp"
-                                android:textStyle="bold" />
-
 
                             <TextView
                                 android:id="@+id/titleAmount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/txtAmount"
+                                android:fontFamily="@font/quasimoda_bold"
                                 android:text="@string/strBalance"
-                                android:textAllCaps="true"
-                                android:textColor="@color/colorWalletText"
-                                android:textSize="13dp" />
+                                android:textColor="@color/colorCuratorHighlightGrey"
+                                android:textFontWeight="700"
+                                android:textSize="15dp" />
+
+                            <TextView
+                                android:id="@+id/txtAmount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/quasimoda_semibold"
+                                android:singleLine="true"
+                                android:textColor="@color/colorNewAppGreen"
+                                android:textFontWeight="600"
+                                android:textSize="30dp" />
+
 
                         </LinearLayout>
 
@@ -127,26 +153,29 @@
                             android:gravity="end"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/txtCurrencyType"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="USD"
-                                android:textAllCaps="true"
-                                android:textColor="@color/colorCurrency"
-                                android:textSize="20dp"
-                                android:textStyle="bold" />
-
 
                             <TextView
                                 android:id="@+id/titleCurrency"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/txtAmount"
+                                android:fontFamily="@font/bilo_bold"
                                 android:text="@string/strCurrency"
+                                android:textColor="@color/colorCuratorHighlightGrey"
+                                android:textFontWeight="700"
+                                android:textSize="15dp" />
+
+                            <TextView
+                                android:id="@+id/txtCurrencyType"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/quasimoda_bold"
+                                android:text="USD"
                                 android:textAllCaps="true"
-                                android:textColor="@color/colorWalletText"
-                                android:textSize="13dp" />
+                                android:textColor="@color/colorNewAppGreen"
+                                android:textFontWeight="700"
+                                android:textSize="30dp" />
+
 
                         </LinearLayout>
                     </LinearLayout>
@@ -162,11 +191,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/relativeAccountDetails"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="25dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical"
             android:visibility="gone"
+
 
             >
 
@@ -175,10 +203,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtAmount"
+                android:fontFamily="@font/quasimoda_bold"
                 android:text="@string/strRewardHistory"
-                android:textAllCaps="true"
-                android:textColor="@color/colorWalletText"
-                android:textSize="20dp" />
+                android:textColor="@color/colorCuratorHighlightGrey"
+                android:textFontWeight="700"
+                android:textSize="15dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -193,33 +222,36 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtAmount"
                     android:layout_weight="1"
+                    android:fontFamily="@font/quasimoda_bold"
                     android:text="@string/strType"
                     android:textAlignment="textStart"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorWalletText"
-                    android:textSize="13dp" />
+                    android:textColor="@color/colorCuratorHighlightGrey"
+                    android:textFontWeight="700"
+                    android:textSize="15dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtAmount"
                     android:layout_weight="1"
+                    android:fontFamily="@font/quasimoda_bold"
                     android:text="@string/strAmount"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorWalletText"
-                    android:textSize="13dp" />
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorCuratorHighlightGrey"
+                    android:textFontWeight="700"
+                    android:textSize="15dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtAmount"
                     android:layout_weight="1"
+                    android:fontFamily="@font/quasimoda_bold"
                     android:text="@string/strWhen"
-                    android:textAlignment="textEnd"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorWalletText"
-                    android:textSize="13dp" />
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorCuratorHighlightGrey"
+                    android:textFontWeight="700"
+                    android:textSize="15dp" />
             </LinearLayout>
 
             <RelativeLayout
@@ -239,21 +271,22 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:orientation="horizontal"
+                    android:visibility="visible"
                     android:weightSum="2">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_weight="1">
-                    <TextView
-                        android:id="@+id/txtVersionName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorWalletText"
-                        android:textSize="12dp"
-                        android:layout_centerInParent="true"
-                        />
-                </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/txtVersionName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textColor="@color/colorWalletText"
+                            android:textSize="12dp" />
+                    </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -265,9 +298,9 @@
                             android:id="@+id/imgSponsor"
                             android:layout_width="120dp"
                             android:layout_height="50dp"
+                            android:layout_alignParentRight="true"
                             android:layout_gravity="center_horizontal"
-                            android:scaleType="fitXY"
-                            android:layout_alignParentRight="true"/>
+                            android:scaleType="fitXY" />
                     </RelativeLayout>
 
 

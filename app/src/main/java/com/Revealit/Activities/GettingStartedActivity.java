@@ -31,7 +31,7 @@ public class GettingStartedActivity extends AppCompatActivity implements View.On
 
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private TextView txtSwappingSilo,txtLogin,txtGetStarted;
+    private TextView txtSwappingSilo,txtTestNewAuth,txtLogin,txtGetStarted;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -66,6 +66,7 @@ public class GettingStartedActivity extends AppCompatActivity implements View.On
 
         txtGetStarted = (TextView)findViewById(R.id.txtGetStarted);
         txtLogin = (TextView)findViewById(R.id.txtLogin);
+        txtTestNewAuth = (TextView)findViewById(R.id.txtTestNewAuth);
         txtSwappingSilo = (TextView)findViewById(R.id.txtSwappingSilo);
 
         //SET APPLICATION INSTALLED VERSION NAME AND SERVER NAME
@@ -81,6 +82,7 @@ public class GettingStartedActivity extends AppCompatActivity implements View.On
         txtGetStarted.setOnClickListener(this);
         txtLogin.setOnClickListener(this);
         txtSwappingSilo.setOnClickListener(this);
+        txtTestNewAuth.setOnClickListener(this);
     }
 
 
@@ -111,6 +113,14 @@ public class GettingStartedActivity extends AppCompatActivity implements View.On
 
                 //OPEN END POINT SELECTION DIALOG
                 openEndPointSelectionDialog();
+
+                break;
+                case R.id.txtTestNewAuth:
+
+                    Intent mTestNewAuthIntent = new Intent(this, NewAuthActivity.class);
+                    startActivity(mTestNewAuthIntent);
+                    finish();
+
 
                 break;
 

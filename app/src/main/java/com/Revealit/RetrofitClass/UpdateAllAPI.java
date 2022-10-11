@@ -3,16 +3,21 @@ package com.Revealit.RetrofitClass;
 
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.ModelClasses.CheckEmailModel;
+import com.Revealit.ModelClasses.CheckUserNameStatusModel;
 import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.ModelClasses.GetAccountDetailsModel;
 import com.Revealit.ModelClasses.GetMultiColorGLB;
 import com.Revealit.ModelClasses.GetProductDetailsModel;
 import com.Revealit.ModelClasses.GetRecipesDetails;
 import com.Revealit.ModelClasses.InfluencersModel;
+import com.Revealit.ModelClasses.InviteModel;
 import com.Revealit.ModelClasses.ItemListFromItemIdModel;
 import com.Revealit.ModelClasses.LoginAuthModel;
+import com.Revealit.ModelClasses.NewAuthLogin;
+import com.Revealit.ModelClasses.NewAuthStatusModel;
 import com.Revealit.ModelClasses.RevealitHistoryModel;
 import com.Revealit.ModelClasses.RewardHistoryModel;
+import com.Revealit.ModelClasses.SubmitProfileModel;
 import com.Revealit.ModelClasses.UserDetailsModel;
 import com.Revealit.ModelClasses.UserRegistrationModel;
 import com.google.gson.JsonElement;
@@ -126,6 +131,42 @@ public interface UpdateAllAPI {
     @GET()
     Call<UserDetailsModel> getUserDetails(@Url String url);
 
+
+    //NEW AUTH PHONE
+    @POST(Constants.API_NEW_AUTH_PHONE_VERIFY)
+    Call<NewAuthStatusModel> verifyPhone(@Body JsonObject body);
+
+    //NEW AUTH PHONE
+    @POST(Constants.API_NEW_AUTH_SUBMIT_PROFILE)
+    Call<SubmitProfileModel> submitProfile(@Body JsonObject body);
+
+    //NEW AUTH PHONE
+    @POST(Constants.API_NEW_AUTH_CREATE_PROTON)
+    Call<JsonElement> createProtonAccount(@Body JsonObject body);
+
+    //NEW AUTH PHONE
+    @POST(Constants.API_NEW_AUTH_CREATE_TOKENS)
+    Call<JsonElement> createTokens(@Body JsonObject body);
+
+    //NEW AUTH PHONE
+    @POST(Constants.API_NEW_AUTH_OTP_VERIFY)
+    Call<NewAuthStatusModel> verifyOTPPhone(@Body JsonObject body);
+
+    //GET USER DETAILS
+    @GET()
+    Call<JsonElement> checkFileOnGoogleDrive(@Url String url);
+
+    //GET CAMPAIGN DETAILS FOR INVITES
+    @GET()
+    Call<InviteModel> getCampaignDetails(@Url String url);
+
+    //CHECK IF USER ALREADY EXIST
+    @GET()
+    Call<CheckUserNameStatusModel> checkIfUserExist(@Url String url);
+
+    //LOGIN API WITH RETROFIT
+    @POST(Constants.API_NEW_AUTH_LOGIN)
+    Call<NewAuthLogin> newAuthLogin(@Body JsonObject body);
 
 }
 

@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.NewAuthActivity">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+    <RelativeLayout
+        android:id="@+id/relativeControler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:id="@+id/linearAuthTwilo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:layout_marginRight="10dp"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+
+               >
+
+                <TextView
+                    android:id="@+id/txtSendPhoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Send Phone Number"
+                    android:background="@drawable/round_corner_enabled_registration"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:padding="10dp"
+                    android:textSize="14dp"
+
+                    />
+
+                <EditText
+                    android:id="@+id/edtPhoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:background="@drawable/round_corner_border"
+                    android:singleLine="true"
+                    android:textSize="14dp"
+                    android:maxEms="12"
+                    android:hint="phone with country code"
+                    android:textColorHint="@color/colorGrayLight"
+                    android:textColor="@color/colorGrayBottomBar"
+                    android:layout_marginTop="10dp"
+                    android:inputType="number"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                >
+
+
+                <TextView
+                    android:id="@+id/txtSendOTP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Verify Your OTP"
+                    android:background="@drawable/round_corner_enabled_registration"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:padding="10dp"
+                    android:textSize="14dp"
+
+                    />
+
+                <EditText
+                    android:id="@+id/edtVerifyOTP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:background="@drawable/round_corner_border"
+                    android:singleLine="true"
+                    android:textSize="14dp"
+                    android:maxEms="50"
+                    android:layout_marginTop="10dp"
+                    android:hint="Enter OTP"
+                    android:textColorHint="@color/colorGrayLight"
+                    android:textColor="@color/colorGrayBottomBar"
+                    android:inputType="number"
+                    />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearCreateProton"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_below="@+id/linearAuthTwilo"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            >
+
+
+            <TextView
+                android:id="@+id/txtCreateProton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Create Proton Account"
+                android:background="@drawable/round_corner_enabled_registration"
+                android:textAlignment="center"
+                android:textColor="@color/colorWhite"
+                android:padding="10dp"
+                android:textSize="14dp"
+
+                />
+
+            <EditText
+                android:id="@+id/edtCreateProtonName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:background="@drawable/round_corner_border"
+                android:singleLine="true"
+                android:textSize="14dp"
+                android:maxEms="50"
+                android:layout_marginTop="10dp"
+                android:hint="Enter User Name"
+                android:textColorHint="@color/colorGrayLight"
+                android:textColor="@color/colorGrayBottomBar"
+
+                />
+
+
+            <TextView
+                android:id="@+id/txtBackupCredentials"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Back up data"
+                android:background="@drawable/round_corner_enabled_registration"
+                android:textAlignment="center"
+                android:textColor="@color/colorWhite"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"
+                android:textSize="14dp"
+
+                />
+
+            <TextView
+                android:id="@+id/txtStatusKeysBackuped"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="State : Keychain Backed Up"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:padding="10dp"
+                android:layout_marginTop="5dp"
+                android:textSize="14dp"
+
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearVerifyQR"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_below="@+id/linearCreateProton"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            >
+
+
+            <ImageView
+                android:id="@+id/imgScanQRcode"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/scan_qr_code"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <TextView
+                android:id="@+id/txtVerifyPush"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Verify Push"
+                android:background="@drawable/round_corner_enabled_registration"
+                android:textAlignment="center"
+                android:textColor="@color/colorWhite"
+                android:padding="10dp"
+                android:textSize="14dp"
+                android:layout_marginTop="20dp"
+
+                />
+
+            <EditText
+                android:id="@+id/edtScanedUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:background="@drawable/round_corner_border"
+                android:singleLine="true"
+                android:textSize="14dp"
+                android:maxEms="50"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="Garry_revealit"
+
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearKeyStoreStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_below="@+id/linearVerifyQR"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            >
+
+            <TextView
+                android:id="@+id/txtStatusKeyChain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="State : Keychain is turned off!"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+
+                android:layout_marginTop="5dp"
+                android:textSize="14dp"
+
+                />
+
+
+            <TextView
+                android:id="@+id/txtStatusCloud"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="State : Google cloud is turn off!"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+
+                android:layout_marginTop="5dp"
+                android:textSize="14dp"
+
+                />
+
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/txtClearData"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Clear Data"
+            android:background="@color/colorRedDark"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:padding="10dp"
+            android:textSize="14dp"
+            android:layout_below="@+id/linearKeyStoreStatus"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+
+            />
+
+    </RelativeLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/relativeSurface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+    <SurfaceView
+        android:id="@+id/surfaceViewScanQRCode"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        />
+        <TextView
+            android:id="@+id/txtBarcodeValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:text="No Barcode Detected"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>

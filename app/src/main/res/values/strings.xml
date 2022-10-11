@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Revealit</string>
+    <string name="app_name">Revealit TV</string>
     <string name="strHome">Home</string>
     <string name="strInternetAvailable">Internet Available</string>
     <string name="strNoInternetAvailable">No Internet Available</string>
@@ -12,15 +12,19 @@
     <string name="strButton">Play Video</string>
     <string name="strARmode">Launch AR mode</string>
     <string name="strLogin">Login</string>
+    <string name="strBackUpLater">Backup Later</string>
+    <string name="strTestNewAuth">Test New Auth</string>
     <string name="strListen">Listen</string>
     <string name="strPlay">Play</string>
     <string name="strWallet">Wallet</string>
     <string name="strLogout">Logout</string>
     <string name="strGetStarted">Get Started</string>
+    <string name="strStatus">Status</string>
+    <string name="strStatusPendingVerification">Pending Verification</string>
     <string name="strCreateAccount">Create Account</string>
     <string name="strCreateAccountTitleOne">We need some basic information to create</string>
     <string name="strCreateAccountTitleTwo">your revealit account</string>
-    <string name="strRegisterAccount">Register Account</string>
+    <string name="strRegisterAccount">Register</string>
     <string name="strRevealitName">Revealit Name</string>
     <string name="strChooseaname">Choose a name you would like to use publicly</string>
     <string name="strChooseanameTwo">with revealit</string>
@@ -58,6 +62,11 @@
     <string name="strBiomatricPermissionTwo">Revealit need excess for you to authenticate with TouchId or FaceId</string>
     <string name="strDontAllow">Dont allow</string>
     <string name="strAccount">Account</string>
+    <string name="strMobileNumber">Mobile number</string>
+    <string name="strSelect">Select</string>
+    <string name="strMySavedItems">My Saved Items</string>
+    <string name="strSettings">Settings</string>
+    <string name="strHelp">Help</string>
     <string name="strFetchingData">Fetching Data....</string>
     <string name="strTapToRevealit">Tap to revealit</string>
     <string name="strMyReveals">My Reveals</string>
@@ -78,6 +87,7 @@
     <string name="strEnterPassword">Please enter password!</string>
     <string name="strUsernamePasswordWrong">Your email or password is incorrect.</string>
     <string name="strSomethingWentWrong">Something went wrong please try again.</string>
+    <string name="strPhoneIsAlreadyInUsed">This phone number is already registered</string>
     <string name="title_activity_home_navigationbar">MainActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -98,6 +108,62 @@
     <string name="strSelectEndPoint">Select Api End Point</string>
     <string name="strSimulation">Simulation</string>
     <string name="strLive">Live</string>
+    <string name="strSignUp">Signup</string>
+    <string name="strBackUpNow">Backup Now</string>
+    <string name="strCloudOne">revealit TV strongly advises that you back-up your private key in your google cloud account</string>
+    <string name="strCloudTwo">Losing the Private Key will cause you to lose your wallet assets and your access to your revealit TV account</string>
+    <string name="strCloudThree">You can do that simply by pressing the ‘Backup Now’ button below</string>
+    <string name="strCloudBackups">Cloud Backup</string>
+    <string name="strWelcomeToRevealitTV">Welcome to revealit TV</string>
+    <string name="strEnterMobilNumber">Enter your mobile number</string>
+    <string name="strUsedForUniqueAccountCreation">Your phone number will be used once for unique account creation and never again.</string>
+    <string name="strMobileAlreadyUsed">Mobile Number is already in use on the revealit TV platform. revealit TV only allows one account per mobile.</string>
+    <string name="strInvalidMobileFormat">Invalid Mobile Number Format</string>
+    <string name="strSomeoneInviteyou">Did someone invite you to revealit TV?</string>
+    <string name="strEnterInviteeName">Enter a revealit username or a campaign ID</string>
+    <string name="strEarnupto">Earn US$1.00 in Bitcoin</string>
+    <string name="strContinue">Continue</string>
+    <string name="strCopyTo">Copy to clipboard</string>
+    <string name="strOffers">Hurry! This offer will end after 5,000 new users.</string>
+    <string name="strByClicking">By clicking ‘Create Account’ you agree to our</string>
+    <string name="strTermsOfService">Terms of Service and Privacy Policy</string>
+    <string name="strErrorCountryCodeEmpty">Country code should not be empty</string>
+    <string name="strErrorCountryCodeValid">Enter valid country code</string>
+    <string name="strErrorMobileNumberEmpty">Enter mobile number</string>
+    <string name="strErrorMobileNumberValid">Mobile number must be 10 digit</string>
+    <string name="strMobileVerification">Mobile Verification</string>
+    <string name="strUsername">Username</string>
+    <string name="strMyWallet">My Wallet</string>
+    <string name="strReveals">Reveals</string>
+    <string name="strUser">User</string>
+    <string name="strUsernameCopied">Username Copied</string>
+    <string name="strEarnReward">Earn Rewards</string>
+    <string name="strWelcomeToTV">Welcome to revealitTV</string>
+    <string name="strNotYourNumber">Not your number?</string>
+    <string name="strClickToEdit">click to edit</string>
+    <string name="strNotReceiveOtp">Didn \'t receive it yet?</string>
+    <string name="strInvalidCode">Invalid Verification Code</string>
+    <string name="strUsernameAlreadyinUse">Username already in use</string>
+    <string name="strRecendCode">Resend Code</string>
+    <string name="strSuccessfullyVerified">Successfully Verieifed your Mobile Device</string>
+    <string name="strWehaveRecieved">We have sent a text message to your phone number</string>
+    <string name="strEnterTheCodeBelow">\n Enter the code below.</string>
+    <string name="strEnterUsername">Enter a username for the revealit TV platform</string>
+    <string name="strInviteFriend">Earn US$1.00 in Bitcoin everytime a friend installs the revealit TV app</string>
+    <string name="strPendingVerificationMsg">Thank you for enrolling on our platform. You are already in the waiting list. We will notify you as soon as your account has been enabled (approximately in 20 days).</string>
+    <string name="strInviteFriendAndGetReward">Invite a friend. Get Rewarded:</string>
+    <string name="strGrabMoney">US$10,000 of Bitcoin up for Grabs!</string>
+    <string name="strEnterUsernameContent">Choose carefully, your username will publicly identify you on the revealit TV platform. It is also how we pay you and how you shop.</string>
+    <string name="strMinimumCharcter">Minimum 4 characters</string>
+    <string name="strMaxCharcter">Maximum 12 characters</string>
+    <string name="strOnlyLowerCase">Only lowercase a-z or numbers 1-5</string>
+    <string name="strUsernameAvailable">Username available</string>
+    <string name="strOTPwrong">Entered OTP is wrong!</string>
+    <string name="strEnterRightCampaignId">Enter the right campaign id or referral id</string>
+    <string name="strVerified">Verified</string>
+    <string name="strThankYouForEnrolingPlatform">Thank you for enrolling on our platform.</string>
+    <string name="strErrorInBckup">Error encountered! Please try after some times</string>
+    <string name="strBckupSuccessfully">Google drive backup successfully!</string>
 
 
     <string name="strBeta">Beta</string>
@@ -116,12 +182,9 @@
     <string name="strIntegrationURL">https://integration.revealit.io</string>
 
 
-
     <string name="key_testfairy_android">SDK-5f7VDJMC</string>
     <string name="key_testfairy_android_pvt_key">5f8216034f7b9cb7327d84aa34f4c2301c794960</string>
     <string name="facebook_app_id">491514455263066</string>
-
-
 
 
 </resources>

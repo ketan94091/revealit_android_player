@@ -3,6 +3,7 @@ package com.Revealit.Fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -79,13 +80,14 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private LinearLayoutManager recylerViewLayoutManager;
     private RewardSummeryListAdapter2 mRewardSummeryListAdapter2;
     private ImageView imgSponsor, imgRefresh;
-    private TextView txtUserName,txtVersionName, txtCurrencyType, txtAmount, txtAccountName;
+    private TextView txtVersionName, txtCurrencyType, txtAmount, txtAccountName;
     private RelativeLayout relativeAccountDetails;
     private LinearLayout linearCurrency, linearRewardHistory;
     private int intPageCount = 1;
     private int intTotalPageCount = 0;
     private String strAccountName = "", strAmount = "";
     private HomeScreenTabLayout mHomeScreenTabLayout;
+    private ProgressDialog pDialog;
 
     public WalletFragment(HomeScreenTabLayout homeScreenTabLayout) {
 
@@ -135,7 +137,6 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         txtAmount = (TextView) mView.findViewById(R.id.txtAmount);
         txtCurrencyType = (TextView) mView.findViewById(R.id.txtCurrencyType);
         txtVersionName = (TextView) mView.findViewById(R.id.txtVersionName);
-        txtUserName= (TextView) mView.findViewById(R.id.txtUserName);
 
         relativeAccountDetails = (RelativeLayout) mView.findViewById(R.id.relativeAccountDetails);
 
@@ -154,12 +155,12 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         //CLEAR AMOUNT AND CURRENCY TYPE DATA
         txtAmount.setText("");
         txtCurrencyType.setText("");
-        txtAccountName.setText("");
 
         //SET APPLICATION INSTALLED VERSION NAME
         txtVersionName.setText(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME) +" Server : "+CommonMethods.installedAppVersion(mContext));
 
-
+        //SET USERNAME
+        txtAccountName.setText(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
 
     }
 
@@ -279,22 +280,22 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 if (isChecked){
                     //UPDATE FLAG FOR APPLICATION MODE
                     mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorGrayBottomBar), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorGrayBottomBar), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorGreenDark), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorGrayBottomBar), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorGrayBottomBar) , getResources().getColor(R.color.colorGreenDark));
+                    mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorNewAppGreen));
                 }else{
                     //CLEAR DUMMY DATA
                     mDatabaseHelper.clearSimulationHistoryDataTable();
 
                     //UPDATE FLAG FOR APPLICATION MODE
                     mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, false);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorGrayBottomBar), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorGrayBottomBar), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
                     mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBlueBottomBar), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorGrayBottomBar), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorGrayBottomBar) , getResources().getColor(R.color.colorBlueBottomBar));
+                    mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorBlueBottomBar));
                 }
 
 
@@ -607,8 +608,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     private void callWalletDetails() {
 
-        //DISPLAY DIALOG
-        CommonMethods.showDialog(mContext);
+
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -650,8 +650,6 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(Call<GetAccountDetailsModel> call, Response<GetAccountDetailsModel> response) {
 
-
-                CommonMethods.closeDialog();
 
                 CommonMethods.printLogE("Response @ callWalletDetails : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callWalletDetails : ", "" + response.code());
@@ -717,8 +715,6 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                     } else {
 
-                        //CLOSE THE DIALOGUE
-                        CommonMethods.closeDialog();
 
                         //OPEN IF ACCOUNT NOT FOUND
                         openAccountNotFoundDialogue();
@@ -728,7 +724,9 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 } else {
 
                     //OPEN IF ACCOUNT NOT FOUND
-                    openAccountNotFoundDialogue();
+                    //openAccountNotFoundDialogue();
+                    //CALL REWARD HISTORY
+                    callRewardHistory(0);
 
                 }
             }
@@ -775,6 +773,11 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     private void callRewardHistory(int i) {
 
+        //DISPLAY DIALOG
+        pDialog = new ProgressDialog(mContext);
+        pDialog.setMessage(mContext.getResources().getString(R.string.strPleaseWait));
+        pDialog.setCancelable(false);
+        pDialog.show();
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -817,7 +820,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
 
                 //CLOSE DIALOG
-                CommonMethods.closeDialog();
+                pDialog.cancel();
 
                 CommonMethods.printLogE("Response @ callRewardHistory : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callRewardHistory : ", "" + response.code());
@@ -870,8 +873,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onFailure(Call<RewardHistoryModel> call, Throwable t) {
 
-                //CLOSE DIALOG
-                CommonMethods.closeDialog();
+                pDialog.cancel();
 
                 CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 
@@ -980,12 +982,9 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     private void updateRewardHistoryUI() {
 
-        //SET USERNAME
-        txtUserName.setText("User : "+mSessionManager.getPreference(Constants.KEY_USERNAME));
 
         //UPDATE UI
         relativeAccountDetails.setVisibility(View.VISIBLE);
-        txtAccountName.setText(strAccountName);
         txtAmount.setText(mSessionManager.getPreference(Constants.ACCOUNT_BALANCE));
         txtCurrencyType.setText(mSessionManager.getPreference(Constants.ACCOUNT_CURRENCY_TYPE));
 
@@ -1000,7 +999,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 .placeholder(getResources().getDrawable(R.drawable.placeholder))
                 .into(imgSponsor);
 
-        imgSponsor.setVisibility(View.INVISIBLE);
+        imgSponsor.setVisibility(View.GONE);
 
 
         //SET ADAPTER
@@ -1041,7 +1040,6 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 txtAmount = (TextView) mView.findViewById(R.id.txtAmount);
                 txtWhen = (TextView) mView.findViewById(R.id.txtWhen);
                 txtLoadMore = (TextView) mView.findViewById(R.id.txtLoadMore);
-
 
             }
         }

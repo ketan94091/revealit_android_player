@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    tools:context=".UserOnboardingProcess.NewAuthGetStartedActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:weightSum="5">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imgLogo"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/app_icon_round" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:gravity="center_vertical"
+                    android:text="@string/strEarnReward"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="700"
+                    android:textSize="18dp" />
+
+                <ImageView
+                    android:id="@+id/imgCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:src="@mipmap/icon_cross" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="top"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/quasimoda_bold"
+                android:text="@string/strGrabMoney"
+                android:textColor="@color/colorNewAppGreen"
+                android:textFontWeight="700"
+                android:textAlignment="center"
+                android:textSize="17dp"
+                />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/quasimoda_medium"
+                android:text="@string/strInviteFriend"
+                android:textColor="@color/colorBlack"
+                android:textFontWeight="500"
+                android:textAlignment="textStart"
+                android:textSize="15dp"
+                android:layout_marginTop="20dp"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/new_auth_round_button"
+                android:orientation="vertical"
+                android:padding="30dp">
+
+
+                <TextView
+                    android:id="@+id/txtMsgCopy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/quasimoda"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="700"
+                    android:textAlignment="center"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:id="@+id/txtCopyToClibBoard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/new_auth_round_button_blue"
+                    android:fontFamily="@font/quasimoda_semibold"
+                    android:gravity="center_horizontal"
+                    android:padding="12dp"
+                    android:text="@string/strCopyTo"
+                    android:textColor="@color/colorWhite"
+                    android:textFontWeight="600"
+                    android:textSize="15dp"
+                    android:layout_marginTop="20dp"
+                    android:visibility="visible" />
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtMsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/quasimoda_semibold"
+                android:text="@string/strOffers"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textFontWeight="600"
+                android:textSize="15dp" />
+
+
+            <TextView
+                android:id="@+id/txtContinueEnabled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtMsg"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/new_auth_round_button_app_green"
+                android:fontFamily="@font/quasimoda_bold"
+                android:gravity="center_horizontal"
+                android:padding="15dp"
+                android:text="@string/strContinue"
+                android:textColor="@color/colorWhite"
+                android:textFontWeight="700"
+                android:textSize="15dp" />
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

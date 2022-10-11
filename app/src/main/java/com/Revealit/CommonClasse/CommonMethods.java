@@ -86,7 +86,7 @@ public class CommonMethods {
 
     public static void printLogE(String strTAG, String strMessage) {
 
-        if (false) {
+        if (true) {
             Log.e(strTAG, strMessage);
         }
 
@@ -101,6 +101,21 @@ public class CommonMethods {
             public void run() {
                 pDialog = new ProgressDialog(mContext);
                 pDialog.setMessage(mContext.getResources().getString(R.string.strPleaseWait));
+                pDialog.setCancelable(false);
+                pDialog.show();
+            }
+        });
+
+
+    }
+
+    public static void showDialogWithCustomMessage(Context mContext, String strMsg) {
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                pDialog = new ProgressDialog(mContext);
+                pDialog.setMessage(strMsg);
                 pDialog.setCancelable(false);
                 pDialog.show();
             }

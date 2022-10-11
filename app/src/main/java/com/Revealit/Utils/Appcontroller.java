@@ -5,8 +5,6 @@ import android.content.Context;
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
-import com.testfairy.TestFairy;
-
 public class Appcontroller extends MultiDexApplication {
     public static final String TAG = Appcontroller.class.getSimpleName();
     private static Appcontroller mInstance;
@@ -20,6 +18,8 @@ public class Appcontroller extends MultiDexApplication {
         MultiDex.install(this);
 
 
+
+
     }
 
     @Override
@@ -28,11 +28,11 @@ public class Appcontroller extends MultiDexApplication {
         mInstance = this;
 
 
-        //TEST FAIRY SDK
-        TestFairy.begin(this, "SDK-5f7VDJMC");
-
-        //SHAKE FEATURE
-        TestFairy.enableFeedbackForm("shake");
+//        //TEST FAIRY SDK
+//        TestFairy.begin(this, "SDK-5f7VDJMC");
+//
+//        //SHAKE FEATURE
+//        TestFairy.enableFeedbackForm("shake");
 
 
 

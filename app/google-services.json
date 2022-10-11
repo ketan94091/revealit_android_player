@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "115328311764",
+    "project_id": "revealit",
+    "storage_bucket": "revealit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:115328311764:android:2064211f49e1b5c56cf641",
+        "android_client_info": {
+          "package_name": "com.Revealit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "115328311764-k19tp2d28noc9jkbtncr3mqhdgku741d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Revealit",
+            "certificate_hash": "90196c19a8fac97084c3184e5be37c7563971439"
+          }
+        },
+        {
+          "client_id": "115328311764-uaifsr0kgfouh66j5g4qe8h72tu5p8sm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBR1BAqR3Rj4cD9m6BS7UJ6glWvMDd10jI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "115328311764-uaifsr0kgfouh66j5g4qe8h72tu5p8sm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

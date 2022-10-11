@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Revealit.Activities.ExoPlayerActivity;
+import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.Activities.LoginActivityActivity;
 import com.Revealit.Adapter.PlayCategoryListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
@@ -70,6 +72,11 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     private RelativeLayout ralativeMain;
     private boolean isForFirstTime = true;
     String strFeaturedMediaCoverImage ="", strFeaturedMediaTitle = "" , strFeaturedMidiaID = "" ,strFeaturedMidiaURL = "";
+    private Activity homeScreenTabLayout;
+
+    public PlayFragment(HomeScreenTabLayout homeScreenTabLayout) {
+        this.homeScreenTabLayout = homeScreenTabLayout;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -228,6 +235,10 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                 .client(httpClient1)
                 .build();
 
+        Log.e("END POINT ",  ""+mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY));
+        Log.e("TYPE ",  ""+mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE));
+        Log.e("TOKEN ",  ""+mSessionManager.getPreference(Constants.AUTH_TOKEN));
+
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
 
 
@@ -237,6 +248,13 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(Call<JsonElement> call, retrofit2.Response<JsonElement> response) {
 
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+
+                Log.e("JSON RESPONSE ",  ""+response.body());
+
 
                 if (response.code() == Constants.API_SUCCESS) {
 
@@ -244,18 +262,14 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                     mDatabaseHelper.clearAllTables();
 
 
-                    Gson gson = new GsonBuilder()
-                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-                            .serializeNulls()
-                            .create();
 
                     //GET API RESPONSE IN THE FORM OF JSON ELEMENT
                     // 1- RE ITERATE KEY NAME OF OBJECT CAUSE ITS DYNAMIC AND UN-KNOWN  BASED ON OBJECT NAME GET DATA FOR THAT OBJECT
-                    for (int i = 0; i < response.body().getAsJsonArray().size(); i++) {
+                    for (int i = 0; i < response.body().getAsJsonObject().get("data").getAsJsonArray().size(); i++) {
 
                         JSONObject jsonObject = null;
                         try {
-                            jsonObject = new JSONObject(String.valueOf(response.body().getAsJsonArray().get(i)));
+                            jsonObject = new JSONObject(String.valueOf(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i)));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -271,19 +285,19 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
                                     // CommonMethods.printLogE("KEY : ", "" + strCategoryName);
 
-                                    // CommonMethods.printLogE(" MEDIA DATA TYPE", " : " + gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get("media_type")).replaceAll("^\"|\"$", ""));
+                                    // CommonMethods.printLogE(" MEDIA DATA TYPE", " : " + gson.toJson(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get("media_type")).replaceAll("^\"|\"$", ""));
 
 
                                     //INSERT DATA IN TO DATABASE
                                     //FURTHER WE WILL ONLY USE IT FROM DATABASE
 
-                                    String strSlug = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("slug")).replaceAll("^\"|\"$", "");
+                                    String strSlug = gson.toJson(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("slug")).replaceAll("^\"|\"$", "");
 
                                     //CommonMethods.printLogE("SLUG : ", "" + strSlug);
 
                                     //INSERT CATEGORY NAMES
                                    /* if(i == 0){
-                                        if(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().size() != 1){
+                                        if(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().size() != 1){
 
                                             //CHECK IF FIRST CATEGORY HAS ONLY ONE VIDEO WHICH SHOULD CONSIDER AS FEATURED VIDEO AND SHOULD NOT DISPLAY THIS CATEGOTY IN VIDEO LIST
                                             //IF MORE THAN 1 VIDEO FOUND IN FIRST CATEGORY THEN DISPLAY FIRST VIDEO FROM THIS CATEGORY AS FEATURED VIDEO AND REST OF VIDEO SHOULD DISPLAY IN VIDEO LIST
@@ -301,26 +315,26 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                     String strMediaShowTitle, strMediaTitle;
 
 
-                                    for (int j = 0; j < Integer.valueOf(gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().size())); j++) {
+                                    for (int j = 0; j < Integer.valueOf(gson.toJson(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().size())); j++) {
 
-                                        int intMediaID = Integer.valueOf(gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_id")).replaceAll("^\"|\"$", ""));
+                                        int intMediaID = Integer.valueOf(gson.toJson(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_id")).replaceAll("^\"|\"$", ""));
 
 
-                                        if (!gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_show_title")).equalsIgnoreCase("null")) {
-                                            strMediaShowTitle = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_show_title")).replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "");
+                                        if (!gson.toJson(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_show_title")).equalsIgnoreCase("null")) {
+                                            strMediaShowTitle = gson.toJson(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_show_title")).replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "");
                                         } else {
                                             strMediaShowTitle = "";
                                         }
 
-                                        if (!gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_title")).equalsIgnoreCase("null")) {
-                                            strMediaTitle = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_title")).replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "");
+                                        if (!gson.toJson(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_title")).equalsIgnoreCase("null")) {
+                                            strMediaTitle = gson.toJson(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_title")).replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "");
                                         } else {
                                             strMediaTitle = "";
                                         }
 
-                                        String strMediaType = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_type")).replaceAll("^\"|\"$", "");
-                                        String strMediaUrl = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_url")).replaceAll("^\"|\"$", "");
-                                        String strMediaCoverArt = gson.toJson(response.body().getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_cover_art")).replaceAll("^\"|\"$", "");
+                                        String strMediaType = gson.toJson(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_type")).replaceAll("^\"|\"$", "");
+                                        String strMediaUrl = gson.toJson(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_url")).replaceAll("^\"|\"$", "");
+                                        String strMediaCoverArt = gson.toJson(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(j).getAsJsonObject().get("media_cover_art")).replaceAll("^\"|\"$", "");
 
 
                                         //CommonMethods.printLogE("MEDIA ID : ", "" + intMediaID);
@@ -384,7 +398,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
 
                     //BIND UI
-                    updateUI(response.body().getAsJsonArray());
+                    updateUI(response.body().getAsJsonObject().get("data").getAsJsonArray());
 
                 } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
 

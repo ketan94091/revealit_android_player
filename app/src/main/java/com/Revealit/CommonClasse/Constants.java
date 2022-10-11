@@ -35,6 +35,12 @@ public class Constants {
   public static final String API_END_POINTS_MOBILE_INTEGRATION_CURATOR = "https://integration.revealit.io/";
   public static final String API_END_POINTS_REGISTRATION_INTEGRATION_CURATOR = "https://icapi.revealit.io/";
 
+  //PROTON SDK APIS
+  //MAIN API
+  public static  final String API_PROTON_MAIN_NET ="https://api.protonchain.com";
+  //TEST NET API
+  public static final  String API_PROTON_TEST_NET ="https://api-dev.protonchain.com";
+
 
 
 
@@ -60,6 +66,15 @@ public class Constants {
   public  static  final  String API_GET_ITEMS_FROM_ITEM_ID ="api/video/matchhistory/items";
   public  static  final  String API_REMOVE_LISTEN_HISTORY ="api/video/matchhistory/remove";
   public  static  final  String API_GET_USER_DETAILS ="user";
+  public static final String API_NEW_AUTH_PHONE_VERIFY = "/api/challenge";
+  public static final String API_NEW_AUTH_OTP_VERIFY = "api/otpcode";
+  public static final String API_NEW_AUTH_CREATE_PROTON = "api/proton/create_account";
+  public static final String API_NEW_AUTH_CREATE_TOKENS = "api/callback";
+  public static final String API_NEW_AUTH_PUSHER_API_USERID_REGISTRATION = "api/pusher_callback";
+  public static final String API_NEW_AUTH_INVITE_SETTINGS = "api/invitesetting";
+  public static final String API_NEW_AUTH_USERNAME_EXIST = "api/usernotexists";
+  public static final String API_NEW_AUTH_SUBMIT_PROFILE = "api/submitprofile";
+  public static final String API_NEW_AUTH_LOGIN = "api/authlogin";
 
 
     public static final String AUTH_TOKEN = "access_token";
@@ -87,6 +102,7 @@ public class Constants {
     public static final String IS_FIRST_LOGIN = "isFirstLogin";
     public static final String PROTON_ACCOUNT_NAME = "protonAccountNAme";
     public  static  final String KEY_USERNAME ="userName";
+    public  static  final String KEY_IS_USER_ACTIVE ="keyIsUserActive";
     public static final String IS_FIRST_TIME_ACCOUNT_SYNC = "isFirstTimeAccountSync";
     public static final String ACCOUNT_BALANCE = "accountBalance";
     public static final String ACCOUNT_CURRENCY_TYPE = "CurrencyType";
@@ -133,10 +149,31 @@ public class Constants {
   public  static  final  String KEY_HOST_VALUE ="identify-ap-southeast-1.acrcloud.com";
   public  static  final  int KEY_TIMEOUT_VALUE =30;
   public  static  final  String KEY_APP_MODE ="appMode";
+  public  static  final  String KEY_PRIVATE_KEY ="keyPrivate";
+  public  static  final  String KEY_PUBLIC_KEY ="keyPublic";
+  public  static  final  String KEY_PROTON_ACCOUNTNAME ="keyProtonAccountName";
+  public  static  final  String KEY_MNEMONICS ="keyMnemonics";
+  public  static  final  String KEY_MOBILE_NUMBER ="keyMobileNumber";
+  public  static  final  String KEY_COUNTRY_CODE ="keyCountryCode";
+  public  static  final  String KEY_CAMPAIGNID ="keyCampaignId";
+  public  static  final  String KEY_REFFERALID ="keyRefferalId";
+  public  static  final  String KEY_NAMEOFINVITE ="keyNameOfInvite";
+  public  static  final  String KEY_NEW_AUTH_USERNAME ="keyNewAuthUsername";
+  public  static  final  String KEY_INVITE_MSG ="keyInviteMsg";
+  public  static  final  String KEY_IS_FROM_REGISTRATION_SCREEN ="keyIsFromRegistrationScreen";
+  public  static  final  String KEY_IS_GOOGLE_DRIVE_BACKUP_DONE ="keyIsGoogleDriveBackupDone";
+  public  static  final  String KEY_USER_DATA ="keyUserData";
+  public  static  final  String GOOGLE_DRIVE_FOLDER_NAME="Revealit.tv.io";
+  public  static  final  String KEY_PRON_WALLET_DETAILS="keyProtonWalletDetails";
+  public  static  final  String KEY_REVEALIT_PRIVATE_KEY="keyRevealitPrivatekey";
+  public  static  final  String KEY_ISFROM_LOGIN="keyIsFromLogin";
 
 
     public static String API_KEY = "AIzaSyC4elGdU9Oxi2DPIShG4pRW2gRBZOeE0pM";
     public static String VIDEO_VIEW = "videoView";
+    public static String PUSHER_INSTANCE_ID = "b8896e62-3c00-43b7-adfd-59960ee48a1d";
+
+
 
 
     public static final String COMMON_TIME_FORMAT = "HH:mm a";
@@ -150,6 +187,7 @@ public class Constants {
     public static final int API_SUCCESS = 200;
   public static final int API_ELEMENT_CREATED = 201;
     public static final int API_USER_UNAUTHORIZED = 401;
+    public static final int API_CODE_NOTFOUND = 404;
 
 
 }

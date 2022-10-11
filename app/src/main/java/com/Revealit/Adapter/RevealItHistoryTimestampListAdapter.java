@@ -127,8 +127,8 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        holder.txtTimeOffsetDisplay.setText(mListAllTimeStamp.get(position));
-        holder.txtTimeOffsetDisplay.setPaintFlags(holder.txtTimeOffsetDisplay.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        holder.txtTimeOffsetDisplay.setText(mListAllTimeStamp.get(position).replace(" ",""));
+        //holder.txtTimeOffsetDisplay.setPaintFlags(holder.txtTimeOffsetDisplay.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
 
 

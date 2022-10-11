@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    tools:context=".UserOnboardingProcess.NewAuthGetStartedActivity">
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:orientation="vertical"
+            android:weightSum="5">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/imgLogo"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/app_icon_round" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:gravity="center_vertical"
+                        android:text="@string/strMobileVerification"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="700"
+                        android:textSize="18dp" />
+
+                    <ImageView
+                        android:id="@+id/imgCancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:src="@mipmap/icon_cross" />
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="40dp">
+
+                <ImageView
+                    android:id="@+id/imgBackArrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:src="@mipmap/icon_back" />
+
+
+                <TextView
+                   android:id="@+id/txtMobileNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:fontFamily="@font/quasimoda_medium"
+                    android:text=""
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="500"
+                    android:textSize="15dp" />
+
+                <LinearLayout
+                    android:id="@+id/linearClickToEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtMobileWarnings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/quasimoda_medium"
+                        android:text="@string/strNotYourNumber"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="500"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/txtClickTOEdit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/quasimoda_medium"
+                        android:text="@string/strClickToEdit"
+                        android:textColor="@color/colorBlue"
+                        android:textFontWeight="500"
+                        android:textSize="15dp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="40dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginRight="15dp"
+                            android:background="@drawable/new_auth_round_button"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/edtOne"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@null"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:maxLength="1"
+                                android:textFontWeight="700"
+                                android:fontFamily="@font/quasimoda_bold"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="25dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="40dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginRight="15dp"
+                            android:background="@drawable/new_auth_round_button"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/edtTwo"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@null"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:maxLength="1"
+                                android:textFontWeight="700"
+                                android:fontFamily="@font/quasimoda_bold"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="25dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="40dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginRight="15dp"
+                            android:background="@drawable/new_auth_round_button"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/edtThree"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@null"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:maxLength="1"
+                                android:textFontWeight="700"
+                                android:fontFamily="@font/quasimoda_bold"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="25dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="40dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginRight="15dp"
+                            android:background="@drawable/new_auth_round_button"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/edtFour"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@null"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:maxLength="1"
+                                android:textFontWeight="700"
+                                android:fontFamily="@font/quasimoda_bold"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="25dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="40dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginRight="15dp"
+                            android:background="@drawable/new_auth_round_button"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/edtFive"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@null"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:maxLength="1"
+                                android:textFontWeight="700"
+                                android:fontFamily="@font/quasimoda_bold"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="25dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="40dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginRight="15dp"
+                            android:background="@drawable/new_auth_round_button"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/edtSix"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@null"
+                                android:gravity="center"
+                                android:inputType="number"
+                                android:maxLength="1"
+                                android:textFontWeight="700"
+                                android:fontFamily="@font/quasimoda_bold"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="25dp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearResendCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:gravity="end"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/quasimoda_medium"
+                            android:text="@string/strNotReceiveOtp"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="500"
+                            android:textSize="15dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/quasimoda_medium"
+                            android:text="@string/strRecendCode"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="500"
+                            android:textSize="15dp" />
+
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:gravity="start"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtInvalidOTP"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/quasimoda_medium"
+                            android:text="@string/strInvalidCode"
+                            android:textColor="@color/colorCuratorRedError"
+                            android:textFontWeight="500"
+                            android:drawablePadding="20dp"
+                            android:drawableLeft="@mipmap/icon_cross_red"
+                            android:textSize="15dp"
+                            android:visibility="gone"/>
+
+                        <TextView
+                            android:id="@+id/txtVerifiedSuccessully"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/quasimoda_medium"
+                            android:text="@string/strSuccessfullyVerified"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="500"
+                            android:visibility="gone"
+                            android:drawablePadding="20dp"
+                            android:drawableLeft="@mipmap/icon_check"
+                            android:textSize="15dp" />
+
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtContinueDisable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/new_auth_round_button_app_green_light"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:gravity="center_horizontal"
+                    android:padding="15dp"
+                    android:text="@string/strContinue"
+                    android:textColor="@color/colorWhite"
+                    android:textFontWeight="700"
+                    android:textSize="15dp"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/txtContinueEnabled"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:background="@drawable/new_auth_round_button_app_green"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:gravity="center_horizontal"
+                    android:padding="15dp"
+                    android:text="@string/strContinue"
+                    android:textColor="@color/colorWhite"
+                    android:textFontWeight="700"
+                    android:textSize="15dp"
+                    android:visibility="gone" />
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

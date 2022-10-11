@@ -1,5 +1,8 @@
 package com.Revealit.Fragments;
 
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -14,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +29,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.Adapter.RevealItHistoryListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
@@ -62,9 +67,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static android.Manifest.permission.RECORD_AUDIO;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-
 
 public class ListenFragment extends Fragment implements View.OnClickListener, RemoveListenHistory {
 
@@ -77,7 +79,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
     private ImageView imgListen;
-    private TextView txtRevealCount;
+    private TextView txtReveal,txtRevealCount;
     private RecyclerView recycleRevealList;
     private LinearLayoutManager recylerViewLayoutManager;
     private RippleBackground rippleBackground;
@@ -87,6 +89,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     private int tapCount = 1;// IGONORE FIRST COUNT AND THEN START GETTING DATA FROM ITEMS TO END ITEMS.
     private ArrayList<CategoryWisePlayListModel.DataBean> mCategoryWisePlayListModel = new ArrayList<>();
     private ArrayList<Long> mLongRevealTime = new ArrayList<>();
+    private Activity homeScreenTabLayout;
+    private LinearLayout linearWaveBackground;
 
     private static String[] PERMISSIONS = {
             Manifest.permission.ACCESS_NETWORK_STATE,
@@ -112,6 +116,11 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         };
     };
 
+;
+
+    public ListenFragment(HomeScreenTabLayout homeScreenTabLayout) {
+        this.homeScreenTabLayout = homeScreenTabLayout;
+    }
 
 
     @Override
@@ -124,6 +133,10 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
         mView = inflater.inflate(R.layout.fragment_listen, container, false);
+
+        //SET IDS
+        setIds();
+        setOnClicks();
 
 
         return mView;
@@ -145,9 +158,11 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         imgListen = (ImageView) mView.findViewById(R.id.imgListen);
 
         txtRevealCount = (TextView) mView.findViewById(R.id.txtRevealCount);
+        txtReveal = (TextView) mView.findViewById(R.id.txtReveal);
 
         rippleBackground = (RippleBackground) mView.findViewById(R.id.content);
 
+        linearWaveBackground =(LinearLayout)mView.findViewById(R.id.linearWaveBackground);
 
         recycleRevealList = (RecyclerView) mView.findViewById(R.id.recycleRevealList);
         recylerViewLayoutManager = new LinearLayoutManager(mActivity);
@@ -186,9 +201,18 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     }
     @Override
     public void setMenuVisibility(boolean menuVisible) {
-        if (menuVisible && mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+
+
+        if (menuVisible  ) {
+
+            //SET IDS
+            setIds();
+            setOnClicks();
+
             //GET REVEALIT HISTORY DATA ON FRAGMENT LOAD
+            if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
             callGetRevealitVideoHistory();
+            }
         }
         super.setMenuVisibility(menuVisible);
     }
@@ -201,7 +225,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         //SET IDS
         setIds();
         setOnClicks();
-
 
     }
 
@@ -239,6 +262,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
                         //START ANIMATION
                         rippleBackground.startRippleAnimation();
+                        linearWaveBackground.setVisibility(View.VISIBLE);
+                        txtReveal.setVisibility(View.INVISIBLE);
 
 
                         new Handler().postDelayed(new Runnable() {
@@ -257,6 +282,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
                                 //START ANIMATION
                                 rippleBackground.stopRippleAnimation();
+                                linearWaveBackground.setVisibility(View.GONE);
+                                txtReveal.setVisibility(View.VISIBLE);
 
 
                             }
@@ -275,6 +302,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
             //START RIPPLE ANIMATION
             rippleBackground.startRippleAnimation();
+            linearWaveBackground.setVisibility(View.VISIBLE);
+            txtReveal.setVisibility(View.INVISIBLE);
 
             //CREATE FILE PATH WHERE WE WILL STORE RECORDERD AUDIO FOR IDENTIFY
             String filePath =getActivity().getApplicationContext().getFilesDir().getPath();
@@ -334,7 +363,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
                     //STOP RIPPLE ANIMATION
                     rippleBackground.stopRippleAnimation();
-
+                    linearWaveBackground.setVisibility(View.GONE);
+                    txtReveal.setVisibility(View.VISIBLE);
 
                     //MAKE IMAGE CLICKBLE TRUE
                     imgListen.setClickable(true);

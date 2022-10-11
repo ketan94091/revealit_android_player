@@ -52,6 +52,15 @@
     <color name="colorRecipeIngredients">#e9f7ff</color>
     <color name="colorRecipePurchaseButton">#ffdc39</color>
     <color name="colorChefNameBackground">#5552e1</color>
-
+    <color name="colorNewAppGreen">#8CC832</color>
+    <color name="colorNewAppGreenLight">#958CC832</color>
+    <color name="colorCuratorGrey">#F5F5F5</color>
+    <color name="colorCuratorRedError">#FF0000</color>
+    <color name="colorCuratorHighlightGrey">#525252</color>
+    <color name="colorCuratorPanel">#F5F5F5</color>
+    <color name="colorCuratorAmber">#FF9900</color>
+    <color name="colorInActiveGrey">#D9D9D9</color>
+    <color name="colorBottomBarActiveGrey">#A0A0A0</color>
+    <color name="colorRevealitGrey">#525252</color>
 
 </resources>

@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,10 +31,7 @@ import com.Revealit.Utils.CacheDataSourceFactory;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -134,14 +132,20 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         //SET LAYOUT MANAGER TO LISTVIEW
-        recylerViewLayoutManager = new LinearLayoutManager(mActivity);
-        holder.recycleRevealHistoryTimestamps.setLayoutManager(recylerViewLayoutManager);
+        //recylerViewLayoutManager = new LinearLayoutManager(mActivity);
+        //holder.recycleRevealHistoryTimestamps.setLayoutManager(recylerViewLayoutManager);
+        //holder.recycleRevealHistoryTimestamps.setLayoutManager(new GridLayoutManager(mActivity, 3));
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext,2);
+        gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL); // set Horizontal Orientation
+        holder.recycleRevealHistoryTimestamps.setLayoutManager(gridLayoutManager);
+
 
         //SET ADAPTER TO TIME STAMP LIST
         //SET CATEGORY LIST
         RevealItHistoryTimestampListAdapter mRevealItHistoryTimestampListAdapter = new RevealItHistoryTimestampListAdapter(mContext, mActivity, revealitHistoryData.get(position));
         holder.recycleRevealHistoryTimestamps.setAdapter(mRevealItHistoryTimestampListAdapter);
-        holder.recycleRevealHistoryTimestamps.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, true));
+       // holder.recycleRevealHistoryTimestamps.setLayoutManager(new GridLayoutManager(mContext,3, LinearLayoutManager.VERTICAL, true));
 
 
         //PRE-LOAD VIDEOS
@@ -150,7 +154,6 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
         //LOAD COVER IMAGE WITH GLIDE
         Glide.with(mActivity)
                 .load("" + revealitHistoryData.get(position).getMedia_cover_art())
-                .apply(new RequestOptions().transform(new CenterCrop(), new RoundedCorners(10)))
                 .placeholder(R.drawable.placeholder)
                 .listener(new RequestListener<Drawable>() {
                     @Override

@@ -6,6 +6,7 @@ public class GetMultiColorGLB {
 
     private List<Data> data = null;
     public List<Data> getData() {
+
         return data;
     }
 

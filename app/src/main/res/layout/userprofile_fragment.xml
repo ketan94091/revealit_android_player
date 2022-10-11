@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    tools:context=".UserOnboardingProcess.NewAuthGetStartedActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:weightSum="5">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imgLogo"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/app_icon_round" />
+
+                <TextView
+                    android:id="@+id/txtUsername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/bilo_bold"
+                    android:gravity="center_vertical"
+                    android:text="@string/strWelcomeToTV"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="700"
+                    android:textSize="18dp" />
+
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_weight="2"
+            android:gravity="top"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:text="@string/strStatus"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="500"
+                    android:textSize="17dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:text=" : "
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="500"
+                    android:textSize="17dp" />
+
+                <TextView
+                    android:id="@+id/txtStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:text="@string/strStatusPendingVerification"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorCuratorAmber"
+                    android:textFontWeight="500"
+                    android:textSize="17dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtStatusMsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/quasimoda_medium"
+                android:text="@string/strPendingVerificationMsg"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorBlack"
+                android:textFontWeight="500"
+                android:textSize="14dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/quasimoda_bold"
+                android:text="@string/strInviteFriendAndGetReward"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textFontWeight="700"
+                android:textSize="15dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/new_auth_round_button"
+                android:orientation="vertical"
+                android:padding="30dp">
+
+
+                <TextView
+                    android:id="@+id/txtMsgCopy"
+                    android:text="Simply tell your friend to mention “garry.rtv” and we will even deposit US$1.00 in their wallet as well.\n or \n Copy the invite below:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/quasimoda"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="500"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:id="@+id/txtCopyToClibBoard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/new_auth_round_button_blue"
+                    android:fontFamily="@font/quasimoda_semibold"
+                    android:gravity="center_horizontal"
+                    android:padding="12dp"
+                    android:text="@string/strCopyTo"
+                    android:textColor="@color/colorWhite"
+                    android:textFontWeight="600"
+                    android:textSize="15dp"
+                    android:visibility="visible" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp">
+
+                <View
+                    android:id="@+id/viewAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height=".5dp"
+                    android:background="@color/colorBlack"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="15dp"
+                    >
+
+                    <ImageView
+                        android:id="@+id/iconAccount"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@color/colorBlack" />
+
+                    <TextView
+                        android:id="@+id/txtAccount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:text="@string/strAccount"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="700"
+                        android:layout_marginLeft="20dp"
+                        android:textSize="15dp" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/viewSavedItems"
+                    android:layout_width="match_parent"
+                    android:layout_height=".5dp"
+                    android:background="@color/colorBlack"
+                    android:layout_marginTop="15dp"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="15dp"
+                    >
+
+                    <ImageView
+                        android:id="@+id/iconSavedItems"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@color/colorBlack" />
+
+                    <TextView
+                        android:id="@+id/txtMySavedItems"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:text="@string/strMySavedItems"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="700"
+                        android:layout_marginLeft="20dp"
+                        android:textSize="15dp" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/viewSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height=".5dp"
+                    android:background="@color/colorBlack"
+                    android:layout_marginTop="15dp"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="15dp"
+                    >
+
+                    <ImageView
+                        android:id="@+id/iconSetting"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@color/colorBlack" />
+
+                    <TextView
+                        android:id="@+id/txtSettings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:text="@string/strSettings"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="700"
+                        android:layout_marginLeft="20dp"
+                        android:textSize="15dp" />
+
+
+                </LinearLayout>
+
+
+                <View
+                    android:id="@+id/viewHelp"
+                    android:layout_width="match_parent"
+                    android:layout_height=".5dp"
+                    android:background="@color/colorBlack"
+                    android:layout_marginTop="15dp"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="15dp"
+                    >
+
+                    <ImageView
+                        android:id="@+id/iconHelp"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@color/colorBlack" />
+
+                    <TextView
+                        android:id="@+id/txtHelp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:text="@string/strHelp"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="700"
+                        android:layout_marginLeft="20dp"
+                        android:textSize="15dp" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/viewBottomDefault"
+                    android:layout_width="match_parent"
+                    android:layout_height=".5dp"
+                    android:background="@color/colorBlack"
+                    android:layout_marginTop="15dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

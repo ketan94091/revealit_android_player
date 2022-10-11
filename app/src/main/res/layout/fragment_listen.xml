@@ -9,7 +9,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,28 +19,61 @@
           >
 
             <RelativeLayout
+                android:id="@+id/relativeTopview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imgLogo"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/app_icon_round" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:gravity="center_vertical"
+                    android:text="@string/strReveals"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="700"
+                    android:textSize="18dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:orientation="vertical">
+                android:layout_weight="5"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/new_auth_round_button">
 
                 <com.Revealit.CustomViews.RippleBackground
                     android:id="@+id/content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:visibility="gone"
                     app:rb_color="@color/colorMainLogo"
                     app:rb_duration="1000"
                     app:rb_radius="30dp"
                     app:rb_rippleAmount="6"
-                    app:rb_scale="5"
-                    android:layout_centerInParent="true">
+                    app:rb_scale="5" />
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/imgListen"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:src="@mipmap/listen_icn" />
+                        android:layout_gravity="center_horizontal"
+                        android:src="@mipmap/listen_icn_new" />
 
                     <TextView
                         android:id="@+id/txtReveal"
@@ -47,44 +81,39 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/imgListen"
                         android:layout_centerInParent="true"
-                        android:layout_marginTop="25dp"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/quasimoda_semibold"
                         android:text="@string/strTapToRevealit"
-                        android:textColor="@color/colorGrayLight"
-                        android:textSize="15dp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/colorRevealitGrey"
+                        android:textFontWeight="600"
+                        android:textSize="15dp" />
+                </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/txtTitle"
+
+                <LinearLayout
+                    android:id="@+id/linearWaveBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/imgWaveUp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-android:layout_below="@+id/txtReveal"
-android:layout_marginTop="20dp"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="15dp" />
-                    <TextView
-                        android:id="@+id/txtAudioID"
+                        android:layout_gravity="center_horizontal"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/wave_up" />
+
+                    <ImageView
+                        android:id="@+id/imgWaveDown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-android:layout_below="@+id/txtTitle"
-
-                        android:textAlignment="textStart"
-                        android:textColor="@color/colorBlack"
-                        android:layout_marginTop="10dp"
-                        android:textSize="15dp" />
-                    <TextView
-                        android:id="@+id/txtOffset"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-android:layout_below="@+id/txtAudioID"
-                        android:layout_marginTop="10dp"
-
-                        android:textAlignment="textStart"
-                        android:textColor="@color/colorBlack"
-                        android:layout_marginBottom="10dp"
-                        android:textSize="15dp" />
-
-                </com.Revealit.CustomViews.RippleBackground>
+                        android:layout_gravity="center_horizontal"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/wave_down" />
+                </LinearLayout>
 
 
             </RelativeLayout>
@@ -94,7 +123,7 @@ android:layout_below="@+id/txtAudioID"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:orientation="vertical"
-                android:padding="15dp"
+                android:layout_marginTop="15dp"
                >
 
                 <LinearLayout
@@ -102,28 +131,41 @@ android:layout_below="@+id/txtAudioID"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="4">
+                    android:weightSum="3">
 
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
+                        android:layout_weight="1"
                         android:text="@string/strMyReveals"
                         android:textAlignment="textStart"
-                        android:textColor="@color/colorBlack"
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:textFontWeight="700"
+                        android:textColor="@color/colorRevealitGrey"
                         android:textSize="15dp" />
 
                     <TextView
                         android:id="@+id/txtRevealCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="0 reveals"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:textFontWeight="700"
+                        android:textColor="@color/colorRevealitGrey"
+                        android:textSize="15dp"/>
+                    <TextView
+                        android:id="@+id/txtSelect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/strSelect"
                         android:textAlignment="textEnd"
-                        android:textColor="@color/colorGrayLight"
-                        android:textSize="12dp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:textFontWeight="700"
+                        android:textColor="@color/colorRevealitGrey"
+                        android:textSize="15dp" />
 
                 </LinearLayout>
 
@@ -132,7 +174,7 @@ android:layout_below="@+id/txtAudioID"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/linearRevealTitle"
-                    android:layout_marginTop="10dp" />
+                    android:layout_marginTop="15dp" />
 
 
             </RelativeLayout>

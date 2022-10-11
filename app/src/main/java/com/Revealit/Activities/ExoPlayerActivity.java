@@ -1970,7 +1970,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 CommonMethods.printLogE("Response @ callCheckIfInfluencersAvailable : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callCheckIfInfluencersAvailable : ", "" + response.code());
 
-                if (response.code() == Constants.API_SUCCESS && response.body().getData().size() != 0) {
+                if (response.code() == Constants.API_SUCCESS && response.body().getData() != null) {
 
                     //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
                     imgInfluencer.setVisibility(View.VISIBLE);

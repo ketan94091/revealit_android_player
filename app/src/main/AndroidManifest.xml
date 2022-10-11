@@ -4,19 +4,31 @@
     package="com.Revealit">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
     <uses-feature android:name="android.hardware.camera.ar" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.STORAGE"/>
+    <uses-permission android:name="android.permission.STORAGE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <queries>
         <package android:name="com.facebook.katana" />
@@ -24,26 +36,47 @@
         <package android:name="com.instagram.android" />
     </queries>
 
-
-
-
     <application
         android:name=".Utils.Appcontroller"
         android:allowBackup="false"
-        android:icon="@drawable/app_icon_main"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:node="merge"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
-        >
-
+        tools:node="merge">
+        <activity
+            android:name=".UserOnboardingProcess.GoogleCloudBackupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserOnboardingProcess.BiomatricConfirmationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserOnboardingProcess.InviteAndEarnActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserOnboardingProcess.NewAuthEnterUserNameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserOnboardingProcess.NewAuthEnterOTPActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserOnboardingProcess.NewAuthMobileAndPromoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserOnboardingProcess.NewAuthGetStartedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.GoogleDriveBackupActivity"
+            android:exported="false" />
         <activity
             android:name=".Activities.SplashScreen"
+            android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,82 +84,76 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Activities.ExoPlayerActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|uiMode|smallestScreenSize|layoutDirection"
             android:launchMode="singleTop"
             android:screenOrientation="landscape" />
-
+        <activity
+            android:name=".Activities.ExoPlayerTestActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|uiMode|smallestScreenSize|layoutDirection"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Activities.LoginActivityActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.HomeScreenTabLayout"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.MainActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.AssestsList"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.VideoViewActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".Activities.VideoViewActivityTest"
-            android:screenOrientation="landscape" />
-
-        <!--  <activity
+            android:screenOrientation="landscape" /> <!-- <activity -->
+        <!-- android:name=".Activities.SplashScreen" -->
+        <!-- android:screenOrientation="portrait" /> -->
+        <!--
+  <activity
               android:name=".Activities.VideoViewActivity"
               android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|uiMode|smallestScreenSize|layoutDirection"
               android:launchMode="singleTop"
               android:screenOrientation="landscape"
-              android:persistent="true"/>-->
+              android:persistent="true"/>
+        -->
         <activity
             android:name=".Activities.GettingStartedActivity"
+            android:screenOrientation="portrait" /><activity
+            android:name=".UserOnboardingProcess.NewAuthBiomatricAuthenticationActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.RegistrationActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.RevealitNameActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.VerificationCodeActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.BiomatricAuthenticationActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.SharingActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.WebViewScreen"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.ArModelViewerWeb"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.ARviewActivity"
             android:screenOrientation="landscape" />
-
         <activity
             android:name=".Activities.ProductBuyingScreenActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.RecipesScreenActivity"
             android:screenOrientation="portrait" />
@@ -135,11 +162,9 @@
             android:name=".CommonClasse.GlobalLocationService"
             android:enabled="true" />
 
-
-        <meta-data android:name="com.google.ar.core"
+        <meta-data
+            android:name="com.google.ar.core"
             android:value="optional" />
-
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -153,7 +178,27 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="barcode" />
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <service
+            android:name=".services.NotificationsMessagingService"
+            android:exported="true">
+            <intent-filter android:priority="1">
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

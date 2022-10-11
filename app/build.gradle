@@ -1,16 +1,17 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     sourceSets.main.jniLibs.srcDirs = ["libs"]
 
     defaultConfig {
         applicationId "com.Revealit"
-        minSdkVersion 17
-        targetSdkVersion 30
+        minSdkVersion 21
+        targetSdkVersion 31
         multiDexEnabled true
         versionCode 1
-        versionName "0.89.17"
+        versionName "0.89.19"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
        // testInstrumentationRunner "com.android.support.test.runner.AndroidJUnitRunner"
 
@@ -33,6 +34,19 @@ android {
     testOptions {
         unitTests.includeAndroidResources = true
     }
+    buildFeatures {
+        viewBinding true
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+    }
 
 
 
@@ -43,7 +57,7 @@ dependencies {
     //ANDROID SUPPORT LIBRARY
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'com.android.support:appcompat-v7:30.0.0'
+    implementation 'com.android.support:appcompat-v7:31.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.android.support:support-annotations:28.0.0'
     implementation files('libs\\YouTubeAndroidPlayerApi.jar')
@@ -57,21 +71,24 @@ dependencies {
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
     implementation 'androidx.viewpager:viewpager:1.0.0'
     testImplementation 'junit:junit:4.12'
-    implementation 'com.android.support:design:30.0.0'
+    implementation 'com.android.support:design:31.0.0'
 
 
     //to check internet connectivity
     implementation 'com.job:droidnet:2.0.0'
 
     //AppCompate support design lib
-    implementation 'com.android.support:design:30.0.0'
+    implementation 'com.android.support:design:31.0.0'
 
     //Card view
-    implementation 'com.android.support:cardview-v7:30.0.0'
+    implementation 'com.android.support:cardview-v7:31.0.0'
+
+    //MULTIDECK SUPPORT
+    implementation 'com.android.support:multidex:1.0.3'
 
 
     //SUPPORT RECYCLER VIEW
-    implementation 'com.android.support:recyclerview-v7:30.0.0'
+    implementation 'com.android.support:recyclerview-v7:31.0.0'
 
 
     //For retrofit web call
@@ -141,16 +158,44 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.2.0'
     // Espresso UI Testing
     androidTestImplementation "com.android.support.test.espresso:espresso-core:2.2.1"
-// Optional if you need to detect intents.
+    // Optional if you need to detect intents.
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:2.2.1"
 
-    implementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
+   // implementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
 
    //GOOGLE METERIAL DESIGN
     implementation 'com.google.android.material:material:1.2.1'
 
+    //GOOGLE DRIVE API
+    implementation 'com.google.android.gms:play-services-auth:20.3.0'
+    implementation 'com.google.http-client:google-http-client-gson:1.26.0'
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
+
+    implementation('com.google.api-client:google-api-client-android:1.26.0') {
+        //exclude group: 'org.apache.httpcomponents'
+    }
+    implementation 'com.google.android.gms:play-services-drive:8.4.0'
+    implementation('com.google.apis:google-api-services-drive:v3-rev136-1.25.0') {
+       // exclude group: 'org.apache.httpcomponents'
+    }
+
+    implementation 'com.google.android.gms:play-services-vision:20.1.3'
+
+    implementation platform('com.google.firebase:firebase-bom:30.2.0')
+
+    //FIREBASE AND PUSHER NOTIFICATION SDK
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-messaging:21.1.0'
+    implementation 'com.pusher:push-notifications-android:1.9.0'
+
+    //PSR DECODING
+    //implementation 'com.greymass:esrsdk:1.0.7'
+
+    implementation("com.google.firebase:firebase-iid")
 
 
+    //PROTON SDK
+   // implementation "com.metallicus:protonsdk:1.0.9"
 
 
 }
@@ -162,7 +207,10 @@ buildscript {
    repositories {
        mavenCentral()
        google()
-       maven { url 'https://www.testfairy.com/maven' }
+       maven{
+           url 'https://www.testfairy.com/maven'
+       }
+
    }
    dependencies {
        classpath 'com.testfairy.plugins.gradle:testfairy:3.+'
@@ -175,4 +223,5 @@ android {
    }
 
 }
+
 //TestFairy end

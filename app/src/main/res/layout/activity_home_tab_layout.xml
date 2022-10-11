@@ -8,7 +8,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbarLayout"
@@ -32,18 +34,19 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/appbarLayout">
 
-        <androidx.viewpager.widget.ViewPager
+        <com.Revealit.CustomViews.CustomViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/view"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <View
             android:id="@+id/view"
             android:layout_width="match_parent"
-            android:layout_height="1.5dp"
-            android:layout_above="@+id/tabLayout" />
+            android:layout_height="1dp"
+            android:layout_above="@+id/tabLayout"
+            android:background="@color/colorNewAppGreen"/>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
@@ -51,9 +54,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             app:tabIndicatorHeight="0dp"
-            app:tabTextColor="@color/colorGrayBottomBar"
-            app:tabSelectedTextColor="@color/colorBlueBottomBar"
-            app:tabTextAppearance="@style/TabLayoutTextStyle"
+            app:tabPadding="10dp"
+            android:layout_margin="10dp"
+
+            app:tabBackground="@drawable/tab_color_selector"
             />
     </RelativeLayout>
 
