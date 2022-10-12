@@ -51,11 +51,12 @@
 
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center">
 
 
                 <TextView
@@ -72,21 +73,23 @@
                     android:textFontWeight="500"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/new_auth_round_button"
+                    android:visibility="gone"
                    />
 
                 <TextView
                     android:id="@+id/txtOk"
-                    android:layout_width="match_parent"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:text="@string/strOk"
                     android:textColor="@color/colorBlack"
                     android:textSize="12dp"
                     android:textAlignment="center"
+                    android:layout_gravity="center"
                     android:fontFamily="@font/quasimoda_semibold"
                     android:textFontWeight="500"
                     android:background="@drawable/new_auth_round_button"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:layout_marginLeft="10dp"
                     android:textStyle="bold"/>
 

@@ -258,8 +258,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                     mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, true);
                     mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN, true);
 
-                    //UPDATE FLAG FOR APPLICATION MODE
-                    mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
+
 
                     Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, HomeScreenTabLayout.class);
                     mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,false);
@@ -361,8 +360,6 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                     mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, true);
                     mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN, true);
 
-                    //UPDATE FLAG FOR APPLICATION MODE
-                    mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
 
                     Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, HomeScreenTabLayout.class);
                     mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,false);

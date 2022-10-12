@@ -16,7 +16,7 @@ import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 
-public class BiomatricConfirmationActivity extends AppCompatActivity {
+public class GetBiomatricPermissionActivity extends AppCompatActivity {
     private static final String TAG = "BiomatricConfirmationActivity";
     private Activity mActivity;
     private Context mContext;
@@ -34,8 +34,8 @@ public class BiomatricConfirmationActivity extends AppCompatActivity {
 
     private void setIds() {
 
-        mActivity = BiomatricConfirmationActivity.this;
-        mContext = BiomatricConfirmationActivity.this;
+        mActivity = GetBiomatricPermissionActivity.this;
+        mContext = GetBiomatricPermissionActivity.this;
 
         mSessionManager = new SessionManager(mContext);
         mSessionManager.openSettings();
@@ -98,8 +98,7 @@ public class BiomatricConfirmationActivity extends AppCompatActivity {
         mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
         mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
 
-
-        Intent mIntent = new Intent(BiomatricConfirmationActivity.this, GoogleCloudBackupActivity.class);
+        Intent mIntent = new Intent(GetBiomatricPermissionActivity.this, GoogleCloudBackupActivity.class);
         startActivity(mIntent);
         finish();
     }

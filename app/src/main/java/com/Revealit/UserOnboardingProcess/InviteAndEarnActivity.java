@@ -89,7 +89,7 @@ public class InviteAndEarnActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.txtContinueEnabled:
 
-                Intent mIntent = new Intent(InviteAndEarnActivity.this, BiomatricConfirmationActivity.class);
+                Intent mIntent = new Intent(InviteAndEarnActivity.this, GetBiomatricPermissionActivity.class);
                 startActivity(mIntent);
 
                 break;

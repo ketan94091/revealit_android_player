@@ -56,7 +56,6 @@
             app:tabIndicatorHeight="0dp"
             app:tabPadding="10dp"
             android:layout_margin="10dp"
-
             app:tabBackground="@drawable/tab_color_selector"
             />
     </RelativeLayout>

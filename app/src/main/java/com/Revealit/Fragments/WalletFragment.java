@@ -583,6 +583,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         }else{
 
             Intent mIntent = new Intent(mActivity, HomeScreenTabLayout.class);
+            mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,false);
             startActivity(mIntent);
             mActivity.finish();
         }
@@ -760,6 +761,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                         // SEND USER TO LANDING SCREEN
                         Intent mIntent = new Intent(mActivity, HomeScreenTabLayout.class);
+                        mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,false);
                         startActivity(mIntent);
                         mActivity.finish();
 

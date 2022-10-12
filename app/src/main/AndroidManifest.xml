@@ -54,10 +54,13 @@
             android:name=".UserOnboardingProcess.GoogleCloudBackupActivity"
             android:exported="false" />
         <activity
-            android:name=".UserOnboardingProcess.BiomatricConfirmationActivity"
+            android:name=".UserOnboardingProcess.GetBiomatricPermissionActivity"
             android:exported="false" />
         <activity
             android:name=".UserOnboardingProcess.InviteAndEarnActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.CloudBackupActivity"
             android:exported="false" />
         <activity
             android:name=".UserOnboardingProcess.NewAuthEnterUserNameActivity"
@@ -75,7 +78,7 @@
             android:name=".Activities.GoogleDriveBackupActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.SplashScreen"
+            android:name=".UserOnboardingProcess.NewAuthSplashScreen"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

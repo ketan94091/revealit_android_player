@@ -4,21 +4,20 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.CommonClasse.CommonMethods;
@@ -26,7 +25,6 @@ import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
-import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
 
 public class UserProfileFragment extends Fragment implements View.OnClickListener {
 
@@ -41,6 +39,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private String strUsername, strCopymsg;
     private ImageView iconHelp, iconSavedItems, iconSetting, iconAccount;
     private boolean isUserIsActive =false;
+    private LinearLayout linearAccount,linearSettings,linearSavedItems,linearHelp;
 
     public UserProfileFragment(HomeScreenTabLayout homeScreenTabLayout) {
         this.mHomeScreenTabLayout = homeScreenTabLayout;
@@ -97,13 +96,18 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         iconSavedItems = (ImageView) mView.findViewById(R.id.iconSavedItems);
         iconHelp = (ImageView) mView.findViewById(R.id.iconHelp);
 
+        linearAccount=(LinearLayout)mView.findViewById(R.id.linearAccount);
+        linearSavedItems=(LinearLayout)mView.findViewById(R.id.linearSavedItems);
+        linearSettings=(LinearLayout)mView.findViewById(R.id.linearSettings);
+        linearHelp=(LinearLayout)mView.findViewById(R.id.linearHelp);
+
         //GET USER STATUS
         //TRUE = USER IS ACTIVE AND VERIFIED
         //FLASE= USER IS NOT ACTIVE AND NOT YET VERIFIED
         isUserIsActive = mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_ACTIVE);
 
         //GET INTENT DATA
-        strUsername = mSessionManager.getPreference(Constants.KEY_USERNAME);
+        strUsername = mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME);
         strCopymsg = mSessionManager.getPreference(Constants.KEY_INVITE_MSG);
 
         //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
@@ -124,18 +128,18 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
     private void setOnClicks() {
 
-
         txtCopyToClibBoard.setOnClickListener(this);
-        txtAccount.setOnClickListener(this);
+        linearAccount.setOnClickListener(this);
+        linearSavedItems.setOnClickListener(this);
+        linearSettings.setOnClickListener(this);
+        linearHelp.setOnClickListener(this);
     }
 
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         if (menuVisible) {
-
-            //OPEN LOGOUT DIALOGUE
-            //openLogoutDialogue();
-
+            setIds();
+            setOnClicks();
 
         }
         super.setMenuVisibility(menuVisible);
@@ -156,12 +160,31 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 CommonMethods.displayToast(mContext, getString(R.string.strUsernameCopied));
 
                 break;
-            case R.id.txtAccount:
+            case R.id.linearAccount:
 
-                openLogoutDialogue();
+                loadFragments(new AccountFragmentContainer(mHomeScreenTabLayout));
+
+                break;
+            case R.id.linearHelp:
+
+                loadFragments(new HelpFragmentContainer(mHomeScreenTabLayout));
+
+                break;
+
+            case R.id.linearSettings:
+
+                loadFragments(new SettingsFragmentContainer(mHomeScreenTabLayout));
 
                 break;
         }
+
+    }
+
+    private void loadFragments(Fragment loadingFragment) {
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.profile_fragment_container, loadingFragment ).commit();
+        transaction.addToBackStack(null);
 
     }
 
@@ -172,7 +195,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             txtStatus.setText(getResources().getString(R.string.strStatusPendingVerification));
             txtStatusMsg.setText(getResources().getString(R.string.strPendingVerificationMsg));
             txtStatus.setTextColor(getResources().getColor(R.color.colorCuratorAmber));
-
 
 
             txtAccount.setTextColor(getResources().getColor(R.color.colorInActiveGrey));
@@ -235,39 +257,5 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
     }
 
-    private void openLogoutDialogue() {
-
-        new AlertDialog.Builder(mHomeScreenTabLayout).setCancelable(false)
-
-                .setTitle(Constants.APPLICATION_NAME)
-
-                .setMessage(Constants.LOGOUT_FROM_APP)
-
-                .setPositiveButton(Constants.YES, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        //CLEAR PUSHER NOTIFICATION INTEREST
-                        //PushNotifications.clearAllState();
-
-                        // SEND USER TO LANDING SCREEN
-                        Intent mIntent = new Intent(mActivity, NewAuthGetStartedActivity.class);
-                        startActivity(mIntent);
-                        mActivity.finish();
-
-                    }
-                })
-
-                .setNegativeButton(Constants.NO, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent mIntent = new Intent(mActivity, HomeScreenTabLayout.class);
-                        startActivity(mIntent);
-                        mActivity.finish();
-
-                    }
-                })
-                .show();
-    }
 
 }

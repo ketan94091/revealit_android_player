@@ -1,19 +1,17 @@
 package com.Revealit.Activities;
 
+import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
+import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,12 +23,8 @@ import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.concurrent.Executor;
-
-import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
-import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
 
 public class BiomatricAuthenticationActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -144,6 +138,7 @@ public class BiomatricAuthenticationActivity extends AppCompatActivity implement
                 super.onAuthenticationSucceeded(result);
 
                 Intent mIntent = new Intent(BiomatricAuthenticationActivity.this, HomeScreenTabLayout.class);
+                mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,false);
                 startActivity(mIntent);
                 finish();
             }

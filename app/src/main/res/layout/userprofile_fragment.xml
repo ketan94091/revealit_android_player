@@ -7,7 +7,6 @@
     android:background="@color/colorWhite"
     tools:context=".UserOnboardingProcess.NewAuthGetStartedActivity">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -170,12 +169,12 @@
 
 
                 <LinearLayout
+                    android:id="@+id/linearAccount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="15dp"
                     >
 
                     <ImageView
@@ -184,17 +183,32 @@
                         android:layout_height="15dp"
                         android:background="@color/colorBlack" />
 
-                    <TextView
-                        android:id="@+id/txtAccount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/quasimoda_bold"
-                        android:text="@string/strAccount"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/colorBlack"
-                        android:textFontWeight="700"
-                        android:layout_marginLeft="20dp"
-                        android:textSize="15dp" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/txtAccount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/quasimoda_bold"
+                            android:text="@string/strAccount"
+                            android:layout_centerInParent="true"
+                            android:layout_alignParentLeft="true"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="700"
+                            android:layout_marginLeft="20dp"
+                            android:textSize="15dp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerInParent="true"
+                            android:layout_margin="20dp"
+                            android:src="@mipmap/arrow_next_page" />
+
+                    </RelativeLayout>
 
 
                 </LinearLayout>
@@ -204,16 +218,16 @@
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
                     android:background="@color/colorBlack"
-                    android:layout_marginTop="15dp"/>
+                   />
 
 
                 <LinearLayout
+                    android:id="@+id/linearSavedItems"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="15dp"
                     >
 
                     <ImageView
@@ -222,17 +236,35 @@
                         android:layout_height="15dp"
                         android:background="@color/colorBlack" />
 
-                    <TextView
-                        android:id="@+id/txtMySavedItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/quasimoda_bold"
-                        android:text="@string/strMySavedItems"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/colorBlack"
-                        android:textFontWeight="700"
-                        android:layout_marginLeft="20dp"
-                        android:textSize="15dp" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/txtMySavedItems"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerInParent="true"
+                            android:layout_marginLeft="20dp"
+                            android:fontFamily="@font/quasimoda_bold"
+                            android:text="@string/strMySavedItems"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="700"
+                            android:textSize="15dp" />
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerInParent="true"
+                            android:layout_margin="20dp"
+                            android:src="@mipmap/arrow_next_page" />
+
+                    </RelativeLayout>
+
+
 
 
                 </LinearLayout>
@@ -242,16 +274,16 @@
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
                     android:background="@color/colorBlack"
-                    android:layout_marginTop="15dp"/>
+                   />
 
 
                 <LinearLayout
+                    android:id="@+id/linearSettings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="15dp"
                     >
 
                     <ImageView
@@ -260,17 +292,36 @@
                         android:layout_height="15dp"
                         android:background="@color/colorBlack" />
 
-                    <TextView
-                        android:id="@+id/txtSettings"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/quasimoda_bold"
-                        android:text="@string/strSettings"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/colorBlack"
-                        android:textFontWeight="700"
-                        android:layout_marginLeft="20dp"
-                        android:textSize="15dp" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/txtSettings"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/quasimoda_bold"
+                            android:text="@string/strSettings"
+                            android:layout_centerInParent="true"
+                            android:layout_alignParentLeft="true"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="700"
+                            android:layout_marginLeft="20dp"
+                            android:textSize="15dp" />
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerInParent="true"
+                            android:layout_margin="20dp"
+                            android:src="@mipmap/arrow_next_page" />
+
+                    </RelativeLayout>
+
+
+
 
 
                 </LinearLayout>
@@ -281,16 +332,16 @@
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
                     android:background="@color/colorBlack"
-                    android:layout_marginTop="15dp"/>
+                   />
 
 
                 <LinearLayout
+                    android:id="@+id/linearHelp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="15dp"
                     >
 
                     <ImageView
@@ -299,17 +350,35 @@
                         android:layout_height="15dp"
                         android:background="@color/colorBlack" />
 
-                    <TextView
-                        android:id="@+id/txtHelp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/quasimoda_bold"
-                        android:text="@string/strHelp"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/colorBlack"
-                        android:textFontWeight="700"
-                        android:layout_marginLeft="20dp"
-                        android:textSize="15dp" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/txtHelp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerInParent="true"
+                            android:layout_marginLeft="20dp"
+                            android:fontFamily="@font/quasimoda_bold"
+                            android:text="@string/strHelp"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="700"
+                            android:textSize="15dp" />
+
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerInParent="true"
+                            android:layout_margin="20dp"
+                            android:src="@mipmap/arrow_next_page" />
+
+                    </RelativeLayout>
+
 
 
                 </LinearLayout>
@@ -319,7 +388,7 @@
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
                     android:background="@color/colorBlack"
-                    android:layout_marginTop="15dp"/>
+                   />
 
             </LinearLayout>
 

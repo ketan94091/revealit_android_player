@@ -1,4 +1,4 @@
-package com.Revealit.UserOnboardingProcess;
+package com.Revealit.Activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,12 +8,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.DriveServiceHelper;
@@ -48,13 +48,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class GoogleCloudBackupActivity extends AppCompatActivity implements View.OnClickListener {
+public class CloudBackupActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "GoogleCloudBackupActivity";
     private Activity mActivity;
     private Context mContext;
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private TextView txtBackupNow,txtBackuplater;
+    private TextView txtBackupNow;
     private static final int REQUEST_CODE_SIGN_IN = 1;
     private static final int REQUEST_CODE_OPEN_DOCUMENT = 2;
     private String strToken,mOpenFileId;
@@ -62,20 +62,21 @@ public class GoogleCloudBackupActivity extends AppCompatActivity implements View
     private DriveServiceHelper mDriveServiceHelper;
     private GoogleSignInOptions signInOptions;
     private GoogleSignInClient client;
+    private RelativeLayout relativeBack;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_google_cloud_backup);
+        setContentView(R.layout.activity_cloud_backup);
 
         setId();
         setOnClicks();
     }
 
     private void setId() {
-        mActivity = GoogleCloudBackupActivity.this;
-        mContext = GoogleCloudBackupActivity.this;
+        mActivity = CloudBackupActivity.this;
+        mContext = CloudBackupActivity.this;
 
         mSessionManager = new SessionManager(mContext);
         mSessionManager.openSettings();
@@ -83,15 +84,23 @@ public class GoogleCloudBackupActivity extends AppCompatActivity implements View
         mDatabaseHelper = new DatabaseHelper(mContext);
         mDatabaseHelper.open();
 
-        txtBackuplater =(TextView)findViewById(R.id.txtBackuplater);
         txtBackupNow =(TextView)findViewById(R.id.txtBackupNow);
+
+        relativeBack =(RelativeLayout)findViewById(R.id.relativeBack);
+
+        //CHECK IF CLOUD BACKUP IS ALREADY DONE
+        if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_GOOGLE_DRIVE_BACKUP_DONE)){
+            txtBackupNow.setVisibility(View.GONE);
+        }else{
+            txtBackupNow.setVisibility(View.VISIBLE);
+        }
 
 
     }
 
     private void setOnClicks() {
-        txtBackuplater.setOnClickListener(this);
         txtBackupNow.setOnClickListener(this);
+        relativeBack.setOnClickListener(this);
 
     }
 
@@ -101,21 +110,15 @@ public class GoogleCloudBackupActivity extends AppCompatActivity implements View
 
 
         switch (mView.getId()){
-            case R.id.txtBackuplater:
 
-                //UPDATE GOOGLE DRIVE BACKUP FLAG
-                mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_GOOGLE_DRIVE_BACKUP_DONE, false);
-
-
-                Intent mIntent = new Intent(GoogleCloudBackupActivity.this, HomeScreenTabLayout.class);
-                mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,true);
-                mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(mIntent);
-
-                break;
             case R.id.txtBackupNow:
 
                 requestSignIn();
+
+                break;
+            case R.id.relativeBack:
+
+                finish();
 
                 break;
         }
@@ -332,22 +335,17 @@ public class GoogleCloudBackupActivity extends AppCompatActivity implements View
     }
 
     private void displaySuccessDialogue() {
+
         CommonMethods.displayToast(mContext ,getString(R.string.strBckupSuccessfully));
 
 
         //UPDATE GOOGLE DRIVE BACKUP FLAG
         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_GOOGLE_DRIVE_BACKUP_DONE, true);
 
-
-        //REDIRECT TO HOME SCREEN
-        Intent mIntent = new Intent(GoogleCloudBackupActivity.this, HomeScreenTabLayout.class);
-        mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,true);
-        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(mIntent);
-
         //SIGN OUT GOOGLE ACCOUNT
         client.signOut();
 
+        finish();
     }
 
     private void displayErrorDialogue(Exception exception) {

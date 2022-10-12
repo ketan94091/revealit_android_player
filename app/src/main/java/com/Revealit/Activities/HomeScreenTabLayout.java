@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.view.ViewGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -11,13 +12,12 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.Revealit.Adapter.FragmentAdapter;
-import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.CustomViews.CustomViewPager;
 import com.Revealit.Fragments.ListenFragment;
 import com.Revealit.Fragments.PlayFragment;
-import com.Revealit.Fragments.UserProfileFragment;
+import com.Revealit.Fragments.ProfileFragmentContainer;
 import com.Revealit.Fragments.WalletFragment;
 import com.Revealit.R;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
@@ -35,7 +35,7 @@ public class HomeScreenTabLayout extends AppCompatActivity {
     private Context mContext;
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private boolean isUserIsActive,isFromRegistrationScreen=false;
+    private boolean isUserIsActive,isFromRegistrationScreen;
 
 
     @Override
@@ -75,22 +75,17 @@ public class HomeScreenTabLayout extends AppCompatActivity {
         fragments.add(new ListenFragment(this));
         fragments.add(new PlayFragment(this));
         fragments.add(new WalletFragment(this));
-        fragments.add(new UserProfileFragment(this));
+        fragments.add(new ProfileFragmentContainer(this));
+        //fragments.add(new UserProfileFragment(this));
 
         //ATTACHED ADAPTER
         FragmentAdapter pagerAdapter = new FragmentAdapter(getSupportFragmentManager(), getApplicationContext(), fragments);
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
+        //SET PAGER OFFSET LIMIT - LOADING ALL PAGES
+        viewPager.setOffscreenPageLimit(3);
 
-        //DEFAULT SELECT PROFILE SCREEN IF USER IS FROM REGISTRATION PAGE
-        if (!isUserIsActive) {
-            //SELECT USER PROFILE FRAGMENT
-            tabLayout.getTabAt(3).select();
-        } else {
-            //SELECT PLAY FRAGMENT
-            tabLayout.getTabAt(1).select();
-        }
 
 
         tabLayout.getTabAt(0).setIcon(getResources().getDrawable(R.mipmap.icon_mic_home));
@@ -105,39 +100,56 @@ public class HomeScreenTabLayout extends AppCompatActivity {
         tabLayout.getTabAt(3).setIcon(getResources().getDrawable(R.mipmap.icon_profile_home));
         //tabLayout.getTabAt(3).setText(getResources().getString(R.string.strLogout));
 
+        //DEFAULT SELECT PROFILE SCREEN IF USER IS FROM REGISTRATION PAGE
+        //IF USER IS NOT ACTIVATED
+        //IF USER ACTIVATED BUT HE IS FROM REGISTRATION SCREEN - FIRST SHOW THE PROFILE SCREEN THAN USUALL PLAY SCREEN
+        if (!isUserIsActive  || isUserIsActive && isFromRegistrationScreen) {
+            //SELECT USER PROFILE FRAGMENT
+            tabLayout.getTabAt(3).select();
+            tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
+
+        } else{
+            //SELECT PLAY FRAGMENT
+            tabLayout.getTabAt(1).select();
+            tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
+
+
+        }
+
+
+
+        if (!isUserIsActive) {
+
+            //MAKE VIEW PAGER SCROLLABLE FALSE
+            viewPager.disableScroll(true);
+
+            //DISABLE BOTTOM BAR ICON CLICK IF USER IS NOT ACTIVE
+            enableDisableBottomBar(false);
+
+        }else{
+            //MAKE VIEW PAGER SCROLLABLE TURE
+            viewPager.disableScroll(false);
+
+            //DISABLE BOTTOM BAR ICON CLICK IF USER IS NOT ACTIVE
+            enableDisableBottomBar(true);
+        }
 
         //DEFAULT ICON COLOR
-        //IF = IS FROM REGISTRATION AND APP IS IN LIVE MODE
-        //ELSE IF=  IS NOT FROM REGISTRATION AND APP IS IN LIVE MODE
-        //ELSE = APP IS NOT FROM REGISTRATION AND APP IS IN TEST MODE
-        if (!isUserIsActive) {
-            tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorInActiveGrey), PorterDuff.Mode.SRC_IN);
-            tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorInActiveGrey), PorterDuff.Mode.SRC_IN);
-            tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorInActiveGrey), PorterDuff.Mode.SRC_IN);
-            tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
-            tabLayout.setTabTextColors(getResources().getColor(R.color.colorInActiveGrey), getResources().getColor(R.color.colorNewAppGreen));
-
-        }else if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE) ) {
+        if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
             tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
             tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
             tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
             tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
             tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey), getResources().getColor(R.color.colorNewAppGreen));
+
         } else {
             tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
             tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorBlueBottomBar), PorterDuff.Mode.SRC_IN);
             tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
             tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
             tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey), getResources().getColor(R.color.colorBlueBottomBar));
-
         }
 
-        if (!isUserIsActive) {
-            viewPager.disableScroll(true);
-            CommonMethods.displayToast(mContext, "USER NOT VERIFIED!");
-        }else{
-            viewPager.disableScroll(false);
-        }
 
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -233,5 +245,15 @@ public class HomeScreenTabLayout extends AppCompatActivity {
         });
 
 
+    }
+
+    private void enableDisableBottomBar(boolean shouldDisable) {
+
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+
+        for(int i =0 ;i< 4 ;i++){
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(i);
+            vgTab.setEnabled(shouldDisable);
+        }
     }
 }

@@ -110,6 +110,7 @@ public class NewAuthSplashScreen extends AppCompatActivity {
                     startActivity(mIntent);
                     finish();
                 } else {
+                    mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
                     Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthBiomatricAuthenticationActivity.class);
                     mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, false);
                     startActivity(mIntent);

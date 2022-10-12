@@ -572,6 +572,7 @@ public class LoginActivityActivity extends AppCompatActivity implements View.OnC
 
                     //MOVE TO HOME SCREEN
                     Intent mIntent = new Intent(LoginActivityActivity.this, HomeScreenTabLayout.class);
+                    mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,false);
                     startActivity(mIntent);
 
                     //FINISH THE CURRENT ACTIVITY
