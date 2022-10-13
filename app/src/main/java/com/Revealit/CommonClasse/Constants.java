@@ -8,7 +8,6 @@ public class Constants {
     public static String API_END_POINTS_REGISTRATION = "https://bcapi.revealit.io/";
 
 
-
   //END POINTS FOR SELECTIONS
   //KEY
   public static final String API_END_POINTS_MOBILE_KEY = "endPointMobile";
@@ -20,7 +19,7 @@ public class Constants {
   public static final String API_END_POINTS_REGISTRATION_B_CURATOR = "https://bcapi.revealit.io/";
 
   //STAGING CURATOR
-  public static final String API_END_POINTS_MOBILE_S_CURATOR = "https://staging.api.revealit.io/";
+  public static final String API_END_POINTS_MOBILE_S_CURATOR = "https://staging.revealit.io/";
   public static final String API_END_POINTS_REGISTRATION_S_CURATOR = "https://scapi.revealit.io/";
 
   //TESTING1  CURATOR

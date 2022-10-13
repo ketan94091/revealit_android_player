@@ -7,6 +7,7 @@
     android:background="@color/colorWhite"
     tools:context=".UserOnboardingProcess.NewAuthGetStartedActivity">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -45,6 +46,7 @@
             </RelativeLayout>
 
         </RelativeLayout>
+
 
 
         <LinearLayout
@@ -154,6 +156,18 @@
 
 
             </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbarStyle="@null"
+                >
+
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingBottom="20dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -384,6 +398,58 @@
                 </LinearLayout>
 
                 <View
+                    android:id="@+id/viewAdmin"
+                    android:layout_width="match_parent"
+                    android:layout_height=".5dp"
+                    android:background="@color/colorBlack"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/linearAdmin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    >
+
+                    <ImageView
+                        android:id="@+id/iconAdmin"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@color/colorBlack" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/txtAdmin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/quasimoda_bold"
+                            android:text="@string/strAdmin"
+                            android:layout_centerInParent="true"
+                            android:layout_alignParentLeft="true"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="700"
+                            android:layout_marginLeft="20dp"
+                            android:textSize="15dp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerInParent="true"
+                            android:layout_margin="20dp"
+                            android:src="@mipmap/arrow_next_page" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+                <View
                     android:id="@+id/viewBottomDefault"
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
@@ -392,9 +458,13 @@
 
             </LinearLayout>
 
+          </LinearLayout>
+            </ScrollView>
         </LinearLayout>
 
 
+
     </LinearLayout>
+
 
 </RelativeLayout>

@@ -79,7 +79,7 @@ public class NewAuthSplashScreen extends AppCompatActivity {
                     mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR);
                     mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strIntegration));
 
-                    switch (Constants.API_END_POINTS_MOBILE) {
+                    switch (Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR) {
 
                         case Constants.API_END_POINTS_MOBILE_B_CURATOR:
                             mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 1);
@@ -102,7 +102,6 @@ public class NewAuthSplashScreen extends AppCompatActivity {
                     mSessionManager.updatePreferenceBoolean(Constants.IS_APP_OPEN_FIRST_TIME, true);
                 }
 
-
                 //INTENT
                 //CHECK IF USER IS ALREADY LOGGED IN OR NOT
                 if (!mSessionManager.getPreferenceBoolean(Constants.USER_LOGGED_IN)) {
@@ -110,13 +109,13 @@ public class NewAuthSplashScreen extends AppCompatActivity {
                     startActivity(mIntent);
                     finish();
                 } else {
-                    mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
                     Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthBiomatricAuthenticationActivity.class);
                     mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, false);
                     startActivity(mIntent);
                     finish();
 
                 }
+
 
             }
         }, 3000);

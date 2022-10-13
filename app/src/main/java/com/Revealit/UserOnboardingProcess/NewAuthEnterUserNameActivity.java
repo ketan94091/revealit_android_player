@@ -288,8 +288,8 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME ,body.getProton().getAccountName());
         mSessionManager.updatePreferenceString(Constants.KEY_PRON_WALLET_DETAILS ,gson.toJson(body.getProton()));
         mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY ,body.getrevealit_private_key());
-        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,body.isActivated());
-        //mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
+        //mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,body.isActivated());
+        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
 
         //UPDATE FLAG FOR APPLICATION MODE
         mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);

@@ -63,6 +63,7 @@
     <string name="strBiomatricPermissionTwo">Revealit need excess for you to authenticate with TouchId or FaceId</string>
     <string name="strDontAllow">Dont allow</string>
     <string name="strAccount">Account</string>
+    <string name="strAdmin">Admin</string>
     <string name="strCloudBackup">Cloud Backup</string>
     <string name="strPrivacy">Privacy</string>
     <string name="strMobileNumber">Mobile number</string>
@@ -84,6 +85,7 @@
     <string name="strClearVideo">Are you sure you want to clear this video?</string>
     <string name="strClear">Clear</string>
     <string name="strClearAll">Clear All</string>
+    <string name="strUsernotfound">User not found! Please create new user</string>
 
 
     <string name="strEnterUserName">Please enter username!</string>

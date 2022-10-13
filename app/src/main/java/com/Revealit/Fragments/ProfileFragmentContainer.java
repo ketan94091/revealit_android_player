@@ -30,8 +30,6 @@ public class ProfileFragmentContainer extends Fragment {
     private HomeScreenTabLayout mHomeScreenTabLayout;
     private OnFragmentInteractionListener mListener;
 
-
-
     public ProfileFragmentContainer(HomeScreenTabLayout homeScreenTabLayout) {
         this.mHomeScreenTabLayout = homeScreenTabLayout;
     }
@@ -82,18 +80,10 @@ public class ProfileFragmentContainer extends Fragment {
         void messageFromParentFragment(Uri uri);
     }
 
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setIds();
-    }
-
-
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         if (menuVisible) {
-            setIds();
+//setIds();
 
         }
         super.setMenuVisibility(menuVisible);

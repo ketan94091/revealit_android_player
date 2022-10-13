@@ -163,6 +163,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                     callAuthenticationAPI();
                 }else{
                     callCallBackAPI();
+
                 }
 
 
@@ -236,8 +237,8 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
             @Override
             public void onResponse(Call<NewAuthLogin> call, Response<NewAuthLogin> response) {
 
-                CommonMethods.printLogE("Response @ callAuthenticationAPI: ", "" + response.isSuccessful());
-                CommonMethods.printLogE("Response @ callAuthenticationAPI: ", "" + response.code());
+                CommonMethods.printLogE("Response @ callCallBackAPI: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callCallBackAPI: ", "" + response.code());
 
                 //CLOSE DIALOG
                 CommonMethods.closeDialog();
@@ -250,7 +251,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                             .serializeNulls()
                             .create();
 
-                    CommonMethods.printLogE("Response @ Login: ", "" + gson.toJson(response.body()));
+                    CommonMethods.printLogE("Response @ callCallBackAPI: ", "" + gson.toJson(response.body()));
 
                     //SAVE AUTHENTICATION DATA
                     mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN, response.body().getToken());
@@ -263,7 +264,6 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                     Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, HomeScreenTabLayout.class);
                     mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,false);
                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
                     startActivity(mIntent);
                     finish();
 

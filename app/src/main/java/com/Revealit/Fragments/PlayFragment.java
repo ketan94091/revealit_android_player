@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.HomeScreenTabLayout;
-import com.Revealit.Activities.LoginActivityActivity;
 import com.Revealit.Adapter.PlayCategoryListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
@@ -30,6 +29,7 @@ import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
@@ -405,7 +405,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                     //CLOSE DIALOG
                     CommonMethods.closeDialog();
 
-                    Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
+                    Intent mLoginIntent = new Intent(mActivity, NewAuthGetStartedActivity.class);
                     mActivity.startActivity(mLoginIntent);
                     mActivity.finish();
 

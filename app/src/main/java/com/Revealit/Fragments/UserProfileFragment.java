@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,13 +32,13 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private Context mContext;
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private View mView, viewBottomDefault, viewHelp, viewSettings, viewSavedItems, viewAccount;
+    private View mView, viewBottomDefault, viewAdmin,viewHelp, viewSettings, viewSavedItems, viewAccount;
     private HomeScreenTabLayout mHomeScreenTabLayout;
-    private TextView txtUsername, txtHelp, txtSettings, txtMySavedItems, txtAccount, txtStatusMsg, txtStatus, txtCopyToClibBoard, txtMsgCopy;
+    private TextView txtUsername, txtAdmin,txtHelp, txtSettings, txtMySavedItems, txtAccount, txtStatusMsg, txtStatus, txtCopyToClibBoard, txtMsgCopy;
     private String strUsername, strCopymsg;
-    private ImageView iconHelp, iconSavedItems, iconSetting, iconAccount;
+    private ImageView iconAdmin,iconHelp, iconSavedItems, iconSetting, iconAccount;
     private boolean isUserIsActive =false;
-    private LinearLayout linearAccount,linearSettings,linearSavedItems,linearHelp;
+    private LinearLayout linearAccount,linearSettings,linearSavedItems,linearAdmin,linearHelp;
 
     public UserProfileFragment(HomeScreenTabLayout homeScreenTabLayout) {
         this.mHomeScreenTabLayout = homeScreenTabLayout;
@@ -84,22 +83,26 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         txtMySavedItems = (TextView) mView.findViewById(R.id.txtMySavedItems);
         txtSettings = (TextView) mView.findViewById(R.id.txtSettings);
         txtHelp = (TextView) mView.findViewById(R.id.txtHelp);
+        txtAdmin = (TextView) mView.findViewById(R.id.txtAdmin);
 
         viewAccount = (View) mView.findViewById(R.id.viewAccount);
         viewSavedItems = (View) mView.findViewById(R.id.viewSavedItems);
         viewSettings = (View) mView.findViewById(R.id.viewSettings);
         viewHelp = (View) mView.findViewById(R.id.viewHelp);
+        viewAdmin = (View) mView.findViewById(R.id.viewAdmin);
         viewBottomDefault = (View) mView.findViewById(R.id.viewBottomDefault);
 
         iconAccount = (ImageView) mView.findViewById(R.id.iconAccount);
         iconSetting = (ImageView) mView.findViewById(R.id.iconSetting);
         iconSavedItems = (ImageView) mView.findViewById(R.id.iconSavedItems);
         iconHelp = (ImageView) mView.findViewById(R.id.iconHelp);
+        iconAdmin = (ImageView) mView.findViewById(R.id.iconAdmin);
 
         linearAccount=(LinearLayout)mView.findViewById(R.id.linearAccount);
         linearSavedItems=(LinearLayout)mView.findViewById(R.id.linearSavedItems);
         linearSettings=(LinearLayout)mView.findViewById(R.id.linearSettings);
         linearHelp=(LinearLayout)mView.findViewById(R.id.linearHelp);
+        linearAdmin=(LinearLayout)mView.findViewById(R.id.linearAdmin);
 
         //GET USER STATUS
         //TRUE = USER IS ACTIVE AND VERIFIED
@@ -133,6 +136,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         linearSavedItems.setOnClickListener(this);
         linearSettings.setOnClickListener(this);
         linearHelp.setOnClickListener(this);
+        linearAdmin.setOnClickListener(this);
     }
 
     @Override
@@ -176,6 +180,11 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 loadFragments(new SettingsFragmentContainer(mHomeScreenTabLayout));
 
                 break;
+            case R.id.linearAdmin:
+
+                loadFragments(new AdminFragment(mHomeScreenTabLayout));
+
+                break;
         }
 
     }
@@ -201,23 +210,20 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             txtMySavedItems.setTextColor(getResources().getColor(R.color.colorInActiveGrey));
             txtSettings.setTextColor(getResources().getColor(R.color.colorInActiveGrey));
             txtHelp.setTextColor(getResources().getColor(R.color.colorInActiveGrey));
+            txtAdmin.setTextColor(getResources().getColor(R.color.colorInActiveGrey));
 
             viewAccount.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
             viewSavedItems.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
             viewSettings.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
             viewHelp.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
+            viewAdmin.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
             viewBottomDefault.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
 
             iconAccount.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
             iconSetting.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
             iconSavedItems.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
             iconHelp.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
-
-            //CHANGE TAB BAR COLOR TO INACTIVE
-            mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorInActiveGrey), PorterDuff.Mode.SRC_IN);
-            mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorInActiveGrey), PorterDuff.Mode.SRC_IN);
-            mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorInActiveGrey), PorterDuff.Mode.SRC_IN);
-            mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
+            iconAdmin.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
 
         } else if (isUserIsActive) {
             //SET VERIFIED MSG IF ACTIVE USER
@@ -234,25 +240,22 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             txtMySavedItems.setTextColor(getResources().getColor(R.color.colorBlack));
             txtSettings.setTextColor(getResources().getColor(R.color.colorBlack));
             txtHelp.setTextColor(getResources().getColor(R.color.colorBlack));
+            txtAdmin.setTextColor(getResources().getColor(R.color.colorBlack));
 
             viewAccount.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
             viewSavedItems.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
             viewSettings.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
             viewHelp.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
+            viewAdmin.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
             viewBottomDefault.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
 
             iconAccount.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
             iconSetting.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
             iconSavedItems.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
             iconHelp.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
+            iconAdmin.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
 
-            //CHANGE TAB BAR COLOR TO INACTIVE
-            mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-            mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-            mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-            mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
         }
-
 
 
     }

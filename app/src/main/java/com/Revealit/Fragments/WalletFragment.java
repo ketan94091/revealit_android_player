@@ -285,6 +285,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                     mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
                     mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
                     mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorNewAppGreen));
+
+                    mHomeScreenTabLayout.viewBottom.setBackgroundColor(getResources().getColor(R.color.colorNewAppGreen));
                 }else{
                     //CLEAR DUMMY DATA
                     mDatabaseHelper.clearSimulationHistoryDataTable();
@@ -296,17 +298,17 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                     mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBlueBottomBar), PorterDuff.Mode.SRC_IN);
                     mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
                     mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorBlueBottomBar));
+
+                    mHomeScreenTabLayout.viewBottom.setBackgroundColor(getResources().getColor(R.color.colorBlueBottomBar));
                 }
+
+
 
 
             }
 
 
         });
-
-
-
-
 
         switch (mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)) {
             case 1:

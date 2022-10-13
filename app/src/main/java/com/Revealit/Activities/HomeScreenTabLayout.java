@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,7 @@ public class HomeScreenTabLayout extends AppCompatActivity {
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
     private boolean isUserIsActive,isFromRegistrationScreen;
+    public static View viewBottom;
 
 
     @Override
@@ -63,6 +65,8 @@ public class HomeScreenTabLayout extends AppCompatActivity {
 
         viewPager = (CustomViewPager) findViewById(R.id.pager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+
+        viewBottom=(View)findViewById(R.id.viewBottom);
 
         //GET INTENT DATA
         isFromRegistrationScreen = getIntent().getBooleanExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN, false);
@@ -105,15 +109,43 @@ public class HomeScreenTabLayout extends AppCompatActivity {
         //IF USER ACTIVATED BUT HE IS FROM REGISTRATION SCREEN - FIRST SHOW THE PROFILE SCREEN THAN USUALL PLAY SCREEN
         if (!isUserIsActive  || isUserIsActive && isFromRegistrationScreen) {
             //SELECT USER PROFILE FRAGMENT
-            tabLayout.getTabAt(3).select();
-            tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
+            selectPage(3);
+            //DEFAULT ICON COLOR
+            if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+                tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
+                tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey), getResources().getColor(R.color.colorNewAppGreen));
+
+            } else {
+                tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBlueBottomBar), PorterDuff.Mode.SRC_IN);
+                tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey), getResources().getColor(R.color.colorBlueBottomBar));
+            }
+
 
         } else{
             //SELECT PLAY FRAGMENT
-            tabLayout.getTabAt(1).select();
-            tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
+            selectPage(1);
 
+            //DEFAULT ICON COLOR
+            if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+                tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
+                tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey), getResources().getColor(R.color.colorNewAppGreen));
 
+            } else {
+                tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorBlueBottomBar), PorterDuff.Mode.SRC_IN);
+                tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey), getResources().getColor(R.color.colorBlueBottomBar));
+            }
         }
 
 
@@ -134,21 +166,12 @@ public class HomeScreenTabLayout extends AppCompatActivity {
             enableDisableBottomBar(true);
         }
 
-        //DEFAULT ICON COLOR
-        if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
-            tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-            tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
-            tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-            tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-            tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey), getResources().getColor(R.color.colorNewAppGreen));
 
-        } else {
-            tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-            tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorBlueBottomBar), PorterDuff.Mode.SRC_IN);
-            tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-            tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-            tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey), getResources().getColor(R.color.colorBlueBottomBar));
-        }
+
+        //CHANGE BOTTOM VIEW COLOR
+        changeBottomViewColor();
+
+
 
 
 
@@ -247,6 +270,15 @@ public class HomeScreenTabLayout extends AppCompatActivity {
 
     }
 
+    private void changeBottomViewColor() {
+        if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
+            viewBottom.setBackgroundColor(getResources().getColor(R.color.colorNewAppGreen));
+        }else{
+            viewBottom.setBackgroundColor(getResources().getColor(R.color.colorBlueBottomBar));
+        }
+
+    }
+
     private void enableDisableBottomBar(boolean shouldDisable) {
 
         ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
@@ -255,5 +287,10 @@ public class HomeScreenTabLayout extends AppCompatActivity {
             ViewGroup vgTab = (ViewGroup) vg.getChildAt(i);
             vgTab.setEnabled(shouldDisable);
         }
+    }
+
+    void selectPage(int pageIndex){
+        tabLayout.setScrollPosition(pageIndex,0f,true);
+        viewPager.setCurrentItem(pageIndex);
     }
 }

@@ -82,7 +82,7 @@
 
                     <EditText
                         android:id="@+id/edtUsername"
-                        android:layout_width="wrap_content"
+                        android:layout_width="250dp"
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:gravity="center_vertical"
@@ -129,7 +129,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:src="@mipmap/icon_cross_red"
-                            android:visibility="invisible"/>
+                            android:visibility="invisible" />
                     </RelativeLayout>
 
 
