@@ -15,6 +15,15 @@ public class InviteModel {
         private Long campaign_id;
         private Long referral_id;
         private String error;
+        private String currency_icon_url;
+
+    public String getCurrency_icon_url() {
+        return currency_icon_url;
+    }
+
+    public void setCurrency_icon_url(String currency_icon_url) {
+        this.currency_icon_url = currency_icon_url;
+    }
 
     public String getTooltip() {
         return tooltip;

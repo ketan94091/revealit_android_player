@@ -103,7 +103,7 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/quasimoda_medium"
                 android:text="@string/strPendingVerificationMsg"
-                android:textAlignment="textStart"
+                android:textAlignment="center"
                 android:textColor="@color/colorBlack"
                 android:textFontWeight="500"
                 android:textSize="14dp" />
@@ -167,7 +167,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical"
-              android:paddingBottom="20dp">
+              android:paddingBottom="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -191,11 +191,6 @@
                     android:gravity="center_vertical"
                     >
 
-                    <ImageView
-                        android:id="@+id/iconAccount"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:background="@color/colorBlack" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -211,7 +206,7 @@
                             android:layout_alignParentLeft="true"
                             android:textColor="@color/colorBlack"
                             android:textFontWeight="700"
-                            android:layout_marginLeft="20dp"
+
                             android:textSize="15dp" />
 
                         <ImageView
@@ -244,11 +239,6 @@
                     android:gravity="center_vertical"
                     >
 
-                    <ImageView
-                        android:id="@+id/iconSavedItems"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:background="@color/colorBlack" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -260,7 +250,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
                             android:layout_centerInParent="true"
-                            android:layout_marginLeft="20dp"
+
                             android:fontFamily="@font/quasimoda_bold"
                             android:text="@string/strMySavedItems"
                             android:textColor="@color/colorBlack"
@@ -300,11 +290,6 @@
                     android:gravity="center_vertical"
                     >
 
-                    <ImageView
-                        android:id="@+id/iconSetting"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:background="@color/colorBlack" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -320,7 +305,6 @@
                             android:layout_alignParentLeft="true"
                             android:textColor="@color/colorBlack"
                             android:textFontWeight="700"
-                            android:layout_marginLeft="20dp"
                             android:textSize="15dp" />
 
 
@@ -358,12 +342,6 @@
                     android:gravity="center_vertical"
                     >
 
-                    <ImageView
-                        android:id="@+id/iconHelp"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:background="@color/colorBlack" />
-
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -374,7 +352,6 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
                             android:layout_centerInParent="true"
-                            android:layout_marginLeft="20dp"
                             android:fontFamily="@font/quasimoda_bold"
                             android:text="@string/strHelp"
                             android:textColor="@color/colorBlack"
@@ -413,12 +390,6 @@
                     android:gravity="center_vertical"
                     >
 
-                    <ImageView
-                        android:id="@+id/iconAdmin"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:background="@color/colorBlack" />
-
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -433,7 +404,6 @@
                             android:layout_alignParentLeft="true"
                             android:textColor="@color/colorBlack"
                             android:textFontWeight="700"
-                            android:layout_marginLeft="20dp"
                             android:textSize="15dp" />
 
                         <ImageView

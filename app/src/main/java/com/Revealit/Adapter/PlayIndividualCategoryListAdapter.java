@@ -92,7 +92,6 @@ public  class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Pla
         Glide.with(mActivity)
                 .load("" + strCategoryList.get(position).getMediaCoverArt())
                 .placeholder(R.drawable.placeholder)
-                .apply(new RequestOptions().transform(new RoundedCorners(10)))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

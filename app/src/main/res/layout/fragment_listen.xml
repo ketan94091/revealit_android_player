@@ -62,32 +62,7 @@
                     app:rb_scale="5" />
 
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/imgListen"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:src="@mipmap/listen_icn_new" />
-
-                    <TextView
-                        android:id="@+id/txtReveal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/imgListen"
-                        android:layout_centerInParent="true"
-                        android:layout_marginTop="5dp"
-                        android:fontFamily="@font/quasimoda_semibold"
-                        android:text="@string/strTapToRevealit"
-                        android:textColor="@color/colorRevealitGrey"
-                        android:textFontWeight="600"
-                        android:textSize="15dp" />
-                </LinearLayout>
 
 
                 <LinearLayout
@@ -113,6 +88,33 @@
                         android:layout_gravity="center_horizontal"
                         android:scaleType="fitXY"
                         android:src="@mipmap/wave_down" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imgListen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@mipmap/listen_icn_new" />
+
+                    <TextView
+                        android:id="@+id/txtReveal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/imgListen"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/quasimoda_semibold"
+                        android:text="@string/strTapToRevealit"
+                        android:textColor="@color/colorRevealitGrey"
+                        android:textFontWeight="600"
+                        android:textSize="15dp" />
                 </LinearLayout>
 
 

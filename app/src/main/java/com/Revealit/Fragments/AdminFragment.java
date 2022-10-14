@@ -147,8 +147,8 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
                     mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
                     mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
                     mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
                     mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorNewAppGreen));
 
                     mHomeScreenTabLayout.viewBottom.setBackgroundColor(getResources().getColor(R.color.colorNewAppGreen));
@@ -164,11 +164,11 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
                     mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, false);
                     mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
                     mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBlueBottomBar), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorBlueBottomBar));
+                    mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_IN);
+                    mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorBlue));
 
-                    mHomeScreenTabLayout.viewBottom.setBackgroundColor(getResources().getColor(R.color.colorBlueBottomBar));
+                    mHomeScreenTabLayout.viewBottom.setBackgroundColor(getResources().getColor(R.color.colorBlue));
 
                     txtSimulation.setTextColor(getResources().getColor(R.color.colorBlack));
                     txtLive.setTextColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
@@ -344,7 +344,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
                 CommonMethods.closeDialog();
 
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS && response.body().getToken() != null) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)

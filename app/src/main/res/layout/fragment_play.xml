@@ -5,9 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
+    android:padding="15dp"
     android:background="@color/colorWhite"
     android:orientation="vertical">
+
+
 
     <RelativeLayout
         android:id="@+id/ralativeMain"
@@ -16,31 +18,70 @@
        >
 
         <RelativeLayout
+            android:id="@+id/relativeTopview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imgLogo"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/app_icon_round" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/quasimoda_bold"
+                android:gravity="center_vertical"
+                android:text="@string/strHome"
+                android:textColor="@color/colorBlack"
+                android:textFontWeight="700"
+                android:textSize="18dp" />
+
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
             android:id="@+id/relativeFeatured"
             android:layout_width="match_parent"
-            android:layout_height="120dp">
+            android:layout_height="150dp"
+            android:layout_below="@+id/relativeTopview"
+            android:layout_marginTop="15dp"
+           >
 
 
             <ImageView
                 android:id="@+id/imgBiteBanner"
-                android:layout_width="450dp"
-                android:layout_height="200dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY" />
+
+            <ImageView
+                android:id="@+id/imgPlay"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_above="@+id/txtBiteTitle"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="30dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/bite_templet"
-                />
+                android:src="@mipmap/icon_play_home" />
+
 
             <TextView
                 android:id="@+id/txtBiteTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="20dp"
-                android:textColor="@color/colorBlack"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:visibility="gone"/>
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/transfer_bottombar"
+                android:fontFamily="@font/quasimoda_bold"
+                android:padding="5dp"
+                android:textAlignment="center"
+                android:textColor="@color/colorWhite"
+                android:textFontWeight="700"
+                android:textSize="15dp" />
 
             <ImageView
                 android:id="@+id/imgBiteBrandLogo"
@@ -50,6 +91,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="10dp"
+                android:visibility="gone"
                 android:src="@mipmap/bite_brand_logo_templet" />
 
         </RelativeLayout>
@@ -102,25 +144,25 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/linearTrending"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
             android:background="@drawable/border_button_mai_logo"
             android:paddingLeft="10dp"
             android:paddingTop="5dp"
             android:paddingRight="10dp"
             android:paddingBottom="5dp"
             android:text="@string/strPlay"
+            android:visibility="gone"
             android:textAlignment="center"
             android:textAllCaps="true"
-            android:textStyle="bold"
             android:textColor="@color/colorWhite"
-            android:layout_marginTop="15dp"/>
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycleCategoryList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/txtPlay"
-            android:layout_marginTop="10dp"
-            />
+            android:layout_marginTop="15dp" />
 
 
     </RelativeLayout>

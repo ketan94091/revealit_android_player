@@ -69,6 +69,7 @@ public class NewAuthSplashScreen extends AppCompatActivity {
             @Override
             public void run() {
 
+
                 //FALSE == APP OPEN FIRST TIME
                 //TRUE  == APP NOT OPEN FIRST TIME
 
@@ -104,7 +105,12 @@ public class NewAuthSplashScreen extends AppCompatActivity {
 
                 //INTENT
                 //CHECK IF USER IS ALREADY LOGGED IN OR NOT
-                if (!mSessionManager.getPreferenceBoolean(Constants.USER_LOGGED_IN)) {
+                if(mSessionManager.getPreferenceBoolean(Constants.KEY_ISFROM_LOGOUT)){
+                    Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthBiomatricAuthenticationActivity.class);
+                    mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, true);
+                    startActivity(mIntent);
+                    finish();
+                }else if (!mSessionManager.getPreferenceBoolean(Constants.USER_LOGGED_IN)) {
                     Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthGetStartedActivity.class);
                     startActivity(mIntent);
                     finish();

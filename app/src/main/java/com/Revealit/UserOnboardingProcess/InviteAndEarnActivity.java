@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
@@ -60,7 +61,7 @@ public class InviteAndEarnActivity extends AppCompatActivity implements View.OnC
          strCopymsg = mSessionManager.getPreference(Constants.KEY_INVITE_MSG);
 
          //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
-         txtMsgCopy.setText(strCopymsg.replace("XXXX",strUsername));
+         txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
 
     }
     private void setOnClicks() {
@@ -80,8 +81,11 @@ public class InviteAndEarnActivity extends AppCompatActivity implements View.OnC
             case R.id.txtCopyToClibBoard:
 
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText(getString(R.string.strUsername),strUsername);
+                ClipData clip = ClipData.newPlainText(getString(R.string.strUsername),txtMsgCopy.getText().toString());
                 clipboard.setPrimaryClip(clip);
+
+                //TOAST MSG
+                CommonMethods.displayToast(mContext, getString(R.string.strUsernameCopied));
 
                 break;
             case R.id.imgCancel:

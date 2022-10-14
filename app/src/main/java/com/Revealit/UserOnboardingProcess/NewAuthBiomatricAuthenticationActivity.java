@@ -244,7 +244,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                 CommonMethods.closeDialog();
 
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS && response.body().getToken() != null) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -271,7 +271,8 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                 } else {
 
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strUsernotfound));
+                    finish();
                 }
             }
 
@@ -345,7 +346,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                 CommonMethods.closeDialog();
 
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS && response.body().getToken() != null) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -372,7 +373,8 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                 } else {
 
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strUsernotfound));
+                    finish();
                 }
             }
 

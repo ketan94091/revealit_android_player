@@ -8,7 +8,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp">
 
         <LinearLayout
             android:id="@+id/linearTitle"
@@ -24,7 +25,9 @@
                 android:layout_height="wrap_content"
                 android:text="Food"
                 android:textSize="20dp"
-                android:textColor="@color/colorMainLogo"
+                android:fontFamily="@font/bilo_bold"
+                android:textFontWeight="700"
+                android:textColor="@color/colorNewAppGreen"
                 />
             <LinearLayout
                 android:layout_width="match_parent"
@@ -35,17 +38,11 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:layout_weight="1"
-                    android:background="@color/colorMainLogo"
+                    android:layout_weight="2"
+                    android:background="@color/colorNewAppGreen"
                     android:paddingRight="10dp"
                     />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/colorGrayBottomBar"
-                    />
+
 
             </LinearLayout>
 
@@ -54,11 +51,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycleIndividualCategoryList"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_height="160dp"
             android:layout_below="@+id/linearTitle"
-            />
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 
     </RelativeLayout>

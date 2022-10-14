@@ -102,6 +102,7 @@ public class Constants {
     public static final String PROTON_ACCOUNT_NAME = "protonAccountNAme";
     public  static  final String KEY_USERNAME ="userName";
     public  static  final String KEY_IS_USER_ACTIVE ="keyIsUserActive";
+    public  static  final String KEY_IS_USER_IS_ADMIN ="keyIsUserIsAdmin";
     public static final String IS_FIRST_TIME_ACCOUNT_SYNC = "isFirstTimeAccountSync";
     public static final String ACCOUNT_BALANCE = "accountBalance";
     public static final String ACCOUNT_CURRENCY_TYPE = "CurrencyType";
@@ -166,6 +167,7 @@ public class Constants {
   public  static  final  String KEY_PRON_WALLET_DETAILS="keyProtonWalletDetails";
   public  static  final  String KEY_REVEALIT_PRIVATE_KEY="keyRevealitPrivatekey";
   public  static  final  String KEY_ISFROM_LOGIN="keyIsFromLogin";
+  public  static  final  String KEY_ISFROM_LOGOUT="keyIsUserIsFromLogout";
 
 
     public static String API_KEY = "AIzaSyC4elGdU9Oxi2DPIShG4pRW2gRBZOeE0pM";

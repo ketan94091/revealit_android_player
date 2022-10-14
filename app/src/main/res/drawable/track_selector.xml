@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true">
         <shape android:dither="true" android:shape="rectangle" android:useLevel="false" android:visible="true">
-            <solid android:color="@color/colorGreenDark"/>
+            <solid android:color="@color/colorNewAppGreen"/>
             <corners android:radius="25dp" />
             <size android:width="50dp" android:height="25dp" />
 

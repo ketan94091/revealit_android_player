@@ -248,7 +248,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/quasimoda_bold"
                     android:text="@string/strWhen"
-                    android:textAlignment="textStart"
+                    android:textAlignment="textEnd"
                     android:textColor="@color/colorCuratorHighlightGrey"
                     android:textFontWeight="700"
                     android:textSize="15dp" />
@@ -271,7 +271,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:orientation="horizontal"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:weightSum="2">
 
                     <RelativeLayout

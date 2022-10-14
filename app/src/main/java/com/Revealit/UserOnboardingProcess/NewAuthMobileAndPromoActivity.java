@@ -3,6 +3,7 @@ package com.Revealit.UserOnboardingProcess;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.Revealit.CommonClasse.CommonMethods;
@@ -23,6 +25,11 @@ import com.Revealit.ModelClasses.NewAuthStatusModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -42,7 +49,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "NewAuthMobileAndPromoActivity";
     boolean isMobileAlreadyUsed = false;
-    long delay = 1000; // 1 seconds after user stops typing
+    long delay = 3000; // 1 seconds after user stops typing
     long last_text_edit = 0;
     Handler handler = new Handler();
     private Activity mActivity;
@@ -50,11 +57,20 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
     private TextView txtContinueDisable, txtPromoWarnings,txtPromoAmount,txtInviteQuestion,txtContinueEnabled, txtMobileWarnings;
-    private ImageView imgPromoStatusFalse,imgPromoStatus, imgMobileStutusTrue, imgMobileStutusFalse,imgCancel, imgLogo;
+    private ImageView imgCurrencyIcon,imgPromoStatusFalse,imgPromoStatus, imgMobileStutusTrue, imgMobileStutusFalse,imgCancel, imgLogo;
     private EditText edtPromo, edtMobilenumber, edtCountryCode;
     private LinearLayout linearPrivacyPolicy, linearPromoWarnings, linearMobileWarnings;
     private String strCampaignId ="0", strRefferalId="0",strInviteName="";
     private Runnable input_finish_checker = new Runnable() {
+        public void run() {
+            if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
+                isCountryCodeValid();
+            }
+        }
+    };
+
+
+    private Runnable input_finish_checker_mobile = new Runnable() {
         public void run() {
             if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
                 isMobileNumberValid();
@@ -95,6 +111,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         imgMobileStutusFalse = (ImageView) findViewById(R.id.imgMobileStutusFalse);
         imgPromoStatus = (ImageView) findViewById(R.id.imgPromoStatus);
         imgPromoStatusFalse = (ImageView) findViewById(R.id.imgPromoStatusFalse);
+        imgCurrencyIcon = (ImageView) findViewById(R.id.imgCurrencyIcon);
 
         edtCountryCode = (EditText) findViewById(R.id.edtCountryCode);
         edtMobilenumber = (EditText) findViewById(R.id.edtMobilenumber);
@@ -125,7 +142,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                                                    public void onTextChanged(final CharSequence s, int start, int before,
                                                                              int count) {
                                                        //You need to remove this to run only once
-                                                       handler.removeCallbacks(input_finish_checker);
+                                                       handler.removeCallbacks(input_finish_checker_mobile);
 
                                                    }
 
@@ -134,7 +151,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                                                        //avoid triggering event when text is empty
                                                        if (s.length() > 0) {
                                                            last_text_edit = System.currentTimeMillis();
-                                                           handler.postDelayed(input_finish_checker, delay);
+                                                           handler.postDelayed(input_finish_checker_mobile, delay);
                                                        } else {
 
                                                        }
@@ -250,9 +267,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         }
     }
 
-    private boolean isMobileNumberValid() {
-
-
+    private boolean isCountryCodeValid() {
 
         if (edtCountryCode.getText().toString().isEmpty()) {
             linearMobileWarnings.setVisibility(View.VISIBLE);
@@ -268,7 +283,21 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             txtMobileWarnings.setText(getString(R.string.strErrorCountryCodeValid));
             return false;
 
-        } else if (edtMobilenumber.getText().toString().isEmpty()) {
+        }else{
+            linearMobileWarnings.setVisibility(View.INVISIBLE);
+            imgMobileStutusFalse.setVisibility(View.INVISIBLE);
+            imgMobileStutusTrue.setVisibility(View.INVISIBLE);
+            txtMobileWarnings.setText("");
+            return true;
+        }
+    }
+
+
+    private boolean isMobileNumberValid() {
+
+
+
+         if (edtMobilenumber.getText().toString().isEmpty()) {
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
             imgMobileStutusTrue.setVisibility(View.INVISIBLE);
@@ -479,6 +508,23 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
     private void updateInviteUI(InviteModel mInviteModel, boolean isFromCampaignId) {
 
+        //LOAD COVER IMAGE WITH GLIDE
+        Glide.with(mActivity)
+                .load((mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY)+""+mInviteModel.getCurrency_icon_url().substring(1)))
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+
+                        return false;
+                    }
+                })
+                .into(imgCurrencyIcon);
         txtInviteQuestion.setText(mInviteModel.getQuestion());
         edtPromo.setHint(mInviteModel.getPlace_holder());
         txtPromoAmount.setText("Earn "+mInviteModel.getCurrency()+" "+mInviteModel.getCurrency_amount()+" In "+mInviteModel.getCrypto_currency());

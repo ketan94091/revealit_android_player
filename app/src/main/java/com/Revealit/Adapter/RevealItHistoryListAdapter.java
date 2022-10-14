@@ -194,7 +194,6 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
         SimpleExoPlayer exoPlayer = ExoPlayerFactory.newSimpleInstance(mContext, trackSelector);
         MediaSource audioSource = new ExtractorMediaSource(Uri.parse(media_url),
                 new CacheDataSourceFactory(mContext, 100 * 1024 * 1024, 5 * 1024 * 1024), new DefaultExtractorsFactory(), null, null);
-        Log.e("URL LOAD" ,"true  : " + media_url);
     }
 
 

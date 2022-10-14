@@ -17,11 +17,12 @@
     <color name="colorRedDark">#e84d6e</color>
     <color name="colorGreenDark">#16a765</color>
     <color name="colorTransperent">#00FDFCFC</color>
+    <color name="colorTransperentBanner">#B2000000</color>
     <color name="colorTransperentBlack">#A6FFFFFF</color>
     <color name="colorRedLight">#a1fae3e3</color>
     <color name="colorGreenLight">#00E4E6CE</color>
     <color name="colorGrayUltraLight">#f2f2f2</color>
-    <color name="colorBlue">#46afcf</color>
+    <color name="colorBlue">#03C3FF</color>
     <color name="colorMainLogo">#82c341</color>
     <color name="colorTransperentSplash">#AD7061B4</color>
     <color name="colorTransperentLogin">#5C000000</color>

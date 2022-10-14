@@ -4,11 +4,11 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,7 +36,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private HomeScreenTabLayout mHomeScreenTabLayout;
     private TextView txtUsername, txtAdmin,txtHelp, txtSettings, txtMySavedItems, txtAccount, txtStatusMsg, txtStatus, txtCopyToClibBoard, txtMsgCopy;
     private String strUsername, strCopymsg;
-    private ImageView iconAdmin,iconHelp, iconSavedItems, iconSetting, iconAccount;
     private boolean isUserIsActive =false;
     private LinearLayout linearAccount,linearSettings,linearSavedItems,linearAdmin,linearHelp;
 
@@ -92,11 +91,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         viewAdmin = (View) mView.findViewById(R.id.viewAdmin);
         viewBottomDefault = (View) mView.findViewById(R.id.viewBottomDefault);
 
-        iconAccount = (ImageView) mView.findViewById(R.id.iconAccount);
-        iconSetting = (ImageView) mView.findViewById(R.id.iconSetting);
-        iconSavedItems = (ImageView) mView.findViewById(R.id.iconSavedItems);
-        iconHelp = (ImageView) mView.findViewById(R.id.iconHelp);
-        iconAdmin = (ImageView) mView.findViewById(R.id.iconAdmin);
 
         linearAccount=(LinearLayout)mView.findViewById(R.id.linearAccount);
         linearSavedItems=(LinearLayout)mView.findViewById(R.id.linearSavedItems);
@@ -114,7 +108,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         strCopymsg = mSessionManager.getPreference(Constants.KEY_INVITE_MSG);
 
         //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
-        txtMsgCopy.setText(strCopymsg.replace("XXXX",strUsername));
+        txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
 
         //UPDATE UI BASED ON USER STATUS
         updateUI(isUserIsActive);
@@ -132,11 +126,16 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private void setOnClicks() {
 
         txtCopyToClibBoard.setOnClickListener(this);
-        linearAccount.setOnClickListener(this);
-        linearSavedItems.setOnClickListener(this);
-        linearSettings.setOnClickListener(this);
-        linearHelp.setOnClickListener(this);
-        linearAdmin.setOnClickListener(this);
+
+        //IF USER IS ACTIVE ONLY
+        if(isUserIsActive){
+            linearAccount.setOnClickListener(this);
+            linearSavedItems.setOnClickListener(this);
+            linearSettings.setOnClickListener(this);
+            linearHelp.setOnClickListener(this);
+            linearAdmin.setOnClickListener(this);
+        }
+
     }
 
     @Override
@@ -219,11 +218,12 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             viewAdmin.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
             viewBottomDefault.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
 
-            iconAccount.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
-            iconSetting.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
-            iconSavedItems.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
-            iconHelp.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
-            iconAdmin.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
+            mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorInActiveGrey), PorterDuff.Mode.SRC_IN);
+            mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorInActiveGrey), PorterDuff.Mode.SRC_IN);
+            mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorInActiveGrey), PorterDuff.Mode.SRC_IN);
+            mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
+            mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorInActiveGrey) , getResources().getColor(R.color.colorNewAppGreen));
+
 
         } else if (isUserIsActive) {
             //SET VERIFIED MSG IF ACTIVE USER
@@ -249,12 +249,14 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             viewAdmin.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
             viewBottomDefault.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
 
-            iconAccount.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
-            iconSetting.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
-            iconSavedItems.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
-            iconHelp.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
-            iconAdmin.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
 
+        }
+
+        //HIDE SHOW ADMIN DETAILS
+        if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
+            linearAdmin.setVisibility(View.VISIBLE);
+        }else{
+            linearAdmin.setVisibility(View.INVISIBLE);
         }
 
 

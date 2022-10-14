@@ -54,7 +54,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
     private String strCountryCode,strMobileNumber,strCampaignId,strRefferalId,strInvitename;
 
 
-    long delay = 1000; // 1 seconds after user stops typing
+    long delay = 5000; // 1 seconds after user stops typing
     long last_text_edit = 0;
     Handler handler = new Handler();
     private Runnable input_username = new Runnable() {
@@ -288,7 +288,16 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME ,body.getProton().getAccountName());
         mSessionManager.updatePreferenceString(Constants.KEY_PRON_WALLET_DETAILS ,gson.toJson(body.getProton()));
         mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY ,body.getrevealit_private_key());
-        //mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,body.isActivated());
+       // mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,body.isActivated());
+
+        //UPDATE FLAG IF USER IS ADMIN OR NOT
+        if(body.getAudience().equals("Admin")){
+            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,true);
+        }else{
+            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,false);
+        }
+
+
         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
 
         //UPDATE FLAG FOR APPLICATION MODE

@@ -18,7 +18,7 @@
         <LinearLayout
             android:layout_width="20dp"
             android:layout_height="200dp"
-            android:background="@drawable/samir_test"
+            android:background="@drawable/transfer_bottombar"
             />
 
     </RelativeLayout>

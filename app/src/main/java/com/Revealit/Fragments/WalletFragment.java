@@ -720,7 +720,10 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
 
                         //OPEN IF ACCOUNT NOT FOUND
-                        openAccountNotFoundDialogue();
+                        //openAccountNotFoundDialogue();
+
+                        //CALL REWARD HISTORY
+                        callRewardHistory(0);
 
                     }
 

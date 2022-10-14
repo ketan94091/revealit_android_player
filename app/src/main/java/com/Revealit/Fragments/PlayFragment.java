@@ -31,7 +31,8 @@ import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -253,7 +254,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                         .serializeNulls()
                         .create();
 
-                Log.e("JSON RESPONSE ",  ""+response.body());
+               // Log.e("JSON RESPONSE ",  ""+response.body());
 
 
                 if (response.code() == Constants.API_SUCCESS) {
@@ -445,9 +446,11 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
             //SET BITE IMAGE
             Glide.with(mActivity)
-                   // .load(strFeaturedMediaCoverImage)
-                    .load("https://beta.sgp1.digitaloceanspaces.com/featured/featured_header_iamkareno1.jpg")
-                    .apply(new RequestOptions().override(450, 200))
+                    .load(strFeaturedMediaCoverImage)
+                    .transform(new CenterCrop(),new RoundedCorners(30))
+
+                    //.load("https://beta.sgp1.digitaloceanspaces.com/featured/featured_header_iamkareno1.jpg")
+                     //.apply(new RequestOptions().override(450, 200))
                     .placeholder(getResources().getDrawable(R.drawable.bite_templet))
                     .into(imgBiteBanner);
 

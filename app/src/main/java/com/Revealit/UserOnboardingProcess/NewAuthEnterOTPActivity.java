@@ -502,6 +502,9 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
 
                     isOtpVarified = true;
 
+                    //HIDE KEY BOARD
+                    CommonMethods.hideKeyboard(mActivity);
+
 
                 } else {
 

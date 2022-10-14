@@ -22,7 +22,7 @@ import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
-import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
+import com.Revealit.UserOnboardingProcess.NewAuthSplashScreen;
 
 public class PrivacyFragment extends Fragment implements View.OnClickListener {
 
@@ -132,9 +132,10 @@ public class PrivacyFragment extends Fragment implements View.OnClickListener {
 
                         //UPDATE LOGIN FLAG
                         mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN,false);
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_ISFROM_LOGOUT,true);
 
                         // SEND USER TO LANDING SCREEN
-                        Intent mIntent = new Intent(mActivity, NewAuthGetStartedActivity.class);
+                        Intent mIntent = new Intent(mActivity, NewAuthSplashScreen.class);
                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(mIntent);
                         mActivity.finish();
