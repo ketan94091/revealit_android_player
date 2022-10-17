@@ -90,6 +90,7 @@
                     android:textFontWeight="500"
                     android:background="@drawable/new_auth_round_button"
                     android:layout_weight="2"
+                    android:capitalize="words"
                     android:layout_marginLeft="10dp"
                     android:textStyle="bold"/>
 

@@ -9,8 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:padding="10dp">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbarLayout"
@@ -39,6 +38,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/viewBottom"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <View
@@ -46,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_above="@+id/tabLayout"
-            android:background="@color/colorNewAppGreen"/>
+            android:background="@color/colorNewAppGreen" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
@@ -56,7 +58,6 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
             app:tabBackground="@drawable/tab_color_selector"
             app:tabIndicatorHeight="0dp"
             app:tabPadding="10dp" />

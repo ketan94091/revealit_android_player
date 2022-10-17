@@ -18,6 +18,7 @@
     <color name="colorGreenDark">#16a765</color>
     <color name="colorTransperent">#00FDFCFC</color>
     <color name="colorTransperentBanner">#B2000000</color>
+    <color name="colorTransperentBannerImage">#40000000</color>
     <color name="colorTransperentBlack">#A6FFFFFF</color>
     <color name="colorRedLight">#a1fae3e3</color>
     <color name="colorGreenLight">#00E4E6CE</color>

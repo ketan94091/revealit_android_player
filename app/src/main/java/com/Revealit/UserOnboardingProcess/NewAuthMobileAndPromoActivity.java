@@ -60,7 +60,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
     private ImageView imgCurrencyIcon,imgPromoStatusFalse,imgPromoStatus, imgMobileStutusTrue, imgMobileStutusFalse,imgCancel, imgLogo;
     private EditText edtPromo, edtMobilenumber, edtCountryCode;
     private LinearLayout linearPrivacyPolicy, linearPromoWarnings, linearMobileWarnings;
-    private String strCampaignId ="0", strRefferalId="0",strInviteName="";
+    private String strCampaignId ="0", strRefferalId="0",strInviteName="",strDefalutCountrycode ="61";
     private Runnable input_finish_checker = new Runnable() {
         public void run() {
             if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
@@ -359,10 +359,19 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                 .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
                 .build();
 
+
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
         JsonObject paramObject = new JsonObject();
         paramObject.addProperty("receiver_number", edtMobilenumber.getText().toString());
-        paramObject.addProperty("country_code", edtCountryCode.getText().toString());
+        if(!edtCountryCode.getText().toString().isEmpty()){
+            paramObject.addProperty("country_code", edtCountryCode.getText().toString());
+        }else{
+            //SEND 61 AS A DEFAULT COUNTRY CODE
+            paramObject.addProperty("country_code", strDefalutCountrycode);
+            //SET COUNTRY CODE
+            edtCountryCode.setText(strDefalutCountrycode);
+
+        }
 
         Call<NewAuthStatusModel> call = patchService1.verifyPhone(paramObject);
 

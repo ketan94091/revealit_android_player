@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Revealit TV</string>
+    <string name="app_name">revealit TV</string>
     <string name="strHome">Home</string>
     <string name="strInternetAvailable">Internet Available</string>
     <string name="strNoInternetAvailable">No Internet Available</string>
@@ -60,7 +60,7 @@
     <string name="strEmailAlreadyRegisteredMsg">This email is already registered with revealit would</string>
     <string name="strEmailAlreadyRegisteredMsgTwo">you like to</string>
     <string name="strBiomatricPermissionOne">Do you want to allow Revealit to use FaceId or FingerprintId?</string>
-    <string name="strBiomatricPermissionTwo">Revealit need excess for you to authenticate with TouchId or FaceId</string>
+    <string name="strBiomatricPermissionTwo">revealit TV needs excess for you to authenticate with TouchId or FaceId</string>
     <string name="strDontAllow">Dont allow</string>
     <string name="strAccount">Account</string>
     <string name="strAdmin">Admin</string>
@@ -156,7 +156,7 @@
     <string name="strInvalidCode">Invalid Verification Code</string>
     <string name="strUsernameAlreadyinUse">Username already in use</string>
     <string name="strRecendCode">Resend Code</string>
-    <string name="strSuccessfullyVerified">Successfully Verieifed your Mobile Device</string>
+    <string name="strSuccessfullyVerified">Successfully Verified your Mobile Device</string>
     <string name="strWehaveRecieved">We have sent a text message to your phone number</string>
     <string name="strEnterTheCodeBelow">\n Enter the code below.</string>
     <string name="strEnterUsername">Enter a username for the revealit TV platform</string>

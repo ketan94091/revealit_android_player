@@ -65,8 +65,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     private GridLayoutManager mGridLayoutManager;
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private ImageView imgBiteBrandLogo, imgBiteBanner;
-    private TextView txtNoPublishedVideo, txtPlay, txtSubTitleThree, txtSubTitleTwo, txtSubTitleOne, txtBiteTitle;
+    private ImageView imgPlay,imgBiteBrandLogo, imgBiteBanner;
+    private TextView txtNoPublishedVideo, txtSubTitleThree, txtSubTitleTwo, txtSubTitleOne, txtBiteTitle;
     private PlayCategoryListAdapter mPlayCategoryListAdapter;
     private LinearLayoutManager recylerViewLayoutManager;
     private RecyclerView recycleCategoryList;
@@ -131,12 +131,12 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
         imgBiteBanner = (ImageView) mView.findViewById(R.id.imgBiteBanner);
         imgBiteBrandLogo = (ImageView) mView.findViewById(R.id.imgBiteBrandLogo);
+        imgPlay = (ImageView) mView.findViewById(R.id.imgPlay);
 
         txtBiteTitle = (TextView) mView.findViewById(R.id.txtBiteTitle);
         txtSubTitleOne = (TextView) mView.findViewById(R.id.txtSubTitleOne);
         txtSubTitleTwo = (TextView) mView.findViewById(R.id.txtSubTitleTwo);
         txtSubTitleThree = (TextView) mView.findViewById(R.id.txtSubTitleThree);
-        txtPlay = (TextView) mView.findViewById(R.id.txtPlay);
         txtNoPublishedVideo = (TextView) mView.findViewById(R.id.txtNoPublishedVideo);
 
         ralativeMain = (RelativeLayout) mView.findViewById(R.id.ralativeMain);
@@ -157,7 +157,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         txtSubTitleOne.setOnClickListener(this);
         txtSubTitleTwo.setOnClickListener(this);
         txtSubTitleThree.setOnClickListener(this);
-        txtPlay.setOnClickListener(this);
+        imgPlay.setOnClickListener(this);
     }
 
     @Override
@@ -174,7 +174,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
             case R.id.txtSubTitleThree:
 
                 break;
-            case R.id.txtPlay:
+            case R.id.imgPlay:
 
 
                 if (!strFeaturedMidiaURL.isEmpty()) {

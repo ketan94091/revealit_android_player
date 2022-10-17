@@ -275,6 +275,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
             txtContinueDisable.setVisibility(View.VISIBLE);
             txtInvalidOTP.setVisibility(View.VISIBLE);
             txtVerifiedSuccessully.setVisibility(View.GONE);
+
         }
     }
 
@@ -498,6 +499,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                     txtContinueDisable.setVisibility(View.INVISIBLE);
                     txtInvalidOTP.setVisibility(View.GONE);
                     txtVerifiedSuccessully.setVisibility(View.VISIBLE);
+                    linearResendCode.setVisibility(View.GONE);
 
 
                     isOtpVarified = true;
@@ -512,6 +514,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                     txtContinueDisable.setVisibility(View.VISIBLE);
                     txtInvalidOTP.setVisibility(View.VISIBLE);
                     txtVerifiedSuccessully.setVisibility(View.GONE);
+                    linearResendCode.setVisibility(View.VISIBLE);
 
                     CommonMethods.buildDialog(mContext, getResources().getString(R.string.strOTPwrong));
 

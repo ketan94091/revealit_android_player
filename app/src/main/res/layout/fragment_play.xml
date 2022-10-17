@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp"
     android:background="@color/colorWhite"
     android:orientation="vertical">
 
@@ -47,7 +46,7 @@
         <RelativeLayout
             android:id="@+id/relativeFeatured"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="160dp"
             android:layout_below="@+id/relativeTopview"
             android:layout_marginTop="15dp"
            >
@@ -57,28 +56,30 @@
                 android:id="@+id/imgBiteBanner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:foreground="@drawable/fetured_image_overlay"
                 android:scaleType="fitXY" />
 
             <ImageView
                 android:id="@+id/imgPlay"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_above="@+id/txtBiteTitle"
+                android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="30dp"
-                android:scaleType="fitXY"
-                android:src="@mipmap/icon_play_home" />
+                android:layout_marginTop="10dp"
+                android:src="@mipmap/play_fetured_video" />
 
 
             <TextView
                 android:id="@+id/txtBiteTitle"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/transfer_bottombar"
                 android:fontFamily="@font/quasimoda_bold"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:textAlignment="center"
+                android:layout_centerInParent="true"
                 android:textColor="@color/colorWhite"
                 android:textFontWeight="700"
                 android:textSize="15dp" />
@@ -138,30 +139,11 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/txtPlay"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/linearTrending"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/border_button_mai_logo"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="5dp"
-            android:text="@string/strPlay"
-            android:visibility="gone"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycleCategoryList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/txtPlay"
+            android:layout_below="@+id/linearTrending"
             android:layout_marginTop="15dp" />
 
 
