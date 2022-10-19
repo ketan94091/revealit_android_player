@@ -74,6 +74,7 @@ public class Constants {
   public static final String API_NEW_AUTH_USERNAME_EXIST = "api/usernotexists";
   public static final String API_NEW_AUTH_SUBMIT_PROFILE = "api/submitprofile";
   public static final String API_NEW_AUTH_LOGIN = "api/authlogin";
+  public static final String API_NEW_AUTH_CALLBACK = "/api/callback";
 
 
     public static final String AUTH_TOKEN = "access_token";
@@ -168,6 +169,10 @@ public class Constants {
   public  static  final  String KEY_REVEALIT_PRIVATE_KEY="keyRevealitPrivatekey";
   public  static  final  String KEY_ISFROM_LOGIN="keyIsFromLogin";
   public  static  final  String KEY_ISFROM_LOGOUT="keyIsUserIsFromLogout";
+  public  static  final  String KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_VERSION="keyMinimumAcceptableVersion";
+  public  static  final  String KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION="keyMinimumAcceptableApiVersion";
+  public  static  final  String KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER="keyProfileReminder";
+  public  static  final  String KEY_PUBLIC_SETTING_BACKUP_REMINDER="keyBackupReminder";
 
 
     public static String API_KEY = "AIzaSyC4elGdU9Oxi2DPIShG4pRW2gRBZOeE0pM";

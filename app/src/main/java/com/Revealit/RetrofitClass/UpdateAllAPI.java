@@ -14,6 +14,7 @@ import com.Revealit.ModelClasses.InviteModel;
 import com.Revealit.ModelClasses.ItemListFromItemIdModel;
 import com.Revealit.ModelClasses.LoginAuthModel;
 import com.Revealit.ModelClasses.NewAuthLogin;
+import com.Revealit.ModelClasses.NewAuthLoginCallbackModel;
 import com.Revealit.ModelClasses.NewAuthStatusModel;
 import com.Revealit.ModelClasses.RevealitHistoryModel;
 import com.Revealit.ModelClasses.RewardHistoryModel;
@@ -167,6 +168,10 @@ public interface UpdateAllAPI {
     //LOGIN API WITH RETROFIT
     @POST(Constants.API_NEW_AUTH_LOGIN)
     Call<NewAuthLogin> newAuthLogin(@Body JsonObject body);
+
+    //LOGIN API WITH RETROFIT
+    @POST(Constants.API_NEW_AUTH_CALLBACK)
+    Call<NewAuthLoginCallbackModel> newAuthCallback(@Body JsonObject body);
 
 }
 

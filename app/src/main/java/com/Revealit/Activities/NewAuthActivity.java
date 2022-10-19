@@ -736,7 +736,7 @@ public class NewAuthActivity extends AppCompatActivity implements View.OnClickLi
                         @Override
                         public void run() {
 
-                            //Log.e("DATA : ", intentData);
+                            Log.e("DATA : ", intentData);
 
                             if (barcodes.valueAt(0).email != null) {
                                 txtBarcodeValue.removeCallbacks(null);

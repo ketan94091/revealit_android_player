@@ -63,7 +63,9 @@
     <string name="strBiomatricPermissionTwo">revealit TV needs excess for you to authenticate with TouchId or FaceId</string>
     <string name="strDontAllow">Dont allow</string>
     <string name="strAccount">Account</string>
-    <string name="strAdmin">Admin</string>
+    <string name="strAdmin">admin</string>
+    <string name="strAdminCapital">Admin</string>
+    <string name="strTokenBearer">Bearer</string>
     <string name="strCloudBackup">Cloud Backup</string>
     <string name="strPrivacy">Privacy</string>
     <string name="strMobileNumber">Mobile number</string>

@@ -108,7 +108,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         strCopymsg = mSessionManager.getPreference(Constants.KEY_INVITE_MSG);
 
         //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
-        txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
+        txtMsgCopy.setText(strCopymsg.replace("XXXX",strUsername));
 
         //UPDATE UI BASED ON USER STATUS
         updateUI(isUserIsActive);

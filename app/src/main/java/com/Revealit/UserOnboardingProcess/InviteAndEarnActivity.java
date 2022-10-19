@@ -61,7 +61,7 @@ public class InviteAndEarnActivity extends AppCompatActivity implements View.OnC
          strCopymsg = mSessionManager.getPreference(Constants.KEY_INVITE_MSG);
 
          //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
-         txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
+         txtMsgCopy.setText(strCopymsg.replace("XXXX",strUsername));
 
     }
     private void setOnClicks() {

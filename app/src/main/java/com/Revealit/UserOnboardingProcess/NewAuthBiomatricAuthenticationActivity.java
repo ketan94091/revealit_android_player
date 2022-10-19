@@ -5,7 +5,9 @@ import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTI
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.ModelClasses.NewAuthLogin;
+import com.Revealit.ModelClasses.NewAuthLoginCallbackModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
@@ -207,6 +210,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                 okhttp3.Request request = original.newBuilder()
                         .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
                         .method(original.method(), original.body())
                         .build();
 
@@ -227,31 +231,28 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
         JsonObject paramObject = new JsonObject();
-        paramObject.addProperty("revealit_private_key",mSessionManager.getPreference(Constants.KEY_REVEALIT_PRIVATE_KEY));
         paramObject.addProperty("name", mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
 
 
-        Call<NewAuthLogin> call = patchService1.newAuthLogin(paramObject);
+        Call<NewAuthLoginCallbackModel> call = patchService1.newAuthCallback(paramObject);
 
-        call.enqueue(new Callback<NewAuthLogin>() {
+        call.enqueue(new Callback<NewAuthLoginCallbackModel>() {
             @Override
-            public void onResponse(Call<NewAuthLogin> call, Response<NewAuthLogin> response) {
+            public void onResponse(Call<NewAuthLoginCallbackModel> call, Response<NewAuthLoginCallbackModel> response) {
 
                 CommonMethods.printLogE("Response @ callCallBackAPI: ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callCallBackAPI: ", "" + response.code());
 
-                //CLOSE DIALOG
-                CommonMethods.closeDialog();
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+
+                CommonMethods.printLogE("Response @ callCallBackAPI: ", "" + gson.toJson(response.body()));
 
 
                 if (response.isSuccessful() && response.code() == Constants.API_SUCCESS && response.body().getToken() != null) {
 
-                    Gson gson = new GsonBuilder()
-                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-                            .serializeNulls()
-                            .create();
-
-                    CommonMethods.printLogE("Response @ callCallBackAPI: ", "" + gson.toJson(response.body()));
 
                     //SAVE AUTHENTICATION DATA
                     mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN, response.body().getToken());
@@ -259,8 +260,31 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                     mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, true);
                     mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN, true);
 
+                    //UPDATE FLAG IF USER IS ADMIN OR NOT
+                    if(response.body().getRole().equals(getResources().getString(R.string.strAdmin))){
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,true);
+                    }else{
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,false);
+                    }
+
+                    //UPDATE ACTIVE FLAG
+                    if(response.body().getIs_activated().equals("1")){
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
+                    }else{
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
+                    }
+
+                    //SAVE PUBLIC SETTINGS
+                    if(response.body().getPuplic_settings() != null){
+                        mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_VERSION, response.body().getPuplic_settings().getMinumum_acceptable_version());
+                        mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION, response.body().getPuplic_settings().getMinumum_acceptable_api_version());
+                        mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER, response.body().getPuplic_settings().getProfile_update_reminder_period());
+                        mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_BACKUP_REMINDER, response.body().getPuplic_settings().getBackup_update_reminder_period());
+                    }
 
 
+
+                    //MOVE TO HOME SCREEN
                     Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, HomeScreenTabLayout.class);
                     mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,false);
                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -271,13 +295,19 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                 } else {
 
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strUsernotfound));
-                    finish();
+                    displayAlertDialogue(getResources().getString(R.string.strUsernotfound));
+
+
                 }
+
+                //CLOSE DIALOG
+               CommonMethods.closeDialog();
+
+
             }
 
             @Override
-            public void onFailure(Call<NewAuthLogin> call, Throwable t) {
+            public void onFailure(Call<NewAuthLoginCallbackModel> call, Throwable t) {
 
 
                 CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
@@ -288,6 +318,21 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
             }
         });
 
+    }
+
+    private void displayAlertDialogue(String strMessege) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(mContext.getResources().getString(R.string.app_name));
+        builder.setMessage(strMessege);
+        builder.setNegativeButton(mContext.getResources().getString(R.string.strOk), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void callAuthenticationAPI() {
@@ -342,24 +387,47 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                 CommonMethods.printLogE("Response @ callAuthenticationAPI: ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callAuthenticationAPI: ", "" + response.code());
 
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+
+                CommonMethods.printLogE("Response @ callAuthenticationAPI: ", "" + gson.toJson(response.body()));
+
                 //CLOSE DIALOG
                 CommonMethods.closeDialog();
 
 
                 if (response.isSuccessful() && response.code() == Constants.API_SUCCESS && response.body().getToken() != null) {
 
-                    Gson gson = new GsonBuilder()
-                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-                            .serializeNulls()
-                            .create();
-
-                    CommonMethods.printLogE("Response @ Login: ", "" + gson.toJson(response.body()));
 
                     //SAVE AUTHENTICATION DATA
                     mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN, response.body().getToken());
                     mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE, response.body().getToken_type());
                     mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, true);
                     mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN, true);
+
+                    //UPDATE FLAG IF USER IS ADMIN OR NOT
+                    if(response.body().getRole().equals(getResources().getString(R.string.strAdmin))){
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,true);
+                    }else{
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,false);
+                    }
+
+                    //UPDATE ACTIVE FLAG
+                    if(response.body().getIs_activated().equals("1")){
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
+                    }else{
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
+                    }
+
+                    //SAVE PUBLIC SETTINGS
+                    if(response.body().getPuplic_settings() != null){
+                        mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_VERSION, response.body().getPuplic_settings().getMinumum_acceptable_version());
+                        mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION, response.body().getPuplic_settings().getMinumum_acceptable_api_version());
+                        mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER, response.body().getPuplic_settings().getProfile_update_reminder_period());
+                        mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_BACKUP_REMINDER, response.body().getPuplic_settings().getBackup_update_reminder_period());
+                    }
 
 
                     Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, HomeScreenTabLayout.class);
@@ -373,8 +441,8 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                 } else {
 
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strUsernotfound));
-                    finish();
+                    displayAlertDialogue(getResources().getString(R.string.strUsernotfound));
+
                 }
             }
 

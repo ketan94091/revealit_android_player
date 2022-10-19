@@ -8,14 +8,14 @@ public class SubmitProfileModel {
         private String auth_token;
         private String audience;
         private Proton proton;
-        private boolean activated;
+        private String is_activated;
 
-    public boolean isActivated() {
-        return activated;
+    public String isActivated() {
+        return is_activated;
     }
 
-    public void setActivated(boolean activated) {
-        this.activated = activated;
+    public void setActivated(String activated) {
+        this.is_activated = activated;
     }
 
     public Boolean getSuccess() {

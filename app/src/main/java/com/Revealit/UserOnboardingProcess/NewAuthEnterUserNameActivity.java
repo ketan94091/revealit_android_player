@@ -284,21 +284,24 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
 
         mSessionManager.updatePreferenceString(Constants.KEY_USER_DATA, ""+gson.toJson(body));
         mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN ,body.getauth_token());
-        mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE ,"Bearer");
+        mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE ,getResources().getString(R.string.strTokenBearer));
         mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME ,body.getProton().getAccountName());
         mSessionManager.updatePreferenceString(Constants.KEY_PRON_WALLET_DETAILS ,gson.toJson(body.getProton()));
         mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY ,body.getrevealit_private_key());
-       // mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,body.isActivated());
 
         //UPDATE FLAG IF USER IS ADMIN OR NOT
-        if(body.getAudience().equals("Admin")){
+        if(body.getAudience().equals(getResources().getString(R.string.strAdmin))){
             mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,true);
         }else{
             mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,false);
         }
 
-
-        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
+        //UPDATE ACTIVE FLAG
+        if(body.isActivated().equals("1")){
+            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
+        }else{
+            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
+        }
 
         //UPDATE FLAG FOR APPLICATION MODE
         mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);

@@ -1,8 +1,8 @@
 package com.Revealit.ModelClasses;
 
-public class NewAuthLogin {
+public class NewAuthLoginCallbackModel {
 
-    private String token;
+    private String auth_token;
     private String token_type;
     private String status;
     private String is_activated;
@@ -10,11 +10,11 @@ public class NewAuthLogin {
     private PublicSetting public_settings;
 
     public String getToken() {
-        return token;
+        return auth_token;
     }
 
     public void setToken(String auth_token) {
-        this.token = auth_token;
+        this.auth_token = auth_token;
     }
 
     public String getToken_type() {

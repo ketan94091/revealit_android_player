@@ -10,10 +10,11 @@
 
 
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/ralativeMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
        >
 
         <RelativeLayout
@@ -46,8 +47,9 @@
         <RelativeLayout
             android:id="@+id/relativeFeatured"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="match_parent"
             android:layout_below="@+id/relativeTopview"
+            android:layout_weight="5"
             android:layout_marginTop="15dp"
            >
 
@@ -139,6 +141,13 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            >
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycleCategoryList"
             android:layout_width="match_parent"
@@ -146,18 +155,16 @@
             android:layout_below="@+id/linearTrending"
             android:layout_marginTop="15dp" />
 
-
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/txtNoPublishedVideo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/strNoPublishedVideo"
-        android:textColor="@color/colorGrayLight"
-        android:textSize="25dp"
-        android:textStyle="bold"
-        android:visibility="gone"/>
-
+            <TextView
+                android:id="@+id/txtNoPublishedVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/strNoPublishedVideo"
+                android:textColor="@color/colorGrayLight"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:visibility="gone"/>
+    </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>

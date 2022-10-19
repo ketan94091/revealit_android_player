@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -70,7 +70,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     private PlayCategoryListAdapter mPlayCategoryListAdapter;
     private LinearLayoutManager recylerViewLayoutManager;
     private RecyclerView recycleCategoryList;
-    private RelativeLayout ralativeMain;
+    private LinearLayout ralativeMain;
     private boolean isForFirstTime = true;
     String strFeaturedMediaCoverImage ="", strFeaturedMediaTitle = "" , strFeaturedMidiaID = "" ,strFeaturedMidiaURL = "";
     private Activity homeScreenTabLayout;
@@ -139,7 +139,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         txtSubTitleThree = (TextView) mView.findViewById(R.id.txtSubTitleThree);
         txtNoPublishedVideo = (TextView) mView.findViewById(R.id.txtNoPublishedVideo);
 
-        ralativeMain = (RelativeLayout) mView.findViewById(R.id.ralativeMain);
+        ralativeMain = (LinearLayout) mView.findViewById(R.id.ralativeMain);
 
         recycleCategoryList = (RecyclerView) mView.findViewById(R.id.recycleCategoryList);
         recylerViewLayoutManager = new LinearLayoutManager(mActivity);
