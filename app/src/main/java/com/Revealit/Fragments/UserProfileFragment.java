@@ -108,7 +108,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         strCopymsg = mSessionManager.getPreference(Constants.KEY_INVITE_MSG);
 
         //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
-        txtMsgCopy.setText(strCopymsg.replace("XXXX",strUsername));
+        txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
 
         //UPDATE UI BASED ON USER STATUS
         updateUI(isUserIsActive);
@@ -156,7 +156,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             case R.id.txtCopyToClibBoard:
 
                 ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText(getString(R.string.strUsername), strUsername);
+                ClipData clip = ClipData.newPlainText(getString(R.string.strUsername), mSessionManager.getPreference(Constants.KEY_INVITE_COPY_CLIPBOARD).replace("xxxx",strUsername));
                 clipboard.setPrimaryClip(clip);
 
                 //TOAST MSG

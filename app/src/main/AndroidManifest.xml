@@ -71,14 +71,14 @@
         <activity
             android:name=".UserOnboardingProcess.NewAuthMobileAndPromoActivity"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".UserOnboardingProcess.NewAuthGetStartedActivity"-->
-<!--            android:exported="false" />-->
+        <activity
+            android:name=".UserOnboardingProcess.NewAuthGetStartedActivity"
+            android:exported="false" />
         <activity
             android:name=".Activities.GoogleDriveBackupActivity"
             android:exported="false" />
         <activity
-            android:name=".UserOnboardingProcess.NewAuthGetStartedActivity"
+            android:name=".UserOnboardingProcess.NewAuthSplashScreen"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

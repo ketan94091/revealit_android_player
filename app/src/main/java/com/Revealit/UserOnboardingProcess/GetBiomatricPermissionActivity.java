@@ -59,6 +59,10 @@ public class GetBiomatricPermissionActivity extends AppCompatActivity {
         final AlertDialog mAlertDialog = dialogBuilder.create();
         TextView txtDontAllow = (TextView) dialogView.findViewById(R.id.txtDontAllow);
         TextView txtOk = (TextView) dialogView.findViewById(R.id.txtOk);
+        TextView txtDisplayMsg = (TextView) dialogView.findViewById(R.id.txtDisplayMsg);
+
+        //BIOMETRIC PERMISSION MSG
+        txtDisplayMsg.setText(mSessionManager.getPreference(Constants.KEY_INVITE_BIOMETRIC_PERMISSION));
 
         txtDontAllow.setOnClickListener(new View.OnClickListener() {
             @Override

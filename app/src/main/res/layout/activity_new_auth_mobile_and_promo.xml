@@ -7,11 +7,6 @@
     android:background="@color/colorWhite"
     tools:context=".UserOnboardingProcess.NewAuthGetStartedActivity">
 
-    <ScrollView
-        android:id="@+id/scrollView1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -83,6 +78,18 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/new_auth_round_button"
                     android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/quasimoda_semibold"
+                        android:text="+"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="600"
+                        android:textSize="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="2dp"
+                        />
+
 
                     <EditText
                         android:id="@+id/edtCountryCode"
@@ -90,11 +97,14 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:gravity="center_vertical"
-                        android:hint="+61"
                         android:inputType="number"
                         android:maxLength="3"
-                        android:padding="15dp"
+                        android:paddingTop="15dp"
                         android:textFontWeight="600"
+                        android:paddingBottom="15dp"
+                        android:paddingRight="15dp"
+                        android:text="61"
+                        android:hint="61"
                         android:fontFamily="@font/quasimoda_semibold"
                         android:textColor="@color/colorBlack"
                         android:textSize="15dp" />
@@ -270,14 +280,15 @@
                         android:textColor="@color/colorBlack"
                         android:textFontWeight="500"
                         android:textSize="12dp" />
+
                         <ImageView
                             android:id="@+id/imgCurrencyIcon"
                             android:layout_width="10dp"
                             android:layout_height="10dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginTop="5dp"
                             android:layout_gravity="center_vertical"
-                            />
+                            android:foregroundGravity="center_vertical"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="5dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -396,5 +407,4 @@
 
 
         </LinearLayout>
-    </ScrollView>
 </RelativeLayout>

@@ -273,7 +273,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
         }else{
             txtContinueEnabled.setVisibility(View.INVISIBLE);
             txtContinueDisable.setVisibility(View.VISIBLE);
-            txtInvalidOTP.setVisibility(View.VISIBLE);
+            txtInvalidOTP.setVisibility(View.GONE);
             txtVerifiedSuccessully.setVisibility(View.GONE);
 
         }
@@ -500,6 +500,13 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                     txtInvalidOTP.setVisibility(View.GONE);
                     txtVerifiedSuccessully.setVisibility(View.VISIBLE);
                     linearResendCode.setVisibility(View.GONE);
+
+                    edtOne.setTextColor(getColor(R.color.colorBlack));
+                    edtTwo.setTextColor(getColor(R.color.colorBlack));
+                    edtThree.setTextColor(getColor(R.color.colorBlack));
+                    edtFour.setTextColor(getColor(R.color.colorBlack));
+                    edtFive.setTextColor(getColor(R.color.colorBlack));
+                    edtSix.setTextColor(getColor(R.color.colorBlack));
 
 
                     isOtpVarified = true;

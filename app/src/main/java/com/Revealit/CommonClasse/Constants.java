@@ -104,6 +104,7 @@ public class Constants {
     public  static  final String KEY_USERNAME ="userName";
     public  static  final String KEY_IS_USER_ACTIVE ="keyIsUserActive";
     public  static  final String KEY_IS_USER_IS_ADMIN ="keyIsUserIsAdmin";
+    public  static  final String KEY_IS_USER_REGISTRATION_DONE ="keyIsUserRegistrationDone";
     public static final String IS_FIRST_TIME_ACCOUNT_SYNC = "isFirstTimeAccountSync";
     public static final String ACCOUNT_BALANCE = "accountBalance";
     public static final String ACCOUNT_CURRENCY_TYPE = "CurrencyType";
@@ -161,6 +162,8 @@ public class Constants {
   public  static  final  String KEY_NAMEOFINVITE ="keyNameOfInvite";
   public  static  final  String KEY_NEW_AUTH_USERNAME ="keyNewAuthUsername";
   public  static  final  String KEY_INVITE_MSG ="keyInviteMsg";
+  public  static  final  String KEY_INVITE_COPY_CLIPBOARD ="keyInviteCpoyClipBorad";
+  public  static  final  String KEY_INVITE_BIOMETRIC_PERMISSION ="keyInviteBioMetricPermission";
   public  static  final  String KEY_IS_FROM_REGISTRATION_SCREEN ="keyIsFromRegistrationScreen";
   public  static  final  String KEY_IS_GOOGLE_DRIVE_BACKUP_DONE ="keyIsGoogleDriveBackupDone";
   public  static  final  String KEY_USER_DATA ="keyUserData";

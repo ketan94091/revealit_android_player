@@ -25,10 +25,10 @@
                 android:orientation="vertical"
                >
             <TextView
+                android:id="@+id/txtDisplayMsg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="@string/strBiomatricPermissionOne"
                 android:textAlignment="textStart"
                 android:textSize="15dp"
                 android:fontFamily="@font/quasimoda_medium"
@@ -40,7 +40,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="@string/strBiomatricPermissionTwo"
                 android:textSize="12dp"
                 android:textColor="@color/colorBlack"
                 android:fontFamily="@font/quasimoda_medium"

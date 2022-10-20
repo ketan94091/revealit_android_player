@@ -54,7 +54,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
     private String strCountryCode,strMobileNumber,strCampaignId,strRefferalId,strInvitename;
 
 
-    long delay = 4000; // 1 seconds after user stops typing
+    long delay = 3000; // 1 seconds after user stops typing
     long last_text_edit = 0;
     Handler handler = new Handler();
     private Runnable input_username = new Runnable() {
@@ -288,6 +288,8 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME ,body.getProton().getAccountName());
         mSessionManager.updatePreferenceString(Constants.KEY_PRON_WALLET_DETAILS ,gson.toJson(body.getProton()));
         mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY ,body.getrevealit_private_key());
+        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_REGISTRATION_DONE ,true);
+
 
         //UPDATE FLAG IF USER IS ADMIN OR NOT
         if(body.getAudience().equals(getResources().getString(R.string.strAdmin))){
@@ -315,7 +317,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
     private void apiCheckIfUsernameExist(){
 
         //OPEN DIALOGUE
-        CommonMethods.showDialog(mContext);
+        //CommonMethods.showDialog(mContext);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -355,7 +357,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
                 CommonMethods.printLogE("Response @ apiCheckIfUsernameExist: ", "" + response.code());
 
                 //CLOSED DIALOGUE
-                CommonMethods.closeDialog();
+                //CommonMethods.closeDialog();
 
                 if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
 
@@ -369,9 +371,11 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
                     //UPDATE INVITE UI
                     updateInviteUI(response.body().isStatus());
 
-                } else {
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                } else if(response.code() == Constants.API_CODE_NOTFOUND){
+                    CommonMethods.buildDialog(mContext, "Username or Mobile number already registered with revealit Tv Platform!");
 
+                }else{
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
                 }
             }
 
@@ -379,7 +383,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
             public void onFailure(Call<CheckUserNameStatusModel> call, Throwable t) {
 
                 //CLOSED DIALOGUE
-                CommonMethods.closeDialog();
+                //CommonMethods.closeDialog();
 
                 CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 

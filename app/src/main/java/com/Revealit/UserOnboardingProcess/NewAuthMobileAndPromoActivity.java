@@ -363,15 +363,8 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
         JsonObject paramObject = new JsonObject();
         paramObject.addProperty("receiver_number", edtMobilenumber.getText().toString());
-        if(!edtCountryCode.getText().toString().isEmpty()){
-            paramObject.addProperty("country_code", edtCountryCode.getText().toString());
-        }else{
-            //SEND 61 AS A DEFAULT COUNTRY CODE
-            paramObject.addProperty("country_code", strDefalutCountrycode);
-            //SET COUNTRY CODE
-            edtCountryCode.setText(strDefalutCountrycode);
+        paramObject.addProperty("country_code", edtCountryCode.getText().toString());
 
-        }
 
         Call<NewAuthStatusModel> call = patchService1.verifyPhone(paramObject);
 
@@ -381,22 +374,19 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
                 CommonMethods.printLogE("Response @ apiCallToGetOTP: ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ apiCallToGetOTP: ", "" + response.code());
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+
+                CommonMethods.printLogE("Response @ apiCallToGetOTP: ", "" + gson.toJson(response.body()));
 
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
                 if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
 
-                    Gson gson = new GsonBuilder()
-                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-                            .serializeNulls()
-                            .create();
-
-                    CommonMethods.printLogE("Response @ apiCallToGetOTP: ", "" + gson.toJson(response.body()));
-
-
-                    CommonMethods.displayToast(mContext, "Please check your inbox, We sent you an OTP");
-
+                    CommonMethods.displayToast(mContext, getResources().getString(R.string.strOTPinboxMsg));
 
 
                     //MOVE TO NEXT ACTIVITY
@@ -409,8 +399,8 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                     startActivity(mIntent);
 
 
-                } else {
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                } else if(response.code() == Constants.API_CODE_NOTFOUND){
+                    CommonMethods.buildDialog(mContext, "Error while creating record!");
 
                 }
             }
@@ -433,7 +423,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
     private void apiSendInvites(String strCampaignId, boolean isFromCampaignId){
 
         //OPEN DIALOGUE
-        CommonMethods.showDialog(mContext);
+        //CommonMethods.showDialog(mContext);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -478,18 +468,19 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
                 CommonMethods.printLogE("Response @ apiSendInvites: ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ apiSendInvites: ", "" + response.code());
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+
+                CommonMethods.printLogE("Response @ apiSendInvites: ", "" + gson.toJson(response.body()));
+
 
                 //CLOSED DIALOGUE
-                CommonMethods.closeDialog();
+                //CommonMethods.closeDialog();
 
                 if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
 
-                    Gson gson = new GsonBuilder()
-                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-                            .serializeNulls()
-                            .create();
-
-                    CommonMethods.printLogE("Response @ apiSendInvites: ", "" + gson.toJson(response.body()));
 
                  //UPDATE INVITE UI
                     updateInviteUI(response.body(),isFromCampaignId);
@@ -504,7 +495,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             public void onFailure(Call<InviteModel> call, Throwable t) {
 
                 //CLOSED DIALOGUE
-                CommonMethods.closeDialog();
+                //CommonMethods.closeDialog();
 
                 CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 
@@ -519,7 +510,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
         //LOAD COVER IMAGE WITH GLIDE
         Glide.with(mActivity)
-                .load((mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY)+""+mInviteModel.getCurrency_icon_url().substring(1)))
+                .load((mInviteModel.getCurrency_icon_url()))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -543,6 +534,8 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
         //UPDATE PREFERENCE
         mSessionManager.updatePreferenceString(Constants.KEY_INVITE_MSG ,""+mInviteModel.getInvitation_message());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_COPY_CLIPBOARD ,""+mInviteModel.getInvitation_message_clipboard());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_BIOMETRIC_PERMISSION ,""+mInviteModel.getBiometrics_permission_message());
 
 
         if(!isFromCampaignId){

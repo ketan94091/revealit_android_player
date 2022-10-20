@@ -66,6 +66,7 @@
     <string name="strAdmin">admin</string>
     <string name="strAdminCapital">Admin</string>
     <string name="strTokenBearer">Bearer</string>
+    <string name="strOTPinboxMsg">Please check your inbox, We sent you an OTP</string>
     <string name="strCloudBackup">Cloud Backup</string>
     <string name="strPrivacy">Privacy</string>
     <string name="strMobileNumber">Mobile number</string>
@@ -117,9 +118,9 @@
     <string name="strLive">Live</string>
     <string name="strSignUp">Signup</string>
     <string name="strBackUpNow">Backup Now</string>
-    <string name="strCloudOne">revealit TV strongly advises that you back-up your private key in your google cloud account</string>
-    <string name="strCloudTwo">Losing the Private Key will cause you to lose your wallet assets and your access to your revealit TV account</string>
-    <string name="strCloudThree">You can do that simply by pressing the ‘Backup Now’ button below</string>
+    <string name="strCloudOne">revealit TV strongly advises that you backup your Private Key in your google cloud account.</string>
+    <string name="strCloudTwo">Losing the Private Key will cause you to lose your wallet assets and access to your revealit TV account.</string>
+    <string name="strCloudThree">You can do that simply by pressing the ‘Backup Now’ button below.</string>
     <string name="strCloudBackups">Cloud Backup</string>
     <string name="strWelcomeToRevealitTV">Welcome to revealit TV</string>
     <string name="strEnterMobilNumber">Enter your mobile number</string>

@@ -16,6 +16,8 @@ public class InviteModel {
         private Long referral_id;
         private String error;
         private String currency_icon_url;
+        private String invitation_message_clipboard;
+        private String biometrics_permission_message;
 
     public String getCurrency_icon_url() {
         return currency_icon_url;
@@ -119,5 +121,21 @@ public class InviteModel {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public String getInvitation_message_clipboard() {
+        return invitation_message_clipboard;
+    }
+
+    public void setInvitation_message_clipboard(String invitation_message_clipboard) {
+        this.invitation_message_clipboard = invitation_message_clipboard;
+    }
+
+    public String getBiometrics_permission_message() {
+        return biometrics_permission_message;
+    }
+
+    public void setBiometrics_permission_message(String biometrics_permission_message) {
+        this.biometrics_permission_message = biometrics_permission_message;
     }
 }
