@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.Revealit.CommonClasse.CommonMethods;
@@ -32,6 +35,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -48,8 +52,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "NewAuthMobileAndPromoActivity";
-    boolean isMobileAlreadyUsed = false;
-    long delay = 3000; // 1 seconds after user stops typing
+    boolean isMobileAlreadyUsed;
+    long delay = 3000; // 3 seconds after user stops typing
+    long delayForMobile = 2000; // 2 seconds after user stops typing
     long last_text_edit = 0;
     Handler handler = new Handler();
     private Activity mActivity;
@@ -72,7 +77,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
     private Runnable input_finish_checker_mobile = new Runnable() {
         public void run() {
-            if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
+            if (System.currentTimeMillis() > (last_text_edit + delayForMobile - 500)) {
                 isMobileNumberValid();
             }
         }
@@ -151,7 +156,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                                                        //avoid triggering event when text is empty
                                                        if (s.length() > 0) {
                                                            last_text_edit = System.currentTimeMillis();
-                                                           handler.postDelayed(input_finish_checker_mobile, delay);
+                                                           handler.postDelayed(input_finish_checker_mobile, delayForMobile);
                                                        } else {
 
                                                        }
@@ -296,7 +301,6 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
     private boolean isMobileNumberValid() {
 
 
-
          if (edtMobilenumber.getText().toString().isEmpty()) {
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
@@ -310,21 +314,107 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             imgMobileStutusTrue.setVisibility(View.INVISIBLE);
             txtMobileWarnings.setText(getString(R.string.strInvalidMobileFormat));
             return false;
-        } else if (isMobileAlreadyUsed) {
+        }else{
+
+             //CHECK IF USER EXIST IN DATABASE
+             checkIfMobileAlreadyRegistered();
+
+             return true;
+         }
+
+    }
+
+    private void checkIfMobileAlreadyRegistered() {
+
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+        Call<JsonElement> call = patchService1.checkIfPhoneAlreadyRegistered("/api/phonenotexists?receiver_number="+edtMobilenumber.getText().toString()+"&country_code="+edtCountryCode.getText().toString());
+
+        call.enqueue(new Callback<JsonElement>() {
+
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+
+                Log.e("checkIfMobileAlready: ", "" + response.isSuccessful());
+                Log.e("checkIfMobileAlready: ", "" + response.code());
+
+                if (response.isSuccessful() && response.code() == 200) {
+
+                    Gson gson = new GsonBuilder()
+                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                            .serializeNulls()
+                            .create();
+
+                    Log.e("checkIfMobileAlready: ", "" + gson.toJson(response.body()));
+
+                    //CHECK IF MOBILE ALREADY IN USED
+                    //TRUE -> ALREADY REGISTERED
+                    //FALSE -> GOOD TO GO
+                    if(response.body().getAsJsonObject().get("status").getAsBoolean()){
+                       updateMobileErrorUI(true);
+                    }else{
+                        updateMobileErrorUI(false);
+                    }
+
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+                updateMobileErrorUI(false);
+
+            }
+        });
+
+        updateMobileErrorUI(false);
+    }
+
+    private void updateMobileErrorUI(boolean isMobileAlreadyUsed) {
+
+        if (isMobileAlreadyUsed) {
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
             imgMobileStutusTrue.setVisibility(View.INVISIBLE);
+            txtContinueDisable.setVisibility(View.VISIBLE);
+            txtContinueEnabled.setVisibility(View.GONE);
             txtMobileWarnings.setText(getString(R.string.strMobileAlreadyUsed));
-            return false;
+
         } else {
             linearMobileWarnings.setVisibility(View.INVISIBLE);
             imgMobileStutusFalse.setVisibility(View.INVISIBLE);
             imgMobileStutusTrue.setVisibility(View.VISIBLE);
             txtContinueDisable.setVisibility(View.GONE);
             txtContinueEnabled.setVisibility(View.VISIBLE);
-            return true;
-        }
 
+        }
 
     }
 
@@ -550,6 +640,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             imgPromoStatus.setVisibility(View.INVISIBLE);
             imgPromoStatusFalse.setVisibility(View.VISIBLE);
             txtPromoWarnings.setText(""+mInviteModel.getError());
+
 
         }else {
 

@@ -173,6 +173,10 @@ public interface UpdateAllAPI {
     @POST(Constants.API_NEW_AUTH_CALLBACK)
     Call<NewAuthLoginCallbackModel> newAuthCallback(@Body JsonObject body);
 
+    //GET USER DETAILS
+    @GET()
+    Call<JsonElement> checkIfPhoneAlreadyRegistered(@Url String url);
+
 }
 
 

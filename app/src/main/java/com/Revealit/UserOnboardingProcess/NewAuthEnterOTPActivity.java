@@ -508,32 +508,15 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                     edtFive.setTextColor(getColor(R.color.colorBlack));
                     edtSix.setTextColor(getColor(R.color.colorBlack));
 
-
                     isOtpVarified = true;
 
                     //HIDE KEY BOARD
                     CommonMethods.hideKeyboard(mActivity);
 
 
-                } else {
+                }else {
 
-                    txtContinueEnabled.setVisibility(View.INVISIBLE);
-                    txtContinueDisable.setVisibility(View.VISIBLE);
-                    txtInvalidOTP.setVisibility(View.VISIBLE);
-                    txtVerifiedSuccessully.setVisibility(View.GONE);
-                    linearResendCode.setVisibility(View.VISIBLE);
-
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strOTPwrong));
-
-                    isOtpVarified = false;
-
-                    edtOne.setTextColor(getColor(R.color.colorCuratorRedError));
-                    edtTwo.setTextColor(getColor(R.color.colorCuratorRedError));
-                    edtThree.setTextColor(getColor(R.color.colorCuratorRedError));
-                    edtFour.setTextColor(getColor(R.color.colorCuratorRedError));
-                    edtFive.setTextColor(getColor(R.color.colorCuratorRedError));
-                    edtSix.setTextColor(getColor(R.color.colorCuratorRedError));
-
+                    updateUIforWrongOTP(response.body().getMessage());
                 }
             }
 
@@ -551,6 +534,27 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
             }
         });
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void updateUIforWrongOTP(String strErrorMsg) {
+
+        txtContinueEnabled.setVisibility(View.INVISIBLE);
+        txtContinueDisable.setVisibility(View.VISIBLE);
+        txtInvalidOTP.setVisibility(View.VISIBLE);
+        txtVerifiedSuccessully.setVisibility(View.GONE);
+        linearResendCode.setVisibility(View.VISIBLE);
+
+        CommonMethods.buildDialog(mContext, strErrorMsg);
+
+        isOtpVarified = false;
+
+        edtOne.setTextColor(getColor(R.color.colorCuratorRedError));
+        edtTwo.setTextColor(getColor(R.color.colorCuratorRedError));
+        edtThree.setTextColor(getColor(R.color.colorCuratorRedError));
+        edtFour.setTextColor(getColor(R.color.colorCuratorRedError));
+        edtFive.setTextColor(getColor(R.color.colorCuratorRedError));
+        edtSix.setTextColor(getColor(R.color.colorCuratorRedError));
     }
 
 }
