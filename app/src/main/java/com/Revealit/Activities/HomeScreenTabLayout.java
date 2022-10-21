@@ -28,7 +28,7 @@ import java.util.ArrayList;
 
 public class HomeScreenTabLayout extends AppCompatActivity {
 
-   public static CustomViewPager viewPager;
+    public static CustomViewPager viewPager;
     public static TabLayout tabLayout;
     ArrayList<Fragment> fragments;
     Toolbar toolbar;
@@ -37,7 +37,7 @@ public class HomeScreenTabLayout extends AppCompatActivity {
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
     private boolean isUserIsActive,isFromRegistrationScreen;
-    public static View viewBottom;
+    public static View viewBottomLine;
 
 
     @Override
@@ -66,7 +66,7 @@ public class HomeScreenTabLayout extends AppCompatActivity {
         viewPager = (CustomViewPager) findViewById(R.id.pager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        viewBottom=(View)findViewById(R.id.viewBottom);
+        viewBottomLine=(View)findViewById(R.id.viewBottomLine);
 
         //GET INTENT DATA
         isFromRegistrationScreen = getIntent().getBooleanExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN, false);
@@ -272,9 +272,9 @@ public class HomeScreenTabLayout extends AppCompatActivity {
 
     private void changeBottomViewColor() {
         if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
-            viewBottom.setBackgroundColor(getResources().getColor(R.color.colorNewAppGreen));
+            viewBottomLine.setBackgroundColor(getResources().getColor(R.color.colorNewAppGreen));
         }else{
-            viewBottom.setBackgroundColor(getResources().getColor(R.color.colorBlue));
+            viewBottomLine.setBackgroundColor(getResources().getColor(R.color.colorBlue));
         }
 
     }

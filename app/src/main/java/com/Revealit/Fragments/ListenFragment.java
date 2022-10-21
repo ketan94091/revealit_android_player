@@ -90,7 +90,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     private ArrayList<CategoryWisePlayListModel.DataBean> mCategoryWisePlayListModel = new ArrayList<>();
     private ArrayList<Long> mLongRevealTime = new ArrayList<>();
     private Activity homeScreenTabLayout;
-    private LinearLayout linearWaveBackground;
+    private LinearLayout linearWavingBackground;
 
     private static String[] PERMISSIONS = {
             Manifest.permission.ACCESS_NETWORK_STATE,
@@ -162,7 +162,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         rippleBackground = (RippleBackground) mView.findViewById(R.id.content);
 
-        linearWaveBackground =(LinearLayout)mView.findViewById(R.id.linearWaveBackground);
+        linearWavingBackground =(LinearLayout)mView.findViewById(R.id.linearWavingBackground);
 
         recycleRevealList = (RecyclerView) mView.findViewById(R.id.recycleRevealList);
         recylerViewLayoutManager = new LinearLayoutManager(mActivity);
@@ -262,7 +262,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
                         //START ANIMATION
                         rippleBackground.startRippleAnimation();
-                        linearWaveBackground.setVisibility(View.VISIBLE);
+                        linearWavingBackground.setVisibility(View.VISIBLE);
                         txtReveal.setVisibility(View.INVISIBLE);
 
 
@@ -282,7 +282,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
                                 //START ANIMATION
                                 rippleBackground.stopRippleAnimation();
-                                linearWaveBackground.setVisibility(View.GONE);
+                                linearWavingBackground.setVisibility(View.GONE);
                                 txtReveal.setVisibility(View.VISIBLE);
 
 
@@ -302,7 +302,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
             //START RIPPLE ANIMATION
             rippleBackground.startRippleAnimation();
-            linearWaveBackground.setVisibility(View.VISIBLE);
+            linearWavingBackground.setVisibility(View.VISIBLE);
             txtReveal.setVisibility(View.INVISIBLE);
 
             //CREATE FILE PATH WHERE WE WILL STORE RECORDERD AUDIO FOR IDENTIFY
@@ -363,7 +363,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
                     //STOP RIPPLE ANIMATION
                     rippleBackground.stopRippleAnimation();
-                    linearWaveBackground.setVisibility(View.GONE);
+                    linearWavingBackground.setVisibility(View.GONE);
                     txtReveal.setVisibility(View.VISIBLE);
 
                     //MAKE IMAGE CLICKBLE TRUE
@@ -496,7 +496,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                 CommonMethods.printLogE("Response @ getVideoDetails: ", "" + response.code());
 
 
-                if (response.isSuccessful() && response.code() == Constants.API_ELEMENT_CREATED) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_201) {
 
 
                     callGetRevealitVideoHistory();
@@ -571,7 +571,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
 
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                     //CLEAR TABLE AND INSERT NEW DATA
                     mDatabaseHelper.clearRevealitHistoryListTable();

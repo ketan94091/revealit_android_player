@@ -239,7 +239,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -251,7 +251,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
 
 
 
-                }else if(response.code() == Constants.API_CODE_NOTFOUND){
+                }else if(response.code() == Constants.API_CODE_404){
                     CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 
                 } else {
@@ -359,7 +359,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
                 //CLOSED DIALOGUE
                 //CommonMethods.closeDialog();
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -371,7 +371,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
                     //UPDATE INVITE UI
                     updateInviteUI(response.body().isStatus());
 
-                } else if(response.code() == Constants.API_CODE_NOTFOUND){
+                } else if(response.code() == Constants.API_CODE_404){
                     CommonMethods.buildDialog(mContext, "Username or Mobile number already registered with revealit Tv Platform!");
 
                 }else{

@@ -52,30 +52,38 @@
         tools:node="merge">
         <activity
             android:name=".UserOnboardingProcess.GoogleCloudBackupActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UserOnboardingProcess.GetBiomatricPermissionActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UserOnboardingProcess.InviteAndEarnActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Activities.CloudBackupActivity"
             android:exported="false" />
         <activity
             android:name=".UserOnboardingProcess.NewAuthEnterUserNameActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UserOnboardingProcess.NewAuthEnterOTPActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UserOnboardingProcess.NewAuthMobileAndPromoActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UserOnboardingProcess.NewAuthGetStartedActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Activities.GoogleDriveBackupActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UserOnboardingProcess.NewAuthSplashScreen"
@@ -127,7 +135,8 @@
         -->
         <activity
             android:name=".Activities.GettingStartedActivity"
-            android:screenOrientation="portrait" /><activity
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".UserOnboardingProcess.NewAuthBiomatricAuthenticationActivity"
             android:screenOrientation="portrait" />
         <activity

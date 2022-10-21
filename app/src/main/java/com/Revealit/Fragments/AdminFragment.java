@@ -151,7 +151,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
                     mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
                     mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorNewAppGreen));
 
-                    mHomeScreenTabLayout.viewBottom.setBackgroundColor(getResources().getColor(R.color.colorNewAppGreen));
+                    mHomeScreenTabLayout.viewBottomLine.setBackgroundColor(getResources().getColor(R.color.colorNewAppGreen));
 
                     txtSimulation.setTextColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
                     txtLive.setTextColor(getResources().getColor(R.color.colorBlack));
@@ -168,7 +168,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
                     mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_IN);
                     mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorBlue));
 
-                    mHomeScreenTabLayout.viewBottom.setBackgroundColor(getResources().getColor(R.color.colorBlue));
+                    mHomeScreenTabLayout.viewBottomLine.setBackgroundColor(getResources().getColor(R.color.colorBlue));
 
                     txtSimulation.setTextColor(getResources().getColor(R.color.colorBlack));
                     txtLive.setTextColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
@@ -344,7 +344,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
                 CommonMethods.closeDialog();
 
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS && response.body().getToken() != null) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200 && response.body().getToken() != null) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)

@@ -251,7 +251,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                 CommonMethods.printLogE("Response @ callCallBackAPI: ", "" + gson.toJson(response.body()));
 
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS && response.body().getToken() != null) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200 && response.body().getToken() != null) {
 
 
                     //SAVE AUTHENTICATION DATA
@@ -398,7 +398,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                 CommonMethods.closeDialog();
 
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS && response.body().getToken() != null) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200 && response.body().getToken() != null) {
 
 
                     //SAVE AUTHENTICATION DATA

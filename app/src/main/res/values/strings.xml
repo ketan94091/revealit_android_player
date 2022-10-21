@@ -95,6 +95,9 @@
     <string name="strEnterPassword">Please enter password!</string>
     <string name="strUsernamePasswordWrong">Your email or password is incorrect.</string>
     <string name="strSomethingWentWrong">Something went wrong please try again.</string>
+    <string name="strApiCallFailure">Api call failure</string>
+    <string name="strApproved">approved</string>
+    <string name="strInternalServerError">Status code 500. Internal server error.</string>
     <string name="strPhoneIsAlreadyInUsed">This phone number is already registered</string>
     <string name="title_activity_home_navigationbar">MainActivity</string>
     <string name="title_home">Home</string>
@@ -178,6 +181,8 @@
     <string name="strThankYouForEnrolingPlatform">Thank you for enrolling on our platform.</string>
     <string name="strErrorInBckup">Error encountered! Please try after some times</string>
     <string name="strBckupSuccessfully">Google drive backup successfully!</string>
+    <string name="strStatusCode404Error">Api status code 404, not found!</string>
+    <string name="strStatusCode400Error">Error! Api status code 400</string>
 
 
     <string name="strBeta">Beta</string>

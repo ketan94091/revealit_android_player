@@ -153,7 +153,7 @@ public class NewAuthActivity extends AppCompatActivity implements View.OnClickLi
 
                 if (checkValidationForOTP()) {
 
-                    apiCallVerifyOTPMobile();
+                    //apiCallVerifyOTPMobile();
                 }
 
                 break;
@@ -299,92 +299,92 @@ public class NewAuthActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    private void apiCallVerifyOTPMobile() {
-
-        //OPEN DIALOGUE
-        CommonMethods.showDialog(mContext);
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                okhttp3.Request original = chain.request();
-
-                okhttp3.Request request = original.newBuilder()
-                        .header("Content-Type", "application/json")
-                        .method(original.method(), original.body())
-                        .build();
-
-                return chain.proceed(request);
-            }
-        });
-
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-
-        final OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://testing1.revealit.io/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
-                .build();
-
-        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
-        JsonObject paramObject = new JsonObject();
-        paramObject.addProperty("receiver_number", edtPhoneNumber.getText().toString());
-        paramObject.addProperty("code", edtVerifyOTP.getText().toString());
-
-        Call<NewAuthStatusModel> call = patchService1.verifyOTPPhone(paramObject);
-
-        call.enqueue(new Callback<NewAuthStatusModel>() {
-            @Override
-            public void onResponse(Call<NewAuthStatusModel> call, Response<NewAuthStatusModel> response) {
-
-                CommonMethods.printLogE("Response @ apiCallVerifyOTPMobile: ", "" + response.isSuccessful());
-                CommonMethods.printLogE("Response @ apiCallVerifyOTPMobile: ", "" + response.code());
-
-                //CLOSED DIALOGUE
-                CommonMethods.closeDialog();
-
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
-
-                    Gson gson = new GsonBuilder()
-                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-                            .serializeNulls()
-                            .create();
-
-                    CommonMethods.printLogE("Response @ apiCallVerifyOTPMobile: ", "" + gson.toJson(response.body()));
-
-
-                    CommonMethods.displayToast(mContext, response.body().getStatus());
-
-                    isOtpVarified = true;
-
-
-                } else {
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
-
-                    isOtpVarified = false;
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<NewAuthStatusModel> call, Throwable t) {
-
-                isOtpVarified = false;
-
-                //CLOSED DIALOGUE
-                CommonMethods.closeDialog();
-
-                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
-
-
-            }
-        });
-
-    }
+//    private void apiCallVerifyOTPMobile() {
+//
+//        //OPEN DIALOGUE
+//        CommonMethods.showDialog(mContext);
+//
+//        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+//        httpClient.addInterceptor(new Interceptor() {
+//            @Override
+//            public okhttp3.Response intercept(Chain chain) throws IOException {
+//                okhttp3.Request original = chain.request();
+//
+//                okhttp3.Request request = original.newBuilder()
+//                        .header("Content-Type", "application/json")
+//                        .method(original.method(), original.body())
+//                        .build();
+//
+//                return chain.proceed(request);
+//            }
+//        });
+//
+//        Gson gson = new GsonBuilder()
+//                .setLenient()
+//                .create();
+//
+//        final OkHttpClient client = httpClient.build();
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("https://testing1.revealit.io/")
+//                .addConverterFactory(GsonConverterFactory.create(gson))
+//                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+//                .build();
+//
+//        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+//        JsonObject paramObject = new JsonObject();
+//        paramObject.addProperty("receiver_number", edtPhoneNumber.getText().toString());
+//        paramObject.addProperty("code", edtVerifyOTP.getText().toString());
+//
+//        Call<NewAuthStatusModel> call = patchService1.verifyOTPPhone(paramObject);
+//
+//        call.enqueue(new Callback<NewAuthStatusModel>() {
+//            @Override
+//            public void onResponse(Call<NewAuthStatusModel> call, Response<NewAuthStatusModel> response) {
+//
+//                CommonMethods.printLogE("Response @ apiCallVerifyOTPMobile: ", "" + response.isSuccessful());
+//                CommonMethods.printLogE("Response @ apiCallVerifyOTPMobile: ", "" + response.code());
+//
+//                //CLOSED DIALOGUE
+//                CommonMethods.closeDialog();
+//
+//                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+//
+//                    Gson gson = new GsonBuilder()
+//                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+//                            .serializeNulls()
+//                            .create();
+//
+//                    CommonMethods.printLogE("Response @ apiCallVerifyOTPMobile: ", "" + gson.toJson(response.body()));
+//
+//
+//                    CommonMethods.displayToast(mContext, response.body().getStatus());
+//
+//                    isOtpVarified = true;
+//
+//
+//                } else {
+//                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+//
+//                    isOtpVarified = false;
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<NewAuthStatusModel> call, Throwable t) {
+//
+//                isOtpVarified = false;
+//
+//                //CLOSED DIALOGUE
+//                CommonMethods.closeDialog();
+//
+//                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+//
+//
+//            }
+//        });
+//
+//    }
 
     private void apiCallToGetOTP() {
 
@@ -433,7 +433,7 @@ public class NewAuthActivity extends AppCompatActivity implements View.OnClickLi
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -517,7 +517,7 @@ public class NewAuthActivity extends AppCompatActivity implements View.OnClickLi
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -611,7 +611,7 @@ public class NewAuthActivity extends AppCompatActivity implements View.OnClickLi
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)

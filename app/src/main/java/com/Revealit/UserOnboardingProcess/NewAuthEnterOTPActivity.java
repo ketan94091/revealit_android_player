@@ -399,7 +399,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -476,6 +476,10 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onResponse(Call<NewAuthStatusModel> call, Response<NewAuthStatusModel> response) {
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
 
                 CommonMethods.printLogE("Response @ apiCallVerifyOTPMobile: ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ apiCallVerifyOTPMobile: ", "" + response.code());
@@ -484,40 +488,58 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
-                if (response.code() == 200 && response.body().getStatus().toString().contains("approved")) {
 
-                    Gson gson = new GsonBuilder()
-                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-                            .serializeNulls()
-                            .create();
+                switch (response.code()){
+                    case Constants.API_CODE_200:
+
+                        if(response.body().getStatus().toString().contains(getResources().getString(R.string.strApproved))){
+
+                            //TOAST SEND OTP MSG
+                            CommonMethods.displayToast(mContext, response.body().getStatus());
+
+                            txtContinueEnabled.setVisibility(View.VISIBLE);
+                            txtContinueDisable.setVisibility(View.INVISIBLE);
+                            txtInvalidOTP.setVisibility(View.GONE);
+                            txtVerifiedSuccessully.setVisibility(View.VISIBLE);
+                            linearResendCode.setVisibility(View.GONE);
+
+                            edtOne.setTextColor(getColor(R.color.colorBlack));
+                            edtTwo.setTextColor(getColor(R.color.colorBlack));
+                            edtThree.setTextColor(getColor(R.color.colorBlack));
+                            edtFour.setTextColor(getColor(R.color.colorBlack));
+                            edtFive.setTextColor(getColor(R.color.colorBlack));
+                            edtSix.setTextColor(getColor(R.color.colorBlack));
+
+                            //UPDATE FLAG
+                            isOtpVarified = true;
+
+                            //HIDE KEY BOARD
+                            CommonMethods.hideKeyboard(mActivity);
+                        }else{
+                            CommonMethods.buildDialog(mContext, ""+response.body().getMessage());
+                        }
 
 
+                        break;
 
-                    CommonMethods.displayToast(mContext, response.body().getStatus());
+                    case Constants.API_CODE_404:
 
-                    txtContinueEnabled.setVisibility(View.VISIBLE);
-                    txtContinueDisable.setVisibility(View.INVISIBLE);
-                    txtInvalidOTP.setVisibility(View.GONE);
-                    txtVerifiedSuccessully.setVisibility(View.VISIBLE);
-                    linearResendCode.setVisibility(View.GONE);
+                        CommonMethods.buildDialog(mContext, getResources().getString(R.string.strStatusCode404Error));
 
-                    edtOne.setTextColor(getColor(R.color.colorBlack));
-                    edtTwo.setTextColor(getColor(R.color.colorBlack));
-                    edtThree.setTextColor(getColor(R.color.colorBlack));
-                    edtFour.setTextColor(getColor(R.color.colorBlack));
-                    edtFive.setTextColor(getColor(R.color.colorBlack));
-                    edtSix.setTextColor(getColor(R.color.colorBlack));
+                        break;
 
-                    isOtpVarified = true;
+                    case Constants.API_CODE_400:
 
-                    //HIDE KEY BOARD
-                    CommonMethods.hideKeyboard(mActivity);
+                        CommonMethods.buildDialog(mContext, getResources().getString(R.string.strStatusCode400Error));
 
+                        break;
+                    case Constants.API_CODE_500:
 
-                }else {
+                        CommonMethods.buildDialog(mContext, getResources().getString(R.string.strInternalServerError));
 
-                    updateUIforWrongOTP(response.body().getMessage());
+                        break;
                 }
+
             }
 
             @Override

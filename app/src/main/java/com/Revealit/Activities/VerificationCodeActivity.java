@@ -320,7 +320,7 @@ public class VerificationCodeActivity extends AppCompatActivity implements View.
                     //CLOSED DIALOGUE
                     CommonMethods.closeDialog();
 
-                    if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                    if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                         Gson gson = new GsonBuilder()
                                 .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)

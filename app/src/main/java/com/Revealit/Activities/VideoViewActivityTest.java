@@ -562,7 +562,7 @@ public class VideoViewActivityTest extends AppCompatActivity implements View.OnC
                 CommonMethods.printLogE("Response @ callLocationApi : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callLocationApi : ", "" + response.code());
 
-                if (response.code() == Constants.API_SUCCESS) {
+                if (response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -584,7 +584,7 @@ public class VideoViewActivityTest extends AppCompatActivity implements View.OnC
                     locationData = response.body().getData();
 
 
-                } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
+                } else if (response.code() == Constants.API_CODE_401) {
 
                     Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
                     mActivity.startActivity(mLoginIntent);

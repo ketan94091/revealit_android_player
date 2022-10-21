@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -254,7 +253,7 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
                     CommonMethods.printLogE("Response @ callGetItesmsList: ", "" + response.code());
 
 
-                    if (response.code() == Constants.API_SUCCESS) {
+                    if (response.code() == Constants.API_CODE_200) {
 
                         Gson gson = new GsonBuilder()
                                 .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -284,7 +283,7 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
 
 
 
-                    } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
+                    } else if (response.code() == Constants.API_CODE_401) {
 
                         progressLoadData.setVisibility(View.GONE);
                         mDialogeForItems.dismiss();

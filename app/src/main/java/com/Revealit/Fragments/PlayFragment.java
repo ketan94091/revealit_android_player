@@ -257,7 +257,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                // Log.e("JSON RESPONSE ",  ""+response.body());
 
 
-                if (response.code() == Constants.API_SUCCESS) {
+                if (response.code() == Constants.API_CODE_200) {
 
                     //DELETE ALL TABLE AND INSERT NEW DATA ONLY
                     mDatabaseHelper.clearAllTables();
@@ -401,7 +401,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                     //BIND UI
                     updateUI(response.body().getAsJsonObject().get("data").getAsJsonArray());
 
-                } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
+                } else if (response.code() == Constants.API_CODE_401) {
 
                     //CLOSE DIALOG
                     CommonMethods.closeDialog();

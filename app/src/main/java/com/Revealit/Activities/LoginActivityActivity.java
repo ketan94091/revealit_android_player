@@ -233,7 +233,7 @@ public class LoginActivityActivity extends AppCompatActivity implements View.OnC
                 CommonMethods.closeDialog();
 
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -560,7 +560,7 @@ public class LoginActivityActivity extends AppCompatActivity implements View.OnC
                 CommonMethods.printLogE("Response @ getUserDetails: ", "" + response.body().first_name);
 
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                     //SAVE DATA
                     mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME ,response.body().getProton_account_name());

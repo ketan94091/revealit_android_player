@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.Revealit.Activities.WebViewScreen;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -154,12 +155,9 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                                                    @Override
                                                    public void afterTextChanged(final Editable s) {
                                                        //avoid triggering event when text is empty
-                                                       if (s.length() > 0) {
-                                                           last_text_edit = System.currentTimeMillis();
-                                                           handler.postDelayed(input_finish_checker_mobile, delayForMobile);
-                                                       } else {
+                                                       last_text_edit = System.currentTimeMillis();
+                                                       handler.postDelayed(input_finish_checker_mobile, delayForMobile);
 
-                                                       }
                                                    }
                                                }
 
@@ -182,12 +180,9 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                                                   @Override
                                                   public void afterTextChanged(final Editable s) {
                                                       //avoid triggering event when text is empty
-                                                      if (s.length() > 0) {
-                                                          last_text_edit = System.currentTimeMillis();
-                                                          handler.postDelayed(input_finish_checker, delay);
-                                                      } else {
+                                                      last_text_edit = System.currentTimeMillis();
+                                                      handler.postDelayed(input_finish_checker, delay);
 
-                                                      }
                                                   }
                                               }
 
@@ -209,6 +204,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                                                    @Override
                                                    public void afterTextChanged(final Editable s) {
                                                        //avoid triggering event when text is empty
+
                                                        if (s.length() > 0) {
                                                            last_text_edit = System.currentTimeMillis();
                                                            handler.postDelayed(input_promo, delay);
@@ -241,7 +237,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
                 break;
             case R.id.imgCancel:
-               finish();
+                finish();
                 break;
             case R.id.txtContinueEnabled:
 
@@ -252,6 +248,10 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
             case R.id.linearPrivacyPolicy:
 
+                Intent mIntent = new Intent(mActivity, WebViewScreen.class);
+                mIntent.putExtra(Constants.RESEARCH_URL, Constants.PRIVACY_POLICY_URL);
+                mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "Privacy Policy");
+                startActivity(mIntent);
 
                 break;
 
@@ -278,6 +278,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
             imgMobileStutusTrue.setVisibility(View.INVISIBLE);
+            disbaledContinueButton();
             txtMobileWarnings.setText(getString(R.string.strErrorCountryCodeEmpty));
             return false;
 
@@ -285,14 +286,13 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
             imgMobileStutusTrue.setVisibility(View.INVISIBLE);
+            disbaledContinueButton();
             txtMobileWarnings.setText(getString(R.string.strErrorCountryCodeValid));
             return false;
 
         }else{
-            linearMobileWarnings.setVisibility(View.INVISIBLE);
-            imgMobileStutusFalse.setVisibility(View.INVISIBLE);
-            imgMobileStutusTrue.setVisibility(View.INVISIBLE);
-            txtMobileWarnings.setText("");
+            edtMobilenumber.requestFocus();
+            isMobileNumberValid();
             return true;
         }
     }
@@ -301,10 +301,27 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
     private boolean isMobileNumberValid() {
 
 
-         if (edtMobilenumber.getText().toString().isEmpty()) {
+       if(edtCountryCode.getText().toString().isEmpty()) {
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
             imgMobileStutusTrue.setVisibility(View.INVISIBLE);
+           disbaledContinueButton();
+            txtMobileWarnings.setText(getString(R.string.strErrorCountryCodeEmpty));
+            return false;
+
+        } else if (edtCountryCode.getText().toString().length() < 2) {
+            linearMobileWarnings.setVisibility(View.VISIBLE);
+            imgMobileStutusFalse.setVisibility(View.VISIBLE);
+            imgMobileStutusTrue.setVisibility(View.INVISIBLE);
+           disbaledContinueButton();
+            txtMobileWarnings.setText(getString(R.string.strErrorCountryCodeValid));
+            return false;
+
+        }else if (edtMobilenumber.getText().toString().isEmpty()) {
+            linearMobileWarnings.setVisibility(View.VISIBLE);
+            imgMobileStutusFalse.setVisibility(View.VISIBLE);
+            imgMobileStutusTrue.setVisibility(View.INVISIBLE);
+            disbaledContinueButton();
             txtMobileWarnings.setText(getString(R.string.strErrorMobileNumberEmpty));
             return false;
 
@@ -312,12 +329,18 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
             imgMobileStutusTrue.setVisibility(View.INVISIBLE);
+            disbaledContinueButton();
             txtMobileWarnings.setText(getString(R.string.strInvalidMobileFormat));
             return false;
         }else{
 
              //CHECK IF USER EXIST IN DATABASE
-             checkIfMobileAlreadyRegistered();
+            if(edtPromo.getText().length() < 2){
+                checkIfMobileAlreadyRegistered();
+            }else{
+                isCountryCodeValid();
+            }
+
 
              return true;
          }
@@ -354,7 +377,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                 .build();
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
-        Call<JsonElement> call = patchService1.checkIfPhoneAlreadyRegistered("/api/phonenotexists?receiver_number="+edtMobilenumber.getText().toString()+"&country_code="+edtCountryCode.getText().toString());
+        Call<JsonElement> call = patchService1.checkIfPhoneAlreadyRegistered(Constants.API_NEW_AUTH_CHECK_MOBILENUMBER+"?receiver_number="+edtMobilenumber.getText().toString()+"&country_code="+edtCountryCode.getText().toString());
 
         call.enqueue(new Callback<JsonElement>() {
 
@@ -375,12 +398,12 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                     Log.e("checkIfMobileAlready: ", "" + gson.toJson(response.body()));
 
                     //CHECK IF MOBILE ALREADY IN USED
-                    //TRUE -> ALREADY REGISTERED
-                    //FALSE -> GOOD TO GO
+                    //FALSE -> ALREADY REGISTERED
+                    //TRUE -> GOOD TO GO
                     if(response.body().getAsJsonObject().get("status").getAsBoolean()){
-                       updateMobileErrorUI(true);
+                       updateMobileErrorUI(false);
                     }else{
-                        updateMobileErrorUI(false);
+                        updateMobileErrorUI(true);
                     }
 
                 }
@@ -403,19 +426,25 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
             imgMobileStutusTrue.setVisibility(View.INVISIBLE);
-            txtContinueDisable.setVisibility(View.VISIBLE);
-            txtContinueEnabled.setVisibility(View.GONE);
+            disbaledContinueButton();
             txtMobileWarnings.setText(getString(R.string.strMobileAlreadyUsed));
 
         } else {
             linearMobileWarnings.setVisibility(View.INVISIBLE);
             imgMobileStutusFalse.setVisibility(View.INVISIBLE);
             imgMobileStutusTrue.setVisibility(View.VISIBLE);
-            txtContinueDisable.setVisibility(View.GONE);
-            txtContinueEnabled.setVisibility(View.VISIBLE);
+            enabledContinueButton();
 
         }
 
+    }
+    private void disbaledContinueButton(){
+        txtContinueDisable.setVisibility(View.VISIBLE);
+        txtContinueEnabled.setVisibility(View.GONE);
+    }
+    private void enabledContinueButton(){
+        txtContinueDisable.setVisibility(View.GONE);
+        txtContinueEnabled.setVisibility(View.VISIBLE);
     }
 
     private void apiSendOTPtoMobile(){
@@ -474,25 +503,27 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                switch (response.code()){
+                    case Constants.API_CODE_200:
 
-                    CommonMethods.displayToast(mContext, getResources().getString(R.string.strOTPinboxMsg));
+                        CommonMethods.displayToast(mContext, getResources().getString(R.string.strOTPinboxMsg));
 
+                        //MOVE TO NEXT ACTIVITY
+                        Intent mIntent = new Intent(NewAuthMobileAndPromoActivity.this, NewAuthEnterOTPActivity.class);
+                        mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,edtMobilenumber.getText().toString());
+                        mIntent.putExtra(Constants.KEY_COUNTRY_CODE ,edtCountryCode.getText().toString());
+                        mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
+                        mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
+                        mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,edtPromo.getText().toString());
+                        startActivity(mIntent);
 
-                    //MOVE TO NEXT ACTIVITY
-                    Intent mIntent = new Intent(NewAuthMobileAndPromoActivity.this, NewAuthEnterOTPActivity.class);
-                    mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,edtMobilenumber.getText().toString());
-                    mIntent.putExtra(Constants.KEY_COUNTRY_CODE ,edtCountryCode.getText().toString());
-                    mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
-                    mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
-                    mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,edtPromo.getText().toString());
-                    startActivity(mIntent);
+                        break;
 
-
-                } else if(response.code() == Constants.API_CODE_NOTFOUND){
-                    CommonMethods.buildDialog(mContext, "Error while creating record!");
-
+                    case Constants.API_CODE_404:
+                        CommonMethods.buildDialog(mContext, "[HTTP 400] Unable to create record: Invalid parameter `To`: +"+edtCountryCode.getText().toString()+edtMobilenumber.getText().toString());
+                        break;
                 }
+
             }
 
             @Override
@@ -501,7 +532,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
-                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strApiCallFailure));
 
 
             }
@@ -569,16 +600,21 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                 //CLOSED DIALOGUE
                 //CommonMethods.closeDialog();
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                switch (response.code()){
+                    case Constants.API_CODE_200:
 
+                        //UPDATE INVITE UI
+                        updateInviteUI(response.body(),isFromCampaignId);
 
-                 //UPDATE INVITE UI
-                    updateInviteUI(response.body(),isFromCampaignId);
+                        break;
 
-                } else {
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                    case Constants.API_CODE_404:
 
+                        CommonMethods.buildDialog(mContext, getResources().getString(R.string.strStatusCode404Error));
+
+                        break;
                 }
+
             }
 
             @Override
@@ -587,7 +623,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                 //CLOSED DIALOGUE
                 //CommonMethods.closeDialog();
 
-                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strApiCallFailure));
 
 
             }

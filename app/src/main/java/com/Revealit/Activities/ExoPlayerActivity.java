@@ -744,7 +744,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 CommonMethods.printLogE("Response @ callLocationApi : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callLocationApi : ", "" + response.code());
 
-                if (response.code() == Constants.API_SUCCESS) {
+                if (response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -761,7 +761,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     displayCoordinates(response.body().getData(), 1, 0);
 
 
-                } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
+                } else if (response.code() == Constants.API_CODE_401) {
 
                     Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
                     mActivity.startActivity(mLoginIntent);
@@ -1787,7 +1787,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 CommonMethods.printLogE("Response @ callGetInfluencerData : ", "" + response.code());
 
 
-                if (response.code() == Constants.API_SUCCESS) {
+                if (response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -1800,7 +1800,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     updateInfluencerUI(dialogView, response.body(), mAlertDialog);
 
 
-                } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
+                } else if (response.code() == Constants.API_CODE_401) {
 
                     progressLoadData.setVisibility(View.GONE);
                     mAlertDialog.dismiss();
@@ -1879,7 +1879,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 CommonMethods.printLogE("Response @ callGetRecipeData : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callGetRecipeData : ", "" + response.code());
 
-                if (response.code() == Constants.API_SUCCESS) {
+                if (response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -1892,7 +1892,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     updateRecipeDialoge(dialogView, response.body().getData(), mAlertDialog);
 
 
-                } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
+                } else if (response.code() == Constants.API_CODE_401) {
 
                     progressLoadData.setVisibility(View.GONE);
                     mAlertDialog.dismiss();
@@ -1970,7 +1970,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 CommonMethods.printLogE("Response @ callCheckIfInfluencersAvailable : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callCheckIfInfluencersAvailable : ", "" + response.code());
 
-                if (response.code() == Constants.API_SUCCESS && response.body().getData() != null) {
+                if (response.code() == Constants.API_CODE_200 && response.body().getData() != null) {
 
                     //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
                     imgInfluencer.setVisibility(View.VISIBLE);
@@ -2041,7 +2041,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 CommonMethods.printLogE("Response @ callCheckIfRecipeAvailable : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callCheckIfRecipeAvailable : ", "" + response.code());
 
-                if (response.code() == Constants.API_SUCCESS && response.body().getData() != null) {
+                if (response.code() == Constants.API_CODE_200 && response.body().getData() != null) {
 
                     //SET RECIPE ICON IF RECIPE IS AVAILABLE THEN DISPLAY ELSE GONE
                     imgRecipe.setVisibility(View.VISIBLE);
@@ -2254,7 +2254,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                 CommonMethods.printLogE("Response @ callUploadRewardData: ", "" + response.code());
 
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                 }
             }

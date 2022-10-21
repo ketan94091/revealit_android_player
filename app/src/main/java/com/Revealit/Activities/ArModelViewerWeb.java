@@ -239,7 +239,7 @@ public class ArModelViewerWeb extends AppCompatActivity implements View.OnClickL
                 CommonMethods.printLogE("Response @ callGetMultiColorGLBs: ", "" + response.code());
 
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                     if (response.body().getData().size() != 0) {
 

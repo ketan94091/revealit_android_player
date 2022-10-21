@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -330,7 +329,7 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
                 CommonMethods.printLogE("Response @ callRemoveVideo: ", "" + response.code());
 
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                     CommonMethods.printLogE("Response @ callRemoveVideo: ", "Video removed");
                     mRemoveListenHistory.removeListenHistory(true);

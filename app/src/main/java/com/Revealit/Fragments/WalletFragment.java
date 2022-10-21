@@ -286,7 +286,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                     mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
                     mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorNewAppGreen));
 
-                    mHomeScreenTabLayout.viewBottom.setBackgroundColor(getResources().getColor(R.color.colorNewAppGreen));
+                    mHomeScreenTabLayout.viewBottomLine.setBackgroundColor(getResources().getColor(R.color.colorNewAppGreen));
                 }else{
                     //CLEAR DUMMY DATA
                     mDatabaseHelper.clearSimulationHistoryDataTable();
@@ -299,7 +299,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                     mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
                     mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorBlueBottomBar));
 
-                    mHomeScreenTabLayout.viewBottom.setBackgroundColor(getResources().getColor(R.color.colorBlueBottomBar));
+                    mHomeScreenTabLayout.viewBottomLine.setBackgroundColor(getResources().getColor(R.color.colorBlueBottomBar));
                 }
 
 
@@ -519,7 +519,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 CommonMethods.closeDialog();
 
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -657,7 +657,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 CommonMethods.printLogE("Response @ callWalletDetails : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callWalletDetails : ", "" + response.code());
 
-                if (response.isSuccessful() && response.code() == Constants.API_SUCCESS) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -833,7 +833,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 CommonMethods.printLogE("Response @ callRewardHistory : ", "" + response.code());
 
 
-                if (response.code() == Constants.API_SUCCESS) {
+                if (response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -862,7 +862,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                     updateRewardHistoryUI();
 
 
-                } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
+                } else if (response.code() == Constants.API_CODE_401) {
 
                     Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
                     mActivity.startActivity(mLoginIntent);
@@ -937,7 +937,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 CommonMethods.printLogE("Response @ apiGetMoreRewardData : ", "" + response.code());
 
 
-                if (response.code() == Constants.API_SUCCESS) {
+                if (response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -961,7 +961,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                     }
 
 
-                } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
+                } else if (response.code() == Constants.API_CODE_401) {
 
                     Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
                     mActivity.startActivity(mLoginIntent);

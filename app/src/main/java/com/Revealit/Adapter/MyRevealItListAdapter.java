@@ -271,7 +271,7 @@ public class MyRevealItListAdapter extends RecyclerView.Adapter<MyRevealItListAd
                 CommonMethods.printLogE("Response @ callGetItesmsList: ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callGetItesmsList: ", "" + response.code());
 
-                if (response.code() == Constants.API_SUCCESS) {
+                if (response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -284,7 +284,7 @@ public class MyRevealItListAdapter extends RecyclerView.Adapter<MyRevealItListAd
                     updateItemsDialogue(dialogView, response.body().getData(), mDialogeForItems);
 
 
-                } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
+                } else if (response.code() == Constants.API_CODE_401) {
 
                     progressLoadData.setVisibility(View.GONE);
                     mDialogeForItems.dismiss();

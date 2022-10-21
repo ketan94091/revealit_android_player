@@ -75,6 +75,7 @@ public class Constants {
   public static final String API_NEW_AUTH_SUBMIT_PROFILE = "api/submitprofile";
   public static final String API_NEW_AUTH_LOGIN = "api/authlogin";
   public static final String API_NEW_AUTH_CALLBACK = "/api/callback";
+  public static final String API_NEW_AUTH_CHECK_MOBILENUMBER = "/api/phonenotexists";
 
 
     public static final String AUTH_TOKEN = "access_token";
@@ -140,6 +141,7 @@ public class Constants {
   public  static  final  String AUDIO_CAN_NOT_RECORD ="Oops!! Something went wrong please try after sometimes.";
   public  static  final  String AUDIO_NOT_RECOGNISED ="Video not recognized!";
   public  static  final  String MICROPHONE_CANNOT_WORK ="Can not record audio!";
+  public  static  final  String PRIVACY_POLICY_URL ="https://curator.revealit.io/terms";
 
   //ACR CLOUD SDK
   public  static  final  String KEY_ACCESS_KEY ="access_key";
@@ -193,10 +195,12 @@ public class Constants {
 
 
     //CONSTANT DATA WHICH SHOULD NOT CHANGE
-    public static final int API_SUCCESS = 200;
-  public static final int API_ELEMENT_CREATED = 201;
-    public static final int API_USER_UNAUTHORIZED = 401;
-    public static final int API_CODE_NOTFOUND = 404;
+    public static final int API_CODE_200 = 200;
+    public static final int API_CODE_201 = 201;
+    public static final int API_CODE_401 = 401;
+    public static final int API_CODE_404 = 404;
+    public static final int API_CODE_500 = 500;
+    public static final int API_CODE_400 = 400;
 
 
 }

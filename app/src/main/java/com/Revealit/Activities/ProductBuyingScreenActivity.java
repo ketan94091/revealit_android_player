@@ -189,7 +189,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
                 CommonMethods.printLogE("Response @ callGetProductData : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callGetProductData : ", "" + response.code());
 
-                if (response.code() == Constants.API_SUCCESS) {
+                if (response.code() == Constants.API_CODE_200) {
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -207,7 +207,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
                     updateProductDetailsUI(dialogView, response.body().getData(), mAlertDialog);
 
 
-                } else if (response.code() == Constants.API_USER_UNAUTHORIZED) {
+                } else if (response.code() == Constants.API_CODE_401) {
 
                     progressLoadData.setVisibility(View.GONE);
                     mAlertDialog.dismiss();
