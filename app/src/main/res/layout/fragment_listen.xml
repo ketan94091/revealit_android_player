@@ -66,7 +66,7 @@
 
 
                 <LinearLayout
-                    android:id="@+id/linearWaveBackground"
+                    android:id="@+id/linearWavingBackground"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -74,7 +74,6 @@
                     android:visibility="gone">
 
                     <ImageView
-                        android:id="@+id/imgWaveUp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -82,7 +81,6 @@
                         android:src="@mipmap/wave_up" />
 
                     <ImageView
-                        android:id="@+id/imgWaveDown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
