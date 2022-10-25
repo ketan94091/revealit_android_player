@@ -1,6 +1,7 @@
 package com.Revealit.Fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import com.Revealit.ModelClasses.NewAuthLogin;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -57,6 +60,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
     private RelativeLayout relativeBack;
     private String strServerName, strMobileKey,strRegistrationKey;
     private int intEnvironmetID;
+    private AlertDialog mAlertDialog = null;
 
 
     public AdminFragment(HomeScreenTabLayout homeScreenTabLayout) {
@@ -371,11 +375,12 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
 
                 } else {
 
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strUsernotfound));
+                    //DISPLAY USER NOT FOUND FOR THIS SELECTION DIALOGUE
+                    displayAlertForUserNotFound();
 
                     //UPDATE DEFAULT ENVIRONMENT IF THERE IS NO USER AVAILABLE TO THE SELECTED ENVIRONMENT
                     //IN CASE ERROR SET DEFAULT ENVIRONMENT
-                    updateEnvironment(strMobileKey,strRegistrationKey, strServerName,intEnvironmetID);
+                    //updateEnvironment(strMobileKey,strRegistrationKey, strServerName,intEnvironmetID);
 
                 }
             }
@@ -395,6 +400,63 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
 
             }
         });
+
+    }
+
+    private void displayAlertForUserNotFound() {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mActivity);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.alert_dialog_user_not_found_for_selected_silos, null);
+        dialogBuilder.setView(dialogView);
+
+        mAlertDialog = dialogBuilder.create();
+        mAlertDialog.setCancelable(true);
+
+        //SET CURRENT PROGRESSBAR
+        ImageView imgCloseDailoge = (ImageView) dialogView.findViewById(R.id.imgCloseDailoge);
+
+
+        TextView txtContent = (TextView)dialogView. findViewById(R.id.txtContent);
+        TextView txtContinue = (TextView)dialogView. findViewById(R.id.txtContinue);
+        TextView txtCancel = (TextView)dialogView. findViewById(R.id.txtCancel);
+
+        //SET DYNAMIC CONTENT
+        txtContent.setText("The current user "+mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME)+" does not have an account at "+strServerName);
+
+        imgCloseDailoge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.cancel();
+
+            }
+        });
+        txtContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //UPDATE LOGIN FLAG
+                mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN,false);
+                mSessionManager.updatePreferenceBoolean(Constants.KEY_ISFROM_LOGOUT,true);
+
+                // SEND USER TO LANDING SCREEN
+                Intent mIntent = new Intent(mActivity, NewAuthGetStartedActivity.class);
+                mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(mIntent);
+                mActivity.finish();
+
+            }
+        });
+        txtCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAlertDialog.cancel();
+
+            }
+        });
+
+        mAlertDialog.show();
 
     }
 

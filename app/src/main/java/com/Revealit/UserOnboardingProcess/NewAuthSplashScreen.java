@@ -72,15 +72,14 @@ public class NewAuthSplashScreen extends AppCompatActivity {
 
                 //FALSE == APP OPEN FIRST TIME
                 //TRUE  == APP NOT OPEN FIRST TIME
-
                 if (!mSessionManager.getPreferenceBoolean(Constants.IS_APP_OPEN_FIRST_TIME)) {
                     //SAVE TESTING END POINTS
                     //CHANGE API END POINT TO ALPHA T CURATOR
-                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR);
-                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR);
-                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strIntegration));
+                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_T1_CURATOR);
+                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_T1_CURATOR);
+                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strTesting1));
 
-                    switch (Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR) {
+                    switch (Constants.API_END_POINTS_MOBILE_T1_CURATOR) {
 
                         case Constants.API_END_POINTS_MOBILE_B_CURATOR:
                             mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 1);
@@ -106,6 +105,10 @@ public class NewAuthSplashScreen extends AppCompatActivity {
                 //INTENT
                 //CHECK IF USER IS ALREADY LOGGED IN OR NOT
                 if(mSessionManager.getPreferenceBoolean(Constants.KEY_ISFROM_LOGOUT)){
+
+                    //CLEAR FLAG - IF USER CAME FROM LOGOUT AND THAN UPDATE FLAG
+                    mSessionManager.updatePreferenceBoolean(Constants.KEY_ISFROM_LOGOUT, false);
+
                     Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthBiomatricAuthenticationActivity.class);
                     mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, true);
                     startActivity(mIntent);

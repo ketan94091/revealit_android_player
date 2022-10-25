@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.Revealit.Activities.HomeScreenTabLayout;
+import com.Revealit.BuildConfig;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -108,10 +109,13 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         strCopymsg = mSessionManager.getPreference(Constants.KEY_INVITE_MSG);
 
         //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
-        txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
+        txtMsgCopy.setText(strCopymsg.replace("XXXX",strUsername));
 
         //UPDATE UI BASED ON USER STATUS
         updateUI(isUserIsActive);
+
+        //SET APPLICATION INSTALLED VERSION NAME AND SERVER NAME
+        txtAdmin.setText(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME) +" Server : "+  BuildConfig.VERSION_NAME);
 
 
     }

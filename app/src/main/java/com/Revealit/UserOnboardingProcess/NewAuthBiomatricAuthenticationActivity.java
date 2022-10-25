@@ -170,7 +170,6 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                 }
 
 
-
             }
 
             @Override

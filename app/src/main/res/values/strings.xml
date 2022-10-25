@@ -146,6 +146,7 @@
     <string name="strMobileVerification">Mobile Verification</string>
     <string name="strUsername">Username</string>
     <string name="strVersion">Version</string>
+    <string name="strCurrentAppVersion">Current App Version</string>
     <string name="strMyWallet">My Wallet</string>
     <string name="strAbout">About</string>
     <string name="strReveals">Reveals</string>
@@ -183,6 +184,11 @@
     <string name="strBckupSuccessfully">Google drive backup successfully!</string>
     <string name="strStatusCode404Error">Api status code 404, not found!</string>
     <string name="strStatusCode400Error">Error! Api status code 400</string>
+    <string name="strMinimumAcceptableVersion">minumum_acceptable_version</string>
+    <string name="strMinimumAcceptableApiVersion">minumum_acceptable_api_version</string>
+    <string name="strProfileUpdateReminder">profile_update_reminder_period</string>
+    <string name="strBackUpUpdateReminder">backup_update_reminder_period</string>
+    <string name="strCredentialsIssues">Credential Issue</string>
 
 
     <string name="strBeta">Beta</string>

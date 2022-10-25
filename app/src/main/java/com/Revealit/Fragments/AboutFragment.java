@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.CommonClasse.CommonMethods;
+import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
@@ -31,7 +33,8 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     private HomeScreenTabLayout mHomeScreenTabLayout;
     private OnFragmentInteractionListener mListener;
     private RelativeLayout relativeBack;
-    private TextView txtVersionName;
+    private TextView txtBackUpUpdateReminder,txtProfileUpdateReminder,txtMinimumAcceptableApiVersion,txtMinimumAcceptableVersion,txtVersionName;
+    private LinearLayout linearAdminData;
 
 
     public AboutFragment(HomeScreenTabLayout homeScreenTabLayout) {
@@ -65,13 +68,30 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         mDatabaseHelper.open();
 
         relativeBack =(RelativeLayout)mView.findViewById(R.id.relativeBack);
+        linearAdminData =(LinearLayout)mView.findViewById(R.id.linearAdminData);
 
         txtVersionName=(TextView)mView.findViewById(R.id.txtVersionName);
+        txtMinimumAcceptableVersion=(TextView)mView.findViewById(R.id.txtMinimumAcceptableVersion);
+        txtMinimumAcceptableApiVersion=(TextView)mView.findViewById(R.id.txtMinimumAcceptableApiVersion);
+        txtProfileUpdateReminder=(TextView)mView.findViewById(R.id.txtProfileUpdateReminder);
+        txtBackUpUpdateReminder=(TextView)mView.findViewById(R.id.txtBackUpUpdateReminder);
 
         //SET APP VERSION
-        txtVersionName.setText(getActivity().getString(R.string.strVersion)+" "+ CommonMethods.installedAppVersion(mContext));
+        txtVersionName.setText(getActivity().getString(R.string.strCurrentAppVersion)+" : "+ CommonMethods.installedAppVersion(mContext));
 
+       //CHECK IF USER IS ADMIN
+        if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
 
+        //DISPLAY ONLY FOR ADMIN
+        linearAdminData.setVisibility(View.VISIBLE);
+
+        //SET DATA FROM CALLBACK OR LOGIN API
+            txtMinimumAcceptableVersion.setText(getActivity().getString(R.string.strMinimumAcceptableVersion)+" : "+ mSessionManager.getPreference(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_VERSION));
+            txtMinimumAcceptableApiVersion.setText(getActivity().getString(R.string.strMinimumAcceptableApiVersion)+" : "+ mSessionManager.getPreference(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION));
+            txtProfileUpdateReminder.setText(getActivity().getString(R.string.strProfileUpdateReminder)+" : "+ mSessionManager.getPreferenceInt(Constants.KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER));
+            txtBackUpUpdateReminder.setText(getActivity().getString(R.string.strBackUpUpdateReminder)+" : "+ mSessionManager.getPreferenceInt(Constants.KEY_PUBLIC_SETTING_BACKUP_REMINDER));
+
+     }
     }
     private void setOnClicks() {
         relativeBack.setOnClickListener(this);

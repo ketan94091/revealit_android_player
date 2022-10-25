@@ -110,7 +110,6 @@ public class GettingStartedActivity extends AppCompatActivity implements View.On
 
             case R.id.txtSwappingSilo:
 
-
                 //OPEN END POINT SELECTION DIALOG
                 openEndPointSelectionDialog();
 
