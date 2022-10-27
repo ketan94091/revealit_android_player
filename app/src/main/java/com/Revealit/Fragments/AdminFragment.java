@@ -248,7 +248,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
             public void onClick(View v) {
 
                 //UPDATE ENVIRONMENT
-                updateEnvironment(Constants.API_END_POINTS_MOBILE_T1_CURATOR,Constants.API_END_POINTS_REGISTRATION_T1_CURATOR, mActivity.getResources().getString(R.string.strTesting1),2);
+                updateEnvironment(Constants.API_END_POINTS_MOBILE_T1_CURATOR,Constants.API_END_POINTS_REGISTRATION_T1_CURATOR, mActivity.getResources().getString(R.string.strTesting1),3);
 
 
                 //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
@@ -375,12 +375,10 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
 
                 } else {
 
+
                     //DISPLAY USER NOT FOUND FOR THIS SELECTION DIALOGUE
                     displayAlertForUserNotFound();
 
-                    //UPDATE DEFAULT ENVIRONMENT IF THERE IS NO USER AVAILABLE TO THE SELECTED ENVIRONMENT
-                    //IN CASE ERROR SET DEFAULT ENVIRONMENT
-                    //updateEnvironment(strMobileKey,strRegistrationKey, strServerName,intEnvironmetID);
 
                 }
             }
@@ -428,6 +426,11 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
 
+                //UPDATE DEFAULT ENVIRONMENT IF THERE IS NO USER AVAILABLE TO THE SELECTED ENVIRONMENT
+                //IN CASE ERROR SET DEFAULT ENVIRONMENT
+                updateEnvironment(strMobileKey,strRegistrationKey, strServerName,intEnvironmetID);
+
+
                 mAlertDialog.cancel();
 
             }
@@ -451,6 +454,11 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
         txtCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //UPDATE DEFAULT ENVIRONMENT IF THERE IS NO USER AVAILABLE TO THE SELECTED ENVIRONMENT
+                //IN CASE ERROR SET DEFAULT ENVIRONMENT
+                updateEnvironment(strMobileKey,strRegistrationKey, strServerName,intEnvironmetID);
+
                 mAlertDialog.cancel();
 
             }

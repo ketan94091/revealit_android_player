@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.InsetDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -149,7 +152,7 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
             @Override
             public boolean onLongClick(View v) {
 
-                openItemList(revealitHistoryData.media_id , mListAllTimeStampOffset.get(position).replace(" ",""));
+                openItemList(revealitHistoryData.media_id , mListAllTimeStampOffset.get(position).replace(" ",""),mListAllTimeStamp.get(position).replace(" ",""));
 
                 return true;
             }
@@ -166,19 +169,26 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
         return  mListAllTimeStamp.size();
     }
 
-    private void openItemList(int intMediaId, String strItemId) {
+    private void openItemList(int intMediaId, String strItemId, String strTimeStamp) {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
         LayoutInflater inflater = mActivity.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.alert_dialog_item_list_listenscreen, null);
-        dialogBuilder.setView(dialogView);
+        final View mView = inflater.inflate(R.layout.alert_dialog_item_list_listenscreen, null);
+        dialogBuilder.setView(mView);
+
+
+
 
         mDialogeForItems = dialogBuilder.create();
         mDialogeForItems.setCancelable(true);
+        ColorDrawable back = new ColorDrawable(Color.TRANSPARENT);
+        InsetDrawable inset = new InsetDrawable(back, 40);
+        mDialogeForItems.getWindow().setBackgroundDrawable(inset);
+
 
         //SET CURRENT PROGRESSBAR
-        progressLoadData = (ProgressBar) dialogView.findViewById(R.id.progressLoadData);
-        txtNoPublishedVideo=(TextView)dialogView.findViewById(R.id.txtNoPublishedVideo);
+        progressLoadData = (ProgressBar) mView.findViewById(R.id.progressLoadData);
+        txtNoPublishedVideo=(TextView)mView.findViewById(R.id.txtNoPublishedVideo);
 
         final View decorView = mDialogeForItems.getWindow().getDecorView();
         decorView.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -196,14 +206,14 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
                 });
 
         //GET LIST OF PRODUCTS
-        callGetItesmsList(dialogView, intMediaId, strItemId, mDialogeForItems);
+        callGetItesmsList(mView, intMediaId, strItemId, mDialogeForItems,strTimeStamp);
 
 
         mDialogeForItems.show();
 
     }
 
-    private void callGetItesmsList(View dialogView, int intMediaId, String strItemId, AlertDialog mDialogeForItems) {
+    private void callGetItesmsList(View dialogView, int intMediaId, String strItemId, AlertDialog mDialogeForItems, String strTimeStamp) {
 
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -264,7 +274,7 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
 
                         //UPDATE UI
                         if(response.body().getData().size() != 0){
-                            updateItemsDialogue(dialogView, response.body().getData(), mDialogeForItems);
+                            updateItemsDialogue(dialogView, response.body().getData(), mDialogeForItems , revealitHistoryData.media_title , strTimeStamp);
                         }else {
 
                             //DISMISS DIALOGUE
@@ -313,7 +323,16 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
 
     }
 
-    private void updateItemsDialogue(View dialogView, List<ItemListFromItemIdModel.Data> itemListData, AlertDialog mDialogeForItems) {
+    private void updateItemsDialogue(View dialogView, List<ItemListFromItemIdModel.Data> itemListData, AlertDialog mDialogeForItems, String strMediaTitle, String strTimeStamp) {
+
+
+        //DISPLAY TITLE
+        TextView txtVideTitle =(TextView)dialogView.findViewById(R.id.txtVideoTitle);
+        txtVideTitle.setText(strMediaTitle);
+
+        //DISPLAY TITLE
+        TextView txtTimeStamp =(TextView)dialogView.findViewById(R.id.txtTimeStamp);
+        txtTimeStamp.setText(strTimeStamp);
 
         //CLOSE DIALOGE
         ImageView imgCloseDailoge = (ImageView) dialogView.findViewById(R.id.imgCloseDailoge);

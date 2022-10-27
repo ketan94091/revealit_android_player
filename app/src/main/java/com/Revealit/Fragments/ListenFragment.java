@@ -78,7 +78,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private ImageView imgListen;
+    private ImageView imgScanQRcode,imgListen;
     private TextView txtReveal,txtRevealCount;
     private RecyclerView recycleRevealList;
     private LinearLayoutManager recylerViewLayoutManager;
@@ -156,6 +156,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         mDatabaseHelper.open();
 
         imgListen = (ImageView) mView.findViewById(R.id.imgListen);
+        imgScanQRcode =(ImageView)mView.findViewById(R.id.imgScanQRcode);
+
 
         txtRevealCount = (TextView) mView.findViewById(R.id.txtRevealCount);
         txtReveal = (TextView) mView.findViewById(R.id.txtReveal);
@@ -231,6 +233,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     private void setOnClicks() {
 
         imgListen.setOnClickListener(this);
+        imgScanQRcode.setOnClickListener(this);
     }
 
 
@@ -240,6 +243,11 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     public void onClick(View mView) {
 
         switch (mView.getId()) {
+            case R.id.imgScanQRcode:
+
+                CommonMethods.displayToast(mContext,"Work in progress!");
+
+                break;
 
             case R.id.imgListen:
 

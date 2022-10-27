@@ -28,6 +28,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.concurrent.TimeUnit;
@@ -235,29 +237,31 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
                 CommonMethods.printLogE("Response @ apiSubmitProfile: ", "" + response.code());
                 CommonMethods.printLogE("Response @ apiSubmitProfile: ", "" + gson.toJson(response.body()));
 
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+                CommonMethods.printLogE("Response @ apiSubmitProfile: ", "" + gson.toJson(response.body()));
+
 
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
                 if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
-                    Gson gson = new GsonBuilder()
-                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-                            .serializeNulls()
-                            .create();
-
-
                     updateUI(response.body());
 
-
-
-                }else if(response.code() == Constants.API_CODE_404){
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
-
                 } else {
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        CommonMethods.buildDialog(mContext,"Error Code : "+jObjError.getString("error_code") +" "+ jObjError.getString("message"));
+                    } catch (Exception e) {
+                        CommonMethods.buildDialog(mContext,"Error Code : "+e.getMessage());
 
+                    }
                 }
+
+
             }
 
             @Override

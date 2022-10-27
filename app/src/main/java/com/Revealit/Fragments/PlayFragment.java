@@ -65,7 +65,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     private GridLayoutManager mGridLayoutManager;
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private ImageView imgPlay,imgBiteBrandLogo, imgBiteBanner;
+    private ImageView imgScanQRcode,imgPlay,imgBiteBrandLogo, imgBiteBanner;
     private TextView txtNoPublishedVideo, txtSubTitleThree, txtSubTitleTwo, txtSubTitleOne, txtBiteTitle;
     private PlayCategoryListAdapter mPlayCategoryListAdapter;
     private LinearLayoutManager recylerViewLayoutManager;
@@ -132,6 +132,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         imgBiteBanner = (ImageView) mView.findViewById(R.id.imgBiteBanner);
         imgBiteBrandLogo = (ImageView) mView.findViewById(R.id.imgBiteBrandLogo);
         imgPlay = (ImageView) mView.findViewById(R.id.imgPlay);
+        imgScanQRcode =(ImageView)mView.findViewById(R.id.imgScanQRcode);
+
 
         txtBiteTitle = (TextView) mView.findViewById(R.id.txtBiteTitle);
         txtSubTitleOne = (TextView) mView.findViewById(R.id.txtSubTitleOne);
@@ -158,6 +160,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         txtSubTitleTwo.setOnClickListener(this);
         txtSubTitleThree.setOnClickListener(this);
         imgPlay.setOnClickListener(this);
+        imgScanQRcode.setOnClickListener(this);
     }
 
     @Override
@@ -190,6 +193,11 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
                     CommonMethods.displayToast(mContext, getResources().getString(R.string.strNoFeatureVideos));
                 }
+
+                break;
+            case R.id.imgScanQRcode:
+
+                CommonMethods.displayToast(mContext,"Work in progress!");
 
                 break;
 

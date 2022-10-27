@@ -39,6 +39,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.concurrent.TimeUnit;
@@ -503,25 +505,27 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
-                switch (response.code()){
-                    case Constants.API_CODE_200:
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
-                        CommonMethods.displayToast(mContext, getResources().getString(R.string.strOTPinboxMsg));
+                    CommonMethods.displayToast(mContext, getResources().getString(R.string.strOTPinboxMsg));
 
-                        //MOVE TO NEXT ACTIVITY
-                        Intent mIntent = new Intent(NewAuthMobileAndPromoActivity.this, NewAuthEnterOTPActivity.class);
-                        mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,edtMobilenumber.getText().toString());
-                        mIntent.putExtra(Constants.KEY_COUNTRY_CODE ,edtCountryCode.getText().toString());
-                        mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
-                        mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
-                        mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,edtPromo.getText().toString());
-                        startActivity(mIntent);
+                    //MOVE TO NEXT ACTIVITY
+                    Intent mIntent = new Intent(NewAuthMobileAndPromoActivity.this, NewAuthEnterOTPActivity.class);
+                    mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,edtMobilenumber.getText().toString());
+                    mIntent.putExtra(Constants.KEY_COUNTRY_CODE ,edtCountryCode.getText().toString());
+                    mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
+                    mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
+                    mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,edtPromo.getText().toString());
+                    startActivity(mIntent);
 
-                        break;
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        CommonMethods.buildDialog(mContext,"Error : "+ jObjError.getString("message"));
+                    } catch (Exception e) {
+                        CommonMethods.buildDialog(mContext,"Error : "+e.getMessage());
 
-                    case Constants.API_CODE_404:
-                        CommonMethods.buildDialog(mContext, "[HTTP 400] Unable to create record: Invalid parameter `To`: +"+edtCountryCode.getText().toString()+edtMobilenumber.getText().toString());
-                        break;
+                    }
                 }
 
             }

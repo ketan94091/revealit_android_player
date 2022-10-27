@@ -21,20 +21,22 @@
             android:orientation="horizontal">
 
             <RelativeLayout
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_gravity="center_vertical">
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/img_with_rounded_corner">
 
-            <ImageView
-                android:id="@+id/imgItem"
-                android:layout_width="70dp"
-                android:layout_height="70dp" />
+                <ImageView
+                    android:id="@+id/imgItem"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerInParent="true"/>
 
-            <ProgressBar
-                android:id="@+id/progressImgLoad"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerInParent="true"/>
+                <ProgressBar
+                    android:id="@+id/progressImgLoad"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true" />
 
             </RelativeLayout>
 
@@ -50,16 +52,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="textStart"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="@color/colorRevealitGrey"
                     android:textSize="14dp"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:textFontWeight="700"
                     android:paddingBottom="2dp"/>
 
 
             </LinearLayout>
         </LinearLayout>
-
-
 
 
     </RelativeLayout>
@@ -69,7 +70,8 @@
         android:layout_height=".5dp"
         android:background="@color/colorGrayLight"
         android:layout_below="@+id/relatativeMain"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
+        android:visibility="invisible"
         />
 
 

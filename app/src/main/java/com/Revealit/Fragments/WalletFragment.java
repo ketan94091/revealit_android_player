@@ -79,7 +79,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recycleRewardHistory;
     private LinearLayoutManager recylerViewLayoutManager;
     private RewardSummeryListAdapter2 mRewardSummeryListAdapter2;
-    private ImageView imgSponsor, imgRefresh;
+    private ImageView imgScanQRcode,imgSponsor, imgRefresh;
     private TextView txtVersionName, txtCurrencyType, txtAmount, txtAccountName;
     private RelativeLayout relativeAccountDetails;
     private LinearLayout linearCurrency, linearRewardHistory;
@@ -132,6 +132,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         imgRefresh = (ImageView) mView.findViewById(R.id.imgRefresh);
         imgSponsor = (ImageView) mView.findViewById(R.id.imgSponsor);
+        imgScanQRcode =(ImageView)mView.findViewById(R.id.imgScanQRcode);
+
 
         txtAccountName = (TextView) mView.findViewById(R.id.txtAccountName);
         txtAmount = (TextView) mView.findViewById(R.id.txtAmount);
@@ -187,6 +189,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         imgRefresh.setOnClickListener(this);
         linearCurrency.setOnClickListener(this);
         txtVersionName.setOnClickListener(this);
+        imgScanQRcode.setOnClickListener(this);
     }
 
 
@@ -194,6 +197,11 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     public void onClick(View mView) {
 
         switch (mView.getId()) {
+            case R.id.imgScanQRcode:
+
+                CommonMethods.displayToast(mContext,"Work in progress!");
+
+                break;
 
             case R.id.imgRefresh:
 

@@ -2,13 +2,24 @@ package com.Revealit.ModelClasses;
 
 public class SubmitProfileModel {
 
-        private Boolean status;
+        private String status;
         private String revealit_private_key;
         private String role;
         private String auth_token;
         private String audience;
         private Proton proton;
         private String is_activated;
+        private String message;
+        private int error_code;
+
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String isActivated() {
         return is_activated;
@@ -18,13 +29,6 @@ public class SubmitProfileModel {
         this.is_activated = activated;
     }
 
-    public Boolean getSuccess() {
-            return status;
-        }
-
-        public void setSuccess(Boolean success) {
-            this.status = success;
-        }
 
         public String getrevealit_private_key() {
             return revealit_private_key;
@@ -66,6 +70,21 @@ public class SubmitProfileModel {
             this.proton = proton;
         }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public int getError_code() {
+        return error_code;
+    }
+
+    public void setError_code(int error_code) {
+        this.error_code = error_code;
+    }
 
     public class Proton {
 

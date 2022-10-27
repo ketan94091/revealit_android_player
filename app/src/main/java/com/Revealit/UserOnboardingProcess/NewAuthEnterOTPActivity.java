@@ -27,6 +27,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.concurrent.TimeUnit;
@@ -489,55 +491,43 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                 CommonMethods.closeDialog();
 
 
-                switch (response.code()){
-                    case Constants.API_CODE_200:
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
-                        if(response.body().getStatus().toString().contains(getResources().getString(R.string.strApproved))){
+                    if(response.body().getStatus().toString().contains(getResources().getString(R.string.strApproved))){
 
-                            //TOAST SEND OTP MSG
-                            CommonMethods.displayToast(mContext, response.body().getStatus());
+                        //TOAST SEND OTP MSG
+                        CommonMethods.displayToast(mContext, response.body().getStatus());
 
-                            txtContinueEnabled.setVisibility(View.VISIBLE);
-                            txtContinueDisable.setVisibility(View.INVISIBLE);
-                            txtInvalidOTP.setVisibility(View.GONE);
-                            txtVerifiedSuccessully.setVisibility(View.VISIBLE);
-                            linearResendCode.setVisibility(View.GONE);
+                        txtContinueEnabled.setVisibility(View.VISIBLE);
+                        txtContinueDisable.setVisibility(View.INVISIBLE);
+                        txtInvalidOTP.setVisibility(View.GONE);
+                        txtVerifiedSuccessully.setVisibility(View.VISIBLE);
+                        linearResendCode.setVisibility(View.GONE);
 
-                            edtOne.setTextColor(getColor(R.color.colorBlack));
-                            edtTwo.setTextColor(getColor(R.color.colorBlack));
-                            edtThree.setTextColor(getColor(R.color.colorBlack));
-                            edtFour.setTextColor(getColor(R.color.colorBlack));
-                            edtFive.setTextColor(getColor(R.color.colorBlack));
-                            edtSix.setTextColor(getColor(R.color.colorBlack));
+                        edtOne.setTextColor(getColor(R.color.colorBlack));
+                        edtTwo.setTextColor(getColor(R.color.colorBlack));
+                        edtThree.setTextColor(getColor(R.color.colorBlack));
+                        edtFour.setTextColor(getColor(R.color.colorBlack));
+                        edtFive.setTextColor(getColor(R.color.colorBlack));
+                        edtSix.setTextColor(getColor(R.color.colorBlack));
 
-                            //UPDATE FLAG
-                            isOtpVarified = true;
+                        //UPDATE FLAG
+                        isOtpVarified = true;
 
-                            //HIDE KEY BOARD
-                            CommonMethods.hideKeyboard(mActivity);
-                        }else{
-                            CommonMethods.buildDialog(mContext, ""+response.body().getMessage());
-                        }
+                        //HIDE KEY BOARD
+                        CommonMethods.hideKeyboard(mActivity);
+                    }else{
+                        CommonMethods.buildDialog(mContext, ""+response.body().getStatus());
+                    }
 
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        CommonMethods.buildDialog(mContext,"Error : "+ jObjError.getString("message"));
+                    } catch (Exception e) {
+                        CommonMethods.buildDialog(mContext,"Error : "+e.getMessage());
 
-                        break;
-
-                    case Constants.API_CODE_404:
-
-                        CommonMethods.buildDialog(mContext, getResources().getString(R.string.strStatusCode404Error));
-
-                        break;
-
-                    case Constants.API_CODE_400:
-
-                        CommonMethods.buildDialog(mContext, getResources().getString(R.string.strStatusCode400Error));
-
-                        break;
-                    case Constants.API_CODE_500:
-
-                        CommonMethods.buildDialog(mContext, getResources().getString(R.string.strInternalServerError));
-
-                        break;
+                    }
                 }
 
             }

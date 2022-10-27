@@ -252,7 +252,7 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
             public void onClick(View v) {
 
                 //UPDATE ENVIRONMENT
-                updateEnvironment(Constants.API_END_POINTS_MOBILE_T1_CURATOR,Constants.API_END_POINTS_REGISTRATION_T1_CURATOR, mActivity.getResources().getString(R.string.strTesting1),2);
+                updateEnvironment(Constants.API_END_POINTS_MOBILE_T1_CURATOR,Constants.API_END_POINTS_REGISTRATION_T1_CURATOR, mActivity.getResources().getString(R.string.strTesting1),3);
 
 
             }

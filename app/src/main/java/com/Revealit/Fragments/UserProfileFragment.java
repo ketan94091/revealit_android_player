@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -33,12 +34,13 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private Context mContext;
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private View mView, viewBottomDefault, viewAdmin,viewHelp, viewSettings, viewSavedItems, viewAccount;
+    private View mView,  viewAdmin,viewHelp, viewSettings, viewSavedItems, viewAccount;
     private HomeScreenTabLayout mHomeScreenTabLayout;
     private TextView txtUsername, txtAdmin,txtHelp, txtSettings, txtMySavedItems, txtAccount, txtStatusMsg, txtStatus, txtCopyToClibBoard, txtMsgCopy;
     private String strUsername, strCopymsg;
     private boolean isUserIsActive =false;
     private LinearLayout linearAccount,linearSettings,linearSavedItems,linearAdmin,linearHelp;
+    private ImageView imgScanQRcode;
 
     public UserProfileFragment(HomeScreenTabLayout homeScreenTabLayout) {
         this.mHomeScreenTabLayout = homeScreenTabLayout;
@@ -90,7 +92,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         viewSettings = (View) mView.findViewById(R.id.viewSettings);
         viewHelp = (View) mView.findViewById(R.id.viewHelp);
         viewAdmin = (View) mView.findViewById(R.id.viewAdmin);
-        viewBottomDefault = (View) mView.findViewById(R.id.viewBottomDefault);
 
 
         linearAccount=(LinearLayout)mView.findViewById(R.id.linearAccount);
@@ -98,6 +99,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         linearSettings=(LinearLayout)mView.findViewById(R.id.linearSettings);
         linearHelp=(LinearLayout)mView.findViewById(R.id.linearHelp);
         linearAdmin=(LinearLayout)mView.findViewById(R.id.linearAdmin);
+
+        imgScanQRcode =(ImageView)mView.findViewById(R.id.imgScanQRcode);
 
         //GET USER STATUS
         //TRUE = USER IS ACTIVE AND VERIFIED
@@ -109,7 +112,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         strCopymsg = mSessionManager.getPreference(Constants.KEY_INVITE_MSG);
 
         //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
-        txtMsgCopy.setText(strCopymsg.replace("XXXX",strUsername));
+        txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
 
         //UPDATE UI BASED ON USER STATUS
         updateUI(isUserIsActive);
@@ -138,6 +141,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             linearSettings.setOnClickListener(this);
             linearHelp.setOnClickListener(this);
             linearAdmin.setOnClickListener(this);
+            imgScanQRcode.setOnClickListener(this);
         }
 
     }
@@ -188,6 +192,11 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 loadFragments(new AdminFragment(mHomeScreenTabLayout));
 
                 break;
+            case R.id.imgScanQRcode:
+
+                CommonMethods.displayToast(mContext,"Work in progress!");
+
+                break;
         }
 
     }
@@ -220,7 +229,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             viewSettings.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
             viewHelp.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
             viewAdmin.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
-            viewBottomDefault.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
 
             mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorInActiveGrey), PorterDuff.Mode.SRC_IN);
             mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorInActiveGrey), PorterDuff.Mode.SRC_IN);
@@ -251,7 +259,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             viewSettings.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
             viewHelp.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
             viewAdmin.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
-            viewBottomDefault.setBackgroundColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
 
 
         }
