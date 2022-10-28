@@ -56,7 +56,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "NewAuthMobileAndPromoActivity";
     boolean isMobileAlreadyUsed;
-    long delay = 3000; // 3 seconds after user stops typing
+    long delay = 2000; // 2 seconds after user stops typing
     long delayForMobile = 2000; // 2 seconds after user stops typing
     long last_text_edit = 0;
     Handler handler = new Handler();

@@ -121,7 +121,7 @@ public class RecipesScreenActivity extends AppCompatActivity {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(RecipesScreenActivity.this);
         LayoutInflater inflater = getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.alert_dialog_product_purchase, null);
+        final View dialogView = inflater.inflate(R.layout.alert_dialog_product_purchase_new, null);
         dialogBuilder.setView(dialogView);
 
         final AlertDialog mAlertDialog = dialogBuilder.create();

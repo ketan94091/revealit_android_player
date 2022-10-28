@@ -12,6 +12,7 @@
     <string name="strButton">Play Video</string>
     <string name="strARmode">Launch AR mode</string>
     <string name="strLogin">Login</string>
+    <string name="strBack">Back</string>
     <string name="strBackUpLater">Backup Later</string>
     <string name="strAlreadyBackUp">Already Backup</string>
     <string name="strTestNewAuth">Test New Auth</string>
@@ -74,6 +75,7 @@
     <string name="strProductAt">Product at</string>
     <string name="strDelete">Delete</string>
     <string name="strMySavedItems">My Saved Items</string>
+    <string name="strSaved">Saved</string>
     <string name="strSettings">Settings</string>
     <string name="strHelp">Help</string>
     <string name="strFetchingData">Fetching Data....</string>

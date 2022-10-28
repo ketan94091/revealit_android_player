@@ -45,7 +45,9 @@ import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
@@ -85,6 +87,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE};
     private Bitmap savedBitMap;
     private GetProductDetailsModel.Data mProductData;
+    private ImageView imgHeaderViewDialogView;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +112,8 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
         mDatabaseHelper = new DatabaseHelper(mContext);
         mDatabaseHelper.open();
+        
+         imgHeaderViewDialogView = (ImageView)findViewById(R.id.imgHeaderView);
 
         openProductPurchaseDialog(getIntent().getStringExtra("ITEM_ID"));
 
@@ -116,9 +121,9 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
     private void openProductPurchaseDialog(String itemId) {
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ProductBuyingScreenActivity.this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this,android.R.style.Theme_DeviceDefault_NoActionBar_Fullscreen);
         LayoutInflater inflater = getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.alert_dialog_product_purchase, null);
+        final View dialogView = inflater.inflate(R.layout.alert_dialog_product_purchase_new, null);
         dialogBuilder.setView(dialogView);
 
         final AlertDialog mAlertDialog = dialogBuilder.create();
@@ -135,7 +140,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
             @Override
             public void onCancel(DialogInterface dialog) {
 
-                mAlertDialog.dismiss();
+               // mAlertDialog.dismiss();
                 finish();
             }
         });
@@ -242,8 +247,10 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
     private void updateProductDetailsUI(View dialogView, final GetProductDetailsModel.Data data, AlertDialog mAlertDialog) {
 
+
+
         //LOAD HEADER IMAGE
-        ImageView imgHeaderViewDialogView = (ImageView) dialogView.findViewById(R.id.imgHeaderView);
+        
         Glide.with(mActivity)
                 .load(data.getHeader())
                 .listener(new RequestListener<Drawable>() {
@@ -288,9 +295,11 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
 
         //SET SPONSOR LOGO
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions = requestOptions.transforms(new RoundedCorners(25));
         ImageView imgSponsorLogoDialogView = (ImageView) dialogView.findViewById(R.id.imgSponsorLogo);
         Glide.with(mActivity)
-                .load(data.getOffers().getData().get(0).getVendorLogoUrl())
+                .load(data.getOffers().getData().get(0).getVendorLogoUrl()).apply(requestOptions)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -352,8 +361,18 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                mAlertDialog.dismiss();
+               // mAlertDialog.dismiss();
                 finish();
+            }
+        });
+
+        //SAVED ITEM LIST
+        LinearLayout linearSaved = (LinearLayout) dialogView.findViewById(R.id.linearSaved);
+        linearSaved.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+              CommonMethods.displayToast(mContext,"SAVED");
             }
         });
 

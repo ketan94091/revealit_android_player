@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,13 +16,16 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Revealit.Activities.WebViewScreen;
+import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.ModelClasses.GetProductDetailsModel;
 import com.Revealit.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
@@ -53,6 +57,7 @@ public class ProductPurchaseVendorListAdapter extends RecyclerView.Adapter<Produ
         private final TextView txtVendorName,txtDiscountByVendor,txtVendorURL;
         private final RelativeLayout relatativeMain;
         private final ImageView imgVendorLogo;
+        private final LinearLayout linearShare,linarFavorite;
 
 
         public ViewHolder(View mView) {
@@ -64,6 +69,8 @@ public class ProductPurchaseVendorListAdapter extends RecyclerView.Adapter<Produ
             txtVendorURL = (TextView) mView.findViewById(R.id.txtVendorURL);
             relatativeMain = (RelativeLayout) mView.findViewById(R.id.relatativeMain);
             imgVendorLogo = (ImageView)mView.findViewById(R.id.imgVendorLogo);
+            linearShare = (LinearLayout)mView.findViewById(R.id.linearShare);
+            linarFavorite = (LinearLayout)mView.findViewById(R.id.linarFavorite);
 
 
         }
@@ -87,10 +94,12 @@ public class ProductPurchaseVendorListAdapter extends RecyclerView.Adapter<Produ
         holder.txtVendorName.setText(offersArrayList.get(position).getVendorName());
         holder.txtDiscountByVendor.setText(offersArrayList.get(position).getOfferText());
         holder.txtVendorURL.setText(offersArrayList.get(position).getOfferUrl());
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions = requestOptions.transforms(new RoundedCorners(25));
 
         Glide.with(mContext)
                 .load(""+offersArrayList.get(position).getVendorLogoUrl())
-                .placeholder(R.drawable.placeholder)
+                .placeholder(R.drawable.placeholder).apply(requestOptions)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -116,6 +125,24 @@ public class ProductPurchaseVendorListAdapter extends RecyclerView.Adapter<Produ
 
             }
         });
+        holder.linearShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                CommonMethods.displayToast(mContext ,"SHARE CLICKED!");
+
+            }
+        });
+        holder.linarFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                CommonMethods.displayToast(mContext ,"FAVOURITE CLICKED!");
+
+            }
+        });
+
+
 
 
 

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -63,6 +64,7 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
     private ProgressBar progressLoadData;
     private int dialogHight,dialogWidth;
     private TextView txtNoPublishedVideo;
+    private LinearLayout linearHeaderView;
 
 
     public RevealItHistoryTimestampListAdapter(Context mContext, Activity mActivity, RevealitHistoryModel.Data revealitHistoryData) {
@@ -189,6 +191,7 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
         //SET CURRENT PROGRESSBAR
         progressLoadData = (ProgressBar) mView.findViewById(R.id.progressLoadData);
         txtNoPublishedVideo=(TextView)mView.findViewById(R.id.txtNoPublishedVideo);
+        linearHeaderView=(LinearLayout)mView.findViewById(R.id.linearHeaderView);
 
         final View decorView = mDialogeForItems.getWindow().getDecorView();
         decorView.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -358,6 +361,9 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
 
         //HIDE PROGRESS AFTER SETTING ALL DATA
         progressLoadData.setVisibility(View.GONE);
+
+        //VISIBLE HEADER VIEW
+        linearHeaderView.setVisibility(View.VISIBLE);
 
         //DISPLAY TEXT
         if(itemListData.size() == 0)

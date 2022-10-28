@@ -2,17 +2,20 @@ package com.Revealit.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Activities.ProductBuyingScreenActivity;
 import com.Revealit.ModelClasses.ItemListFromItemIdModel;
 import com.Revealit.R;
 import com.bumptech.glide.Glide;
@@ -48,6 +51,7 @@ public class ItemsListForListenScreenAdapter extends RecyclerView.Adapter<ItemsL
         private final TextView txtItemName;
         private final ImageView imgItem;
         private final ProgressBar progressImgLoad;
+        private final RelativeLayout relatativeMain;
 
 
         public ViewHolder(View mView) {
@@ -57,6 +61,7 @@ public class ItemsListForListenScreenAdapter extends RecyclerView.Adapter<ItemsL
             txtItemName = (TextView) mView.findViewById(R.id.txtItemName);
             imgItem = (ImageView)mView.findViewById(R.id.imgItem);
             progressImgLoad =(ProgressBar)mView.findViewById(R.id.progressImgLoad);
+            relatativeMain =(RelativeLayout)mView.findViewById(R.id.relatativeMain);
 
 
         }
@@ -100,6 +105,16 @@ public class ItemsListForListenScreenAdapter extends RecyclerView.Adapter<ItemsL
                             return false;
                         }
                     }).into(holder.imgItem);
+
+            holder.relatativeMain.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent mIntent = new Intent(mActivity, ProductBuyingScreenActivity.class);
+                    mIntent.putExtra("ITEM_ID",""+itemListData.get(position).getProduct_id());
+                    mActivity.startActivity(mIntent);
+                }
+            });
 
 
     }

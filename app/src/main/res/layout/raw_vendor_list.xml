@@ -4,76 +4,141 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/new_auth_round_button"
+    android:layout_marginTop="10dp"
+    >
 
     <RelativeLayout
         android:id="@+id/relatativeMain"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:id="@+id/linearImage"
+                android:layout_width="120dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
                 android:orientation="vertical"
-                android:layout_gravity="center_vertical">
+                android:padding="6dp">
 
                 <ImageView
                     android:id="@+id/imgVendorLogo"
-                    android:layout_width="120dp"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center_horizontal"
-                    />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_vertical"
+                android:layout_toLeftOf="@+id/linearSharing"
+                android:layout_toRightOf="@+id/linearImage"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
 
                 <TextView
                     android:id="@+id/txtVendorName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
+                    android:fontFamily="@font/quasimoda_semibold"
+                    android:maxLength="80"
+                    android:singleLine="true"
                     android:textAlignment="textStart"
-                    android:textColor="@color/colorGrayBottomBar"
-                    android:textSize="12dp"
-                   />
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="600"
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/txtDiscountByVendor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
+                    android:fontFamily="@font/quasimoda_semibold"
+                    android:maxLength="80"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:singleLine="true"
                     android:textAlignment="textStart"
-                    android:textColor="@color/colorGrayBottomBar"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    />
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="600"
+                    android:textSize="14dp" />
+
                 <TextView
                     android:id="@+id/txtVendorURL"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
+                    android:singleLine="true"
                     android:textAlignment="textStart"
-                    android:textColor="@color/colorGrayLight"
-                    android:textSize="12dp"
-                    />
+                    android:textColor="@color/colorNewAppGreen"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearSharing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_centerInParent="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/linearShare"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/circle_white"
+                        android:orientation="vertical"
+                        android:padding="10dp"
+                        android:layout_marginRight="10dp">
+
+                        <ImageView
+                            android:id="@+id/imgShare"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:src="@mipmap/icn_share_grey" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/linarFavorite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/circle_white"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:id="@+id/imgFavourite"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:src="@mipmap/bookmark_grey" />
+                    </LinearLayout>
+
+                </LinearLayout>
 
             </LinearLayout>
 
 
-        </LinearLayout>
+        </RelativeLayout>
 
 
     </RelativeLayout>
