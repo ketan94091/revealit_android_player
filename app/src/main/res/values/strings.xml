@@ -75,6 +75,9 @@
     <string name="strProductAt">Product at</string>
     <string name="strDelete">Delete</string>
     <string name="strMySavedItems">My Saved Items</string>
+    <string name="strDescription">Description</string>
+    <string name="strFeatures">Features</string>
+    <string name="strTechnicalInformation">Technical Information</string>
     <string name="strSaved">Saved</string>
     <string name="strSettings">Settings</string>
     <string name="strHelp">Help</string>
@@ -155,7 +158,7 @@
     <string name="strAbout">About</string>
     <string name="strReveals">Reveals</string>
     <string name="strUser">User</string>
-    <string name="strUsernameCopied">Username Copied</string>
+    <string name="strUsernameCopied">Copied to Clipboard</string>
     <string name="strEarnReward">Earn Rewards</string>
     <string name="strWelcomeToTV">Welcome to revealitTV</string>
     <string name="strSetting">Settings</string>

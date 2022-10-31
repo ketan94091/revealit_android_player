@@ -3,6 +3,7 @@ package com.Revealit.UserOnboardingProcess;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,7 +65,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
     private Context mContext;
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private TextView txtContinueDisable, txtPromoWarnings,txtPromoAmount,txtInviteQuestion,txtContinueEnabled, txtMobileWarnings;
+    private TextView txtContinueDisable, txtTermsOfService,txtPromoWarnings,txtPromoAmount,txtInviteQuestion,txtContinueEnabled, txtMobileWarnings;
     private ImageView imgCurrencyIcon,imgPromoStatusFalse,imgPromoStatus, imgMobileStutusTrue, imgMobileStutusFalse,imgCancel, imgLogo;
     private EditText edtPromo, edtMobilenumber, edtCountryCode;
     private LinearLayout linearPrivacyPolicy, linearPromoWarnings, linearMobileWarnings;
@@ -136,6 +137,10 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         txtInviteQuestion = (TextView) findViewById(R.id.txtInviteQuestion);
         txtPromoAmount = (TextView) findViewById(R.id.txtPromoAmount);
         txtPromoWarnings = (TextView) findViewById(R.id.txtPromoWarnings);
+        txtTermsOfService = (TextView) findViewById(R.id.txtTermsOfService);
+
+        //SET UNDERLINE
+        txtTermsOfService.setPaintFlags(txtTermsOfService.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         //GET CAMPAIGN DATA
         apiSendInvites("",false);
@@ -666,6 +671,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         mSessionManager.updatePreferenceString(Constants.KEY_INVITE_MSG ,""+mInviteModel.getInvitation_message());
         mSessionManager.updatePreferenceString(Constants.KEY_INVITE_COPY_CLIPBOARD ,""+mInviteModel.getInvitation_message_clipboard());
         mSessionManager.updatePreferenceString(Constants.KEY_INVITE_BIOMETRIC_PERMISSION ,""+mInviteModel.getBiometrics_permission_message());
+        mSessionManager.updatePreferenceString(Constants.KEY_CALL_FOR_INVITE_MSG ,""+mInviteModel.getCall_for_action_message());
 
 
         if(!isFromCampaignId){

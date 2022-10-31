@@ -444,10 +444,77 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
 
         LinearLayout linarFavoriteDialogView = (LinearLayout) dialogView.findViewById(R.id.linarFavorite);
+        linarFavoriteDialogView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                CommonMethods.displayToast(mContext ,"Favourite clicked!!");
+            }
+        });
+
 
 
         RelativeLayout relativeContentDialogView = (RelativeLayout) dialogView.findViewById(R.id.relativeContent);
         relativeContentDialogView.setVisibility(View.VISIBLE);
+
+
+        //SET PRODUCT FEATURES AND TECHNICAL SPECIFICATIONS
+        TextView txtProductDescript = (TextView)dialogView.findViewById(R.id.txtProductDescript);
+        TextView txtProductFeatures = (TextView)dialogView.findViewById(R.id.txtProductFeatures);
+        TextView txtProductTechnical = (TextView)dialogView.findViewById(R.id.txtProductTechnical);
+        TextView txtProductDescriptionTitle = (TextView)dialogView.findViewById(R.id.txtProductDescriptionTitle);
+        TextView txtProductFeaturesTitle = (TextView)dialogView.findViewById(R.id.txtProductFeaturesTitle);
+        TextView txtProductTechnicalTitle = (TextView)dialogView.findViewById(R.id.txtProductTechnicalTitle);
+
+        txtProductDescript.setText(data.getLongDesc());
+        txtProductFeatures.setText(data.getFeatures());
+        txtProductTechnical.setText(data.getManufacturerProductId());
+
+        //LINEAR DESCRIPTION
+        LinearLayout linearDescription = (LinearLayout) dialogView.findViewById(R.id.linearProductDescription);
+        linearDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(txtProductDescript.getVisibility() == View.VISIBLE){
+                    txtProductDescript.setVisibility(View.GONE);
+                }else{
+                    txtProductDescript.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+
+        //LINEAR PRODUCT FEATURES
+        LinearLayout linearProductFeatures = (LinearLayout) dialogView.findViewById(R.id.linearProductFeatures);
+        linearProductFeatures.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if(txtProductFeatures.getVisibility() == View.VISIBLE){
+                    txtProductFeatures.setVisibility(View.GONE);
+                }else{
+                    txtProductFeatures.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+
+        //LINEAR TECHNICAL SPECIFICATIONS
+        LinearLayout linearProductTechnical = (LinearLayout) dialogView.findViewById(R.id.linearProductTechnical);
+        linearProductTechnical.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if(txtProductTechnical.getVisibility() == View.VISIBLE){
+                    txtProductTechnical.setVisibility(View.GONE);
+                }else{
+                    txtProductTechnical.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         //HIDE PROGRESS AFTER SETTING ALL DATA
         progressLoadData.setVisibility(View.GONE);

@@ -168,6 +168,7 @@ public class Constants {
   public  static  final  String KEY_INVITE_BIOMETRIC_PERMISSION ="keyInviteBioMetricPermission";
   public  static  final  String KEY_IS_FROM_REGISTRATION_SCREEN ="keyIsFromRegistrationScreen";
   public  static  final  String KEY_IS_GOOGLE_DRIVE_BACKUP_DONE ="keyIsGoogleDriveBackupDone";
+  public  static  final  String KEY_CALL_FOR_INVITE_MSG ="keyCallForInviteMsg";
   public  static  final  String KEY_USER_DATA ="keyUserData";
   public  static  final  String GOOGLE_DRIVE_FOLDER_NAME="Revealit.tv.io";
   public  static  final  String KEY_PRON_WALLET_DETAILS="keyProtonWalletDetails";

@@ -17,7 +17,7 @@
                 android:id="@+id/relativeContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
+
                 >
 
                 <LinearLayout
@@ -258,6 +258,126 @@
                             android:orientation="horizontal" />
 
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearProductSpecifications"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+
+                        <LinearLayout
+                            android:id="@+id/linearProductDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical"
+                            android:padding="15dp"
+                            android:background="@drawable/new_auth_round_button"
+                            >
+
+                            <TextView
+                                android:id="@+id/txtProductDescriptionTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="17dp"
+                                android:text="@string/strDescription"
+                                android:fontFamily="@font/quasimoda_bold"
+                                android:drawableRight="@mipmap/icn_expand"
+                                android:textFontWeight="700"/>
+                            <TextView
+                                android:id="@+id/txtProductDescript"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15dp"
+                                android:visibility="gone"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/quasimoda"
+                                android:textFontWeight="700"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linearProductFeatures"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical"
+                            android:padding="15dp"
+                            android:background="@drawable/new_auth_round_button"
+                            >
+
+                            <TextView
+                                android:id="@+id/txtProductFeaturesTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="17dp"
+                                android:drawableRight="@mipmap/icn_expand"
+                                android:text="@string/strFeatures"
+                                android:fontFamily="@font/quasimoda_bold"
+                                android:textFontWeight="700"/>
+                            <TextView
+                                android:id="@+id/txtProductFeatures"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15dp"
+                                android:visibility="gone"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/quasimoda"
+                                android:textFontWeight="700"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linearProductTechnical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical"
+                            android:padding="15dp"
+                            android:background="@drawable/new_auth_round_button"
+                            >
+
+
+                            <TextView
+                                android:id="@+id/txtProductTechnicalTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="17dp"
+                                android:drawableRight="@mipmap/icn_expand"
+                                android:text="@string/strTechnicalInformation"
+                                android:fontFamily="@font/quasimoda_bold"
+                                android:textFontWeight="700"/>
+                            <TextView
+                                android:id="@+id/txtProductTechnical"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15dp"
+                                android:visibility="gone"
+                                android:layout_marginTop="20dp"
+                                android:fontFamily="@font/quasimoda"
+                                android:textFontWeight="700"/>
+
+                        </LinearLayout>
+
+
+
+
+                    </LinearLayout>
+
 
 
 

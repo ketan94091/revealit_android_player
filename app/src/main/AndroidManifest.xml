@@ -184,7 +184,7 @@
         <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider491514455263066"
-            android:exported="true" />
+            android:exported="true"/>
 
         <uses-library
             android:name="org.apache.http.legacy"

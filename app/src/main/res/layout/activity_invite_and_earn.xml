@@ -63,10 +63,10 @@
             android:orientation="vertical"
             >
             <TextView
+                android:id="@+id/txtCallForActionIvites"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/quasimoda_bold"
-                android:text="@string/strGrabMoney"
                 android:textColor="@color/colorNewAppGreen"
                 android:textFontWeight="700"
                 android:textAlignment="center"

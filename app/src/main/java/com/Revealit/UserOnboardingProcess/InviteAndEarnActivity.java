@@ -25,8 +25,8 @@ public class InviteAndEarnActivity extends AppCompatActivity implements View.OnC
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
     private ImageView  imgCancel, imgLogo;
-    private TextView txtCopyToClibBoard,txtMsgCopy,txtContinueEnabled;
-    private String strCopymsg,strUsername;
+    private TextView txtCallForActionIvites,txtCopyToClibBoard,txtMsgCopy,txtContinueEnabled;
+    private String strCallForActionMsg,strCopymsg,strUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +55,15 @@ public class InviteAndEarnActivity extends AppCompatActivity implements View.OnC
         txtContinueEnabled = (TextView) findViewById(R.id.txtContinueEnabled);
         txtMsgCopy = (TextView) findViewById(R.id.txtMsgCopy);
         txtCopyToClibBoard = (TextView) findViewById(R.id.txtCopyToClibBoard);
+        txtCallForActionIvites = (TextView) findViewById(R.id.txtCallForActionIvites);
 
         //GET INTENT DATA
          strUsername = getIntent().getStringExtra(Constants.KEY_NEW_AUTH_USERNAME);
          strCopymsg = mSessionManager.getPreference(Constants.KEY_INVITE_MSG);
+         strCallForActionMsg = mSessionManager.getPreference(Constants.KEY_CALL_FOR_INVITE_MSG);
+
+         //SET CALL FOR ACTION MSG
+         txtCallForActionIvites.setText(strCallForActionMsg);
 
          //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
          txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));

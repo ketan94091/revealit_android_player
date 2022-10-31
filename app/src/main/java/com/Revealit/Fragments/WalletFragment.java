@@ -653,7 +653,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
 
-        Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+         Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+        //Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails("poifull");
 
 
 
