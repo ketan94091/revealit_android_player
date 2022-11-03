@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.HomeScreenTabLayout;
+import com.Revealit.Activities.QrCodeScannerActivity;
 import com.Revealit.Adapter.PlayCategoryListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
@@ -197,7 +197,9 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.imgScanQRcode:
 
-                CommonMethods.displayToast(mContext,"Work in progress!");
+                Intent mIntent = new Intent(mActivity, QrCodeScannerActivity.class);
+                mActivity.startActivity(mIntent);
+
 
                 break;
 
@@ -244,9 +246,6 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                 .client(httpClient1)
                 .build();
 
-        Log.e("END POINT ",  ""+mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY));
-        Log.e("TYPE ",  ""+mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE));
-        Log.e("TOKEN ",  ""+mSessionManager.getPreference(Constants.AUTH_TOKEN));
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
 

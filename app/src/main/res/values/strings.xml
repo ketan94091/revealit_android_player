@@ -196,6 +196,7 @@
     <string name="strProfileUpdateReminder">profile_update_reminder_period</string>
     <string name="strBackUpUpdateReminder">backup_update_reminder_period</string>
     <string name="strCredentialsIssues">Credential Issue</string>
+    <string name="strCameraPermissionDenied">Camera Permission Dined</string>
 
 
     <string name="strBeta">Beta</string>

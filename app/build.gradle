@@ -97,9 +97,9 @@ dependencies {
     implementation 'com.squareup.okhttp:okhttp:2.0.0'
     implementation 'com.squareup.okio:okio:1.0.1'
     implementation 'com.wdullaer:materialdatetimepicker:3.6.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.8.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
 
     //TO LOAD IMAGES
     implementation 'com.github.bumptech.glide:glide:4.12.0'
@@ -111,7 +111,6 @@ dependencies {
     //FACEBOOK SDK
     //implementation 'com.facebook.android:facebook-android-sdk:5.+'
     implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
-
 
 
     //TEST FAIRY SDK
@@ -188,14 +187,19 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:21.1.0'
     implementation 'com.pusher:push-notifications-android:1.9.0'
 
-    //PSR DECODING
-    //implementation 'com.greymass:esrsdk:1.0.7'
-
+    //GOOGLE FIREBASE
     implementation("com.google.firebase:firebase-iid")
 
+    //ESR SDK ANDROID PROTON SIGNING
+    implementation project(path: ':esrsdk')
 
-    //PROTON SDK
-   // implementation "com.metallicus:protonsdk:1.0.9"
+    //PROTON BLOCKCHAIN TRANSACTION
+    implementation 'one.block:eosiojava:1.0.0'
+    implementation 'one.block:eosiojavasoftkeysignatureprovider:1.0.0'
+    implementation 'one.block:eosiojavaandroidabieosserializationprovider:1.0.0'
+    implementation 'one.block:eosio-java-rpc-provider:1.0.0'
+
+
 
 
 }

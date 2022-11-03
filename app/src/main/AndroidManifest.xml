@@ -51,40 +51,43 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:node="merge">
         <activity
-            android:name=".UserOnboardingProcess.GoogleCloudBackupActivity"
-            android:screenOrientation="portrait"
+            android:name=".Activities.QrCodeScannerActivity"
             android:exported="false" />
+        <activity
+            android:name=".UserOnboardingProcess.GoogleCloudBackupActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UserOnboardingProcess.GetBiomatricPermissionActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UserOnboardingProcess.InviteAndEarnActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.CloudBackupActivity"
             android:exported="false" />
         <activity
             android:name=".UserOnboardingProcess.NewAuthEnterUserNameActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UserOnboardingProcess.NewAuthEnterOTPActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UserOnboardingProcess.NewAuthMobileAndPromoActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UserOnboardingProcess.NewAuthGetStartedActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.GoogleDriveBackupActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UserOnboardingProcess.NewAuthSplashScreen"
             android:exported="true"
@@ -184,7 +187,7 @@
         <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider491514455263066"
-            android:exported="true"/>
+            android:exported="true" />
 
         <uses-library
             android:name="org.apache.http.legacy"

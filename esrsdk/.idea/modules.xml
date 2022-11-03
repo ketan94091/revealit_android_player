@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-584031827/esr.iml" filepath="$PROJECT_DIR$/.idea/modules/-584031827/esr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/632593087/esr.app.iml" filepath="$PROJECT_DIR$/.idea/modules/632593087/esr.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/632593087/esr.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/632593087/esr.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/632593087/esr.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/632593087/esr.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/632593087/esr.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/632593087/esr.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/esr.esrsdk.iml" filepath="$PROJECT_DIR$/.idea/modules/esr.esrsdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/esr.esrsdk.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/esr.esrsdk.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/esr.esrsdk.main.iml" filepath="$PROJECT_DIR$/.idea/modules/esr.esrsdk.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/esr.esrsdk.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/esr.esrsdk.unitTest.iml" />
+    </modules>
+  </component>
+</project>

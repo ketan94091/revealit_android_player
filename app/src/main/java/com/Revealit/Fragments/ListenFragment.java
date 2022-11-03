@@ -7,6 +7,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Revealit.Activities.HomeScreenTabLayout;
+import com.Revealit.Activities.QrCodeScannerActivity;
 import com.Revealit.Adapter.RevealItHistoryListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
@@ -245,7 +247,9 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         switch (mView.getId()) {
             case R.id.imgScanQRcode:
 
-                CommonMethods.displayToast(mContext,"Work in progress!");
+                Intent mIntent = new Intent(mActivity, QrCodeScannerActivity.class);
+                mActivity.startActivity(mIntent);
+
 
                 break;
 

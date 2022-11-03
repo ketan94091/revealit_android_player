@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.Revealit.Activities.GettingStartedActivity;
 import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.Activities.LoginActivityActivity;
+import com.Revealit.Activities.QrCodeScannerActivity;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -199,7 +200,9 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         switch (mView.getId()) {
             case R.id.imgScanQRcode:
 
-                CommonMethods.displayToast(mContext,"Work in progress!");
+                Intent mIntent = new Intent(mActivity, QrCodeScannerActivity.class);
+                mActivity.startActivity(mIntent);
+
 
                 break;
 
