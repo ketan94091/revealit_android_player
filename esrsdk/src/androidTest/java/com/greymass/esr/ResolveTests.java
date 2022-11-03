@@ -1,5 +1,10 @@
 package com.greymass.esr;
 
+import static com.greymass.esr.SigningRequest.PLACEHOLDER_NAME;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.google.common.collect.Lists;
@@ -12,11 +17,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Map;
-
-import static com.greymass.esr.SigningRequest.PLACEHOLDER_NAME;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ResolveTests extends ESRTest {
@@ -87,7 +87,7 @@ public class ResolveTests extends ESRTest {
         ResolvedSigningRequest resolved = request.resolve(new PermissionLevel(FOO, BAR), transactionContext);
         String signature = "SIG_K1_KBub1qmdiPpWA2XKKEZEG3EfKJBf38GETHzbd4t3CBdWLgdvFRLCqbcUsBbbYga6jmxfdSFfodMdhMYraKLhEzjSCsiuMs";
         String expectedCallback = "https://example.com?tx=6AFF5C203810FF6B40469FE20318856354889FF037F4CF5B89A157514A43E825&bn=1234";
-        ResolvedCallback resolvedCallback = resolved.getCallback(Lists.newArrayList(signature), 1234);
+        ResolvedCallback resolvedCallback = resolved.getCallback(Lists.newArrayList(signature),"","","", 1234);
         assertEquals("Callback should resolve properly", expectedCallback, resolvedCallback.getUrl());
     }
 

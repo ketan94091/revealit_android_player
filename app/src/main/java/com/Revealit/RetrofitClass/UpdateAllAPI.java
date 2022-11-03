@@ -177,6 +177,10 @@ public interface UpdateAllAPI {
     @GET()
     Call<JsonElement> checkIfPhoneAlreadyRegistered(@Url String url);
 
+    //VERIFY CODE
+    @POST()
+    Call<JsonElement> signInCallback(@Url String url,@Body JsonObject body);
+
 }
 
 

@@ -1,12 +1,31 @@
 package com.Revealit.ModelClasses;
 
+import com.google.gson.annotations.SerializedName;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class JsonDataTransfer {
+public class JsonDataTransfer implements Serializable {
 
-    String voter;
-    String proxy;
-    List producers;
+    @SerializedName("voter")
+    @NotNull
+    private String voter;
+
+    @SerializedName("proxy")
+    @NotNull
+    private String proxy;
+
+    @SerializedName("producers")
+    @NotNull
+    private List<String> producers;
+
+    public JsonDataTransfer(@NotNull String voter, @NotNull String proxy ,@NotNull List<String> mListProducer) {
+        this.voter = voter;
+        this.proxy = proxy;
+        this.producers =mListProducer;
+    }
 
     public String getVoter() {
         return voter;
@@ -24,11 +43,14 @@ public class JsonDataTransfer {
         this.proxy = proxy;
     }
 
-    public List getProducers() {
+    public List<String> getProducers() {
         return producers;
     }
 
-    public void setProducers(List producers) {
+    public void setProducers(List<String> producers) {
         this.producers = producers;
     }
 }
+
+
+

@@ -1,6 +1,7 @@
 package com.greymass.esr;
 
 import static com.greymass.esr.models.ResolvedCallback.BN;
+import static com.greymass.esr.models.ResolvedCallback.CID;
 import static com.greymass.esr.models.ResolvedCallback.EX;
 import static com.greymass.esr.models.ResolvedCallback.RBN;
 import static com.greymass.esr.models.ResolvedCallback.REQ;
@@ -52,23 +53,24 @@ public class ResolvedSigningRequest {
         }
     }
 
-    public ResolvedCallback getCallback(List<String> signatures) throws ESRException {
-        return getCallback(signatures, -1);
+    public ResolvedCallback getCallback(List<String> signatures, String chainID,String qrCodeData, String currentTime) throws ESRException {
+        return getCallback(signatures,chainID,qrCodeData, currentTime,-1);
     }
 
-    public ResolvedCallback getCallback(List<String> signatures, long blockNum) throws ESRException {
+    public ResolvedCallback getCallback(List<String> signatures,String chainID, String currentTime,String qrCodeData, long blockNum) throws ESRException {
         if (Strings.isNullOrEmpty(gSigningRequest.getCallback()))
             throw new ESRException("Callback is null or empty");
 
         Map<String, String> payload = Maps.newHashMap();
-        //payload.put(SIG, signatures.get(0));
+        payload.put(SIG, signatures.get(0));
         payload.put(TX, getTransactionId());
         payload.put(RBN, gTransaction.getRefBlockNum().toString());
         payload.put(RID, gTransaction.getRefBlockPrefix().toString());
-        payload.put(EX, gTransaction.getExpiration());
-        payload.put(REQ, gSigningRequest.encode());
+        payload.put(EX, currentTime);
+        payload.put(REQ, qrCodeData);
         payload.put(SA, gSigner.getAccountName().getName());
         payload.put(SP, gSigner.getPermissionName().getName());
+        payload.put(CID ,chainID);
 
         for (int i = 1; i < signatures.size(); i++)
             payload.put(SIG + i, signatures.get(i));

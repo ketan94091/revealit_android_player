@@ -1,14 +1,19 @@
 package com.Revealit.Activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -38,8 +43,10 @@ public class HomeScreenTabLayout extends AppCompatActivity {
     private DatabaseHelper mDatabaseHelper;
     private boolean isUserIsActive,isFromRegistrationScreen;
     public static View viewBottomLine;
+    private int REQUEST_CAMERA_PERMISSIONc=100;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +56,7 @@ public class HomeScreenTabLayout extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void setId() {
 
         mActivity = HomeScreenTabLayout.this;
@@ -171,10 +179,6 @@ public class HomeScreenTabLayout extends AppCompatActivity {
         //CHANGE BOTTOM VIEW COLOR
         changeBottomViewColor();
 
-
-
-
-
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -267,7 +271,17 @@ public class HomeScreenTabLayout extends AppCompatActivity {
             }
         });
 
+        //ASK FOR THE CAMARA PERMISSION
+        requestCamaraPermission();
 
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestCamaraPermission() {
+
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(mActivity,new String[]{Manifest.permission.CAMERA}, 100);
+        }
     }
 
     private void changeBottomViewColor() {

@@ -197,6 +197,7 @@
     <string name="strBackUpUpdateReminder">backup_update_reminder_period</string>
     <string name="strCredentialsIssues">Credential Issue</string>
     <string name="strCameraPermissionDenied">Camera Permission Dined</string>
+    <string name="strIncorrectQRcodeData">In correct Qr code data! Please try again</string>
 
 
     <string name="strBeta">Beta</string>

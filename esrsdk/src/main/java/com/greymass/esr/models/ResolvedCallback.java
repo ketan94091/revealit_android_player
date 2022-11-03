@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class ResolvedCallback {
 
-    public static final String SIG = "SIG";
+    public static final String SIG = "sig";
     public static final String TX = "tx";
     public static final String RBN = "rbn";
     public static final String RID = "rid";
@@ -13,6 +13,7 @@ public class ResolvedCallback {
     public static final String SA = "sa";
     public static final String SP = "sp";
     public static final String BN = "bn";
+    public static final String CID = "cid";
 
     private String gUrl;
     private boolean gBackground;
