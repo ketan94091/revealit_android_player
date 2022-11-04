@@ -62,6 +62,16 @@ public class CommonMethods {
        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
    }
 
+   public static String returnDateString(){
+
+       //GET CURRENT DATE
+       Date today = new Date();
+       SimpleDateFormat format = new SimpleDateFormat(Constants.PSR_DATE_FORMAT);
+       String dateToStr = format.format(today);
+
+       return dateToStr;
+   }
+
 
     public static void buildDialog(Context mContext, String strMessege) {
 

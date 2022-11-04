@@ -76,6 +76,7 @@ public class Constants {
   public static final String API_NEW_AUTH_LOGIN = "api/authlogin";
   public static final String API_NEW_AUTH_CALLBACK = "/api/callback";
   public static final String API_NEW_AUTH_CHECK_MOBILENUMBER = "/api/phonenotexists";
+  public static final String API_NEW_AUTH_COUNTRY_CODE = "api/country";
 
 
     public static final String AUTH_TOKEN = "access_token";
@@ -171,7 +172,7 @@ public class Constants {
   public  static  final  String KEY_CALL_FOR_INVITE_MSG ="keyCallForInviteMsg";
   public  static  final  String KEY_USER_DATA ="keyUserData";
   public  static  final  String GOOGLE_DRIVE_FOLDER_NAME="Revealit.tv.io";
-  public  static  final  String KEY_PRON_WALLET_DETAILS="keyProtonWalletDetails";
+  public  static  final  String KEY_PROTON_WALLET_DETAILS ="keyProtonWalletDetails";
   public  static  final  String KEY_REVEALIT_PRIVATE_KEY="keyRevealitPrivatekey";
   public  static  final  String KEY_ISFROM_LOGIN="keyIsFromLogin";
   public  static  final  String KEY_ISFROM_LOGOUT="keyIsUserIsFromLogout";
@@ -191,6 +192,7 @@ public class Constants {
     public static final String COMMON_TIME_FORMAT = "HH:mm a";
     public static final String COMMON_DATE_TIME_FORMAT = "dd/MM/yyyy" + COMMON_TIME_FORMAT;
     public static final String COMMON_DATE_FORMAT = "dd/MM/yyyy";
+    public static final String PSR_DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
     public static final String EMAIL_VALIDATION_REGEX = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     public static final String PASSWORD_VALIDATION_REGEX = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?!.*__).{6,}$";
 

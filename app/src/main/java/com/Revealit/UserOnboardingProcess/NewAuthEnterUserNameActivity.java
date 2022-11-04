@@ -3,6 +3,7 @@ package com.Revealit.UserOnboardingProcess;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.Revealit.CommonClasse.CommonMethods;
@@ -24,6 +26,9 @@ import com.Revealit.ModelClasses.SubmitProfileModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.Revealit.Utils.Cryptography;
+import com.Revealit.Utils.DeCryptor;
+import com.Revealit.Utils.EnCryptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -32,7 +37,18 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -59,6 +75,8 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
     long delay = 2000; // 2 seconds after user stops typing
     long last_text_edit = 0;
     Handler handler = new Handler();
+    private EnCryptor encryptor;
+    private DeCryptor decryptor;
     private Runnable input_username = new Runnable() {
         public void run() {
             if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
@@ -231,6 +249,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         Call<SubmitProfileModel> call = patchService1.submitProfile(paramObject);
 
         call.enqueue(new Callback<SubmitProfileModel>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onResponse(Call<SubmitProfileModel> call, Response<SubmitProfileModel> response) {
 
@@ -279,6 +298,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void updateUI(SubmitProfileModel body) {
         Gson gson = new GsonBuilder()
                 .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -290,9 +310,14 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN ,body.getauth_token());
         mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE ,getResources().getString(R.string.strTokenBearer));
         mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME ,body.getProton().getAccountName());
-        mSessionManager.updatePreferenceString(Constants.KEY_PRON_WALLET_DETAILS ,gson.toJson(body.getProton()));
+        //mSessionManager.updatePreferenceString(Constants.KEY_PROTON_WALLET_DETAILS,gson.toJson(body.getProton()));
         mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY ,body.getrevealit_private_key());
         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_REGISTRATION_DONE ,true);
+
+        //STORE DATA IN TO KEYSTORE
+        encryptKey(body.getProton().getPrivateKey(), Constants.KEY_PRIVATE_KEY ,body.getrevealit_private_key());
+        encryptKey(body.getProton().getPublicKey(),Constants.KEY_PUBLIC_KEY,body.getrevealit_private_key());
+        encryptKey(body.getProton().getMnemonic(),Constants.KEY_MNEMONICS,body.getrevealit_private_key());
 
 
         //UPDATE FLAG IF USER IS ADMIN OR NOT
@@ -318,6 +343,76 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         startActivity(mIntent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void encryptKey(String keyToStore, String alias, String keyStoreName) {
+
+        try{
+
+            //CREATE CRYPTOGRAPHY
+            Cryptography c = new Cryptography(keyStoreName);
+
+            //STORE AND ENCRYPT DATA IN KEYSTORE// returns base 64 data: 'BASE64_DATA,BASE64_IV'
+            String encrypted = c.encrypt(keyToStore);
+
+            //SAVE ENCRYPTED DATA TO PREFERENCE FOR SMOOTH TRANSITION
+            mSessionManager.updatePreferenceString(alias,encrypted);
+
+
+
+
+        }catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void decryptText(String alias) {
+        try {
+            decryptor = new DeCryptor();
+            String encryptedText = decryptor.decryptData(alias, encryptor.getEncryption(), encryptor.getIv());
+            Log.e("DECRIPTOR " ,""+encryptedText);
+        }catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        } catch (UnrecoverableEntryException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
+    }
     private void apiCheckIfUsernameExist(){
 
         //OPEN DIALOGUE

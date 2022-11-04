@@ -150,6 +150,50 @@
 
 
     </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearPrivateKey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txtPrivateKey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:text="@string/strPrivateKey"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="700"
+                    android:textSize="15dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="20dp"
+                    android:src="@mipmap/arrow_next_page" />
+
+            </RelativeLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:background="@color/colorInActiveGrey" />
+
+
+        </LinearLayout>
     </LinearLayout>
 
 

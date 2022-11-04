@@ -4,6 +4,8 @@
     <string name="strInternetAvailable">Internet Available</string>
     <string name="strNoInternetAvailable">No Internet Available</string>
     <string name="strWarningDialogTitle">Warning Message</string>
+    <string name="strWarning">Warning:</string>
+    <string name="strWarningMsg">Please keep this information somewhere secure that only have access to. Do not share them with anybody else. In case of losing your access to your assets in your wallet revealit TV will ask you to enter either of the displayed information.</string>
     <string name="strOk">Ok</string>
     <string name="strNoARproduct">No AR Product Available</string>
     <string name="strValidEmail">Please Enter Valid Emailid</string>
@@ -20,6 +22,8 @@
     <string name="strPlay">Play</string>
     <string name="strWallet">Wallet</string>
     <string name="strLogout">Logout</string>
+    <string name="strPrivateKey">Private Key</string>
+    <string name="strPhras">Mnemonic</string>
     <string name="strGetStarted">Get Started</string>
     <string name="strStatus">Status</string>
     <string name="strStatusPendingVerification">Pending Verification</string>

@@ -52,12 +52,13 @@ public class HomeScreenTabLayout extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_tab_layout);
 
-        setId();
+
+            setId();
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setId() {
+    private void setId()  {
 
         mActivity = HomeScreenTabLayout.this;
         mContext = HomeScreenTabLayout.this;

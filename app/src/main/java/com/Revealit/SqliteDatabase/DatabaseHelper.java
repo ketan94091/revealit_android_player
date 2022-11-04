@@ -28,9 +28,6 @@ public class DatabaseHelper {
     public static String TABLE_REVEALIT_HISTORY= "tableRevealitHistory";
     public static String TABLE_REVEALIT_HISTORY_SIMULATION= "tableRevealitHistorSimulation";
 
-
-
-
     //FIELD TABLE_CATEGORY_NAMES
     public static String KEY_ID = "keyID";
     public static String KEY_CATEGORY_NAMES = "keyCategoryNames";

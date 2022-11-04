@@ -25,6 +25,7 @@ import com.Revealit.Activities.WebViewScreen;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
+import com.Revealit.ModelClasses.CountryCodes;
 import com.Revealit.ModelClasses.InviteModel;
 import com.Revealit.ModelClasses.NewAuthStatusModel;
 import com.Revealit.R;
@@ -48,6 +49,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -141,6 +143,9 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
         //SET UNDERLINE
         txtTermsOfService.setPaintFlags(txtTermsOfService.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        //GET COUNTRY DATA
+        //getCountryCodeList();
 
         //GET CAMPAIGN DATA
         apiSendInvites("",false);
@@ -540,6 +545,89 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
+
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strApiCallFailure));
+
+
+            }
+        });
+
+
+    }
+    private void getCountryCodeList(){
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().serializeNulls().create()))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+
+
+        Call<CountryCodes> call = patchService1.getCountryList(Constants.API_NEW_AUTH_COUNTRY_CODE);
+
+        call.enqueue(new Callback<CountryCodes>() {
+            @Override
+            public void onResponse(Call<CountryCodes> call, Response<CountryCodes> response) {
+
+                CommonMethods.printLogE("Response @ getCountryCodeList: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ getCountryCodeList: ", "" + response.code());
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+
+                CommonMethods.printLogE("Response @ getCountryCodeList: ", "" + gson.toJson(response.body()));
+
+
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
+
+                    CommonMethods.printLogE("Response @ getCountryCodeList: ", ""+ Constants.API_CODE_200);
+
+
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        CommonMethods.buildDialog(mContext,"Error Code : "+jObjError.getString("error_code") +" "+ jObjError.getString("message"));
+                    } catch (Exception e) {
+                        CommonMethods.buildDialog(mContext,"Error Code : "+e.getMessage());
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<CountryCodes> call, Throwable t) {
+
+                //CLOSED DIALOGUE
+                //CommonMethods.closeDialog();
 
                 CommonMethods.buildDialog(mContext, getResources().getString(R.string.strApiCallFailure));
 

@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.Revealit.Activities.DisplayPrivateKeyActivity;
 import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -35,7 +36,7 @@ public class PrivacyFragment extends Fragment implements View.OnClickListener {
     private HomeScreenTabLayout mHomeScreenTabLayout;
     private OnFragmentInteractionListener mListener;
     private RelativeLayout relativeBack;
-    private LinearLayout linearLogout,linearMultifactorAuth;
+    private LinearLayout linearPrivateKey,linearLogout,linearMultifactorAuth;
 
 
     public PrivacyFragment(HomeScreenTabLayout homeScreenTabLayout) {
@@ -71,12 +72,19 @@ public class PrivacyFragment extends Fragment implements View.OnClickListener {
         relativeBack =(RelativeLayout)mView.findViewById(R.id.relativeBack);
         linearMultifactorAuth =(LinearLayout)mView.findViewById(R.id.linearMultifactorAuth);
         linearLogout =(LinearLayout)mView.findViewById(R.id.linearLogout);
+        linearPrivateKey =(LinearLayout)mView.findViewById(R.id.linearPrivateKey);
+
+        //HIDE PRIVATE KEY IF LOGGED IN USER IS NOT ADMIN
+        if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
+            linearPrivateKey.setVisibility(View.VISIBLE);
+        }
 
     }
     private void setOnClicks() {
         relativeBack.setOnClickListener(this);
         linearMultifactorAuth.setOnClickListener(this);
         linearLogout.setOnClickListener(this);
+        linearPrivateKey.setOnClickListener(this);
     }
 
     @Override
@@ -112,6 +120,14 @@ public class PrivacyFragment extends Fragment implements View.OnClickListener {
 
 
                 break;
+
+            case R.id.linearPrivateKey:
+
+               Intent mIntent = new Intent(mActivity, DisplayPrivateKeyActivity.class);
+               mActivity.startActivity(mIntent);
+
+                break;
+
         }
 
     }

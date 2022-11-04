@@ -51,6 +51,9 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:node="merge">
         <activity
+            android:name=".Activities.DisplayPrivateKeyActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.QrCodeScannerActivity"
             android:exported="false" />
         <activity

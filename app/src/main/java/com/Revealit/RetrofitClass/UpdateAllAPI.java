@@ -4,6 +4,7 @@ package com.Revealit.RetrofitClass;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.ModelClasses.CheckEmailModel;
 import com.Revealit.ModelClasses.CheckUserNameStatusModel;
+import com.Revealit.ModelClasses.CountryCodes;
 import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.ModelClasses.GetAccountDetailsModel;
 import com.Revealit.ModelClasses.GetMultiColorGLB;
@@ -160,6 +161,10 @@ public interface UpdateAllAPI {
     //GET CAMPAIGN DETAILS FOR INVITES
     @GET()
     Call<InviteModel> getCampaignDetails(@Url String url);
+
+    //GET COUNTRY CODE LIST
+    @GET()
+    Call<CountryCodes> getCountryList(@Url String url);
 
     //CHECK IF USER ALREADY EXIST
     @GET()

@@ -63,6 +63,7 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
     private GoogleSignInOptions signInOptions;
     private GoogleSignInClient client;
     private RelativeLayout relativeBack;
+    private String userData;
 
 
     @Override
@@ -94,6 +95,56 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
         }else{
             txtBackupNow.setVisibility(View.VISIBLE);
         }
+
+//        try{
+//            //OPEN KEYSTORE
+//            Cryptography mCryptography = new Cryptography(mSessionManager.getPreference(Constants.KEY_REVEALIT_PRIVATE_KEY));
+//
+//            //GET PRIVATE KEY
+//            String   mPrivateKey = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_PRIVATE_KEY));
+//
+//            //GET PUBLIC KEY
+//            String mPublicKey = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_PUBLIC_KEY));
+//
+//            //GET MNEMONICS
+//            String  mMnemonics = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_MNEMONICS));
+//
+//
+//            UserProtonAccountDetails mDetail = new UserProtonAccountDetails();
+//            mDetail.setPrivatekey(mPrivateKey);
+//            mDetail.setPublickey(mPublicKey);
+//            mDetail.setMnemonic(mMnemonics);
+//
+//
+//            Gson gson = new GsonBuilder()
+//                    .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+//                    .serializeNulls()
+//                    .create();
+//
+//            userData = gson.toJson(mDetail);
+//
+//        }catch (NoSuchPaddingException e) {
+//            e.printStackTrace();
+//        } catch (IllegalBlockSizeException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        } catch (BadPaddingException e) {
+//            e.printStackTrace();
+//        } catch (InvalidKeyException e) {
+//            e.printStackTrace();
+//        } catch (InvalidAlgorithmParameterException e) {
+//            e.printStackTrace();
+//        } catch (CertificateException e) {
+//            e.printStackTrace();
+//        } catch (KeyStoreException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchProviderException e) {
+//            e.printStackTrace();
+//        }
+
 
 
     }
