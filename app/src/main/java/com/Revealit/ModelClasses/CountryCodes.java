@@ -1,17 +1,10 @@
 package com.Revealit.ModelClasses;
 
-import androidx.annotation.Nullable;
-
-import com.google.gson.annotations.SerializedName;
-import org.jetbrains.annotations.NotNull;
-import java.io.Serializable;
 import java.util.List;
 
-public class CountryCodes implements Serializable {
+public class CountryCodes {
 
-    @SerializedName("data")
-    @NotNull
-    private List<Data> data;
+    public List<Data> data;
 
     public List<Data> getData() {
         return data;
@@ -21,42 +14,24 @@ public class CountryCodes implements Serializable {
         this.data = data;
     }
 
-    private class Data implements Serializable{
+    public class Data{
 
-        @SerializedName("country_code")
-        @NotNull
         private String country_code;
 
-        @SerializedName("country_name")
-        @NotNull
         private String country_name;
 
-        @SerializedName("phone_code")
-        @NotNull
         private String phone_code;
 
-        @SerializedName("sort_order")
-        @NotNull
         private int sort_order;
 
-        @SerializedName("twilio_support")
-        @NotNull
         private int twilio_support;
 
-        @SerializedName("flag_url")
-        @NotNull
         private String flag_url;
 
-        @SerializedName("mobile_digits")
-        @NotNull
         private String mobile_digits;
 
-        @SerializedName("selected")
-        @NotNull
         private String selected;
 
-        @SerializedName("currency")
-        @Nullable
         private Currency currency;
 
         public String getCountry_code() {
@@ -123,36 +98,26 @@ public class CountryCodes implements Serializable {
             this.selected = selected;
         }
 
-        @Nullable
+
         public Currency getCurrency() {
             return currency;
         }
 
-        public void setCurrency(@Nullable Currency currency) {
+        public void setCurrency(Currency currency) {
             this.currency = currency;
         }
     }
 
-    private class Currency  implements Serializable{
+    public class Currency {
 
-        @SerializedName("code")
-        @Nullable
         private String code;
 
-        @SerializedName("value")
-        @Nullable
         private String value;
 
-        @SerializedName("sort_order")
-        @Nullable
         private int sort_order;
 
-        @SerializedName("enabled")
-        @Nullable
         private int enabled;
 
-        @SerializedName("currency_icon_url")
-        @Nullable
         private String currency_icon_url;
 
         public String getCode() {

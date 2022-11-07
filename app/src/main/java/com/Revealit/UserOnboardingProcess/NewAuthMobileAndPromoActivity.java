@@ -20,11 +20,15 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.Revealit.Activities.WebViewScreen;
+import com.Revealit.Adapter.CountryPickerAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
+import com.Revealit.Interfaces.SelectedCountry;
 import com.Revealit.ModelClasses.CountryCodes;
 import com.Revealit.ModelClasses.InviteModel;
 import com.Revealit.ModelClasses.NewAuthStatusModel;
@@ -45,6 +49,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -56,7 +62,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements View.OnClickListener {
+public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements View.OnClickListener, SelectedCountry {
     private static final String TAG = "NewAuthMobileAndPromoActivity";
     boolean isMobileAlreadyUsed;
     long delay = 2000; // 2 seconds after user stops typing
@@ -68,10 +74,12 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
     private TextView txtContinueDisable, txtTermsOfService,txtPromoWarnings,txtPromoAmount,txtInviteQuestion,txtContinueEnabled, txtMobileWarnings;
-    private ImageView imgCurrencyIcon,imgPromoStatusFalse,imgPromoStatus, imgMobileStutusTrue, imgMobileStutusFalse,imgCancel, imgLogo;
+    private ImageView imgCountryFlag,imgCurrencyIcon,imgPromoStatusFalse,imgPromoStatus, imgMobileStutusTrue, imgMobileStutusFalse,imgCancel, imgLogo;
     private EditText edtPromo, edtMobilenumber, edtCountryCode;
-    private LinearLayout linearPrivacyPolicy, linearPromoWarnings, linearMobileWarnings;
+    private LinearLayout linearCountryPicker,linearCountryList,linearErrorMsgs,linearPrivacyPolicy, linearPromoWarnings, linearMobileWarnings;
     private String strCampaignId ="0", strRefferalId="0",strInviteName="",strDefalutCountrycode ="61";
+    private int intCountryPhoneLength =0;
+    private List<CountryCodes.Data> mCountryList = new ArrayList<>();
     private Runnable input_finish_checker = new Runnable() {
         public void run() {
             if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
@@ -96,6 +104,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             }
         }
     };
+    private RecyclerView recyclerViewRecipesList;
 
 
     @Override
@@ -123,6 +132,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         imgPromoStatus = (ImageView) findViewById(R.id.imgPromoStatus);
         imgPromoStatusFalse = (ImageView) findViewById(R.id.imgPromoStatusFalse);
         imgCurrencyIcon = (ImageView) findViewById(R.id.imgCurrencyIcon);
+        imgCountryFlag = (ImageView) findViewById(R.id.imgCountryFlag);
 
         edtCountryCode = (EditText) findViewById(R.id.edtCountryCode);
         edtMobilenumber = (EditText) findViewById(R.id.edtMobilenumber);
@@ -131,6 +141,9 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         linearMobileWarnings = (LinearLayout) findViewById(R.id.linearMobileWarnings);
         linearPromoWarnings = (LinearLayout) findViewById(R.id.linearPromoWarnings);
         linearPrivacyPolicy = (LinearLayout) findViewById(R.id.linearPrivacyPolicy);
+        linearErrorMsgs = (LinearLayout) findViewById(R.id.linearErrorMsgs);
+        linearCountryList = (LinearLayout) findViewById(R.id.linearCountryList);
+        linearCountryPicker = (LinearLayout) findViewById(R.id.linearCountryPicker);
 
 
         txtMobileWarnings = (TextView) findViewById(R.id.txtMobileWarnings);
@@ -141,14 +154,17 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         txtPromoWarnings = (TextView) findViewById(R.id.txtPromoWarnings);
         txtTermsOfService = (TextView) findViewById(R.id.txtTermsOfService);
 
+        //SET ITEMS LIST
+        recyclerViewRecipesList = (RecyclerView)findViewById(R.id.recycleCourseList);
+        LinearLayoutManager recylerViewLayoutManager = new LinearLayoutManager(mActivity);
+        recyclerViewRecipesList.setLayoutManager(recylerViewLayoutManager);
+
+
         //SET UNDERLINE
         txtTermsOfService.setPaintFlags(txtTermsOfService.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         //GET COUNTRY DATA
-        //getCountryCodeList();
-
-        //GET CAMPAIGN DATA
-        apiSendInvites("",false);
+        getCountryCodeList();
 
         edtMobilenumber.addTextChangedListener(new TextWatcher() {
                                                    @Override
@@ -167,38 +183,45 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                                                    @Override
                                                    public void afterTextChanged(final Editable s) {
                                                        //avoid triggering event when text is empty
-                                                       last_text_edit = System.currentTimeMillis();
-                                                       handler.postDelayed(input_finish_checker_mobile, delayForMobile);
+                                                       if(s.length() != 0){
+                                                           last_text_edit = System.currentTimeMillis();
+                                                           handler.postDelayed(input_finish_checker_mobile, delayForMobile);
+
+                                                       }else{
+                                                           linearMobileWarnings.setVisibility(View.GONE);
+                                                           imgMobileStutusFalse.setVisibility(View.GONE);
+                                                           imgMobileStutusTrue.setVisibility(View.GONE);
+                                                       }
 
                                                    }
                                                }
 
         );
 
-        edtCountryCode.addTextChangedListener(new TextWatcher() {
-                                                  @Override
-                                                  public void beforeTextChanged(CharSequence s, int start, int count,
-                                                                                int after) {
-                                                  }
-
-                                                  @Override
-                                                  public void onTextChanged(final CharSequence s, int start, int before,
-                                                                            int count) {
-                                                      //You need to remove this to run only once
-                                                      handler.removeCallbacks(input_finish_checker);
-
-                                                  }
-
-                                                  @Override
-                                                  public void afterTextChanged(final Editable s) {
-                                                      //avoid triggering event when text is empty
-                                                      last_text_edit = System.currentTimeMillis();
-                                                      handler.postDelayed(input_finish_checker, delay);
-
-                                                  }
-                                              }
-
-        );
+//        edtCountryCode.addTextChangedListener(new TextWatcher() {
+//                                                  @Override
+//                                                  public void beforeTextChanged(CharSequence s, int start, int count,
+//                                                                                int after) {
+//                                                  }
+//
+//                                                  @Override
+//                                                  public void onTextChanged(final CharSequence s, int start, int before,
+//                                                                            int count) {
+//                                                      //You need to remove this to run only once
+//                                                      handler.removeCallbacks(input_finish_checker);
+//
+//                                                  }
+//
+//                                                  @Override
+//                                                  public void afterTextChanged(final Editable s) {
+//                                                      //avoid triggering event when text is empty
+//                                                      last_text_edit = System.currentTimeMillis();
+//                                                      handler.postDelayed(input_finish_checker, delay);
+//
+//                                                  }
+//                                              }
+//
+//        );
         edtPromo.addTextChangedListener(new TextWatcher() {
                                                    @Override
                                                    public void beforeTextChanged(CharSequence s, int start, int count,
@@ -236,6 +259,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         txtContinueDisable.setOnClickListener(this);
         imgCancel.setOnClickListener(this);
         linearPrivacyPolicy.setOnClickListener(this);
+        linearCountryPicker.setOnClickListener(this);
 
     }
 
@@ -264,6 +288,15 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                 mIntent.putExtra(Constants.RESEARCH_URL, Constants.PRIVACY_POLICY_URL);
                 mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "Privacy Policy");
                 startActivity(mIntent);
+
+
+
+                break;
+
+            case R.id.linearCountryPicker:
+
+                linearErrorMsgs.setVisibility(View.GONE);
+                linearCountryList.setVisibility(View.VISIBLE);
 
                 break;
 
@@ -321,14 +354,6 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             txtMobileWarnings.setText(getString(R.string.strErrorCountryCodeEmpty));
             return false;
 
-        } else if (edtCountryCode.getText().toString().length() < 2) {
-            linearMobileWarnings.setVisibility(View.VISIBLE);
-            imgMobileStutusFalse.setVisibility(View.VISIBLE);
-            imgMobileStutusTrue.setVisibility(View.INVISIBLE);
-           disbaledContinueButton();
-            txtMobileWarnings.setText(getString(R.string.strErrorCountryCodeValid));
-            return false;
-
         }else if (edtMobilenumber.getText().toString().isEmpty()) {
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
@@ -337,7 +362,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             txtMobileWarnings.setText(getString(R.string.strErrorMobileNumberEmpty));
             return false;
 
-        } else if (edtMobilenumber.getText().toString().length() < 7) {
+        } else if (edtMobilenumber.getText().toString().length() < intCountryPhoneLength) {
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
             imgMobileStutusTrue.setVisibility(View.INVISIBLE);
@@ -610,6 +635,20 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
                     CommonMethods.printLogE("Response @ getCountryCodeList: ", ""+ Constants.API_CODE_200);
 
+                    for (int i=0 ;i<response.body().getData().size();i++ ){
+                        if(response.body().getData().get(i).getSort_order() == 1) {
+                            selectedCountry(response.body().getData().get(i).getFlag_url(), response.body().getData().get(i).getPhone_code(), response.body().getData().get(i).getMobile_digits());
+                         break;
+                        }
+                    }
+
+
+                    CountryPickerAdapter mCountryPickerAdapter = new CountryPickerAdapter(mContext, NewAuthMobileAndPromoActivity.this, response.body().getData());
+                    recyclerViewRecipesList.setAdapter(mCountryPickerAdapter);
+
+                    //GET CAMPAIGN DATA
+                    apiSendInvites("",false);
+
 
                 } else {
                     try {
@@ -638,10 +677,30 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
     }
 
+    private void setInitialCountryCode(String countryFlagUrl, String countrCode, String countryMobileDigit) {
+
+
+            edtCountryCode.setText(countrCode);
+            Glide.with(mContext)
+                    .load(countryFlagUrl)
+                    .placeholder(R.drawable.placeholder)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    }).into(imgCountryFlag);
+        }
+
+
+
     private void apiSendInvites(String strCampaignId, boolean isFromCampaignId){
 
-        //OPEN DIALOGUE
-        //CommonMethods.showDialog(mContext);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -694,9 +753,6 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                 CommonMethods.printLogE("Response @ apiSendInvites: ", "" + gson.toJson(response.body()));
 
 
-                //CLOSED DIALOGUE
-                //CommonMethods.closeDialog();
-
                 switch (response.code()){
                     case Constants.API_CODE_200:
 
@@ -716,9 +772,6 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
             @Override
             public void onFailure(Call<InviteModel> call, Throwable t) {
-
-                //CLOSED DIALOGUE
-                //CommonMethods.closeDialog();
 
                 CommonMethods.buildDialog(mContext, getResources().getString(R.string.strApiCallFailure));
 
@@ -788,4 +841,34 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
     }
 
 
+    @Override
+    public void selectedCountry(String countryFlagUrl, String countryCode, String countryMobileLength) {
+
+        edtCountryCode.setText(countryCode);
+
+        intCountryPhoneLength = Integer.parseInt(countryMobileLength);
+
+        Glide.with(mContext)
+                .load(countryFlagUrl)
+                .placeholder(R.drawable.placeholder)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(imgCountryFlag);
+
+        linearErrorMsgs.setVisibility(View.VISIBLE);
+        linearCountryList.setVisibility(View.GONE);
+        edtMobilenumber.setText("");
+
+
+
+    }
 }

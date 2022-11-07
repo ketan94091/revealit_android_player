@@ -14,6 +14,7 @@ public class ResolvedCallback {
     public static final String SP = "sp";
     public static final String BN = "bn";
     public static final String CID = "cid";
+    public static final String RPK = "rpk";
 
     private String gUrl;
     private boolean gBackground;

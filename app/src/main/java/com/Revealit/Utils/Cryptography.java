@@ -36,12 +36,14 @@ public class Cryptography {
     private SecretKey secretKey;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public Cryptography(String keyName) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, NoSuchProviderException, InvalidAlgorithmParameterException {
         this.keyName = keyName;
         initKeystore();
         loadOrGenerateKey();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void loadOrGenerateKey() throws NoSuchProviderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
         getKey();
         if (secretKey == null) generateKey();

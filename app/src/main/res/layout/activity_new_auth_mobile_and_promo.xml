@@ -78,6 +78,23 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/new_auth_round_button"
                     android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/linearCountryPicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imgCountryFlag"
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_gravity="center_vertical"
+                        android:scaleType="fitXY"
+                        android:layout_marginLeft="15dp" />
+
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -86,7 +103,7 @@
                         android:textColor="@color/colorBlack"
                         android:textFontWeight="600"
                         android:textSize="15dp"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="5dp"
                         android:layout_marginRight="2dp"
                         />
 
@@ -100,6 +117,7 @@
                         android:inputType="number"
                         android:maxLength="3"
                         android:paddingTop="15dp"
+                        android:focusable="false"
                         android:textFontWeight="600"
                         android:paddingBottom="15dp"
                         android:paddingRight="15dp"
@@ -108,6 +126,8 @@
                         android:fontFamily="@font/quasimoda_semibold"
                         android:textColor="@color/colorBlack"
                         android:textSize="15dp" />
+
+                    </LinearLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -163,6 +183,12 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/linearErrorMsgs"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="vertical">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -201,6 +227,25 @@
                         android:textSize="15dp" />
 
 
+                </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearCountryList"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_marginTop="10dp"
+                    android:padding="10dp"
+                    android:background="@drawable/new_auth_round_button"
+                    >
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycleCourseList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
                 </LinearLayout>
 
                 <LinearLayout

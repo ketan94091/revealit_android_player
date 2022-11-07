@@ -29,6 +29,7 @@ import com.Revealit.ModelClasses.JsonDataTransfer;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.Revealit.Utils.Cryptography;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -49,11 +50,21 @@ import com.greymass.esr.models.TransactionContext;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.cert.CertificateException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -94,7 +105,7 @@ public class QrCodeScannerActivity extends AppCompatActivity {
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private TextView txtBarcodeValue;
-    private String intentData;
+    private String intentData,mProtonAccountName,mPublicKey,mPrivateKey;
     private boolean isBarcodeScanned = false;
 
 
@@ -130,6 +141,25 @@ public class QrCodeScannerActivity extends AppCompatActivity {
 
         //REQUEST CAMARA PERMISSION
        requestCamaraPermission();
+
+
+
+            try {
+                //OPEN KEYSTORE
+                Cryptography  mCryptography = new Cryptography(mSessionManager.getPreference(Constants.KEY_REVEALIT_PRIVATE_KEY));
+
+                //GET PRIVATE KEY
+                mPrivateKey = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_PRIVATE_KEY_PEM));
+                mPublicKey = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_PUBLIC_KEY));
+                mProtonAccountName = mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME);
+
+                CommonMethods.printLogE("PRIVATE_KEY",""+mPrivateKey);
+                CommonMethods.printLogE("ACCOUNT_NAME",""+mProtonAccountName);
+
+            } catch (CertificateException |NoSuchAlgorithmException |KeyStoreException |IOException |NoSuchProviderException | InvalidAlgorithmParameterException| NoSuchPaddingException| IllegalBlockSizeException |BadPaddingException |InvalidKeyException ex) {
+                ex.printStackTrace();
+            }
+
 
     }
 
@@ -279,16 +309,14 @@ public class QrCodeScannerActivity extends AppCompatActivity {
     class RetrieveFeedTask extends AsyncTask<String, Void, Void> {
 
         String qrCodeData, strESRdata;
-        String strPEMprivateKey ="5Kj7AAZ8n2Bc2gC4yehhVP1cVeLKncNiSSbDrTZy8xz1Z2B3yL1";
-        String privateKey1 = "PVT_K1_2upaV73hZccmfonwTFoQLGVH3WQaUWdidXSdHXDu68NPQSP9AY";
-        String publicKey1 = "PUB_K1_6HZByCD9WtFfU8oPcJRzLey2WhNc819EpZoZr6Q9MPRcuVBJoC";
-        String account_name1 = "revdev";
+        //String strPEMprivateKey ="5Kj7AAZ8n2Bc2gC4yehhVP1cVeLKncNiSSbDrTZy8xz1Z2B3yL1";
+        //String account_name1 = "revdev";
         String baseURl ="https://proton.eosusa.news";
+        //String baseURl ="https://proton.greymass.com";
         String permission="active";
         String strActionAccount ="eosio";
         String strVoteProducer ="voteproducer";
         String strGreyMassVote ="greymassvote";
-
         private static final boolean ENABLE_NETWORK_LOG = true;
 
         Gson gson = new GsonBuilder()
@@ -313,6 +341,7 @@ public class QrCodeScannerActivity extends AppCompatActivity {
             IAbiProvider abiProvider1 = new SimpleABIProvider(baseURl);
             SigningRequest signingRequest = new SigningRequest(new ESR(QrCodeScannerActivity.this, abiProvider1));
 
+
             try {
                 signingRequest.load(strESRdata);
             } catch (ESRException e) {
@@ -322,12 +351,14 @@ public class QrCodeScannerActivity extends AppCompatActivity {
             // get info pairs
             Map<String, String> info = signingRequest.getInfo();
             String strAccount = info.get("req_account");
-            try {
-                //SET SIGNING REQUEST ACCOUNT
-                signingRequest.setInfoKey("req_account",account_name1);
-            } catch (ESRException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                //SET SIGNING REQUEST ACCOUNT
+//                //signingRequest.setInfoKey("req_account",mProtonAccountName);
+//            } catch (ESRException e) {
+//                e.printStackTrace();
+//            }
+            CommonMethods.printLogE("signin response",""+gson.toJson(signingRequest.toDataJSON()));
+            CommonMethods.printLogE("signin requestname",""+strAccount);
 
             //RESOLVED THE IDENTITY REQUEST
             if (signingRequest.isIdentity()) {
@@ -349,11 +380,14 @@ public class QrCodeScannerActivity extends AppCompatActivity {
                     ISignatureProvider signatureProvider = new SoftKeySignatureProviderImpl();
 
 
-                    ((SoftKeySignatureProviderImpl) signatureProvider).importKey(strPEMprivateKey);
+
+                    ((SoftKeySignatureProviderImpl) signatureProvider).importKey(mPrivateKey);
 
                     // Creating TransactionProcess
                     TransactionSession session = new TransactionSession(serializationProvider, rpcProvider, abiProvider, signatureProvider);
                     TransactionProcessor processor = session.getTransactionProcessor();
+
+
 
                     // Now the TransactionConfig can be altered, if desired
                     TransactionConfig transactionConfig = processor.getTransactionConfig();
@@ -369,19 +403,13 @@ public class QrCodeScannerActivity extends AppCompatActivity {
                     processor.setTransactionConfig(transactionConfig);
 
 
-
-                    // Apply transaction data to Action's data
-                    //String jsonData = "{ \"from\": \"revdev\", \"to\": \"ziptied\", \"quantity\": \"0.0001 XPR\", \"memo\": \"backend\" }";
-                    //String jsonData = "{\"voter\": \"revdev\",\"proxy\": \"greymassvote\"}";
-
-
                     //CREATE EMPTY LIST FOR PRODUCER
                     List<String> list = Collections.<String>emptyList();
 
 
                     // Creating action with action's data, eosio contract and transfer action.
                     //Action action = new Action(""+signingRequest.getChainId().getChainName(), account_name1, Collections.singletonList(new Authorization(account_name1, permission)), ""+gson.toJson( mJsonDataTransfer));
-                    Action action = new Action(strActionAccount, strVoteProducer, Collections.singletonList(new Authorization(account_name1, permission)),gson.toJson( new JsonDataTransfer(account_name1,strGreyMassVote,list)));
+                    Action action = new Action(strActionAccount, strVoteProducer, Collections.singletonList(new Authorization(mProtonAccountName, permission)),gson.toJson( new JsonDataTransfer(mProtonAccountName,strGreyMassVote,list)));
 
                     //PRINT CONTRACT
                     //CommonMethods.printLogE("SIGNING_CONTRACT_ACTION", "" + gson.toJson(action));
@@ -393,15 +421,15 @@ public class QrCodeScannerActivity extends AppCompatActivity {
                     processor.sign();
 
                     //RESOLVED SIGNING REQUEST
-                    ResolvedSigningRequest resolved = signingRequest.resolve(new PermissionLevel(account_name1, permission), new TransactionContext());
+                    ResolvedSigningRequest resolved = signingRequest.resolve(new PermissionLevel(mProtonAccountName, permission), new TransactionContext());
 
 
                     //GET CALLBACK FROM SIGNING REQUEST
-                    ResolvedCallback callback = resolved.getCallback( processor.getSignatures(),signingRequest.getChainId().getChainId(), CommonMethods.returnDateString(),qrCodeData);
+                    ResolvedCallback callback = resolved.getCallback( processor.getSignatures(),signingRequest.getChainId().getChainId(), CommonMethods.returnDateString(),qrCodeData, "PUB_K1_7KxbJA9qrEu9RrhrEsErkBE8T5orDNuLfy5sjA2vyXHrPvwXHS");
 
 
                     //CALL CALL BACK URL IF SIGNATURE AND RESOLVED REQUEST NOT NULL
-                    //Log.e("CALLBACK_response", gson.toJson(callback));
+                    Log.e("CALLBACK_response", gson.toJson(callback));
 
                     callSignInCallBack(callback);
 
@@ -502,6 +530,7 @@ public class QrCodeScannerActivity extends AppCompatActivity {
         paramObject.addProperty(ResolvedCallback.SP, callback.getPayload().get(ResolvedCallback.SP));
         paramObject.addProperty(ResolvedCallback.BN, callback.getPayload().get(ResolvedCallback.BN));
         paramObject.addProperty(ResolvedCallback.CID, callback.getPayload().get(ResolvedCallback.CID));
+        paramObject.addProperty(ResolvedCallback.RPK, callback.getPayload().get(ResolvedCallback.RPK));
 
 
         Call<JsonElement> call = patchService1.signInCallback(baseUrlParts.get(1),paramObject);

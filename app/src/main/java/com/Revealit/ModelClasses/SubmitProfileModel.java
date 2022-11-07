@@ -92,6 +92,8 @@ public class SubmitProfileModel {
         private String public_key;
         private String private_key;
         private String mnemonic;
+        private String public_pem;
+        private String private_pem;
 
         public String getAccountName() {
             return account_name;
@@ -125,5 +127,20 @@ public class SubmitProfileModel {
             this.mnemonic = mnemonic;
         }
 
+        public String getPublic_pem() {
+            return public_pem;
+        }
+
+        public void setPublic_pem(String public_pem) {
+            this.public_pem = public_pem;
+        }
+
+        public String getPrivate_pem() {
+            return private_pem;
+        }
+
+        public void setPrivate_pem(String private_pem) {
+            this.private_pem = private_pem;
+        }
     }
 }

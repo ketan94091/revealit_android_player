@@ -156,6 +156,8 @@ public class Constants {
   public  static  final  String KEY_APP_MODE ="appMode";
   public  static  final  String KEY_PRIVATE_KEY ="keyPrivate";
   public  static  final  String KEY_PUBLIC_KEY ="keyPublic";
+  public  static  final  String KEY_PRIVATE_KEY_PEM ="keyPrivatePem";
+  public  static  final  String KEY_PUBLIC_KEY_PEM ="keyPublicPem";
   public  static  final  String KEY_PROTON_ACCOUNTNAME ="keyProtonAccountName";
   public  static  final  String KEY_MNEMONICS ="keyMnemonics";
   public  static  final  String KEY_MOBILE_NUMBER ="keyMobileNumber";

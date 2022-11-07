@@ -256,13 +256,6 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
                 CommonMethods.printLogE("Response @ apiSubmitProfile: ", "" + response.code());
                 CommonMethods.printLogE("Response @ apiSubmitProfile: ", "" + gson.toJson(response.body()));
 
-                Gson gson = new GsonBuilder()
-                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-                        .serializeNulls()
-                        .create();
-                CommonMethods.printLogE("Response @ apiSubmitProfile: ", "" + gson.toJson(response.body()));
-
-
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
@@ -318,6 +311,8 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         encryptKey(body.getProton().getPrivateKey(), Constants.KEY_PRIVATE_KEY ,body.getrevealit_private_key());
         encryptKey(body.getProton().getPublicKey(),Constants.KEY_PUBLIC_KEY,body.getrevealit_private_key());
         encryptKey(body.getProton().getMnemonic(),Constants.KEY_MNEMONICS,body.getrevealit_private_key());
+        encryptKey(body.getProton().getPrivate_pem(),Constants.KEY_PRIVATE_KEY_PEM,body.getrevealit_private_key());
+        encryptKey(body.getProton().getPublic_pem(),Constants.KEY_PUBLIC_KEY_PEM,body.getrevealit_private_key());
 
 
         //UPDATE FLAG IF USER IS ADMIN OR NOT
@@ -358,28 +353,8 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
             mSessionManager.updatePreferenceString(alias,encrypted);
 
 
-
-
-        }catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
+        } catch (CertificateException |NoSuchAlgorithmException |KeyStoreException |IOException |NoSuchProviderException | InvalidAlgorithmParameterException| NoSuchPaddingException| IllegalBlockSizeException |BadPaddingException |InvalidKeyException ex) {
+            ex.printStackTrace();
         }
 
     }
