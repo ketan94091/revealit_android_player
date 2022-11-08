@@ -153,8 +153,8 @@ public class QrCodeScannerActivity extends AppCompatActivity {
                 mPublicKey = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_PUBLIC_KEY));
                 mProtonAccountName = mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME);
 
-                CommonMethods.printLogE("PRIVATE_KEY",""+mPrivateKey);
-                CommonMethods.printLogE("ACCOUNT_NAME",""+mProtonAccountName);
+                //CommonMethods.printLogE("PRIVATE_KEY",""+mPrivateKey);
+                //CommonMethods.printLogE("ACCOUNT_NAME",""+mProtonAccountName);
 
             } catch (CertificateException |NoSuchAlgorithmException |KeyStoreException |IOException |NoSuchProviderException | InvalidAlgorithmParameterException| NoSuchPaddingException| IllegalBlockSizeException |BadPaddingException |InvalidKeyException ex) {
                 ex.printStackTrace();

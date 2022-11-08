@@ -186,6 +186,10 @@ public interface UpdateAllAPI {
     @POST()
     Call<JsonElement> signInCallback(@Url String url,@Body JsonObject body);
 
+    //VERIFY CODE
+    @POST(Constants.API_PUSH_AUTHORISATION)
+    Call<JsonElement> pushAuthorisation(@Body JsonObject body);
+
 }
 
 

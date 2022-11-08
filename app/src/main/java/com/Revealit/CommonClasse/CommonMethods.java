@@ -14,6 +14,7 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.format.DateFormat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -555,6 +556,12 @@ public class CommonMethods {
 
         return stringHtmlforAR;
 
+    }
+    public static int getScreenHeight(Activity mActivity){
+        DisplayMetrics screenMetrics = new DisplayMetrics();
+        mActivity.getWindowManager().getDefaultDisplay().getMetrics(screenMetrics);
+        int screenHeight = screenMetrics.heightPixels;
+      return  screenHeight;
     }
 
 }

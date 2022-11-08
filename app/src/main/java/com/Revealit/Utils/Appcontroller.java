@@ -5,6 +5,9 @@ import android.content.Context;
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
+import com.Revealit.CommonClasse.Constants;
+import com.pusher.pushnotifications.PushNotifications;
+
 public class Appcontroller extends MultiDexApplication {
     public static final String TAG = Appcontroller.class.getSimpleName();
     private static Appcontroller mInstance;
@@ -16,6 +19,8 @@ public class Appcontroller extends MultiDexApplication {
 
         //MULTIDEX
         MultiDex.install(this);
+
+
 
 
 

@@ -77,6 +77,7 @@ public class Constants {
   public static final String API_NEW_AUTH_CALLBACK = "/api/callback";
   public static final String API_NEW_AUTH_CHECK_MOBILENUMBER = "/api/phonenotexists";
   public static final String API_NEW_AUTH_COUNTRY_CODE = "api/country";
+  public static final String API_PUSH_AUTHORISATION = "api/authorize";
 
 
     public static final String AUTH_TOKEN = "access_token";

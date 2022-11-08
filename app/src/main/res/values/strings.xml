@@ -7,6 +7,8 @@
     <string name="strWarning">Warning:</string>
     <string name="strWarningMsg">Please keep this information somewhere secure that only have access to. Do not share them with anybody else. In case of losing your access to your assets in your wallet revealit TV will ask you to enter either of the displayed information.</string>
     <string name="strOk">Ok</string>
+    <string name="strAuthWarningMsg">Are you willing to authorise?</string>
+    <string name="strAuthWarningMsgTwo">If not, simply decline the request by exiting the page.</string>
     <string name="strNoARproduct">No AR Product Available</string>
     <string name="strValidEmail">Please Enter Valid Emailid</string>
     <string name="strNoFeatureVideos">No feature video available</string>
@@ -145,6 +147,7 @@
     <string name="strEnterInviteeName">Enter a revealit username or a campaign ID</string>
     <string name="strEarnupto">Earn US$1.00 in Bitcoin</string>
     <string name="strContinue">Continue</string>
+    <string name="strAuthorise">Authorise</string>
     <string name="strCopyTo">Copy to clipboard</string>
     <string name="strOffers">Hurry! This offer will end after 5,000 new users.</string>
     <string name="strByClicking">By clicking ‘Create Account’ you agree to our</string>
@@ -160,6 +163,7 @@
     <string name="strCurrentAppVersion">Current App Version</string>
     <string name="strMyWallet">My Wallet</string>
     <string name="strAbout">About</string>
+    <string name="strAuthorisation">Authorisation</string>
     <string name="strReveals">Reveals</string>
     <string name="strUser">User</string>
     <string name="strUsernameCopied">Copied to Clipboard</string>
