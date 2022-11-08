@@ -337,13 +337,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.txtContinueEnabled:
                 if(isOtpVarified) {
-                    Intent mIntent = new Intent(NewAuthEnterOTPActivity.this, NewAuthEnterUserNameActivity.class);
-                    mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,strMobileNumber);
-                    mIntent.putExtra(Constants.KEY_COUNTRY_CODE ,strCountryCode);
-                    mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
-                    mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
-                    mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,strInvitename);
-                    startActivity(mIntent);
+                   openEnterUsernameScreen();
                 }else{
                     CommonMethods.displayToast(mContext,getString(R.string.strInvalidCode));
                 }
@@ -351,6 +345,17 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                 break;
         }
 
+    }
+
+    private void openEnterUsernameScreen() {
+
+        Intent mIntent = new Intent(NewAuthEnterOTPActivity.this, NewAuthEnterUserNameActivity.class);
+        mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,strMobileNumber);
+        mIntent.putExtra(Constants.KEY_COUNTRY_CODE ,strCountryCode);
+        mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
+        mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
+        mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,strInvitename);
+        startActivity(mIntent);
     }
 
     private void apiSendOTPtoMobile(){
@@ -516,6 +521,9 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
 
                         //HIDE KEY BOARD
                         CommonMethods.hideKeyboard(mActivity);
+
+                        //OPEN ENTER USERNAME SCREEN
+                        openEnterUsernameScreen();
                     }else{
                         CommonMethods.buildDialog(mContext, ""+response.body().getStatus());
                     }

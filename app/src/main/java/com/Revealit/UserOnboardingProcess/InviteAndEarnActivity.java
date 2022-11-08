@@ -25,7 +25,7 @@ public class InviteAndEarnActivity extends AppCompatActivity implements View.OnC
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
     private ImageView  imgCancel, imgLogo;
-    private TextView txtCallForActionIvites,txtCopyToClibBoard,txtMsgCopy,txtContinueEnabled;
+    private TextView txtEarnWhileInstallingApp,txtCallForActionIvites,txtCopyToClibBoard,txtMsgCopy,txtContinueEnabled;
     private String strCallForActionMsg,strCopymsg,strUsername;
 
     @Override
@@ -56,6 +56,7 @@ public class InviteAndEarnActivity extends AppCompatActivity implements View.OnC
         txtMsgCopy = (TextView) findViewById(R.id.txtMsgCopy);
         txtCopyToClibBoard = (TextView) findViewById(R.id.txtCopyToClibBoard);
         txtCallForActionIvites = (TextView) findViewById(R.id.txtCallForActionIvites);
+        txtEarnWhileInstallingApp = (TextView) findViewById(R.id.txtEarnWhileInstallingApp);
 
         //GET INTENT DATA
          strUsername = getIntent().getStringExtra(Constants.KEY_NEW_AUTH_USERNAME);
@@ -67,6 +68,9 @@ public class InviteAndEarnActivity extends AppCompatActivity implements View.OnC
 
          //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
          txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
+
+         //SET INVITE CURRENCY MSG
+        txtEarnWhileInstallingApp.setText("Earn "+mSessionManager.getPreference(Constants.KEY_INVITE_CURRNCY)+mSessionManager.getPreference(Constants.KEY_INVITE_CURRNCY_AMOUNT) +" in "+mSessionManager.getPreference(Constants.KEY_INVITE_CYPTO_CURRNCY)+ " every time a friend installs the revealit TV app");
 
     }
     private void setOnClicks() {

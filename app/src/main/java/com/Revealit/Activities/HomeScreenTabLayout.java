@@ -9,6 +9,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.Revealit.Adapter.FragmentAdapter;
+import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.CustomViews.CustomViewPager;
@@ -26,13 +30,39 @@ import com.Revealit.Fragments.PlayFragment;
 import com.Revealit.Fragments.ProfileFragmentContainer;
 import com.Revealit.Fragments.WalletFragment;
 import com.Revealit.R;
+import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.pusher.pushnotifications.PushNotificationReceivedListener;
+import com.pusher.pushnotifications.PushNotifications;
+import com.pusher.pushnotifications.auth.BeamsTokenProvider;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeScreenTabLayout extends AppCompatActivity {
 
+    private static final String TAG ="HomeScreenTabLayout" ;
     public static CustomViewPager viewPager;
     public static TabLayout tabLayout;
     ArrayList<Fragment> fragments;
@@ -44,6 +74,8 @@ public class HomeScreenTabLayout extends AppCompatActivity {
     private boolean isUserIsActive,isFromRegistrationScreen;
     public static View viewBottomLine;
     private int REQUEST_CAMERA_PERMISSIONc=100;
+    private BeamsTokenProvider tokenProvider;
+    private Gson gson;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -59,6 +91,11 @@ public class HomeScreenTabLayout extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setId()  {
+
+        gson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                .serializeNulls()
+                .create();
 
         mActivity = HomeScreenTabLayout.this;
         mContext = HomeScreenTabLayout.this;
@@ -116,7 +153,7 @@ public class HomeScreenTabLayout extends AppCompatActivity {
         //DEFAULT SELECT PROFILE SCREEN IF USER IS FROM REGISTRATION PAGE
         //IF USER IS NOT ACTIVATED
         //IF USER ACTIVATED BUT HE IS FROM REGISTRATION SCREEN - FIRST SHOW THE PROFILE SCREEN THAN USUALL PLAY SCREEN
-        if (!isUserIsActive  || isUserIsActive && isFromRegistrationScreen) {
+        if (!isUserIsActive) {
             //SELECT USER PROFILE FRAGMENT
             selectPage(3);
             //DEFAULT ICON COLOR
@@ -275,8 +312,20 @@ public class HomeScreenTabLayout extends AppCompatActivity {
         //ASK FOR THE CAMARA PERMISSION
         requestCamaraPermission();
 
+        //CREATE PUSHER TOKEN PROVIDER
+        pusherTokenProvider();
+
 
     }
+
+    private void pusherTokenProvider() {
+
+        //PUSHER SDK
+        PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID);
+        PushNotifications.addDeviceInterest(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestCamaraPermission() {
 
@@ -308,4 +357,159 @@ public class HomeScreenTabLayout extends AppCompatActivity {
         tabLayout.setScrollPosition(pageIndex,0f,true);
         viewPager.setCurrentItem(pageIndex);
     }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PushNotifications.setOnMessageReceivedListenerForVisibleActivity(this, new PushNotificationReceivedListener() {
+            @Override
+            public void onMessageReceived(RemoteMessage remoteMessage) {
+                String messagePayload =gson.toJson(remoteMessage);
+                if (remoteMessage.getData() != null) {
+                    mActivity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            try {
+                                openBottomBarForAuth(messagePayload);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                } else {
+
+                    CommonMethods.displayToast(mContext,"Authentication failed!");
+                }
+            }
+        });
+    }
+
+    private void openBottomBarForAuth(String messagePayload) throws JSONException {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext);
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_auth_push);
+        FrameLayout bottomSheet = bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        behavior.setPeekHeight(CommonMethods.getScreenHeight(mActivity));
+        behavior.setHideable(false);
+
+        ImageView imgBackArrow = bottomSheetDialog.findViewById(R.id.imgBackArrow);
+        ImageView imgProfile = bottomSheetDialog.findViewById(R.id.imgProfile);
+        TextView txtUserName = bottomSheetDialog.findViewById(R.id.txtUserName);
+        TextView txtProtonName = bottomSheetDialog.findViewById(R.id.txtProtonName);
+        TextView txtNotificationMsg = bottomSheetDialog.findViewById(R.id.txtNotificationMsg);
+        TextView txtAuthorise = bottomSheetDialog.findViewById(R.id.txtAuthorise);
+
+        //TEXT NOTIFICATION MSG
+        txtNotificationMsg.setText(""+new JSONObject(messagePayload).getJSONObject("bundle").getJSONObject("mMap").get("gcm.notification.title"));
+
+        //TEXT USERNAME
+        txtProtonName.setText("@"+mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+
+        String pusherId =""+new JSONObject(new JSONObject(messagePayload).getJSONObject("bundle").getJSONObject("mMap").getString("pusher")).get("publishId");
+
+        imgBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //FIRST CLOSE DIALOGUE AND THEN CALL API
+                bottomSheetDialog.cancel();
+
+
+
+            }
+        });
+
+        txtAuthorise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                callAuthorisationApi(bottomSheetDialog,pusherId);
+
+
+            }
+        });
+        bottomSheetDialog.show();
+    }
+
+    private void callAuthorisationApi(BottomSheetDialog bottomSheetDialog, String pusherId) {
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+
+        JsonObject paramObject = new JsonObject();
+        paramObject.addProperty("publish_id", pusherId);
+
+        Call<JsonElement> call = patchService1.pushAuthorisation(paramObject);
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+
+                CommonMethods.printLogE("Response @ callAuthorisationApi: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callAuthorisationApi: ", "" + response.code());
+
+
+                bottomSheetDialog.cancel();
+
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
+
+                    CommonMethods.displayToast(mActivity,"Sign in successfully!");
+
+                } else {
+
+                    CommonMethods.displayToast(mActivity,"Sign in failed!");
+                }
+
+                //CLOSED DIALOGUE
+                CommonMethods.closeDialog();
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+                //CLOSED DIALOGUE
+                CommonMethods.closeDialog();
+
+                bottomSheetDialog.cancel();
+
+                CommonMethods.displayToast(mActivity,"Sign in failed!");
+
+
+            }
+        });
+
+    }
+
+
 }

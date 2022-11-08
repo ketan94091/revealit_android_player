@@ -77,6 +77,7 @@ public class Constants {
   public static final String API_NEW_AUTH_CALLBACK = "/api/callback";
   public static final String API_NEW_AUTH_CHECK_MOBILENUMBER = "/api/phonenotexists";
   public static final String API_NEW_AUTH_COUNTRY_CODE = "api/country";
+  public static final String API_PUSH_AUTHORISATION = "api/authorize";
 
 
     public static final String AUTH_TOKEN = "access_token";
@@ -172,6 +173,9 @@ public class Constants {
   public  static  final  String KEY_IS_FROM_REGISTRATION_SCREEN ="keyIsFromRegistrationScreen";
   public  static  final  String KEY_IS_GOOGLE_DRIVE_BACKUP_DONE ="keyIsGoogleDriveBackupDone";
   public  static  final  String KEY_CALL_FOR_INVITE_MSG ="keyCallForInviteMsg";
+  public  static  final  String KEY_INVITE_CYPTO_CURRNCY ="keyInviteCryptoCurrency";
+  public  static  final  String KEY_INVITE_CURRNCY ="keyInviteCurrency";
+  public  static  final  String KEY_INVITE_CURRNCY_AMOUNT ="keyInviteCurrencyAmounbt";
   public  static  final  String KEY_USER_DATA ="keyUserData";
   public  static  final  String GOOGLE_DRIVE_FOLDER_NAME="Revealit.tv.io";
   public  static  final  String KEY_PROTON_WALLET_DETAILS ="keyProtonWalletDetails";

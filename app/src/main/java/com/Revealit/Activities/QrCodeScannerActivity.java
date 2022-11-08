@@ -153,8 +153,8 @@ public class QrCodeScannerActivity extends AppCompatActivity {
                 mPublicKey = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_PUBLIC_KEY));
                 mProtonAccountName = mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME);
 
-                CommonMethods.printLogE("PRIVATE_KEY",""+mPrivateKey);
-                CommonMethods.printLogE("ACCOUNT_NAME",""+mProtonAccountName);
+                //CommonMethods.printLogE("PRIVATE_KEY",""+mPrivateKey);
+                //CommonMethods.printLogE("ACCOUNT_NAME",""+mProtonAccountName);
 
             } catch (CertificateException |NoSuchAlgorithmException |KeyStoreException |IOException |NoSuchProviderException | InvalidAlgorithmParameterException| NoSuchPaddingException| IllegalBlockSizeException |BadPaddingException |InvalidKeyException ex) {
                 ex.printStackTrace();
@@ -311,8 +311,8 @@ public class QrCodeScannerActivity extends AppCompatActivity {
         String qrCodeData, strESRdata;
         //String strPEMprivateKey ="5Kj7AAZ8n2Bc2gC4yehhVP1cVeLKncNiSSbDrTZy8xz1Z2B3yL1";
         //String account_name1 = "revdev";
-        String baseURl ="https://proton.eosusa.news";
-        //String baseURl ="https://proton.greymass.com";
+        //String baseURl ="https://proton.eosusa.news";
+        String baseURl ="https://proton.greymass.com";
         String permission="active";
         String strActionAccount ="eosio";
         String strVoteProducer ="voteproducer";

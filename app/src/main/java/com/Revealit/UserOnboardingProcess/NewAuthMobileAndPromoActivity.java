@@ -186,6 +186,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                                                        if(s.length() != 0){
                                                            last_text_edit = System.currentTimeMillis();
                                                            handler.postDelayed(input_finish_checker_mobile, delayForMobile);
+                                                           linearCountryList.setVisibility(View.GONE);
 
                                                        }else{
                                                            linearMobileWarnings.setVisibility(View.GONE);
@@ -198,30 +199,6 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
         );
 
-//        edtCountryCode.addTextChangedListener(new TextWatcher() {
-//                                                  @Override
-//                                                  public void beforeTextChanged(CharSequence s, int start, int count,
-//                                                                                int after) {
-//                                                  }
-//
-//                                                  @Override
-//                                                  public void onTextChanged(final CharSequence s, int start, int before,
-//                                                                            int count) {
-//                                                      //You need to remove this to run only once
-//                                                      handler.removeCallbacks(input_finish_checker);
-//
-//                                                  }
-//
-//                                                  @Override
-//                                                  public void afterTextChanged(final Editable s) {
-//                                                      //avoid triggering event when text is empty
-//                                                      last_text_edit = System.currentTimeMillis();
-//                                                      handler.postDelayed(input_finish_checker, delay);
-//
-//                                                  }
-//                                              }
-//
-//        );
         edtPromo.addTextChangedListener(new TextWatcher() {
                                                    @Override
                                                    public void beforeTextChanged(CharSequence s, int start, int count,
@@ -636,7 +613,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                     CommonMethods.printLogE("Response @ getCountryCodeList: ", ""+ Constants.API_CODE_200);
 
                     for (int i=0 ;i<response.body().getData().size();i++ ){
-                        if(response.body().getData().get(i).getSort_order() == 1) {
+                        if(response.body().getData().get(i).getSelected().equals("1")) {
                             selectedCountry(response.body().getData().get(i).getFlag_url(), response.body().getData().get(i).getPhone_code(), response.body().getData().get(i).getMobile_digits());
                          break;
                         }
@@ -813,6 +790,9 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         mSessionManager.updatePreferenceString(Constants.KEY_INVITE_COPY_CLIPBOARD ,""+mInviteModel.getInvitation_message_clipboard());
         mSessionManager.updatePreferenceString(Constants.KEY_INVITE_BIOMETRIC_PERMISSION ,""+mInviteModel.getBiometrics_permission_message());
         mSessionManager.updatePreferenceString(Constants.KEY_CALL_FOR_INVITE_MSG ,""+mInviteModel.getCall_for_action_message());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CYPTO_CURRNCY ,""+mInviteModel.getCrypto_currency());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CURRNCY ,""+mInviteModel.getCurrency());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CURRNCY_AMOUNT ,""+mInviteModel.getCurrency_amount());
 
 
         if(!isFromCampaignId){

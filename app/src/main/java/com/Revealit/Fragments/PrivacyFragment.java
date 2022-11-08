@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -37,6 +38,7 @@ public class PrivacyFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
     private RelativeLayout relativeBack;
     private LinearLayout linearPrivateKey,linearLogout,linearMultifactorAuth;
+    private ImageView imgBackArrow;
 
 
     public PrivacyFragment(HomeScreenTabLayout homeScreenTabLayout) {
@@ -74,6 +76,8 @@ public class PrivacyFragment extends Fragment implements View.OnClickListener {
         linearLogout =(LinearLayout)mView.findViewById(R.id.linearLogout);
         linearPrivateKey =(LinearLayout)mView.findViewById(R.id.linearPrivateKey);
 
+        imgBackArrow =(ImageView)mView.findViewById(R.id.imgBackArrow);
+
         //HIDE PRIVATE KEY IF LOGGED IN USER IS NOT ADMIN
         if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
             linearPrivateKey.setVisibility(View.VISIBLE);
@@ -81,7 +85,7 @@ public class PrivacyFragment extends Fragment implements View.OnClickListener {
 
     }
     private void setOnClicks() {
-        relativeBack.setOnClickListener(this);
+        imgBackArrow.setOnClickListener(this);
         linearMultifactorAuth.setOnClickListener(this);
         linearLogout.setOnClickListener(this);
         linearPrivateKey.setOnClickListener(this);
@@ -104,7 +108,7 @@ public class PrivacyFragment extends Fragment implements View.OnClickListener {
     public void onClick(View mView) {
 
         switch (mView.getId()){
-            case R.id.relativeBack:
+            case R.id.imgBackArrow:
                 //GO BACK TO PREVIOUS PAGE
                 getFragmentManager().popBackStackImmediate();
                 break;

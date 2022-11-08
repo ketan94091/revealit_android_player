@@ -107,8 +107,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
         mView = inflater.inflate(R.layout.fragment_wallet, container, false);
 
-        setIds();
-        setOnClicks();
+        //setIds();
+       // setOnClicks();
 
         return mView;
 
@@ -165,6 +165,10 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         //SET USERNAME
         txtAccountName.setText(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
 
+        //CALL WALLET(ACCOUNTS) DETAILS
+        callWalletDetails();
+
+
     }
 
 
@@ -176,8 +180,6 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             setIds();
             setOnClicks();
 
-            //CALL WALLET(ACCOUNTS) DETAILS
-            callWalletDetails();
 
 
         }
@@ -622,6 +624,11 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     private void callWalletDetails() {
 
+        //DISPLAY DIALOG
+        pDialog = new ProgressDialog(mContext);
+        pDialog.setMessage(mContext.getResources().getString(R.string.strFacingWalletDetails));
+        pDialog.setCancelable(false);
+        pDialog.show();
 
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -665,6 +672,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(Call<GetAccountDetailsModel> call, Response<GetAccountDetailsModel> response) {
 
+                //CLOSE DIALOGUE
+                pDialog.cancel();
 
                 CommonMethods.printLogE("Response @ callWalletDetails : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callWalletDetails : ", "" + response.code());
@@ -758,7 +767,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 openAccountNotFoundDialogue();
 
                 //CLOSE DIALOGUE
-                CommonMethods.closeDialog();
+               pDialog.cancel();
 
             }
         });
@@ -794,7 +803,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         //DISPLAY DIALOG
         pDialog = new ProgressDialog(mContext);
-        pDialog.setMessage(mContext.getResources().getString(R.string.strPleaseWait));
+        pDialog.setMessage(mContext.getResources().getString(R.string.strFatchingRewardHistoryData));
         pDialog.setCancelable(false);
         pDialog.show();
 
