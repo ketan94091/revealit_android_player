@@ -51,13 +51,16 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:node="merge">
         <activity
+            android:name=".Activities.MaintanaceActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.DisplayPrivateKeyActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.QrCodeScannerActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UserOnboardingProcess.GoogleCloudBackupActivity"
             android:exported="false"

@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
-import com.Revealit.CommonClasse.GenericTextWatcher;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.ModelClasses.CheckEmailModel;
 import com.Revealit.R;
@@ -209,14 +208,6 @@ public class VerificationCodeActivity extends AppCompatActivity implements View.
             }
 
         });
-
-
-        edtOTPone.addTextChangedListener(new GenericTextWatcher(edtOTPTwo, edtOTPone));
-        edtOTPTwo.addTextChangedListener(new GenericTextWatcher(edtOTPThree, edtOTPone));
-        edtOTPThree.addTextChangedListener(new GenericTextWatcher(edtOTPFour, edtOTPTwo));
-        edtOTPFour.addTextChangedListener(new GenericTextWatcher(edtOTPFive, edtOTPThree));
-        edtOTPFive.addTextChangedListener(new GenericTextWatcher(edtOTPSix, edtOTPFour));
-        edtOTPSix.addTextChangedListener(new GenericTextWatcher(edtOTPSix, edtOTPFive));
 
 
     }

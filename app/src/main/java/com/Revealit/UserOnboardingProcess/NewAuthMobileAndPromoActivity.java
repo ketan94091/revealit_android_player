@@ -1,9 +1,11 @@
 package com.Revealit.UserOnboardingProcess;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +13,8 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -80,14 +84,6 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
     private String strCampaignId ="0", strRefferalId="0",strInviteName="",strDefalutCountrycode ="61";
     private int intCountryPhoneLength =0;
     private List<CountryCodes.Data> mCountryList = new ArrayList<>();
-    private Runnable input_finish_checker = new Runnable() {
-        public void run() {
-            if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
-                isCountryCodeValid();
-            }
-        }
-    };
-
 
     private Runnable input_finish_checker_mobile = new Runnable() {
         public void run() {
@@ -105,6 +101,8 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         }
     };
     private RecyclerView recyclerViewRecipesList;
+    private boolean isOtpRecieved;
+    private LinearLayout linearMain;
 
 
     @Override
@@ -144,6 +142,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         linearErrorMsgs = (LinearLayout) findViewById(R.id.linearErrorMsgs);
         linearCountryList = (LinearLayout) findViewById(R.id.linearCountryList);
         linearCountryPicker = (LinearLayout) findViewById(R.id.linearCountryPicker);
+        linearMain = (LinearLayout) findViewById(R.id.linearMain);
 
 
         txtMobileWarnings = (TextView) findViewById(R.id.txtMobileWarnings);
@@ -165,6 +164,20 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
         //GET COUNTRY DATA
         getCountryCodeList();
+
+        //GET ON TOUCH OF THE SCREEN TO HIDE COUNTRY PICKER
+        linearMain.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if(linearCountryList.getVisibility() == View.VISIBLE){
+                    linearErrorMsgs.setVisibility(View.VISIBLE);
+                    linearCountryList.setVisibility(View.GONE);
+                }
+
+                return false;
+            }
+        });
 
         edtMobilenumber.addTextChangedListener(new TextWatcher() {
                                                    @Override
@@ -255,7 +268,20 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             case R.id.txtContinueEnabled:
 
                 if(isRefferalValid()){
-                    apiSendOTPtoMobile();
+
+                    if(!isOtpRecieved){
+                        apiSendOTPtoMobile(0);
+                    }else{
+                        //MOVE TO NEXT ACTIVITY
+                        Intent mIntent = new Intent(NewAuthMobileAndPromoActivity.this, NewAuthEnterOTPActivity.class);
+                        mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,edtMobilenumber.getText().toString());
+                        mIntent.putExtra(Constants.KEY_COUNTRY_CODE ,edtCountryCode.getText().toString());
+                        mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
+                        mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
+                        mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,edtPromo.getText().toString());
+                        startActivity(mIntent);
+                    }
+
                 }
                 break;
 
@@ -299,6 +325,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         if (edtCountryCode.getText().toString().isEmpty()) {
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
+            edtMobilenumber.setTextColor(getResources().getColor(R.color.colorCuratorRedError));
             imgMobileStutusTrue.setVisibility(View.INVISIBLE);
             disbaledContinueButton();
             txtMobileWarnings.setText(getString(R.string.strErrorCountryCodeEmpty));
@@ -307,6 +334,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         } else if (edtCountryCode.getText().toString().length() < 2) {
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
+            edtMobilenumber.setTextColor(getResources().getColor(R.color.colorCuratorRedError));
             imgMobileStutusTrue.setVisibility(View.INVISIBLE);
             disbaledContinueButton();
             txtMobileWarnings.setText(getString(R.string.strErrorCountryCodeValid));
@@ -322,18 +350,10 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
     private boolean isMobileNumberValid() {
 
-
-       if(edtCountryCode.getText().toString().isEmpty()) {
+        if (edtMobilenumber.getText().toString().isEmpty()) {
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
-            imgMobileStutusTrue.setVisibility(View.INVISIBLE);
-           disbaledContinueButton();
-            txtMobileWarnings.setText(getString(R.string.strErrorCountryCodeEmpty));
-            return false;
-
-        }else if (edtMobilenumber.getText().toString().isEmpty()) {
-            linearMobileWarnings.setVisibility(View.VISIBLE);
-            imgMobileStutusFalse.setVisibility(View.VISIBLE);
+            edtMobilenumber.setTextColor(getResources().getColor(R.color.colorCuratorRedError));
             imgMobileStutusTrue.setVisibility(View.INVISIBLE);
             disbaledContinueButton();
             txtMobileWarnings.setText(getString(R.string.strErrorMobileNumberEmpty));
@@ -342,20 +362,14 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         } else if (edtMobilenumber.getText().toString().length() < intCountryPhoneLength) {
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
+            edtMobilenumber.setTextColor(getResources().getColor(R.color.colorCuratorRedError));
             imgMobileStutusTrue.setVisibility(View.INVISIBLE);
             disbaledContinueButton();
             txtMobileWarnings.setText(getString(R.string.strInvalidMobileFormat));
             return false;
         }else{
-
-             //CHECK IF USER EXIST IN DATABASE
-            if(edtPromo.getText().length() < 2){
-                checkIfMobileAlreadyRegistered();
-            }else{
-                isCountryCodeValid();
-            }
-
-
+           //CHECK IF USER EXIST IN DATABASE
+            checkIfMobileAlreadyRegistered();
              return true;
          }
 
@@ -431,27 +445,83 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             }
         });
 
-        updateMobileErrorUI(false);
     }
 
     private void updateMobileErrorUI(boolean isMobileAlreadyUsed) {
 
         if (isMobileAlreadyUsed) {
-            linearMobileWarnings.setVisibility(View.VISIBLE);
+           // linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
+            edtMobilenumber.setTextColor(getResources().getColor(R.color.colorCuratorRedError));
             imgMobileStutusTrue.setVisibility(View.INVISIBLE);
             disbaledContinueButton();
-            txtMobileWarnings.setText(getString(R.string.strMobileAlreadyUsed));
+            //txtMobileWarnings.setText(getString(R.string.strMobileAlreadyUsed));
+
+            //OPEN DIALOGUE IF MOBILE NUMBER IS ALREADY REGISTERED
+            openStartOverDialogue();
 
         } else {
             linearMobileWarnings.setVisibility(View.INVISIBLE);
             imgMobileStutusFalse.setVisibility(View.INVISIBLE);
             imgMobileStutusTrue.setVisibility(View.VISIBLE);
+            edtMobilenumber.setTextColor(getResources().getColor(R.color.colorBlack));
             enabledContinueButton();
 
         }
 
     }
+
+    private void openStartOverDialogue() {
+
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
+        dialogBuilder.setCancelable(false);
+        LayoutInflater inflater = mActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.start_over_dailoague, null);
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialogBuilder.setView(dialogView);
+
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        TextView txtStartOver = (TextView) dialogView.findViewById(R.id.txtStartOver);
+        TextView txtRetrieve = (TextView) dialogView.findViewById(R.id.txtRetrieve);
+        ImageView imgCancel = (ImageView) dialogView.findViewById(R.id.imgCancel);
+
+
+        imgCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+            }
+        });
+
+
+        txtStartOver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+                //CALL START OVER
+                apiSendOTPtoMobile(1);
+
+
+            }
+        });
+
+        txtRetrieve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+            }
+        });
+        mAlertDialog.show();
+
+    }
+
     private void disbaledContinueButton(){
         txtContinueDisable.setVisibility(View.VISIBLE);
         txtContinueEnabled.setVisibility(View.GONE);
@@ -461,7 +531,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         txtContinueEnabled.setVisibility(View.VISIBLE);
     }
 
-    private void apiSendOTPtoMobile(){
+    private void apiSendOTPtoMobile(int isStartOver){
 
         //OPEN DIALOGUE
         CommonMethods.showDialog(mContext);
@@ -497,6 +567,8 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         JsonObject paramObject = new JsonObject();
         paramObject.addProperty("receiver_number", edtMobilenumber.getText().toString());
         paramObject.addProperty("country_code", edtCountryCode.getText().toString());
+        if(isStartOver == 1)
+        paramObject.addProperty("start_over", isStartOver);
 
 
         Call<NewAuthStatusModel> call = patchService1.verifyPhone(paramObject);
@@ -517,18 +589,25 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
-                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200  ) {
 
-                    CommonMethods.displayToast(mContext, getResources().getString(R.string.strOTPinboxMsg));
+                    if(isStartOver == 0){
+                        //MOVE TO NEXT ACTIVITY
+                        Intent mIntent = new Intent(NewAuthMobileAndPromoActivity.this, NewAuthEnterOTPActivity.class);
+                        mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,edtMobilenumber.getText().toString());
+                        mIntent.putExtra(Constants.KEY_COUNTRY_CODE ,edtCountryCode.getText().toString());
+                        mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
+                        mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
+                        mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,edtPromo.getText().toString());
+                        startActivity(mIntent);
 
-                    //MOVE TO NEXT ACTIVITY
-                    Intent mIntent = new Intent(NewAuthMobileAndPromoActivity.this, NewAuthEnterOTPActivity.class);
-                    mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,edtMobilenumber.getText().toString());
-                    mIntent.putExtra(Constants.KEY_COUNTRY_CODE ,edtCountryCode.getText().toString());
-                    mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
-                    mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
-                    mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,edtPromo.getText().toString());
-                    startActivity(mIntent);
+                    }else{
+
+                        updateMobileErrorUI(false);
+                    }
+
+                    //check if this api is already called
+                    isOtpRecieved = true;
 
                 } else {
                     try {
@@ -806,6 +885,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             linearPromoWarnings.setVisibility(View.VISIBLE);
             imgPromoStatus.setVisibility(View.INVISIBLE);
             imgPromoStatusFalse.setVisibility(View.VISIBLE);
+            edtPromo.setTextColor(getResources().getColor(R.color.colorCuratorRedError));
             txtPromoWarnings.setText(""+mInviteModel.getError());
 
 
@@ -814,6 +894,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             linearPromoWarnings.setVisibility(View.INVISIBLE);
             imgPromoStatus.setVisibility(View.VISIBLE);
             imgPromoStatusFalse.setVisibility(View.INVISIBLE);
+            edtPromo.setTextColor(getResources().getColor(R.color.colorBlack));
             txtPromoWarnings.setText("");
 
         }
@@ -847,6 +928,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         linearErrorMsgs.setVisibility(View.VISIBLE);
         linearCountryList.setVisibility(View.GONE);
         edtMobilenumber.setText("");
+        edtMobilenumber.setTextColor(getResources().getColor(R.color.colorBlack));
 
 
 

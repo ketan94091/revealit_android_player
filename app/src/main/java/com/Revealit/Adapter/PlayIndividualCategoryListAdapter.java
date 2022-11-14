@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -85,13 +86,15 @@ public  class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Pla
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         //SET TWO ITEMS IN SCREEN
-        holder.relativeLayout.getLayoutParams().width = (int) ((getScreenWidth() - 30) / 2);
+        holder.relativeLayout.getLayoutParams().width = (int) ((getScreenWidth() - 30) / 3);
+        //holder.relativeLayout.getLayoutParams().height = (int) (((getScreenWidth() - 30) / 3) - 80 );
 
 
         //LOAD COVER IMAGE WITH GLIDE
         Glide.with(mActivity)
                 .load("" + strCategoryList.get(position).getMediaCoverArt())
                 .placeholder(R.drawable.placeholder)
+                //.apply(new RequestOptions().override(120, 100))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

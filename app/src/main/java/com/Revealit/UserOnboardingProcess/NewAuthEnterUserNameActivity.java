@@ -72,7 +72,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
     private String strCountryCode,strMobileNumber,strCampaignId,strRefferalId,strInvitename;
 
 
-    long delay = 2000; // 2 seconds after user stops typing
+    long delay = 1000; // 2 seconds after user stops typing
     long last_text_edit = 0;
     Handler handler = new Handler();
     private EnCryptor encryptor;

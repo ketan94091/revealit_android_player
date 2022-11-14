@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -105,173 +106,28 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
         txtMobileNumber.setText(getString(R.string.strWehaveRecieved) + " (+" + strCountryCode+" "+ strMobileNumber + ") " + getString(R.string.strEnterTheCodeBelow));
 
 
-        edtOne.addTextChangedListener(new TextWatcher() {
 
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if (edtOne.getText().toString().length() == 1)     //size as per your requirement
-                {
-                    edtTwo.requestFocus();
-                } else {
-                    edtOne.requestFocus();
-                }
-                //UPDATE CONTINUE BUTTON
-                checkIfAllDigitEntered();
-            }
+        edtOne.addTextChangedListener(new GenericTextWatcher(edtOne, edtTwo));
+        edtTwo.addTextChangedListener(new GenericTextWatcher(edtTwo, edtThree));
+        edtThree.addTextChangedListener(new GenericTextWatcher(edtThree, edtFour));
+        edtFour.addTextChangedListener(new GenericTextWatcher(edtFour, edtFive));
+        edtFive.addTextChangedListener(new GenericTextWatcher(edtFive, edtSix));
+        edtSix.addTextChangedListener(new GenericTextWatcher(edtSix, null));
 
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-                // TODO Auto-generated method stub
+        edtOne.setOnKeyListener(new GenericKey(edtOne, null));
+        edtTwo.setOnKeyListener(new GenericKey(edtTwo, edtOne));
+        edtThree.setOnKeyListener(new GenericKey(edtThree, edtTwo));
+        edtFour.setOnKeyListener(new GenericKey(edtFour,edtThree));
+        edtFive.setOnKeyListener(new GenericKey(edtFive,edtFour));
+        edtSix.setOnKeyListener(new GenericKey(edtSix,edtFive));
 
-            }
-
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-            }
-
-        });
-
-        edtTwo.addTextChangedListener(new TextWatcher() {
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if (edtTwo.getText().toString().length() == 1)     //size as per your requirement
-                {
-                    edtThree.requestFocus();
-                } else {
-                    edtOne.requestFocus();
-                }
-
-                //UPDATE CONTINUE BUTTON
-                checkIfAllDigitEntered();
-            }
-
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-                // TODO Auto-generated method stub
-
-            }
-
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-            }
-
-        });
-
-        edtThree.addTextChangedListener(new TextWatcher() {
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if (edtThree.getText().toString().length() == 1)     //size as per your requirement
-                {
-                    edtFour.requestFocus();
-                } else {
-                    edtTwo.requestFocus();
-                }
-                //UPDATE CONTINUE BUTTON
-                checkIfAllDigitEntered();
-            }
-
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-                // TODO Auto-generated method stub
-
-            }
-
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-            }
-
-        });
-        edtFour.addTextChangedListener(new TextWatcher() {
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if (edtFour.getText().toString().length() == 1)     //size as per your requirement
-                {
-                    edtFive.requestFocus();
-                } else {
-                    edtThree.requestFocus();
-                }
-
-                //UPDATE CONTINUE BUTTON
-                checkIfAllDigitEntered();
-            }
-
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-                // TODO Auto-generated method stub
-
-            }
-
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-            }
-
-        });
-
-        edtFive.addTextChangedListener(new TextWatcher() {
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if (edtFive.getText().toString().length() == 1)     //size as per your requirement
-                {
-                    edtSix.requestFocus();
-
-                } else {
-                    edtFour.requestFocus();
-                }
-
-                //UPDATE CONTINUE BUTTON
-                checkIfAllDigitEntered();
-            }
-
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-                // TODO Auto-generated method stub
-
-            }
-
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-            }
-
-
-
-        });
-
-        edtSix.addTextChangedListener(new TextWatcher() {
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if (edtSix.getText().toString().length() == 1)     //size as per your requirement
-                {
-
-                } else {
-                    edtFive.requestFocus();
-                }
-
-                //UPDATE CONTINUE BUTTON
-                checkIfAllDigitEntered();
-            }
-
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-                // TODO Auto-generated method stub
-
-            }
-
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-            }
-
-        });
     }
 
-    private void checkIfAllDigitEntered() {
+
+    public void checkIfAllDigitEntered() {
 
         if (!edtOne.getText().toString().isEmpty() && !edtTwo.getText().toString().isEmpty() && !edtThree.getText().toString().isEmpty() && !edtFour.getText().toString().isEmpty() && !edtFive.getText().toString().isEmpty() && !edtSix.getText().toString().isEmpty()) {
-           apiCallVerifyOTPMobile();
+            apiCallVerifyOTPMobile();
         }else{
             txtContinueEnabled.setVisibility(View.INVISIBLE);
             txtContinueDisable.setVisibility(View.VISIBLE);
@@ -525,7 +381,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                         //OPEN ENTER USERNAME SCREEN
                         openEnterUsernameScreen();
                     }else{
-                        CommonMethods.buildDialog(mContext, ""+response.body().getStatus());
+                        CommonMethods.buildDialog(mContext, getResources().getString(R.string.strInvalidVerificationCode));
                     }
 
                 } else {
@@ -576,5 +432,57 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
         edtFive.setTextColor(getColor(R.color.colorCuratorRedError));
         edtSix.setTextColor(getColor(R.color.colorCuratorRedError));
     }
+
+    class GenericTextWatcher implements TextWatcher {
+        private EditText edtCurrent;
+        private EditText nextView;
+
+        public GenericTextWatcher(EditText edtCurrent, EditText nextView) {
+            this.edtCurrent = edtCurrent;
+            this.nextView = nextView;
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String text = editable.toString();
+
+            if (text.length() == 1 && nextView != null){
+                nextView.requestFocus();
+            }
+            checkIfAllDigitEntered();
+
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+        }
+    }
+    class GenericKey implements View.OnKeyListener {
+
+        private EditText edtCurrent;
+        private EditText edtPrevious;
+
+        public GenericKey(EditText edtCurrent, EditText edtPrevious) {
+            this.edtCurrent = edtCurrent;
+            this.edtPrevious = edtPrevious;
+        }
+
+        @Override
+        public boolean onKey(View currentView, int keyCode, KeyEvent event) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL && currentView.getId() != R.id.edtOne && edtCurrent.getText().toString().isEmpty()
+            ) {
+                edtPrevious.setText("");
+                edtPrevious.requestFocus();
+                return true;
+            }
+            return false;
+        }
+    }
+
+
 
 }

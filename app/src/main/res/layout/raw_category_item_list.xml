@@ -2,12 +2,13 @@
 
 <RelativeLayout android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginRight="10dp"
+    android:layout_height="100dp"
+    android:layout_marginTop="7dp"
+    android:layout_marginRight="7dp"
     android:layout_marginLeft="0dp"
     android:background="@drawable/new_auth_round_button_black"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
 
     <ImageView
         android:id="@+id/imgVideo"
@@ -15,16 +16,18 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:layout_marginLeft="2dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="12dp"
         android:layout_marginRight="2dp"
-        android:layout_marginBottom="15dp"
-        android:scaleType="fitXY" />
+        android:layout_marginBottom="12dp"
+        android:scaleType="centerInside" />
 
-                <ProgressBar
-                    android:id="@+id/progressImgLoad"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_centerInParent="true" />
 
-        </RelativeLayout>
+    <ProgressBar
+        android:id="@+id/progressImgLoad"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerInParent="true" />
+
+
+</RelativeLayout>
 

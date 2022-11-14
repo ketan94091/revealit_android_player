@@ -190,6 +190,10 @@ public interface UpdateAllAPI {
     @POST(Constants.API_PUSH_AUTHORISATION)
     Call<JsonElement> pushAuthorisation(@Body JsonObject body);
 
+    //VERIFY CODE
+    @POST(Constants.API_PUSH_AUTHORISATION_CANCEL)
+    Call<JsonElement> pushAuthorisationCancel(@Body JsonObject body);
+
 }
 
 

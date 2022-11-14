@@ -416,7 +416,7 @@ public class HomeScreenTabLayout extends AppCompatActivity {
             public void onClick(View v) {
 
                 //FIRST CLOSE DIALOGUE AND THEN CALL API
-                bottomSheetDialog.cancel();
+                callAuthorisationCancelApi(bottomSheetDialog,pusherId);
 
 
 
@@ -433,6 +433,81 @@ public class HomeScreenTabLayout extends AppCompatActivity {
             }
         });
         bottomSheetDialog.show();
+    }
+
+    private void callAuthorisationCancelApi(BottomSheetDialog bottomSheetDialog, String pusherId) {
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+
+        JsonObject paramObject = new JsonObject();
+        paramObject.addProperty("publish_id", pusherId);
+
+        Call<JsonElement> call = patchService1.pushAuthorisationCancel(paramObject);
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+
+                CommonMethods.printLogE("Response @ callAuthorisationCancelApi: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callAuthorisationCancelApi: ", "" + response.code());
+
+
+                bottomSheetDialog.cancel();
+
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
+
+                    CommonMethods.displayToast(mActivity,"Sign in Cancel!");
+
+                } else {
+
+                    CommonMethods.displayToast(mActivity,"Sign in failed!");
+                }
+
+                //CLOSED DIALOGUE
+                CommonMethods.closeDialog();
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+                //CLOSED DIALOGUE
+                CommonMethods.closeDialog();
+
+                bottomSheetDialog.cancel();
+
+                CommonMethods.displayToast(mActivity,"Sign in failed!");
+
+
+            }
+        });
     }
 
     private void callAuthorisationApi(BottomSheetDialog bottomSheetDialog, String pusherId) {

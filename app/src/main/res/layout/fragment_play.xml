@@ -155,12 +155,12 @@
             android:orientation="vertical"
             >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycleCategoryList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/linearTrending"
-            android:layout_marginTop="15dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycleCategoryList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/linearTrending"
+                android:layout_marginTop="15dp" />
 
             <TextView
                 android:id="@+id/txtNoPublishedVideo"
