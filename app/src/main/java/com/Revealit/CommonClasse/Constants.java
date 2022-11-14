@@ -78,6 +78,7 @@ public class Constants {
   public static final String API_NEW_AUTH_CHECK_MOBILENUMBER = "/api/phonenotexists";
   public static final String API_NEW_AUTH_COUNTRY_CODE = "api/country";
   public static final String API_PUSH_AUTHORISATION = "api/authorize";
+  public static final String API_PUSH_AUTHORISATION_CANCEL = "api/authorizecancel";
 
 
     public static final String AUTH_TOKEN = "access_token";
@@ -171,6 +172,7 @@ public class Constants {
   public  static  final  String KEY_INVITE_COPY_CLIPBOARD ="keyInviteCpoyClipBorad";
   public  static  final  String KEY_INVITE_BIOMETRIC_PERMISSION ="keyInviteBioMetricPermission";
   public  static  final  String KEY_IS_FROM_REGISTRATION_SCREEN ="keyIsFromRegistrationScreen";
+  public  static  final  String KEY_IS_FROM_CALLBACKAPI ="keyIsFromCallbackApi";
   public  static  final  String KEY_IS_GOOGLE_DRIVE_BACKUP_DONE ="keyIsGoogleDriveBackupDone";
   public  static  final  String KEY_CALL_FOR_INVITE_MSG ="keyCallForInviteMsg";
   public  static  final  String KEY_INVITE_CYPTO_CURRNCY ="keyInviteCryptoCurrency";

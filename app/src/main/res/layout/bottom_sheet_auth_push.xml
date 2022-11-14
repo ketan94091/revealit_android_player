@@ -64,8 +64,8 @@
                 android:layout_height="120dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
-        android:layout_gravity="center_horizontal"
-                android:background="@drawable/border_ovel_blue" />
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/app_icon_round" />
 
             <TextView
                 android:id="@+id/txtUserName"
@@ -90,7 +90,6 @@
                 android:layout_below="@+id/txtUserName"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/quasimoda_semibold"
-                android:text="KetsPatel"
                 android:textAlignment="center"
                 android:textColor="@color/colorBottomBarActiveGrey"
                 android:textFontWeight="600"
