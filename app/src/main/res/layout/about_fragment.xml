@@ -41,7 +41,7 @@
                     android:text="@string/strHelp"
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="600"
-                    android:textSize="14dp" />
+                    android:textSize="15dp" />
 
                 <TextView
                     android:id="@+id/txtUsername"
@@ -53,18 +53,18 @@
                     android:text="@string/strAbout"
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="700"
-                    android:textSize="14dp" />
+                    android:textSize="15dp" />
 
 
             </RelativeLayout>
 
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="50dp"
             android:layout_marginTop="100dp"
-            >
+            android:padding="25dp">
 
             <TextView
                 android:id="@+id/txtVersionName"
@@ -73,16 +73,27 @@
                 android:fontFamily="@font/bilo_bold"
                 android:textColor="@color/colorBlack"
                 android:textFontWeight="700"
-                android:textSize="14dp" />
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/txtApiVersionName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtVersionName"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/bilo_bold"
+                android:textColor="@color/colorBlack"
+                android:textFontWeight="700"
+                android:textSize="15dp" />
 
             <LinearLayout
                 android:id="@+id/linearAdminData"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txtVersionName"
+                android:layout_below="@+id/txtApiVersionName"
                 android:layout_marginTop="30dp"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/txtMinimumAcceptableVersion"
@@ -92,7 +103,7 @@
                     android:fontFamily="@font/bilo_bold"
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="700"
-                    android:textSize="12dp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/txtMinimumAcceptableApiVersion"
@@ -104,7 +115,7 @@
                     android:gravity="center_vertical"
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="700"
-                    android:textSize="12dp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/txtProfileUpdateReminder"
@@ -116,7 +127,7 @@
                     android:gravity="center_vertical"
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="700"
-                    android:textSize="12dp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/txtBackUpUpdateReminder"
@@ -128,7 +139,7 @@
                     android:gravity="center_vertical"
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="700"
-                    android:textSize="12dp" />
+                    android:textSize="14dp" />
 
             </LinearLayout>
 

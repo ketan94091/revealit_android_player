@@ -380,17 +380,20 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
 
                         //OPEN ENTER USERNAME SCREEN
                         openEnterUsernameScreen();
+
                     }else{
-                        CommonMethods.buildDialog(mContext, getResources().getString(R.string.strInvalidVerificationCode));
+
+                        CommonMethods.buildRevealitCustomDialog(mActivity,mContext, getResources().getString(R.string.strInvalidVerificationCode), getResources().getString(R.string.strInvalidVerificationCodeMessage));
+
                     }
 
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        CommonMethods.buildDialog(mContext,"Error : "+ jObjError.getString("message"));
-                    } catch (Exception e) {
-                        CommonMethods.buildDialog(mContext,"Error : "+e.getMessage());
+                        CommonMethods.buildRevealitCustomDialog(mActivity,mContext, getResources().getString(R.string.strInvalidVerificationCode), jObjError.getString("message"));
 
+                    } catch (Exception e) {
+                        CommonMethods.buildRevealitCustomDialog(mActivity,mContext, getResources().getString(R.string.strInvalidVerificationCode), ""+e.getMessage());
                     }
                 }
 
@@ -404,7 +407,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
-                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+                CommonMethods.buildRevealitCustomDialog(mActivity,mContext, getResources().getString(R.string.strInvalidVerificationCode), getResources().getString(R.string.strApiCallFailed));
 
 
             }

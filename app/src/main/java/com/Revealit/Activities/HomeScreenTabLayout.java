@@ -321,7 +321,15 @@ public class HomeScreenTabLayout extends AppCompatActivity {
     private void pusherTokenProvider() {
 
         //PUSHER SDK
-        PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID);
+        //IF -> SELECTED SERVER INSTANCE IS INTEGRATION
+        //ELSE -> OTHER THAN INTEGRATION
+        if(mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 2){
+            PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_INTERGRATION);
+        }else {
+            PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_PRODUCTION);
+        }
+
+        //REGISTER PUSHER DEVICE INTEREST
         PushNotifications.addDeviceInterest(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
 
     }

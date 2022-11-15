@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Handler;
@@ -16,8 +17,11 @@ import android.provider.Settings;
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Revealit.BuildConfig;
@@ -85,6 +89,47 @@ public class CommonMethods {
                 builder.setNegativeButton(mContext.getResources().getString(R.string.strOk), null);
                 AlertDialog dialog = builder.create();
                 dialog.show();
+            }
+        });
+
+
+    }
+
+    public static void buildRevealitCustomDialog(Activity mActivity,Context mContext,String strTitle, String strMessege) {
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
+                dialogBuilder.setCancelable(false);
+                LayoutInflater inflater = mActivity.getLayoutInflater();
+                final View dialogView = inflater.inflate(R.layout.custom_revealit_dialogue, null);
+                mActivity.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                dialogBuilder.setView(dialogView);
+
+
+                final AlertDialog mAlertDialog = dialogBuilder.create();
+                ImageView imgCancel = (ImageView) dialogView.findViewById(R.id.imgCancel);
+                TextView txtDisplayTitle = (TextView) dialogView.findViewById(R.id.txtDisplayTitle);
+                TextView txtMessage = (TextView) dialogView.findViewById(R.id.txtMessage);
+
+                //SET TEXT TO RESPECTIVE TEXT VIEW
+                txtDisplayTitle.setText(strTitle);
+                txtMessage.setText(strMessege);
+
+
+                imgCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        mAlertDialog.dismiss();
+
+                    }
+                });
+
+
+
+                mAlertDialog.show();
             }
         });
 

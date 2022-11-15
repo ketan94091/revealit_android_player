@@ -19,7 +19,9 @@
     <string name="strPleaseWait">Please Wait</string>
     <string name="strFacingWalletDetails">Fetching Wallet details...</string>
     <string name="strFatchingRewardHistoryData">Fetching Reward history details...</string>
-    <string name="strInvalidVerificationCode">Invalid verification code </string>
+    <string name="strInvalidVerificationCode">Invalid verification code</string>
+    <string name="strInvalidVerificationCodeMessage">You may have entered an incorrect verification code, please try again with the correct one.</string>
+    <string name="strApiCallFailed">Api call failed!</string>
     <string name="strButton">Play Video</string>
     <string name="strARmode">Launch AR mode</string>
     <string name="strLogin">Login</string>
@@ -32,6 +34,7 @@
     <string name="strWallet">Wallet</string>
     <string name="strLogout">Logout</string>
     <string name="strPrivateKey">Private Key</string>
+    <string name="strYourRecoveryPhras">Your Recovery Phrase:</string>
     <string name="strPhras">Mnemonic</string>
     <string name="strGetStarted">Get Started</string>
     <string name="strStatus">Status</string>
@@ -210,6 +213,7 @@
     <string name="strStatusCode404Error">Api status code 404, not found!</string>
     <string name="strStatusCode400Error">Error! Api status code 400</string>
     <string name="strMinimumAcceptableVersion">minumum_acceptable_version</string>
+    <string name="strApiVersion">Current Api Version</string>
     <string name="strMinimumAcceptableApiVersion">minumum_acceptable_api_version</string>
     <string name="strProfileUpdateReminder">profile_update_reminder_period</string>
     <string name="strBackUpUpdateReminder">backup_update_reminder_period</string>

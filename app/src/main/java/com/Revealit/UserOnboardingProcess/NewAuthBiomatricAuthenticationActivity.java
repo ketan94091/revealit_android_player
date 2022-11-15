@@ -251,6 +251,9 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                 CommonMethods.printLogE("Response @ callCallBackAPI: ", "" + gson.toJson(response.body()));
 
 
+                //CLOSE DIALOG
+                CommonMethods.closeDialog();
+
                 if (response.isSuccessful() && response.code() == Constants.API_CODE_200 && response.body().getToken() != null) {
 
 
@@ -276,6 +279,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                     //SAVE PUBLIC SETTINGS
                     if(response.body().getPuplic_settings() != null){
+                        mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_API_VERSION, response.body().getPuplic_settings().getApi_version());
                         mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_VERSION, response.body().getPuplic_settings().getMinumum_acceptable_version());
                         mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION, response.body().getPuplic_settings().getMinumum_acceptable_api_version());
                         mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER, response.body().getPuplic_settings().getProfile_update_reminder_period());
@@ -283,34 +287,32 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                     }
 
 
+                    //CHECK IF APPLICATION IS IN MAINTENANCE
+                    if(response.body().getPuplic_settings() != null && response.body().getPuplic_settings().getMaintenance().equals("1")){
+                        //MOVE TO MAINTENANCE SCREEN
+                        Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, MaintanaceActivity.class);
+                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
+                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mIntent);
+                        finish();
+                    }else {
+                        //MOVE TO HOME SCREEN
+                        Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, HomeScreenTabLayout.class);
+                        mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN, false);
+                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mIntent);
+                        finish();
+                    }
 
-                    //MOVE TO HOME SCREEN
-                    Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, HomeScreenTabLayout.class);
-                    mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,false);
-                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(mIntent);
-                    finish();
 
 
-
-                }else if(response.code() >= 500){
-                    //MOVE TO MAINTENANCE SCREEN
-                    Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, MaintanaceActivity.class);
-                    mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,true);
-                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(mIntent);
-                    finish();
-
-
-                } else {
+                }else {
 
                     displayAlertDialogue(getResources().getString(R.string.strUsernotfound));
 
 
                 }
 
-                //CLOSE DIALOG
-               CommonMethods.closeDialog();
 
 
             }
@@ -432,6 +434,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                     //SAVE PUBLIC SETTINGS
                     if(response.body().getPuplic_settings() != null){
+                        mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_API_VERSION, response.body().getPuplic_settings().getApi_version());
                         mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_VERSION, response.body().getPuplic_settings().getMinumum_acceptable_version());
                         mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION, response.body().getPuplic_settings().getMinumum_acceptable_api_version());
                         mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER, response.body().getPuplic_settings().getProfile_update_reminder_period());
@@ -439,26 +442,26 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                     }
 
 
-                    Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, HomeScreenTabLayout.class);
-                    mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,false);
-                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-                    startActivity(mIntent);
-                    finish();
+                    //CHECK IF APPLICATION IS IN MAINTENANCE
+                    if(response.body().getPuplic_settings() != null && response.body().getPuplic_settings().getMaintenance().equals("1")){
+                        //MOVE TO MAINTENANCE SCREEN
+                        Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, MaintanaceActivity.class);
+                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
+                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mIntent);
+                        finish();
+                    }else {
+                        Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, HomeScreenTabLayout.class);
+                        mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,false);
+                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mIntent);
+                        finish();
+
+                    }
 
 
-
-                }else if(response.code() >= 500){
-
-                    //MOVE TO MAINTENANCE SCREEN
-                    Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, MaintanaceActivity.class);
-                    mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
-                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(mIntent);
-                    finish();
-
-
-                } else {
+                }else {
 
                     displayAlertDialogue(getResources().getString(R.string.strUsernotfound));
 

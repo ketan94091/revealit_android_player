@@ -67,7 +67,11 @@ public class InviteAndEarnActivity extends AppCompatActivity implements View.OnC
          txtCallForActionIvites.setText(strCallForActionMsg);
 
          //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
-         txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
+        if(strCopymsg.contains("xxxx")){
+            txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
+        }else{
+            txtMsgCopy.setText(strCopymsg.replace("XXXX",strUsername));
+        }
 
          //SET INVITE CURRENCY MSG
         txtEarnWhileInstallingApp.setText("Earn "+mSessionManager.getPreference(Constants.KEY_INVITE_CURRNCY)+mSessionManager.getPreference(Constants.KEY_INVITE_CURRNCY_AMOUNT) +" in "+mSessionManager.getPreference(Constants.KEY_INVITE_CYPTO_CURRNCY)+ " every time a friend installs the revealit TV app");

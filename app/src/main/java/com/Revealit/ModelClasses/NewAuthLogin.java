@@ -67,25 +67,35 @@ public class NewAuthLogin {
 
     public class PublicSetting {
 
-      private String minumum_acceptable_version;
-      private String minumum_acceptable_api_version;
+      private String api_version;
+      private String minimum_acceptable_version;
+      private String minimum_acceptable_api_version;
       private int profile_update_reminder_period;
       private int backup_update_reminder_period;
+      private String maintenance;
 
-        public String getMinumum_acceptable_version() {
-            return minumum_acceptable_version;
+        public String getApi_version() {
+            return api_version;
         }
 
-        public void setMinumum_acceptable_version(String minumum_acceptable_version) {
-            this.minumum_acceptable_version = minumum_acceptable_version;
+        public void setApi_version(String api_version) {
+            this.api_version = api_version;
+        }
+
+        public String getMinumum_acceptable_version() {
+            return minimum_acceptable_version;
+        }
+
+        public void setMinumum_acceptable_version(String minimum_acceptable_version) {
+            this.minimum_acceptable_version = minimum_acceptable_version;
         }
 
         public String getMinumum_acceptable_api_version() {
-            return minumum_acceptable_api_version;
+            return minimum_acceptable_api_version;
         }
 
-        public void setMinumum_acceptable_api_version(String minumum_acceptable_api_version) {
-            this.minumum_acceptable_api_version = minumum_acceptable_api_version;
+        public void setMinumum_acceptable_api_version(String minimum_acceptable_api_version) {
+            this.minimum_acceptable_api_version = minimum_acceptable_api_version;
         }
 
         public int getProfile_update_reminder_period() {
@@ -102,6 +112,14 @@ public class NewAuthLogin {
 
         public void setBackup_update_reminder_period(int backup_update_reminder_period) {
             this.backup_update_reminder_period = backup_update_reminder_period;
+        }
+
+        public String getMaintenance() {
+            return maintenance;
+        }
+
+        public void setMaintenance(String maintenance) {
+            this.maintenance = maintenance;
         }
     }
 }

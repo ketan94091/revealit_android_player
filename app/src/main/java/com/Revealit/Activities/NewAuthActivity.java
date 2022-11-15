@@ -121,7 +121,14 @@ public class NewAuthActivity extends AppCompatActivity implements View.OnClickLi
         relativeSurface = (RelativeLayout) findViewById(R.id.relativeSurface);
 
         //PUSHER SDK
-        PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID);
+        //IF -> SELECTED SERVER INSTANCE IS INTEGRATION
+        //ELSE -> OTHER THAN INTEGRATION
+        if(mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 2){
+            PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_INTERGRATION);
+        }else {
+            PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_PRODUCTION);
+        }
+
 
     }
 
@@ -794,9 +801,15 @@ public class NewAuthActivity extends AppCompatActivity implements View.OnClickLi
                     Log.e("PusherBeams", "Pusher Beams authentication failed: " + error.getMessage());
                 }
             });
+            //PUSHER SDK
+            //IF -> SELECTED SERVER INSTANCE IS INTEGRATION
+            //ELSE -> OTHER THAN INTEGRATION
+            if(mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 2){
+                PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_INTERGRATION);
+            }else {
+                PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_PRODUCTION);
+            }
 
-            //START NOTIFICATION FOR THIS DEVICE
-            PushNotifications.start(mContext,Constants.PUSHER_INSTANCE_ID);
 
 
             return null;

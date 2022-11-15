@@ -33,7 +33,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     private HomeScreenTabLayout mHomeScreenTabLayout;
     private OnFragmentInteractionListener mListener;
     private RelativeLayout relativeBack;
-    private TextView txtBackUpUpdateReminder,txtProfileUpdateReminder,txtMinimumAcceptableApiVersion,txtMinimumAcceptableVersion,txtVersionName;
+    private TextView txtBackUpUpdateReminder,txtProfileUpdateReminder,txtMinimumAcceptableApiVersion,txtMinimumAcceptableVersion,txtApiVersionName,txtVersionName;
     private LinearLayout linearAdminData;
 
 
@@ -71,6 +71,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         linearAdminData =(LinearLayout)mView.findViewById(R.id.linearAdminData);
 
         txtVersionName=(TextView)mView.findViewById(R.id.txtVersionName);
+        txtApiVersionName=(TextView)mView.findViewById(R.id.txtApiVersionName);
         txtMinimumAcceptableVersion=(TextView)mView.findViewById(R.id.txtMinimumAcceptableVersion);
         txtMinimumAcceptableApiVersion=(TextView)mView.findViewById(R.id.txtMinimumAcceptableApiVersion);
         txtProfileUpdateReminder=(TextView)mView.findViewById(R.id.txtProfileUpdateReminder);
@@ -78,6 +79,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
         //SET APP VERSION
         txtVersionName.setText(getActivity().getString(R.string.strCurrentAppVersion)+" : "+ CommonMethods.installedAppVersion(mContext));
+        txtApiVersionName.setText(getActivity().getString(R.string.strApiVersion)+" : "+ mSessionManager.getPreference(Constants.KEY_PUBLIC_SETTING_API_VERSION));
 
        //CHECK IF USER IS ADMIN
         if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){

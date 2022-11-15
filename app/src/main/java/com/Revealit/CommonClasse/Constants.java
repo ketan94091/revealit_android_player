@@ -184,6 +184,7 @@ public class Constants {
   public  static  final  String KEY_REVEALIT_PRIVATE_KEY="keyRevealitPrivatekey";
   public  static  final  String KEY_ISFROM_LOGIN="keyIsFromLogin";
   public  static  final  String KEY_ISFROM_LOGOUT="keyIsUserIsFromLogout";
+  public  static  final  String KEY_PUBLIC_SETTING_API_VERSION="keyApiVersion";
   public  static  final  String KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_VERSION="keyMinimumAcceptableVersion";
   public  static  final  String KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION="keyMinimumAcceptableApiVersion";
   public  static  final  String KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER="keyProfileReminder";
@@ -192,7 +193,8 @@ public class Constants {
 
     public static String API_KEY = "AIzaSyC4elGdU9Oxi2DPIShG4pRW2gRBZOeE0pM";
     public static String VIDEO_VIEW = "videoView";
-    public static String PUSHER_INSTANCE_ID = "b8896e62-3c00-43b7-adfd-59960ee48a1d";
+    public static String PUSHER_INSTANCE_ID_INTERGRATION = "b8896e62-3c00-43b7-adfd-59960ee48a1d";// FOR INTEGRATION
+    public static String PUSHER_INSTANCE_ID_PRODUCTION = "3d9abdc3-c6f6-4221-94a5-4004dcf833c4";//STAGING + TESTING1 + TESTING2
 
 
 
