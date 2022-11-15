@@ -445,6 +445,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             }
         });
 
+        updateMobileErrorUI(false);
     }
 
     private void updateMobileErrorUI(boolean isMobileAlreadyUsed) {
