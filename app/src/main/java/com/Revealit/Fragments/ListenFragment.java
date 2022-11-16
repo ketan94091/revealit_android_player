@@ -93,6 +93,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     private ArrayList<Long> mLongRevealTime = new ArrayList<>();
     private Activity homeScreenTabLayout;
     private LinearLayout linearWavingBackground;
+    private RevealItHistoryListAdapter mRevealItHistoryListAdapter;
 
     private static String[] PERMISSIONS = {
             Manifest.permission.ACCESS_NETWORK_STATE,
@@ -118,7 +119,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         };
     };
 
-;
+
 
     public ListenFragment(HomeScreenTabLayout homeScreenTabLayout) {
         this.homeScreenTabLayout = homeScreenTabLayout;
@@ -694,8 +695,10 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
 
         //SET REVEAL IT HISTORY FOR LIVE MODE
-        RevealItHistoryListAdapter mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mActivity, mDatabaseHelper.getRevealitHistoryData(),mRemoveListenHistory);
+        mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mActivity, mDatabaseHelper.getRevealitHistoryData(),mRemoveListenHistory);
         recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
+//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+//        itemTouchHelper.attachToRecyclerView(recycleRevealList);
 
         //SET SIZE TO REVEAL IT
         txtRevealCount.setText(""+mDatabaseHelper.getRevealitHistoryData().size()+" reveals");
@@ -767,5 +770,32 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         updateRevealitHistoryListSimulation();
 
     }
+//    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+//
+//
+//        @Override
+//        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+//            return false;
+//        }
+//
+//        @Override
+//        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+//            final int position = viewHolder.getAdapterPosition();
+//            if (direction == ItemTouchHelper.LEFT) {
+//
+//            }
+//        }
+//
+//        @Override
+//        public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+//            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+//
+//            View itemView = viewHolder.itemView;
+//
+//
+//
+//
+//        }
+//    };
 
 }

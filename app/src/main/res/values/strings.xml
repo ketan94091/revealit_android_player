@@ -201,7 +201,7 @@
     <string name="strGrabMoney">US$10,000 of Bitcoin up for Grabs!</string>
     <string name="strEnterUsernameContent">Choose carefully, your username will publicly identify you on the revealit TV platform. It is also how we pay you and how you shop.</string>
     <string name="strMinimumCharcter">Minimum 4 characters</string>
-    <string name="strMaxCharcter">Maximum 12 characters</string>
+    <string name="strMaxCharcter">Maximum 8 characters</string>
     <string name="strOnlyLowerCase">Only lowercase a-z or numbers 1-5</string>
     <string name="strUsernameAvailable">Username available</string>
     <string name="strOTPwrong">Entered OTP is wrong!</string>

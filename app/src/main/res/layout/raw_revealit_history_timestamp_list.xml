@@ -3,7 +3,7 @@
     android:id="@+id/relativeLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginRight="20dp"
+    android:layout_marginRight="15dp"
     >
 
             <TextView
@@ -12,7 +12,7 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
                 android:textColor="@color/colorNewAppGreen"
-                android:textSize="14dp"
+                android:textSize="12dp"
                 android:fontFamily="@font/quasimoda_bold"
                 android:textFontWeight="700"
                 android:clickable="true"

@@ -41,7 +41,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private TextView txtUsername, txtAdmin,txtHelp, txtSettings, txtMySavedItems, txtAccount, txtStatusMsg, txtStatus, txtCopyToClibBoard, txtMsgCopy;
     private String strUsername, strCopymsg;
     private boolean isUserIsActive =false;
-    private LinearLayout linearAccount,linearSettings,linearSavedItems,linearAdmin,linearHelp;
+    private LinearLayout linearAccount,linearSettings,linearSavedItems,linearUserStatus,linearAdmin,linearHelp;
     private ImageView imgScanQRcode;
 
     public UserProfileFragment(HomeScreenTabLayout homeScreenTabLayout) {
@@ -101,6 +101,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         linearSettings=(LinearLayout)mView.findViewById(R.id.linearSettings);
         linearHelp=(LinearLayout)mView.findViewById(R.id.linearHelp);
         linearAdmin=(LinearLayout)mView.findViewById(R.id.linearAdmin);
+        linearUserStatus=(LinearLayout)mView.findViewById(R.id.linearUserStatus);
 
         imgScanQRcode =(ImageView)mView.findViewById(R.id.imgScanQRcode);
 
@@ -253,6 +254,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             txtStatusMsg.setText(getResources().getString(R.string.strThankYouForEnrolingPlatform));
             txtStatus.setTextColor(getResources().getColor(R.color.colorNewAppGreen));
 
+            //HIDE USER STATUS AS STATUS IS ALREADY VERIFIED
+            linearUserStatus.setVisibility(View.GONE);
 
             //SET USERNAME IF USER IS ACTIVE
             txtUsername.setText(getResources().getString(R.string.strUser) + " : "+strUsername);
@@ -279,6 +282,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         }else{
             linearAdmin.setVisibility(View.INVISIBLE);
         }
+
+
 
 
     }

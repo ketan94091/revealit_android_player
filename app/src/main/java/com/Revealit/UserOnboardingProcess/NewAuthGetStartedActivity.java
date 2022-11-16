@@ -60,6 +60,13 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
         //SET APPLICATION INSTALLED VERSION NAME AND SERVER NAME
         txtSwappingSilo.setText(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME) +" Server : "+  BuildConfig.VERSION_NAME);
 
+        //HIDE SHOW ADMIN DETAILS
+        if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
+            txtSwappingSilo.setVisibility(View.VISIBLE);
+        }else{
+            txtSwappingSilo.setVisibility(View.INVISIBLE);
+        }
+
 
     }
 

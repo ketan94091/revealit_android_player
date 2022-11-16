@@ -167,8 +167,8 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
     @Override
     public int getItemCount() {
 
-        //return mListAllTimeStamp.size() > 5 ? 5 : mListAllTimeStamp.size();
-        return  mListAllTimeStamp.size();
+        return mListAllTimeStamp.size() > 6 ? 6 : mListAllTimeStamp.size();
+        //return  mListAllTimeStamp.size();
     }
 
     private void openItemList(int intMediaId, String strItemId, String strTimeStamp) {
