@@ -41,11 +41,11 @@ public class DisplayPrivateKeyActivity extends AppCompatActivity implements View
     private DatabaseHelper mDatabaseHelper;
     private SessionManager mSessionManager;
     private RelativeLayout relativeBack;
-    private ImageView imgCopy,imgCopyPhrase;
-    private TextView txtPrivateKeyPhrase1,txtPrivateKeyPhrase2,txtPrivateKeyPhrase3,txtPrivateKeyPhrase4,txtPrivateKeyPhrase5,txtPrivateKeyPhrase6,txtPrivateKeyPhrase7,txtPrivateKeyPhrase8,txtPrivateKeyPhrase9,txtPrivateKeyPhrase10,txtPrivateKeyPhrase11,txtPrivateKeyPhrase12,txtPrivateKey;
+    private ImageView imgCopy,imgCopyPublicPem,imgCopyPrivatePem,imgCopyPhrase;
+    private TextView txtPrivateKeyPhrase1,txtPrivateKeyPhrase2,txtPrivateKeyPhrase3,txtPrivateKeyPhrase4,txtPrivateKeyPhrase5,txtPrivateKeyPhrase6,txtPrivateKeyPhrase7,txtPrivateKeyPhrase8,txtPrivateKeyPhrase9,txtPrivateKeyPhrase10,txtPrivateKeyPhrase11,txtPrivateKeyPhrase12,txtPublicKeyPem,txtPrivateKeyPem,txtPrivateKey;
     private DeCryptor decryptor;
     private EnCryptor encryptor;
-    private String mMnemonics,mPrivateKey;
+    private String mMnemonics,mPublicPem,mPrivatePem,mPrivateKey;
 
 
     @Override
@@ -73,8 +73,12 @@ public class DisplayPrivateKeyActivity extends AppCompatActivity implements View
 
         imgCopy =(ImageView)findViewById(R.id.imgCopy);
         imgCopyPhrase =(ImageView)findViewById(R.id.imgCopyPhrase);
+        imgCopyPrivatePem =(ImageView)findViewById(R.id.imgCopyPrivatePem);
+        imgCopyPublicPem =(ImageView)findViewById(R.id.imgCopyPublicPem);
 
         txtPrivateKey=(TextView)findViewById(R.id.txtPrivateKey);
+        txtPrivateKeyPem=(TextView)findViewById(R.id.txtPrivateKeyPem);
+        txtPublicKeyPem=(TextView)findViewById(R.id.txtPublicKeyPem);
         txtPrivateKeyPhrase1=(TextView)findViewById(R.id.txtPrivateKeyPhrase1);
         txtPrivateKeyPhrase2=(TextView)findViewById(R.id.txtPrivateKeyPhrase2);
         txtPrivateKeyPhrase3=(TextView)findViewById(R.id.txtPrivateKeyPhrase3);
@@ -95,14 +99,24 @@ public class DisplayPrivateKeyActivity extends AppCompatActivity implements View
             //GET PRIVATE KEY
             mPrivateKey = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_PRIVATE_KEY));
 
-            //GET PUBLIC KEY
-            String mPublicKey = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_PUBLIC_KEY));
+
+            //GET PRIVAT KEY PEM
+            mPrivatePem = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_PRIVATE_KEY_PEM));
+
+            //GET PUBLIC KEY PEM
+            mPublicPem = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_PUBLIC_KEY_PEM));
 
             //GET MNEMONICS
             mMnemonics = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_MNEMONICS));
 
             //SET PRIVATE KEY
             txtPrivateKey.setText(mPrivateKey);
+
+            //SET PRIVATE KEY PEM
+            txtPrivateKeyPem.setText(mPrivatePem);
+
+            //SET PUBLIC KEY PEM
+            txtPublicKeyPem.setText(mPublicPem);
 
             //SPLIT MNEMONIC
             String[] animalsArray = mMnemonics.split(" ");
@@ -130,6 +144,8 @@ public class DisplayPrivateKeyActivity extends AppCompatActivity implements View
         relativeBack.setOnClickListener(this);
         imgCopy.setOnClickListener(this);
         imgCopyPhrase.setOnClickListener(this);
+        imgCopyPrivatePem.setOnClickListener(this);
+        imgCopyPublicPem.setOnClickListener(this);
 
     }
 
@@ -158,6 +174,24 @@ public class DisplayPrivateKeyActivity extends AppCompatActivity implements View
 
                     //TOAST MSG
                     CommonMethods.displayToast(mContext, getString(R.string.strUsernameCopied));
+                break;
+
+            case R.id.imgCopyPrivatePem:
+                ClipboardManager clipboardPrivatePem = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipPrivatePem = ClipData.newPlainText(getString(R.string.strPrivatePem),mPrivatePem);
+                clipboardPrivatePem.setPrimaryClip(clipPrivatePem);
+
+                //TOAST MSG
+                CommonMethods.displayToast(mContext, getString(R.string.strUsernameCopied));
+                break;
+
+            case R.id.imgCopyPublicPem:
+                ClipboardManager clipboardPublicPem = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipPublicPem = ClipData.newPlainText(getString(R.string.strPublicPem),mPublicPem);
+                clipboardPublicPem.setPrimaryClip(clipPublicPem);
+
+                //TOAST MSG
+                CommonMethods.displayToast(mContext, getString(R.string.strUsernameCopied));
                 break;
         }
 

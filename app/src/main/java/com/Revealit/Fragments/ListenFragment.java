@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,6 +37,7 @@ import com.Revealit.Adapter.RevealItHistoryListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
+import com.Revealit.CommonClasse.SwipeHelper;
 import com.Revealit.CustomViews.RippleBackground;
 import com.Revealit.Interfaces.RemoveListenHistory;
 import com.Revealit.ModelClasses.CategoryWisePlayListModel;
@@ -119,6 +121,14 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         };
     };
 
+    enum ButtonsState {
+        GONE,
+        LEFT_VISIBLE,
+        RIGHT_VISIBLE
+    }
+    private boolean swipeBack = false;
+    private ButtonsState buttonShowedState = ButtonsState.GONE;
+    private static final float buttonWidth = 300;
 
 
     public ListenFragment(HomeScreenTabLayout homeScreenTabLayout) {
@@ -697,8 +707,43 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         //SET REVEAL IT HISTORY FOR LIVE MODE
         mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mActivity, mDatabaseHelper.getRevealitHistoryData(),mRemoveListenHistory);
         recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-//        itemTouchHelper.attachToRecyclerView(recycleRevealList);
+        new SwipeHelper(getContext(), recycleRevealList) {
+            @Override
+            public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+
+
+                underlayButtons.add(new SwipeHelper.UnderlayButton(
+                        "Share",
+                        R.mipmap.icn_share,
+                        Color.parseColor("#F5F5F5"),
+                        getContext(),
+                        new SwipeHelper.UnderlayButtonClickListener() {
+                            @Override
+                            public void onClick(int pos) {
+                                // TODO: OnTransfer
+                                CommonMethods.displayToast(mContext,"Share button clicked!");
+                            }
+                        }
+                ));
+
+                underlayButtons.add(new SwipeHelper.UnderlayButton(
+                        "Delete",
+                        R.mipmap.icn_delete,
+                        Color.parseColor("#F5F5F5"),
+                        getContext(),
+                        new SwipeHelper.UnderlayButtonClickListener() {
+                            @Override
+                            public void onClick(int pos) {
+                                // TODO: onDelete
+                                CommonMethods.displayToast(mContext,"Delete button clicked!");
+
+                            }
+                        }
+                ));
+
+            }
+        };
+
 
         //SET SIZE TO REVEAL IT
         txtRevealCount.setText(""+mDatabaseHelper.getRevealitHistoryData().size()+" reveals");
@@ -770,32 +815,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         updateRevealitHistoryListSimulation();
 
     }
-//    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-//
-//
-//        @Override
-//        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-//            return false;
-//        }
-//
-//        @Override
-//        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-//            final int position = viewHolder.getAdapterPosition();
-//            if (direction == ItemTouchHelper.LEFT) {
-//
-//            }
-//        }
-//
-//        @Override
-//        public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-//            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-//
-//            View itemView = viewHolder.itemView;
-//
-//
-//
-//
-//        }
-//    };
+
 
 }

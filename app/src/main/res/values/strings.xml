@@ -35,6 +35,8 @@
     <string name="strLogout">Logout</string>
     <string name="strPrivateKey">Private Key</string>
     <string name="strYourRecoveryPhras">Your Recovery Phrase:</string>
+    <string name="strPrivatePem">Private Pem:</string>
+    <string name="strPublicPem">Public Pem:</string>
     <string name="strPhras">Mnemonic</string>
     <string name="strGetStarted">Get Started</string>
     <string name="strStatus">Status</string>

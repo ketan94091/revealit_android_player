@@ -61,7 +61,7 @@ public class GetAccountDetailsModel {
         private String token_icon;
         private String symbol;
         private Integer precision;
-        private float amount;
+        private double amount;
         private String contract;
         private String in_usd;
         private String in_usd_icon;
@@ -101,7 +101,7 @@ public class GetAccountDetailsModel {
             this.precision = precision;
         }
 
-        public float getAmount() {
+        public double getAmount() {
             return amount;
         }
 

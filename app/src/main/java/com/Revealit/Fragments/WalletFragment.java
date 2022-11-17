@@ -701,10 +701,12 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                                 mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_TIME_ACCOUNT_SYNC, true);
 
                                 //GET INITIAL VALUES IN DOLLAR
-                                mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE, "" + response.body().getData().getTokens().get(0).getInUsd());
-                                mSessionManager.updatePreferenceString(Constants.ACCOUNT_CURRENCY_TYPE, "USD");
+                                mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE,String.valueOf(response.body().getData().getTokens().get(0).getAmount()));
+                                mSessionManager.updatePreferenceString(Constants.ACCOUNT_CURRENCY_TYPE, "" + response.body().getData().getTokens().get(0).getSymbol());
 
                             }
+
+
                         } else {
 
                             //GET INITIAL VALUES IN DOLLAR

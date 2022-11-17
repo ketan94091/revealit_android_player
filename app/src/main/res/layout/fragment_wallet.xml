@@ -138,12 +138,13 @@
 
                             <TextView
                                 android:id="@+id/txtAmount"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/quasimoda_semibold"
                                 android:singleLine="true"
                                 android:textColor="@color/colorNewAppGreen"
                                 android:textFontWeight="600"
+                                android:maxLength="40"
                                 android:textSize="30dp" />
 
 

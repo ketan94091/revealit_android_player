@@ -83,6 +83,7 @@ public class PrivacyFragment extends Fragment implements View.OnClickListener {
             linearPrivateKey.setVisibility(View.VISIBLE);
         }
 
+
     }
     private void setOnClicks() {
         imgBackArrow.setOnClickListener(this);
