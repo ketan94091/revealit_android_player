@@ -226,7 +226,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
             //GET REVEALIT HISTORY DATA ON FRAGMENT LOAD
             if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
-            callGetRevealitVideoHistory();
+                callGetRevealitVideoHistory();
             }
         }
         super.setMenuVisibility(menuVisible);
@@ -796,18 +796,18 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         for(int i= 0; i < mCategoryWisePlayListModel.subList(from, to).size() ; i++){
 
             if(mDatabaseHelper.getRevealitHistoryItemFromMediaIDSimulation(mCategoryWisePlayListModel.subList(from, to).get(i).getMediaID()).size() == 0)
-            mDatabaseHelper.insertRevealitHistoryDataSimulation(mCategoryWisePlayListModel.subList(from, to).get(i).getMediaID(),
-                    mCategoryWisePlayListModel.subList(from, to).get(i).getMediaID(),
-                    mCategoryWisePlayListModel.subList(from, to).get(i).getMediaTitle(),
-                    mCategoryWisePlayListModel.subList(from, to).get(i).getMediaType(),
-                    mCategoryWisePlayListModel.subList(from, to).get(i).getMediaUrl(),
-                    mCategoryWisePlayListModel.subList(from, to).get(i).getMediaCoverArt(),
-                    "00",
-                    "00",
-                    "0:0:10",
-                    "0",
-                    "0:00:"+(to+5),
-                    ""+(to+5));
+                mDatabaseHelper.insertRevealitHistoryDataSimulation(mCategoryWisePlayListModel.subList(from, to).get(i).getMediaID(),
+                        mCategoryWisePlayListModel.subList(from, to).get(i).getMediaID(),
+                        mCategoryWisePlayListModel.subList(from, to).get(i).getMediaTitle(),
+                        mCategoryWisePlayListModel.subList(from, to).get(i).getMediaType(),
+                        mCategoryWisePlayListModel.subList(from, to).get(i).getMediaUrl(),
+                        mCategoryWisePlayListModel.subList(from, to).get(i).getMediaCoverArt(),
+                        "00",
+                        "00",
+                        "0:0:10",
+                        "0",
+                        "0:00:"+(to+5),
+                        ""+(to+5));
 
         }
 
