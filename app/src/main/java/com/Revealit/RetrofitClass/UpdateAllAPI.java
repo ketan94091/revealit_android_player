@@ -25,6 +25,8 @@ import com.Revealit.ModelClasses.UserRegistrationModel;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -123,7 +125,7 @@ public interface UpdateAllAPI {
 
     //REMOVE VIDEO FROM LISTEN HISTORY
     @POST(Constants.API_REMOVE_LISTEN_HISTORY)
-    Call<JsonElement> removeHistory(@Query("media_id") int media_id);
+    Call<JsonElement> removeHistory(@Query("media_ids") List<Integer> media_id);
 
     //REMOVE ALL LISTEN HISTORY
     @POST(Constants.API_REMOVE_LISTEN_HISTORY)

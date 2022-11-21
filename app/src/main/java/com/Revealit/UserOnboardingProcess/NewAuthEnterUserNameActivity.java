@@ -316,7 +316,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
 
 
         //UPDATE FLAG IF USER IS ADMIN OR NOT
-        if(body.getAudience().equals(getResources().getString(R.string.strAdmin))){
+        if(body.getRole().equals(getResources().getString(R.string.strAdmin))){
             mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,true);
         }else{
             mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,false);

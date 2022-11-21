@@ -9,7 +9,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -402,12 +401,12 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         }
     }
 
-    // INTERFACE METHOF TO ACHIEVE EVENTS FROM ADAPTER
+    // INTERFACE METHOD TO ACHIEVE EVENTS FROM ADAPTER
     @Override
     public void removeListenHistory(boolean isFromLivemode) {
 
         if(isFromLivemode) {
-            //GET REVEALIT HISTORY DATA ON FRAGMENT LOAD
+            //GET REVEAL IT HISTORY DATA ON FRAGMENT LOAD
             callGetRevealitVideoHistory();
         }else{
             //START COUNT FROM 1ST
@@ -642,7 +641,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
                         }else{
 
-
                             mDatabaseHelper.insertRevealitHistoryData(response.body().getData().get(i).getMatch_id(),
                                     response.body().getData().get(i).getMedia_id(),
                                     response.body().getData().get(i).getMedia_title(),
@@ -688,9 +686,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
     }
 
-
-
-
     public boolean CheckPermissions() {
         int result = ContextCompat.checkSelfPermission(getActivity(), WRITE_EXTERNAL_STORAGE);
         int result1 = ContextCompat.checkSelfPermission(getActivity(), RECORD_AUDIO);
@@ -713,9 +708,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
 
                 underlayButtons.add(new SwipeHelper.UnderlayButton(
-                        "Share",
-                        R.mipmap.icn_share,
-                        Color.parseColor("#F5F5F5"),
+                        R.mipmap.icn_share__with_text,
                         getContext(),
                         new SwipeHelper.UnderlayButtonClickListener() {
                             @Override
@@ -727,15 +720,30 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                 ));
 
                 underlayButtons.add(new SwipeHelper.UnderlayButton(
-                        "Delete",
-                        R.mipmap.icn_delete,
-                        Color.parseColor("#F5F5F5"),
+                        R.mipmap.icn_delete_with_text,
                         getContext(),
                         new SwipeHelper.UnderlayButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
                                 // TODO: onDelete
-                                CommonMethods.displayToast(mContext,"Delete button clicked!");
+                                CommonMethods.displayToast(mContext,"Login button clicked!");
+//                                //CONDITION
+//                                //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API'S
+//                                //IF ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
+//                                if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
+//
+//                                    //CALL API REMOVE SINGLE VIDEO
+//                                    callRemoveVideo(false, mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
+//                                }else{
+//
+//                                    //IN ELSE CONDITION
+//                                    //REMOVE SINGLE VIDEO DATA FROM DATABASE
+//                                    mDatabaseHelper.clearSimulationHistoryItem(mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
+//
+//                                    //UPDATE LIST THROUGH INTERFACE
+//                                    removeListenHistory(false);
+//
+//                                }
 
                             }
                         }
@@ -750,6 +758,97 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         //ENABLE BUTTON
         imgListen.setClickable(true);
+
+
+    }
+    private void callRemoveVideo(boolean isClearHistory, int media_id) {
+
+        //SHOW PROGRESS DIALOG
+        ProgressDialog pDialog = new ProgressDialog(mContext);
+        pDialog.setMessage(mContext.getResources().getString(R.string.strPleaseWait));
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+        Call<JsonElement> call;
+
+        List<Integer> mediaIds = new ArrayList<>();
+        mediaIds.add(media_id);
+
+        if (!isClearHistory)
+            call = patchService1.removeHistory(mediaIds);
+        else {
+            call = patchService1.removeWholeHistory(isClearHistory);
+        }
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+
+                CommonMethods.printLogE("Response @ callRemoveVideo: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callRemoveVideo: ", "" + response.code());
+
+
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
+
+                    CommonMethods.printLogE("Response @ callRemoveVideo: ", "Video removed");
+                    mRemoveListenHistory.removeListenHistory(true);
+
+
+                }
+
+                //HIDE PROGRESSBAR
+                pDialog.cancel();
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+                CommonMethods.printLogE("Response @ callRemoveVideo Error", "" + t.getMessage());
+
+                //BUILD ERROR DIALOG DIALOG
+                CommonMethods.buildDialog(mContext, Constants.SOMETHING_WENT_WRONG);
+
+
+                //HIDE PROGRESSBAR
+                pDialog.cancel();
+
+
+            }
+        });
 
 
     }

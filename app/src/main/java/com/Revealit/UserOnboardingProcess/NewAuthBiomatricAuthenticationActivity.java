@@ -103,18 +103,27 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
         //CHECK IF BIOMETRIC HARDWARE AVAILABLE OR NOT
         //ALSO USER ALLOW TO USE BIOMETRIC WHILE REGISTRAION OR FIRST LOGIN
         BiometricManager biometricManager = BiometricManager.from(mContext);
-        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK | BIOMETRIC_STRONG | DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS && mSessionManager.getPreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC)) {
-
-            relativeMain.setVisibility(View.VISIBLE);
+        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK | BIOMETRIC_STRONG | DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS && mSessionManager.getPreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC )) {
 
             //OPEN BIOMETRIC PROMPT
             loadBiomatricPrompt();
 
         } else {
 
-            Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, NewAuthMobileAndPromoActivity.class);
-            startActivity(mIntent);
-            finish();
+
+            //IF - BIOMETRIC AVAILABLE JUST LOAD PROMPT AND DISPLAY BIOMETRIC ACCESS
+            //ELSE - REDIRECT TO SIGN UP SCREEN
+
+            //CALL CALLBACK API UNTIL JWT TOKEN IS VALID
+            //AS REZA'S SUGGESTION WE HAVE REMOVED FOR NOW BIOMETRIC PERMISSIONS FOR NON BIOMETRIC USERS
+            callCallBackAPI();
+
+
+//            Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, NewAuthMobileAndPromoActivity.class);
+//            startActivity(mIntent);
+//            finish();
+
+
         }
 
 
@@ -152,9 +161,12 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                                               @NonNull CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
 
-                Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, NewAuthGetStartedActivity.class);
-                startActivity(mIntent);
-                finish();
+                //IF ANY BIOMETRICS ERROR - JUST CALL JWT TOKEN
+                callCallBackAPI();
+
+//                Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, NewAuthGetStartedActivity.class);
+//                startActivity(mIntent);
+//                finish();
 
             }
 
@@ -306,6 +318,14 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
 
 
+                }else if (response.code() == Constants.API_CODE_401) {
+
+                    //CLOSE DIALOG
+                    CommonMethods.closeDialog();
+
+                    //IF JWT TOKEN IS IN VALID CALL AUTH LOGIN API AND GENERATE NEW TOKEN
+                    callAuthenticationAPI();
+
                 }else {
 
                     displayAlertDialogue(getResources().getString(R.string.strUsernotfound));
@@ -440,8 +460,6 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                         mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER, response.body().getPuplic_settings().getProfile_update_reminder_period());
                         mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_BACKUP_REMINDER, response.body().getPuplic_settings().getBackup_update_reminder_period());
                     }
-
-
 
                     //CHECK IF APPLICATION IS IN MAINTENANCE
                     if(response.body().getPuplic_settings() != null && response.body().getPuplic_settings().getMaintenance().equals("1")){

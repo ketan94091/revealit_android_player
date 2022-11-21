@@ -50,6 +50,7 @@ import com.google.gson.JsonElement;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -315,8 +316,12 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
         Call<JsonElement> call;
 
+        List<Integer> mediaIds = new ArrayList<>();
+        mediaIds.add(media_id);
+
         if (!isClearHistory)
-            call = patchService1.removeHistory(media_id);
+
+            call = patchService1.removeHistory(mediaIds);
         else {
             call = patchService1.removeWholeHistory(isClearHistory);
         }

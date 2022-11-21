@@ -24,7 +24,7 @@ import java.util.Queue;
 
 public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
 
-    public static final int BUTTON_WIDTH = 200;
+    public static final int BUTTON_WIDTH = 170;
     private RecyclerView recyclerView;
     private List<UnderlayButton> buttons;
     private GestureDetector gestureDetector;
@@ -210,10 +210,8 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         private UnderlayButtonClickListener clickListener;
         private Context mContext;
 
-        public UnderlayButton(String text, int imageResId, int color, Context mContext, UnderlayButtonClickListener clickListener) {
-            this.text = text;
+        public UnderlayButton(int imageResId, Context mContext, UnderlayButtonClickListener clickListener) {
             this.imageResId = imageResId;
-            this.color = color;
             this.mContext = mContext;
             this.clickListener = clickListener;
         }
@@ -230,20 +228,16 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         public void onDraw(Canvas c, RectF rect, int pos, View itemView){
             Paint p = new Paint();
             p.setColor(Color.WHITE);
-            //p.setStyle(Paint.Style.FILL_AND_STROKE);
-            //p.setColor(Color.WHITE);
-            p.setStrokeWidth(10);
-            c.drawRoundRect(rect,10,10, p);
+            c.drawRect(rect, p);
 
 
             Rect r = new Rect();
-            float cHeight = rect.height() - 40;
+            float cHeight = rect.height() / 2;
             float cWidth = rect.width();
 
-            float x = cWidth / 2f - r.width() / 2f ;
+            float x = 25  ;
             float y = cHeight / 2f + r.height() / 2f ;
             c.drawBitmap(BitmapFactory.decodeResource(mContext.getResources(), imageResId), rect.left + x, rect.top + y, p);
-            //drawText("DELETE", c, rightButton, p,color);
             clickRegion = rect;
             this.pos = pos;
         }
@@ -252,13 +246,5 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
     public interface UnderlayButtonClickListener {
         void onClick(int pos);
     }
-    private static void drawText(String text, Canvas c, RectF button, Paint p, int color) {
-        float textSize = 20;
-        p.setColor(Color.BLACK);
-        p.setAntiAlias(true);
-        p.setTextSize(textSize);
 
-        float textWidth = p.measureText(text);
-        c.drawText(text, button.centerX() + 30, button.centerY() + 30, p);
-    }
 }
