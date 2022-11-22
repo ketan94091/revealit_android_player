@@ -178,9 +178,6 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
         final View mView = inflater.inflate(R.layout.alert_dialog_item_list_listenscreen, null);
         dialogBuilder.setView(mView);
 
-
-
-
         mDialogeForItems = dialogBuilder.create();
         mDialogeForItems.setCancelable(true);
         ColorDrawable back = new ColorDrawable(Color.TRANSPARENT);
@@ -276,23 +273,25 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
                         CommonMethods.printLogE("Response @ callGetItesmsList : ", "" + gson.toJson(response.body()));
 
                         //UPDATE UI
-                        if(response.body().getData().size() != 0){
-                            updateItemsDialogue(dialogView, response.body().getData(), mDialogeForItems , revealitHistoryData.media_title , strTimeStamp);
-                        }else {
+                        updateItemsDialogue(dialogView, response.body().getData(), mDialogeForItems , revealitHistoryData.media_title , strTimeStamp);
 
-                            //DISMISS DIALOGUE
-                            mDialogeForItems.dismiss();
-
-                            Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
-                            mIntent.putExtra(Constants.MEDIA_URL, "" + revealitHistoryData.media_url);
-                            mIntent.putExtra(Constants.MEDIA_ID, "" + revealitHistoryData.media_id);
-                            mIntent.putExtra(Constants.VIDEO_NAME, "" + revealitHistoryData.media_title);
-                            mIntent.putExtra(Constants.VIDEO_SEEK_TO, strItemId);
-                            mIntent.putExtra(Constants.IS_VIDEO_SEEK, true);
-                            mActivity.startActivity(mIntent);
-
-
-                        }
+//                        if(response.body().getData().size() != 0){
+//                            updateItemsDialogue(dialogView, response.body().getData(), mDialogeForItems , revealitHistoryData.media_title , strTimeStamp);
+//                        }else {
+//
+//                            //DISMISS DIALOGUE
+//                            mDialogeForItems.dismiss();
+//
+//                            Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
+//                            mIntent.putExtra(Constants.MEDIA_URL, "" + revealitHistoryData.media_url);
+//                            mIntent.putExtra(Constants.MEDIA_ID, "" + revealitHistoryData.media_id);
+//                            mIntent.putExtra(Constants.VIDEO_NAME, "" + revealitHistoryData.media_title);
+//                            mIntent.putExtra(Constants.VIDEO_SEEK_TO, strItemId);
+//                            mIntent.putExtra(Constants.IS_VIDEO_SEEK, true);
+//                            mActivity.startActivity(mIntent);
+//
+//
+//                        }
 
 
 

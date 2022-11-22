@@ -125,7 +125,7 @@ public interface UpdateAllAPI {
 
     //REMOVE VIDEO FROM LISTEN HISTORY
     @POST(Constants.API_REMOVE_LISTEN_HISTORY)
-    Call<JsonElement> removeHistory(@Query("media_ids") List<Integer> media_id);
+    Call<JsonElement> removeHistory(@Query("media_ids[1]") List<Integer> media_id);
 
     //REMOVE ALL LISTEN HISTORY
     @POST(Constants.API_REMOVE_LISTEN_HISTORY)

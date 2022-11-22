@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.CommonClasse.SwipeHelper;
+import com.Revealit.CommonClasse.SwipeHelperSimulation;
 import com.Revealit.CustomViews.RippleBackground;
 import com.Revealit.Interfaces.RemoveListenHistory;
 import com.Revealit.ModelClasses.CategoryWisePlayListModel;
@@ -589,7 +591,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
             public void onResponse(Call<RevealitHistoryModel> call, Response<RevealitHistoryModel> response) {
 
                 CommonMethods.printLogE("Response @ callGetRevealitVideoHistory: ", "" + response.isSuccessful());
-                CommonMethods.printLogE("Response @ callGetRevealitVideoHistory: ", "" + response.code());
+                CommonMethods.printLogE("Response @ callGetRevealitVideoHistory: ", "" + response.body().getData());
 
 
 
@@ -702,48 +704,47 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         //SET REVEAL IT HISTORY FOR LIVE MODE
         mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mActivity, mDatabaseHelper.getRevealitHistoryData(),mRemoveListenHistory);
         recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
-        new SwipeHelper(getContext(), recycleRevealList) {
+
+        new SwipeHelper(getActivity(), recycleRevealList) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
 
 
                 underlayButtons.add(new SwipeHelper.UnderlayButton(
-                        R.mipmap.icn_share__with_text,
-                        getContext(),
-                        new SwipeHelper.UnderlayButtonClickListener() {
+                        R.mipmap.icn_share_with_text,
+                        getActivity(),
+                        new UnderlayButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
-                                // TODO: OnTransfer
-                                CommonMethods.displayToast(mContext,"Share button clicked!");
+                                Log.e("Share","Sjare");
                             }
                         }
                 ));
 
                 underlayButtons.add(new SwipeHelper.UnderlayButton(
                         R.mipmap.icn_delete_with_text,
-                        getContext(),
+                        getActivity(),
                         new SwipeHelper.UnderlayButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
                                 // TODO: onDelete
-                                CommonMethods.displayToast(mContext,"Login button clicked!");
-//                                //CONDITION
-//                                //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API'S
-//                                //IF ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
-//                                if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
-//
-//                                    //CALL API REMOVE SINGLE VIDEO
-//                                    callRemoveVideo(false, mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
-//                                }else{
-//
-//                                    //IN ELSE CONDITION
-//                                    //REMOVE SINGLE VIDEO DATA FROM DATABASE
-//                                    mDatabaseHelper.clearSimulationHistoryItem(mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
-//
-//                                    //UPDATE LIST THROUGH INTERFACE
-//                                    removeListenHistory(false);
-//
-//                                }
+                                //CONDITION
+                                //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API'S
+                                //IF ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
+                                if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
+
+                                    //CALL API REMOVE SINGLE VIDEO
+                                    callRemoveVideo(false, mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
+                                }else{
+
+                                    //IN ELSE CONDITION
+                                    //REMOVE SINGLE VIDEO DATA FROM DATABASE
+                                    mDatabaseHelper.clearSimulationHistoryItem(mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
+
+                                    //UPDATE LIST THROUGH INTERFACE
+                                    mRemoveListenHistory.removeListenHistory(false);
+
+                                }
 
                             }
                         }
@@ -855,13 +856,61 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
     private void updateRevealitHistoryListSimulation() {
 
-
         //SET REVEAL IT HISTORY FOR SIMULATION MODE
         RevealItHistoryListAdapter mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mActivity, mDatabaseHelper.getRevealitHistoryDataSimulation(),mRemoveListenHistory);
         recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
 
+        new SwipeHelperSimulation(getContext(), recycleRevealList) {
+            @Override
+            public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<SwipeHelperSimulation.UnderlayButton> underlayButtons) {
+
+
+                underlayButtons.add(new SwipeHelperSimulation.UnderlayButton(
+                        R.mipmap.icn_share_with_text,
+                        getContext(),
+                        new SwipeHelperSimulation.UnderlayButtonClickListener() {
+                            @Override
+                            public void onClick(int pos) {
+                                // TODO: OnTransfer
+                                CommonMethods.displayToast(mContext,"Share button clicked!");
+                            }
+                        }
+                ));
+
+                underlayButtons.add(new SwipeHelperSimulation.UnderlayButton(
+                        R.mipmap.icn_delete_with_text,
+                        getContext(),
+                        new SwipeHelperSimulation.UnderlayButtonClickListener() {
+                            @Override
+                            public void onClick(int pos) {
+                                // TODO: onDelete
+                                //CONDITION
+                                //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API'S
+                                //IF ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
+                                if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
+
+                                    //CALL API REMOVE SINGLE VIDEO
+                                    callRemoveVideo(false, mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
+                                }else{
+
+                                    //IN ELSE CONDITION
+                                    //REMOVE SINGLE VIDEO DATA FROM DATABASE
+                                    mDatabaseHelper.clearSimulationHistoryItem(mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
+
+                                    //UPDATE LIST THROUGH INTERFACE
+                                    mRemoveListenHistory.removeListenHistory(false);
+
+                                }
+
+                            }
+                        }
+                ));
+
+            }
+        };
+
         //SET SIZE TO REVEAL IT
-        txtRevealCount.setText(""+mDatabaseHelper.getRevealitHistoryData().size()+" reveals");
+        txtRevealCount.setText(""+mDatabaseHelper.getRevealitHistoryDataSimulation().size()+" reveals");
 
         //ENABLE BUTTON
         imgListen.setClickable(true);

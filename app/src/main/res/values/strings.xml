@@ -140,7 +140,7 @@
     <string name="strPermissionNeededMsg">Permission is needed to access files from your device...</string>
     <string name="strPurchase">Purchase</string>
     <string name="strNoPublishedVideo">No Published Videos</string>
-    <string name="strNoItemFound">No Items Found</string>
+    <string name="strNoItemFound">This timestamp does not have any products</string>
     <string name="strChooseColors">Choose your color</string>
     <string name="strInfluencers">Influencers</string>
     <string name="strSelectEndPoint">Select Api End Point</string>
