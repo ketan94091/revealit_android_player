@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.Revealit.BuildConfig;
+import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
@@ -67,6 +68,11 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
             txtSwappingSilo.setVisibility(View.INVISIBLE);
         }
 
+
+        //CHECK IF DEVICE ACTIVATED BIOMETRIC
+        if(!CommonMethods.IsDeviceSecured(mContext)){
+            CommonMethods.openStartOverDialogue(mActivity);
+        }
 
     }
 

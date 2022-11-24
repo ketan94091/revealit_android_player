@@ -38,7 +38,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/imgBackArrow"
                     android:fontFamily="@font/quasimoda_semibold"
-                    android:text="@string/strUser"
+                    android:text="@string/strProfile"
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="600"
                     android:textSize="14dp" />

@@ -27,6 +27,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
 import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
@@ -34,6 +35,8 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
@@ -175,6 +178,7 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
         }
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestSignIn() {
 
          signInOptions =
@@ -216,8 +220,6 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
         GoogleSignIn.getSignedInAccountFromIntent(result)
                 .addOnSuccessListener(googleAccount -> {
 
-                    Log.e("TOKEN", "Signed in as " + googleAccount.getIdToken());
-
                     // Use the authenticated account to sign in to the Drive service.
                     GoogleAccountCredential credential =
                             GoogleAccountCredential.usingOAuth2(
@@ -245,6 +247,7 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
                             try {
 
                                 strToken = credential.getToken();
+
                                 //REFRESH DRIVE
                                 checkIfFileExists();
 
@@ -322,8 +325,13 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
                     }
 
                 } else {
-                    createFile();
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        CommonMethods.buildDialog(mContext,"Error : "+ jObjError.getString("message"));
+                    } catch (Exception e) {
+                        CommonMethods.buildDialog(mContext,"Error : "+e.getMessage());
 
+                    }
                 }
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
@@ -394,7 +402,7 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_GOOGLE_DRIVE_BACKUP_DONE, true);
 
         //SIGN OUT GOOGLE ACCOUNT
-        client.signOut();
+        //client.signOut();
 
         finish();
     }

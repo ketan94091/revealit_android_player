@@ -152,7 +152,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         setIds();
         setOnClicks();
 
-
         return mView;
 
     }
@@ -192,6 +191,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
             //INITIALIZED ARC CLOUD LIBRARY
             ACRCloudExtrTool.setDebug();
+            //GET HISTORY
+            callGetRevealitVideoHistory();
 
         }else{
 
@@ -215,42 +216,28 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
 
     }
-    @Override
-    public void setMenuVisibility(boolean menuVisible) {
+//    @Override
+//    public void setMenuVisibility(boolean menuVisible) {
+//
+//
+//        if (menuVisible  ) {
+//
+//            //SET IDS
+//            setIds();
+//            setOnClicks();
+//
+//        }
+//        super.setMenuVisibility(menuVisible);
+//    }
 
 
-        if (menuVisible  ) {
 
-            //SET IDS
-            setIds();
-            setOnClicks();
-
-            //GET REVEALIT HISTORY DATA ON FRAGMENT LOAD
-            if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
-                callGetRevealitVideoHistory();
-            }
-        }
-        super.setMenuVisibility(menuVisible);
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        //SET IDS
-        setIds();
-        setOnClicks();
-
-    }
 
     private void setOnClicks() {
 
         imgListen.setOnClickListener(this);
         imgScanQRcode.setOnClickListener(this);
     }
-
-
 
 
     @Override
@@ -703,16 +690,17 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         //SET REVEAL IT HISTORY FOR LIVE MODE
         mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mActivity, mDatabaseHelper.getRevealitHistoryData(),mRemoveListenHistory);
+        recycleRevealList.setAdapter(null);
         recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
 
-        new SwipeHelper(getActivity(), recycleRevealList) {
+      new SwipeHelper(mActivity, recycleRevealList) {
             @Override
             public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
 
 
                 underlayButtons.add(new SwipeHelper.UnderlayButton(
                         R.mipmap.icn_share_with_text,
-                        getActivity(),
+                        mActivity,
                         new UnderlayButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
@@ -723,14 +711,13 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
                 underlayButtons.add(new SwipeHelper.UnderlayButton(
                         R.mipmap.icn_delete_with_text,
-                        getActivity(),
+                        mActivity,
                         new SwipeHelper.UnderlayButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
                                 // TODO: onDelete
-                                //CONDITION
-                                //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API'S
-                                //IF ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
+                                //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API
+                                //ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
                                 if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
 
                                     //CALL API REMOVE SINGLE VIDEO

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
@@ -61,6 +62,16 @@ public class NewAuthSplashScreen extends AppCompatActivity {
 
         } catch (NoSuchAlgorithmException e) {
 
+        }
+
+        Intent intent = getIntent();
+        Uri data = intent.getData();
+        if(data != null && data.toString().contains("revealit") || data != null && data.toString().contains("proton")){
+            mSessionManager.updatePreferenceBoolean(Constants.KEY_QR_CODE_FROM_CAMERA, true);
+            mSessionManager.updatePreferenceString(Constants.KEY_QR_CODE_FROM_CAMERA_VALUE,data.toString() );
+        }else{
+            mSessionManager.updatePreferenceBoolean(Constants.KEY_QR_CODE_FROM_CAMERA, false);
+            mSessionManager.updatePreferenceString(Constants.KEY_QR_CODE_FROM_CAMERA_VALUE,"");
         }
 
 

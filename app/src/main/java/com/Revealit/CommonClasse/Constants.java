@@ -160,6 +160,8 @@ public class Constants {
   public  static  final  String KEY_PUBLIC_KEY ="keyPublic";
   public  static  final  String KEY_PRIVATE_KEY_PEM ="keyPrivatePem";
   public  static  final  String KEY_PUBLIC_KEY_PEM ="keyPublicPem";
+  public  static  final  String KEY_QR_CODE_FROM_CAMERA ="keyQrCodeFromCamera";
+  public  static  final  String KEY_QR_CODE_FROM_CAMERA_VALUE ="keyQrCodeFromCameraValue";
   public  static  final  String KEY_PROTON_ACCOUNTNAME ="keyProtonAccountName";
   public  static  final  String KEY_MNEMONICS ="keyMnemonics";
   public  static  final  String KEY_MOBILE_NUMBER ="keyMobileNumber";
@@ -180,6 +182,7 @@ public class Constants {
   public  static  final  String KEY_INVITE_CURRNCY_AMOUNT ="keyInviteCurrencyAmounbt";
   public  static  final  String KEY_USER_DATA ="keyUserData";
   public  static  final  String GOOGLE_DRIVE_FOLDER_NAME="Revealit.tv.io";
+  public  static  final  String GOOGLE_ACCESS_TOKEN="GoogleAccessToken";
   public  static  final  String KEY_PROTON_WALLET_DETAILS ="keyProtonWalletDetails";
   public  static  final  String KEY_REVEALIT_PRIVATE_KEY="keyRevealitPrivatekey";
   public  static  final  String KEY_ISFROM_LOGIN="keyIsFromLogin";

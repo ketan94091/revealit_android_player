@@ -216,7 +216,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.profile_fragment_container, loadingFragment ).commit();
-        transaction.addToBackStack(null);
+        transaction.addToBackStack(loadingFragment.getTag());
 
     }
 

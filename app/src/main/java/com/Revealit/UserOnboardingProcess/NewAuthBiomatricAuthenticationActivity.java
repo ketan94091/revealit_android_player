@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 
 import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.Activities.MaintanaceActivity;
+import com.Revealit.Activities.QrCodeScannerActivity;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -110,19 +111,8 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
         } else {
 
-
-            //IF - BIOMETRIC AVAILABLE JUST LOAD PROMPT AND DISPLAY BIOMETRIC ACCESS
-            //ELSE - REDIRECT TO SIGN UP SCREEN
-
-            //CALL CALLBACK API UNTIL JWT TOKEN IS VALID
-            //AS REZA'S SUGGESTION WE HAVE REMOVED FOR NOW BIOMETRIC PERMISSIONS FOR NON BIOMETRIC USERS
-            callCallBackAPI();
-
-
-//            Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, NewAuthMobileAndPromoActivity.class);
-//            startActivity(mIntent);
-//            finish();
-
+            //OPEN NO AUTHENTICATION DIALOGUE
+            CommonMethods.openStartOverDialogue(mActivity);
 
         }
 
@@ -161,12 +151,9 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                                               @NonNull CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
 
-                //IF ANY BIOMETRICS ERROR - JUST CALL JWT TOKEN
-                callCallBackAPI();
 
-//                Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, NewAuthGetStartedActivity.class);
-//                startActivity(mIntent);
-//                finish();
+                finishAffinity();
+
 
             }
 
@@ -195,7 +182,8 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
         promptInfo = new BiometricPrompt.PromptInfo.Builder()
                 .setTitle("Biometric login to Reveailit")
                 .setSubtitle("Log in using your biometric credential")
-                .setNegativeButtonText("Use Credentials")
+               // .setNegativeButtonText("Use account password or Pin or Pattern")
+                .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK | BiometricManager.Authenticators.DEVICE_CREDENTIAL)
                 .setConfirmationRequired(false)
                 .build();
 
@@ -308,12 +296,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                         startActivity(mIntent);
                         finish();
                     }else {
-                        //MOVE TO HOME SCREEN
-                        Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, HomeScreenTabLayout.class);
-                        mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN, false);
-                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(mIntent);
-                        finish();
+                        goToNextActivity();
                     }
 
 
@@ -348,6 +331,22 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
             }
         });
+
+    }
+
+    private void goToNextActivity() {
+
+        if(mSessionManager.getPreferenceBoolean(Constants.KEY_QR_CODE_FROM_CAMERA)){
+            Intent mIntentQrCode = new Intent(this, QrCodeScannerActivity.class);
+            startActivity(mIntentQrCode);
+        }else{
+            //MOVE TO HOME SCREEN
+            Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, HomeScreenTabLayout.class);
+            mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN, false);
+            mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(mIntent);
+            finish();
+        }
 
     }
 
@@ -470,12 +469,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                         startActivity(mIntent);
                         finish();
                     }else {
-                        Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, HomeScreenTabLayout.class);
-                        mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,false);
-                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(mIntent);
-                        finish();
-
+                        goToNextActivity();
                     }
 
 

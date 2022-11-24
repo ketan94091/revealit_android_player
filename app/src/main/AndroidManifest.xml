@@ -59,8 +59,12 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.QrCodeScannerActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:exported="true"
+            android:screenOrientation="portrait" >
+
+
+        </activity>
+
         <activity
             android:name=".UserOnboardingProcess.GoogleCloudBackupActivity"
             android:exported="false"
@@ -100,11 +104,27 @@
             android:name=".UserOnboardingProcess.NewAuthSplashScreen"
             android:exported="true"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                        <intent-filter>
+                            <action android:name="android.intent.action.MAIN" />
+                            <category android:name="android.intent.category.LAUNCHER" />
+                        </intent-filter>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="revealit" />
+
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="proton" />
+
+            </intent-filter>
+
         </activity>
         <activity
             android:name=".Activities.ExoPlayerActivity"

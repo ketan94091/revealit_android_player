@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -139,11 +141,6 @@ public class QrCodeScannerActivity extends AppCompatActivity {
         relativeSurface = (RelativeLayout) findViewById(R.id.relativeSurface);
         txtBarcodeValue = (TextView) findViewById(R.id.txtBarcodeValue);
 
-        //REQUEST CAMARA PERMISSION
-       requestCamaraPermission();
-
-
-
             try {
                 //OPEN KEYSTORE
                 Cryptography  mCryptography = new Cryptography(mSessionManager.getPreference(Constants.KEY_REVEALIT_PRIVATE_KEY));
@@ -159,6 +156,29 @@ public class QrCodeScannerActivity extends AppCompatActivity {
             } catch (CertificateException |NoSuchAlgorithmException |KeyStoreException |IOException |NoSuchProviderException | InvalidAlgorithmParameterException| NoSuchPaddingException| IllegalBlockSizeException |BadPaddingException |InvalidKeyException ex) {
                 ex.printStackTrace();
             }
+
+        //IF -> INTENT CONTAIN DATA FROM CAMARA SCREEN
+        //ELSE -> CONTINUE WITH REGULAR QR CODE SCANNING STUFF
+        if(mSessionManager.getPreferenceBoolean(Constants.KEY_QR_CODE_FROM_CAMERA)){
+
+            //DISPLAY DIALOGUE
+            CommonMethods.showDialog(mContext);
+
+            //HIDE RELATIVE SURFACE
+            relativeSurface.setVisibility(View.GONE);
+
+            //CALL PROTON STUFF
+            callProtonStuff(mSessionManager.getPreference(Constants.KEY_QR_CODE_FROM_CAMERA_VALUE));
+
+
+
+        }else{
+            //VISIBLE RELATIVE SURFACE
+            relativeSurface.setVisibility(View.VISIBLE);
+
+            //REQUEST CAMARA PERMISSION
+            requestCamaraPermission();
+        }
 
 
     }
@@ -267,7 +287,7 @@ public class QrCodeScannerActivity extends AppCompatActivity {
                                     isBarcodeScanned= true;
 
                                     //CALL PROTON SIGNING REQUEST
-                                    if(intentData.contains("proton")){
+                                    if(intentData.contains("proton") || intentData.contains("revealit")){
                                         callProtonStuff(intentData);
                                     }else{
                                         createErrorDialogue(getResources().getString(R.string.strIncorrectQRcodeData));
@@ -308,7 +328,7 @@ public class QrCodeScannerActivity extends AppCompatActivity {
     }
     class RetrieveFeedTask extends AsyncTask<String, Void, Void> {
 
-        String qrCodeData, strESRdata;
+        String qrCodeData, strESRdata,qrRevealitDataFromCamera;
         //String strPEMprivateKey ="5Kj7AAZ8n2Bc2gC4yehhVP1cVeLKncNiSSbDrTZy8xz1Z2B3yL1";
         //String account_name1 = "revdev";
         //String baseURl ="https://proton.eosusa.news";
@@ -326,8 +346,21 @@ public class QrCodeScannerActivity extends AppCompatActivity {
 
 
         public RetrieveFeedTask(String intentData) {
-            this.qrCodeData = intentData.replace("proton:","proton://");
-            this.strESRdata = intentData.replace("proton:","esr://");
+
+
+            if(intentData.contains("revealit")){
+                this.qrCodeData = intentData.replace("revealit:","revealit://");
+            }else{
+                this.qrCodeData = intentData.replace("proton:","proton://");
+            }
+
+            if(intentData.contains("revealit")){
+                this.strESRdata = intentData.replace("revealit:","esr://");
+            }else{
+                this.strESRdata = intentData.replace("proton:","esr://");
+            }
+
+
 
         }
 
@@ -559,7 +592,18 @@ public class QrCodeScannerActivity extends AppCompatActivity {
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
                 //FINISHED ACTIVITY
-                finish();
+
+                if(mSessionManager.getPreferenceBoolean(Constants.KEY_QR_CODE_FROM_CAMERA)){
+                    //CLEAR DATA
+                    mSessionManager.updatePreferenceBoolean(Constants.KEY_QR_CODE_FROM_CAMERA, false);
+                    mSessionManager.updatePreferenceString(Constants.KEY_QR_CODE_FROM_CAMERA_VALUE,"");
+
+                    //FINISH WITH OPEN HOME SCREEN
+                    Intent mIntent = new Intent(QrCodeScannerActivity.this, HomeScreenTabLayout.class);
+                    startActivity(mIntent);
+                }else{
+                    finish();
+                }
             }
 
             @Override

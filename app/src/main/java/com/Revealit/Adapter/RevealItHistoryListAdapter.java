@@ -90,6 +90,8 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
         mDatabaseHelper = new DatabaseHelper(mContext);
         mDatabaseHelper.open();
 
+        notifyDataSetChanged();
+
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

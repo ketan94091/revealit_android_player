@@ -2,6 +2,7 @@ package com.Revealit.CommonClasse;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.KeyguardManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -10,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
@@ -607,6 +609,42 @@ public class CommonMethods {
         mActivity.getWindowManager().getDefaultDisplay().getMetrics(screenMetrics);
         int screenHeight = screenMetrics.heightPixels;
       return  screenHeight;
+    }
+    public static boolean IsDeviceSecured(Context mContext) {
+        KeyguardManager keyguardManager =
+                (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE); //api 16+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return keyguardManager.isDeviceSecure();
+        }
+        return keyguardManager.isKeyguardSecure ();
+    }
+
+    public static void openStartOverDialogue(Activity mActivity) {
+
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
+        dialogBuilder.setCancelable(false);
+        LayoutInflater inflater = mActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.biometric_activation_dailoague, null);
+        mActivity.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialogBuilder.setView(dialogView);
+
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        TextView txtOk = (TextView) dialogView.findViewById(R.id.txtOk);
+
+
+
+        txtOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+                mActivity.finishAffinity();
+
+            }
+        });
+        mAlertDialog.show();
+
     }
 
 }

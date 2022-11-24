@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -505,12 +506,33 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
 
         switch (mView.getId()){
             case R.id.relativeBack:
-                //GO BACK TO PREVIOUS PAGE
-                getFragmentManager().popBackStackImmediate();
+                backToPreviousFragment();
                 break;
                 
         }
 
+    }
+
+    public void onResume() {
+        super.onResume();
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+
+                    backToPreviousFragment();
+
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+    private void backToPreviousFragment() {
+        getFragmentManager().popBackStackImmediate();
     }
    
 

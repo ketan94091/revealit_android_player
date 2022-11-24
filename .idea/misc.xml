@@ -18,6 +18,7 @@
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/drawable/new_auth_round_button_app_green_small_corner.xml" value="0.1275" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/drawable/new_auth_round_button_black.xml" value="0.158" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/drawable/new_auth_round_button_blue.xml" value="0.1555" />
+        <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/drawable/new_auth_round_button_grey_medium.xml" value="0.1" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/drawable/new_auth_round_button_otp.xml" value="0.1395" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/drawable/new_auth_round_button_white.xml" value="0.1275" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/drawable/nonselecteditem_dot.xml" value="0.1275" />
@@ -64,6 +65,7 @@
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/alert_dialog_product_purchase.xml" value="0.11621621621621622" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/alert_dialog_product_purchase_new.xml" value="0.125" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/alert_dialog_user_not_found_for_selected_silos.xml" value="0.11621621621621622" />
+        <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/biometric_activation_dailoague.xml" value="0.11621621621621622" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/bottom_sheet_auth_push.xml" value="0.11621621621621622" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/bottom_sheet_for_clear_listen_history.xml" value="0.11621621621621622" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/custom_biomatric_permission_dailoague.xml" value="0.25" />

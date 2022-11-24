@@ -346,7 +346,7 @@ public class GoogleCloudBackupActivity extends AppCompatActivity implements View
         startActivity(mIntent);
 
         //SIGN OUT GOOGLE ACCOUNT
-        client.signOut();
+        //client.signOut();
 
     }
 

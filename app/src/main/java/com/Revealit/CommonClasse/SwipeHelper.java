@@ -196,6 +196,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
 
     public void attachSwipe(){
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(this);
+        itemTouchHelper.attachToRecyclerView(null);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 

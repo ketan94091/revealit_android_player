@@ -316,6 +316,7 @@ public class HomeScreenTabLayout extends AppCompatActivity {
         pusherTokenProvider();
 
 
+
     }
 
     private void pusherTokenProvider() {
@@ -517,6 +518,7 @@ public class HomeScreenTabLayout extends AppCompatActivity {
             }
         });
     }
+
 
     private void callAuthorisationApi(BottomSheetDialog bottomSheetDialog, String pusherId) {
 
