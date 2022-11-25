@@ -239,8 +239,14 @@
     <string name="strTesting2">Testing2</string>
     <string name="strTesting2URL">https://testing2.revealit.io</string>
 
+    <string name="strTesting3">Testing3</string>
+    <string name="strTesting3URL">https://testing3.revealit.io</string>
+
     <string name="strIntegration">Integration</string>
     <string name="strIntegrationURL">https://integration.revealit.io</string>
+
+    <string name="strDemo">Demo</string>
+    <string name="strDemoURL">https://demo.revealit.io</string>
 
 
     <string name="key_testfairy_android">SDK-5f7VDJMC</string>

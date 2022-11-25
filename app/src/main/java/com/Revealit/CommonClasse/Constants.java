@@ -30,9 +30,17 @@ public class Constants {
   public static final String API_END_POINTS_MOBILE_T2_CURATOR = "https://testing2.revealit.io/";
   public static final String API_END_POINTS_REGISTRATION_T2_CURATOR = "https://tcapi2.revealit.io/";
 
+  //TESTING3  CURATOR
+  public static final String API_END_POINTS_MOBILE_T3_CURATOR = "https://testing3.revealit.io/";
+  public static final String API_END_POINTS_REGISTRATION_T3_CURATOR = "https://tcapi3.revealit.io/";
+
   //INTEGRATION  CURATOR
   public static final String API_END_POINTS_MOBILE_INTEGRATION_CURATOR = "https://integration.revealit.io/";
   public static final String API_END_POINTS_REGISTRATION_INTEGRATION_CURATOR = "https://icapi.revealit.io/";
+
+  //DEMO  CURATOR
+  public static final String API_END_POINTS_MOBILE_DEMO_CURATOR = "https://demo.revealit.io/";
+  public static final String API_END_POINTS_REGISTRATION_DEMO_CURATOR = "https://dcapi.revealit.io/";
 
   //PROTON SDK APIS
   //MAIN API
@@ -217,6 +225,28 @@ public class Constants {
     public static final int API_CODE_404 = 404;
     public static final int API_CODE_500 = 500;
     public static final int API_CODE_400 = 400;
+
+    //SWAPPING SILOS AND ITS DATA
+    //WE MANAGE THESE DATA LOCALLY FOR THE ADMIN USERS
+
+    //KEY_ALIS_FOR_SILOS
+    public static final String KEY_SILOS_ALIAS = "keyAliasRevealitSilos";
+
+   // public static final int KEY_SILOS_BETA = 1;
+//    public static final int KEY_SILOS_STAGING = 2;
+//    public static final int KEY_SILOS_TESTING_1 = 3;
+//    public static final int KEY_SILOS_TESTING_2 = 4;
+//    public static final int KEY_SILOS_TESTING_3 = 5;
+//    public static final int KEY_SILOS_INTEGRATION = 6;
+//    public static final int KEY_SILOS_DEMO = 7;
+
+    public static final String KEY_SILOS_BETA_VALUE = "keySilosBeta";
+    public static final String KEY_SILOS_STAGING_VALUE = "keySilosBeta";
+    public static final String KEY_SILOS_TESTING_1_VALUE ="keySilosTesting1";
+    public static final String KEY_SILOS_TESTING_2_VALUE = "keySilosTesting2";
+    public static final String KEY_SILOS_TESTING_3_VALUE = "keySilosTesting3";
+    public static final String KEY_SILOS_INTEGRATION_VALUE ="keySilosIntegration";
+    public static final String KEY_SILOS_DEMO_VALUE ="keySilosDemo";
 
 
 }

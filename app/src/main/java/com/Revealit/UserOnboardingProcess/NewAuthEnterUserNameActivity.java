@@ -332,6 +332,32 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         //UPDATE FLAG FOR APPLICATION MODE
         mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
 
+        //STORE DATA FOR SWAPPING SILOS
+        //THIS IS TEMPORARY FOR ADMIN USERS
+//        switch (mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)) {
+//            case 1:
+//                encryptKey(Constants.KEY_SILOS_ALIAS, Constants.KEY_SILOS_BETA_VALUE ,""+gson.toJson(body));
+//                break;
+//            case 2:
+//                encryptKey(Constants.KEY_SILOS_ALIAS, Constants.KEY_SILOS_STAGING_VALUE ,""+gson.toJson(body));
+//                break;
+//            case 3:
+//                encryptKey(Constants.KEY_SILOS_ALIAS, Constants.KEY_SILOS_TESTING_1_VALUE ,""+gson.toJson(body));
+//                break;
+//            case 4:
+//                encryptKey(Constants.KEY_SILOS_ALIAS, Constants.KEY_SILOS_TESTING_2_VALUE ,""+gson.toJson(body));
+//                break;
+//            case 5:
+//                encryptKey(Constants.KEY_SILOS_ALIAS, Constants.KEY_SILOS_TESTING_3_VALUE ,""+gson.toJson(body));
+//                break;
+//            case 6:
+//                encryptKey(Constants.KEY_SILOS_ALIAS, Constants.KEY_SILOS_INTEGRATION_VALUE ,""+gson.toJson(body));
+//                break;
+//            case 7:
+//                encryptKey(Constants.KEY_SILOS_ALIAS, Constants.KEY_SILOS_DEMO_VALUE ,""+gson.toJson(body));
+//                break;
+      //  }
+
 
         Intent mIntent = new Intent(NewAuthEnterUserNameActivity.this,InviteAndEarnActivity.class);
         mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME ,body.getProton().getAccountName());

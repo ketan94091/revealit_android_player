@@ -104,8 +104,11 @@ public class NewAuthSplashScreen extends AppCompatActivity {
                         case Constants.API_END_POINTS_MOBILE_T2_CURATOR:
                             mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 4);
                             break;
-                        case Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR:
+                        case Constants.API_END_POINTS_MOBILE_T3_CURATOR:
                             mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 5);
+                            break;
+                        case Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR:
+                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 6);
                             break;
                     }
 

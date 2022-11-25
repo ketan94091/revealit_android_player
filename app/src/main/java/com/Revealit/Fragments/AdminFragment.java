@@ -102,12 +102,16 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
         LinearLayout linearStaging = (LinearLayout) mView.findViewById(R.id.linearStaging);
         LinearLayout linearTesting1 = (LinearLayout) mView.findViewById(R.id.linearTesting1);
         LinearLayout linearTesting2 = (LinearLayout) mView.findViewById(R.id.linearTesting2);
+        LinearLayout linearTesting3 = (LinearLayout) mView.findViewById(R.id.linearTesting3);
         LinearLayout linearIntegration = (LinearLayout) mView.findViewById(R.id.linearIntegration);
+        LinearLayout linearDemo = (LinearLayout) mView.findViewById(R.id.linearDemo);
+
+
+        TextView txtSimulation = (TextView) mView.findViewById(R.id.txtSimulation);
+        TextView txtLive = (TextView) mView.findViewById(R.id.txtLive);
 
         TextView txtBetaCuratorMobile = (TextView) mView.findViewById(R.id.txtBetaCuratorMobile);
         TextView txtBetaCuratorRegistration = (TextView) mView.findViewById(R.id.txtBetaCuratorRegistration);
-        TextView txtSimulation = (TextView) mView.findViewById(R.id.txtSimulation);
-        TextView txtLive = (TextView) mView.findViewById(R.id.txtLive);
 
         TextView txtStagingMobile = (TextView) mView.findViewById(R.id.txtStagingMobile);
         TextView txtStagingRegistration = (TextView) mView.findViewById(R.id.txtStagingRegistration);
@@ -118,8 +122,14 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
         TextView txtTesting2Mobile = (TextView) mView.findViewById(R.id.txtTesting2Mobile);
         TextView txtTesting2Registration = (TextView) mView.findViewById(R.id.txtTesting2Registration);
 
+        TextView txtTesting3Mobile = (TextView) mView.findViewById(R.id.txtTesting3Mobile);
+        TextView txtTesting3Registration = (TextView) mView.findViewById(R.id.txtTesting3Registration);
+
         TextView txtIntegrationMobile = (TextView) mView.findViewById(R.id.txtIntegrationMobile);
         TextView txtIntegrationRegistration = (TextView) mView.findViewById(R.id.txtIntegrationRegistration);
+
+        TextView txtDemoMobile = (TextView) mView.findViewById(R.id.txtDemoMobile);
+        TextView txtDemoRegistration = (TextView) mView.findViewById(R.id.txtDemoRegistration);
 
 
 
@@ -207,10 +217,20 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
                 linearTesting2.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
 
                 break;
-
             case 5:
 
+                linearTesting3.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
+
+                break;
+
+            case 6:
+
                 linearIntegration.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
+
+                break;
+            case 7:
+
+                linearDemo.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
 
                 break;
         }
@@ -275,13 +295,43 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
 
             }
         });
+        linearTesting3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                //UPDATE ENVIRONMENT
+                updateEnvironment(Constants.API_END_POINTS_MOBILE_T3_CURATOR,Constants.API_END_POINTS_REGISTRATION_T3_CURATOR, mActivity.getResources().getString(R.string.strTesting3),5);
+
+
+                //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
+                //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN
+                checkUserAvailable();
+
+
+            }
+        });
 
         linearIntegration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 //UPDATE ENVIRONMENT
-                updateEnvironment(Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR,Constants.API_END_POINTS_REGISTRATION_INTEGRATION_CURATOR, mActivity.getResources().getString(R.string.strIntegration),5);
+                updateEnvironment(Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR,Constants.API_END_POINTS_REGISTRATION_INTEGRATION_CURATOR, mActivity.getResources().getString(R.string.strIntegration),6);
+
+                //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
+                //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN
+                checkUserAvailable();
+
+            }
+        });
+
+        linearDemo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //UPDATE ENVIRONMENT
+                updateEnvironment(Constants.API_END_POINTS_MOBILE_DEMO_CURATOR,Constants.API_END_POINTS_REGISTRATION_DEMO_CURATOR, mActivity.getResources().getString(R.string.strDemo),7);
 
                 //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
                 //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN

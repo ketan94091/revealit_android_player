@@ -74,7 +74,7 @@
                 android:id="@+id/linearBetacurator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="10dp"
                 android:padding="15dp"
                 android:weightSum="3"
                 android:orientation="horizontal"
@@ -111,7 +111,7 @@
                 android:weightSum="3"
                 android:orientation="horizontal"
                 android:background="@drawable/new_auth_round_button"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="10dp"
                 android:padding="15dp">
 
                 <TextView
@@ -147,7 +147,7 @@
                 android:weightSum="3"
                 android:orientation="horizontal"
                 android:background="@drawable/new_auth_round_button"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="10dp"
                 android:padding="15dp">
 
                 <TextView
@@ -183,7 +183,7 @@
                 android:weightSum="3"
                 android:orientation="horizontal"
                 android:background="@drawable/new_auth_round_button"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="10dp"
                 android:padding="15dp">
 
                 <TextView
@@ -209,6 +209,39 @@
                     android:textFontWeight="500"
                     android:textSize="14dp" />
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linearTesting3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="3"
+                android:orientation="horizontal"
+                android:background="@drawable/new_auth_round_button"
+                android:layout_marginTop="10dp"
+                android:padding="15dp">
+
+                <TextView
+                    android:id="@+id/txtTesting3Mobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strTesting3"
+                    android:textColor="@color/colorWalletText"
+                    android:textSize="18dp"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:textFontWeight="700" />
+
+                <TextView
+                    android:id="@+id/txtTesting3Registration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strTesting3URL"
+                    android:layout_weight="1"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/colorWalletText"
+                    android:fontFamily="@font/quasimoda_medium"
+                    android:textFontWeight="500"
+                    android:textSize="14dp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearIntegration"
@@ -217,7 +250,7 @@
                 android:weightSum="3"
                 android:orientation="horizontal"
                 android:background="@drawable/new_auth_round_button"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="10dp"
                 android:padding="15dp">
 
                 <TextView
@@ -236,6 +269,40 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/strIntegrationURL"
+                    android:textColor="@color/colorWalletText"
+                    android:layout_weight="1"
+                    android:textAlignment="textEnd"
+                    android:fontFamily="@font/quasimoda_medium"
+                    android:textFontWeight="500"
+                    android:textSize="14dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearDemo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="3"
+                android:orientation="horizontal"
+                android:background="@drawable/new_auth_round_button"
+                android:layout_marginTop="10dp"
+                android:padding="15dp">
+
+                <TextView
+                    android:id="@+id/txtDemoMobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strDemo"
+                    android:textColor="@color/colorWalletText"
+                    android:textSize="18dp"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:textFontWeight="700" />
+
+                <TextView
+                    android:id="@+id/txtDemoRegistration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/strDemoURL"
                     android:textColor="@color/colorWalletText"
                     android:layout_weight="1"
                     android:textAlignment="textEnd"
