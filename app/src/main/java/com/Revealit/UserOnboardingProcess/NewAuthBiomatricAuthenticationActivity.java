@@ -112,7 +112,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
         } else {
 
             //OPEN NO AUTHENTICATION DIALOGUE
-            CommonMethods.openStartOverDialogue(mActivity);
+            CommonMethods.openBiometricActivatioDailogue(mActivity);
 
         }
 
@@ -336,6 +336,9 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
     private void goToNextActivity() {
 
+
+        //IF THE USER IS FROM QR CODE
+        //ELSE MOVE TO HOME SCREEN
         if(mSessionManager.getPreferenceBoolean(Constants.KEY_QR_CODE_FROM_CAMERA)){
             Intent mIntentQrCode = new Intent(this, QrCodeScannerActivity.class);
             startActivity(mIntentQrCode);

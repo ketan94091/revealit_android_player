@@ -231,6 +231,7 @@ public class Constants {
 
     //KEY_ALIS_FOR_SILOS
     public static final String KEY_SILOS_ALIAS = "keyAliasRevealitSilos";
+    public static final String KEY_SILOS_DATA= "keyAliasUserSilosData";
 
    // public static final int KEY_SILOS_BETA = 1;
 //    public static final int KEY_SILOS_STAGING = 2;

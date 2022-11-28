@@ -619,7 +619,7 @@ public class CommonMethods {
         return keyguardManager.isKeyguardSecure ();
     }
 
-    public static void openStartOverDialogue(Activity mActivity) {
+    public static void openBiometricActivatioDailogue(Activity mActivity) {
 
         android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
         dialogBuilder.setCancelable(false);
@@ -631,8 +631,6 @@ public class CommonMethods {
 
         final AlertDialog mAlertDialog = dialogBuilder.create();
         TextView txtOk = (TextView) dialogView.findViewById(R.id.txtOk);
-
-
 
         txtOk.setOnClickListener(new View.OnClickListener() {
             @Override

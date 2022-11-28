@@ -42,7 +42,6 @@ import java.security.InvalidKeyException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
 
@@ -334,31 +333,10 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
 
         //STORE DATA FOR SWAPPING SILOS
         //THIS IS TEMPORARY FOR ADMIN USERS
-//        switch (mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)) {
-//            case 1:
-//                encryptKey(Constants.KEY_SILOS_ALIAS, Constants.KEY_SILOS_BETA_VALUE ,""+gson.toJson(body));
-//                break;
-//            case 2:
-//                encryptKey(Constants.KEY_SILOS_ALIAS, Constants.KEY_SILOS_STAGING_VALUE ,""+gson.toJson(body));
-//                break;
-//            case 3:
-//                encryptKey(Constants.KEY_SILOS_ALIAS, Constants.KEY_SILOS_TESTING_1_VALUE ,""+gson.toJson(body));
-//                break;
-//            case 4:
-//                encryptKey(Constants.KEY_SILOS_ALIAS, Constants.KEY_SILOS_TESTING_2_VALUE ,""+gson.toJson(body));
-//                break;
-//            case 5:
-//                encryptKey(Constants.KEY_SILOS_ALIAS, Constants.KEY_SILOS_TESTING_3_VALUE ,""+gson.toJson(body));
-//                break;
-//            case 6:
-//                encryptKey(Constants.KEY_SILOS_ALIAS, Constants.KEY_SILOS_INTEGRATION_VALUE ,""+gson.toJson(body));
-//                break;
-//            case 7:
-//                encryptKey(Constants.KEY_SILOS_ALIAS, Constants.KEY_SILOS_DEMO_VALUE ,""+gson.toJson(body));
-//                break;
-      //  }
+        //OVERRIDE EXISTING SILOS IF ADMIN CREATE NEW WITH FOR EXISTING SAVED SILOS
+        encryptKey(""+gson.toJson(body),  Constants.KEY_SILOS_DATA+""+mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID),Constants.KEY_SILOS_ALIAS);
 
-
+        //GO TO NEXT ACTIVITY
         Intent mIntent = new Intent(NewAuthEnterUserNameActivity.this,InviteAndEarnActivity.class);
         mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME ,body.getProton().getAccountName());
         startActivity(mIntent);
@@ -370,10 +348,10 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         try{
 
             //CREATE CRYPTOGRAPHY
-            Cryptography c = new Cryptography(keyStoreName);
+            Cryptography mCryptography = new Cryptography(keyStoreName);
 
             //STORE AND ENCRYPT DATA IN KEYSTORE// returns base 64 data: 'BASE64_DATA,BASE64_IV'
-            String encrypted = c.encrypt(keyToStore);
+            String encrypted = mCryptography.encrypt(keyToStore);
 
             //SAVE ENCRYPTED DATA TO PREFERENCE FOR SMOOTH TRANSITION
             mSessionManager.updatePreferenceString(alias,encrypted);
@@ -385,35 +363,6 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
 
     }
 
-    private void decryptText(String alias) {
-        try {
-            decryptor = new DeCryptor();
-            String encryptedText = decryptor.decryptData(alias, encryptor.getEncryption(), encryptor.getIv());
-            Log.e("DECRIPTOR " ,""+encryptedText);
-        }catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        } catch (UnrecoverableEntryException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
-    }
     private void apiCheckIfUsernameExist(){
 
         //OPEN DIALOGUE

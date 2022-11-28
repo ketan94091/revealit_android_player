@@ -1,14 +1,9 @@
 package com.Revealit.UserOnboardingProcess;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -18,9 +13,6 @@ import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class NewAuthSplashScreen extends AppCompatActivity {
 
@@ -49,21 +41,9 @@ public class NewAuthSplashScreen extends AppCompatActivity {
         mDatabaseHelper = new DatabaseHelper(mContext);
         mDatabaseHelper.open();
 
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    getPackageName(),
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
 
-        } catch (NoSuchAlgorithmException e) {
-
-        }
-
+        //GET DATA FROM THE CAMERA QR CODE
+        //IT MUST BE IN THE FORM OF REVEALIT OR PROTON
         Intent intent = getIntent();
         Uri data = intent.getData();
         if(data != null && data.toString().contains("revealit") || data != null && data.toString().contains("proton")){
@@ -79,7 +59,6 @@ public class NewAuthSplashScreen extends AppCompatActivity {
 
             @Override
             public void run() {
-
 
                 //FALSE == APP OPEN FIRST TIME
                 //TRUE  == APP NOT OPEN FIRST TIME
