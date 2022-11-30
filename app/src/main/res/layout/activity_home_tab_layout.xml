@@ -47,19 +47,99 @@
             android:id="@+id/viewBottomLine"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_above="@+id/tabLayout"
+            android:layout_above="@+id/relativeTab"
             android:background="@color/colorNewAppGreen" />
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
+        <RelativeLayout
+            android:id="@+id/relativeTab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            app:tabBackground="@drawable/tab_color_selector"
-            app:tabIndicatorHeight="0dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="10dp">
 
-            />
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:tabBackground="@drawable/tab_color_selector"
+                app:tabIndicatorHeight="0dp" />
+
+            <LinearLayout
+                android:id="@+id/linearListenScreenControls"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:id="@+id/linearDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@mipmap/delete_grey"
+                        android:drawablePadding="5dp"
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:text="@string/strDelete"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorRevealitGrey"
+                        android:textFontWeight="700"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@mipmap/group"
+                        android:drawablePadding="5dp"
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:text="@string/strGroup"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorRevealitGrey"
+                        android:textFontWeight="700"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearShare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@mipmap/share_grey"
+                        android:drawablePadding="5dp"
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:text="@string/strShare"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorRevealitGrey"
+                        android:textFontWeight="700"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </RelativeLayout>
     </RelativeLayout>
 
     </RelativeLayout>

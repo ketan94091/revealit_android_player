@@ -108,6 +108,7 @@
     <string name="strTapToRevealit">Tap to revealit</string>
     <string name="strMyReveals">My Reveals</string>
     <string name="strSelectALl">Select All</string>
+    <string name="strRevealSelected">Reveals Selected</string>
     <string name="strDeselectALl">Deselect All</string>
     <string name="strCancel">Cancel</string>
     <string name="strShare">Share</string>
@@ -216,6 +217,7 @@
     <string name="strOTPwrong">Entered OTP is wrong!</string>
     <string name="strEnterRightCampaignId">Enter the right campaign id or referral id</string>
     <string name="strVerified">Verified</string>
+    <string name="strGroup">Group</string>
     <string name="strThankYouForEnrolingPlatform">Thank you for enrolling on our platform.</string>
     <string name="strErrorInBckup">Error encountered! Please try after some times</string>
     <string name="strBckupSuccessfully">Google drive backup successfully!</string>

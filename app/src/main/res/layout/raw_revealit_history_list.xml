@@ -23,12 +23,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/radioSelection"
-                android:checked="false"
+            <CheckBox
+                android:id="@+id/chcekBoxSelection"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
+                android:visibility="gone"
+
                 android:layout_marginRight="10dp"/>
 
             <RelativeLayout

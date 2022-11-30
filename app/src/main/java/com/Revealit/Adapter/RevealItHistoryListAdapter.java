@@ -9,9 +9,10 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -76,14 +77,18 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
     private LinearLayoutManager recylerViewLayoutManager;
     private SessionManager mSessionManager;
     private RemoveListenHistory mRemoveListenHistory;
+    private boolean isCheckSelected,shouldCheckBoxVisible;
+    private ArrayList<String> mSelectedVideoIds = new ArrayList<>();
 
 
 
-    public RevealItHistoryListAdapter(Context mContext, Activity mActivity, ArrayList<RevealitHistoryModel.Data> revealitHistoryData, RemoveListenHistory mRemoveListenHistory) {
+    public RevealItHistoryListAdapter(Context mContext, Activity mActivity, ArrayList<RevealitHistoryModel.Data> revealitHistoryData, RemoveListenHistory mRemoveListenHistory, boolean isCheckSelected,boolean shouldCheckBoxVisible) {
         this.mContext = mContext;
         this.mActivity = mActivity;
         this.revealitHistoryData = revealitHistoryData;
         this.mRemoveListenHistory =mRemoveListenHistory;
+        this.isCheckSelected =isCheckSelected;
+        this.shouldCheckBoxVisible =shouldCheckBoxVisible;
 
 
         mSessionManager = new SessionManager(mContext);
@@ -92,14 +97,28 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
         mDatabaseHelper = new DatabaseHelper(mContext);
         mDatabaseHelper.open();
 
-        notifyDataSetChanged();
 
     }
 
-    public void updateListData(ArrayList<RevealitHistoryModel.Data> list) {
-revealitHistoryData.clear();
-revealitHistoryData.addAll(list);
-notifyDataSetChanged();
+    public void updateListData(ArrayList<RevealitHistoryModel.Data> mRevealitHistoryList, boolean isCheckBoxSelected,boolean shouldCheckBoxVisible) {
+
+        //CLEAR CURRENT LIST
+        revealitHistoryData.clear();
+
+        //ADD FRESH LIST
+        revealitHistoryData.addAll(mRevealitHistoryList);
+
+        //UPDATE CHECK BOX DATA
+        this.isCheckSelected = isCheckBoxSelected;
+
+        //UPDATE CHECK BOX VISIBILITY
+        this.shouldCheckBoxVisible = shouldCheckBoxVisible;
+
+        //CLEAR SELECTED IDS
+        mSelectedVideoIds.clear();
+
+        //NOTIFY LISTENER
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -109,7 +128,7 @@ notifyDataSetChanged();
         private final ProgressBar progressImgLoad;
         private final RelativeLayout relatativeMain;
         private final RecyclerView recycleRevealHistoryTimestamps;
-        private final RadioButton radioSelection;
+        private final CheckBox chcekBoxSelection;
 
 
         public ViewHolder(View mView) {
@@ -122,7 +141,7 @@ notifyDataSetChanged();
             progressImgLoad = (ProgressBar) mView.findViewById(R.id.progressImgLoad);
             relatativeMain = (RelativeLayout) mView.findViewById(R.id.relatativeMain);
             recycleRevealHistoryTimestamps = (RecyclerView) mView.findViewById(R.id.recycleRevealHistoryTimestamps);
-            radioSelection =(RadioButton)mView.findViewById(R.id.radioSelection);
+            chcekBoxSelection =(CheckBox)mView.findViewById(R.id.chcekBoxSelection);
 
 
         }
@@ -135,7 +154,6 @@ notifyDataSetChanged();
 
         view.setTag(viewHolder);
         viewHolder = new ViewHolder(view);
-
 
         return viewHolder;
     }
@@ -183,29 +201,36 @@ notifyDataSetChanged();
             @Override
             public boolean onLongClick(View v) {
 
-                showBottomSheetDialog(revealitHistoryData.get(position).getMedia_id());
+                //showBottomSheetDialog(revealitHistoryData.get(position).getMedia_id());
                 return true;
             }
         });
 
         //CHECK CHECK BOX
-        if(revealitHistoryData.get(position).getIsSelected() == 1){
-            holder.radioSelection.setSelected(true);
+        if(shouldCheckBoxVisible){
+            holder.chcekBoxSelection.setVisibility(View.VISIBLE);
+
         }else{
-            holder.radioSelection.setSelected(false);
+            holder.chcekBoxSelection.setVisibility(View.GONE);
         }
 
-        //SET DATA SET CHANGE LISTENER
-        holder.radioSelection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        //UPDATE CHECKBOX CHECKED
+        holder.chcekBoxSelection.setChecked(isCheckSelected);
 
-                if(revealitHistoryData.get(position).getIsSelected() == 1 ){
-                    revealitHistoryData.get(position).setIsSelected(0);
-                }else {
-                    revealitHistoryData.get(position).setIsSelected(1);
+        holder.chcekBoxSelection.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean mChecked) {
+
+                if(!mChecked){
+                    if(mSelectedVideoIds.contains(String.valueOf(revealitHistoryData.get(position).getMedia_id()))){
+                        mSelectedVideoIds.remove(String.valueOf(revealitHistoryData.get(position).getMedia_id()));
+                    }
+                }else{
+                    mSelectedVideoIds.add(String.valueOf(revealitHistoryData.get(position).getMedia_id()));
                 }
-                notifyDataSetChanged();
+
+                //UPDATE LIST THROUGH INTERFACE
+                mRemoveListenHistory.getSelectedIds(mSelectedVideoIds);
             }
         });
 
@@ -221,6 +246,9 @@ notifyDataSetChanged();
         SimpleExoPlayer exoPlayer = ExoPlayerFactory.newSimpleInstance(mContext, trackSelector);
         MediaSource audioSource = new ExtractorMediaSource(Uri.parse(media_url),
                 new CacheDataSourceFactory(mContext, 100 * 1024 * 1024, 5 * 1024 * 1024), new DefaultExtractorsFactory(), null, null);
+    }
+    public  ArrayList<String> getSelectedIds(){
+        return  mSelectedVideoIds;
     }
 
 

@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -61,6 +62,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -83,8 +85,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private ImageView imgScanQRcode,imgListen;
-    private TextView txtRevealSelectedCount,txtSelectDeselectAll,txtSelectionCancel,txtSelect,txtReveal,txtRevealCount;
+    private ImageView imgScanQRcode, imgListen;
+    private TextView txtRevealSelectedCount, txtSelectDeselectAll, txtSelectionCancel, txtSelect, txtReveal, txtRevealCount;
     private RecyclerView recycleRevealList;
     private LinearLayoutManager recylerViewLayoutManager;
     private RippleBackground rippleBackground;
@@ -94,8 +96,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     private int tapCount = 1;// IGONORE FIRST COUNT AND THEN START GETTING DATA FROM ITEMS TO END ITEMS.
     private ArrayList<CategoryWisePlayListModel.DataBean> mCategoryWisePlayListModel = new ArrayList<>();
     private ArrayList<Long> mLongRevealTime = new ArrayList<>();
-    private Activity homeScreenTabLayout;
-    private LinearLayout linearRevealTitle,linearRevealSelection,linearWavingBackground;
+    private HomeScreenTabLayout mHomeScreenTabLayout;
+    private LinearLayout linearRevealTitle, linearRevealSelection, linearWavingBackground;
     private RevealItHistoryListAdapter mRevealItHistoryListAdapter;
 
     private static String[] PERMISSIONS = {
@@ -119,7 +121,9 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                 default:
                     break;
             }
-        };
+        }
+
+        ;
     };
 
     enum ButtonsState {
@@ -127,13 +131,14 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         LEFT_VISIBLE,
         RIGHT_VISIBLE
     }
+
     private boolean swipeBack = false;
     private ButtonsState buttonShowedState = ButtonsState.GONE;
     private static final float buttonWidth = 300;
 
 
-    public ListenFragment(HomeScreenTabLayout homeScreenTabLayout) {
-        this.homeScreenTabLayout = homeScreenTabLayout;
+    public ListenFragment(HomeScreenTabLayout mHomeScreenTabLayout) {
+        this.mHomeScreenTabLayout = mHomeScreenTabLayout;
     }
 
 
@@ -149,8 +154,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         mView = inflater.inflate(R.layout.fragment_listen, container, false);
 
         //SET IDS
-        setIds();
-        setOnClicks();
+        //setIds();
+        //setOnClicks();
 
         return mView;
 
@@ -169,7 +174,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         mDatabaseHelper.open();
 
         imgListen = (ImageView) mView.findViewById(R.id.imgListen);
-        imgScanQRcode =(ImageView)mView.findViewById(R.id.imgScanQRcode);
+        imgScanQRcode = (ImageView) mView.findViewById(R.id.imgScanQRcode);
 
 
         txtRevealCount = (TextView) mView.findViewById(R.id.txtRevealCount);
@@ -181,9 +186,9 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         rippleBackground = (RippleBackground) mView.findViewById(R.id.content);
 
-        linearWavingBackground =(LinearLayout)mView.findViewById(R.id.linearWavingBackground);
-        linearRevealSelection =(LinearLayout)mView.findViewById(R.id.linearRevealSelection);
-        linearRevealTitle =(LinearLayout)mView.findViewById(R.id.linearRevealTitle);
+        linearWavingBackground = (LinearLayout) mView.findViewById(R.id.linearWavingBackground);
+        linearRevealSelection = (LinearLayout) mView.findViewById(R.id.linearRevealSelection);
+        linearRevealTitle = (LinearLayout) mView.findViewById(R.id.linearRevealTitle);
 
         recycleRevealList = (RecyclerView) mView.findViewById(R.id.recycleRevealList);
         recylerViewLayoutManager = new LinearLayoutManager(mActivity);
@@ -193,14 +198,14 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         mRemoveListenHistory = (RemoveListenHistory) this;
 
 
-        if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
+        if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
 
             //INITIALIZED ARC CLOUD LIBRARY
             ACRCloudExtrTool.setDebug();
             //GET HISTORY
             callGetRevealitVideoHistory();
 
-        }else{
+        } else {
 
             //GET WATCH DATA FROM DATABASE
             mCategoryWisePlayListModel = mDatabaseHelper.getCategoryWisePlayList();
@@ -219,24 +224,20 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         }
 
 
-
-
     }
-//    @Override
-//    public void setMenuVisibility(boolean menuVisible) {
-//
-//
-//        if (menuVisible  ) {
-//
-//            //SET IDS
-//            setIds();
-//            setOnClicks();
-//
-//        }
-//        super.setMenuVisibility(menuVisible);
-//    }
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
 
 
+        if (menuVisible  ) {
+
+            //SET IDS
+            setIds();
+            setOnClicks();
+
+        }
+        super.setMenuVisibility(menuVisible);
+    }
 
 
     private void setOnClicks() {
@@ -245,6 +246,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         imgScanQRcode.setOnClickListener(this);
         txtSelect.setOnClickListener(this);
         txtSelectionCancel.setOnClickListener(this);
+        txtSelectDeselectAll.setOnClickListener(this);
     }
 
 
@@ -257,23 +259,58 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                 Intent mIntent = new Intent(mActivity, QrCodeScannerActivity.class);
                 mActivity.startActivity(mIntent);
 
-
                 break;
 
             case R.id.txtSelect:
 
-               if(linearRevealTitle.getVisibility() == View.VISIBLE){
-                   linearRevealTitle.setVisibility(View.GONE);
-                   linearRevealSelection.setVisibility(View.VISIBLE);
-               }
+                if (linearRevealTitle.getVisibility() == View.VISIBLE) {
+                    linearRevealTitle.setVisibility(View.GONE);
+                    linearRevealSelection.setVisibility(View.VISIBLE);
+
+                    //CHANGE HOMEPAGE TAB BAR
+                    mHomeScreenTabLayout.changeBottomBarControls(true);
+
+                    //CHANGE SELECT ALL TO SELECT ALL
+                    txtSelectDeselectAll.setText(getResources().getString(R.string.strSelectALl));
+
+                    //DISPLAY LIST WITH CHECK BOX
+                    //FIRST PARAM -> FALSE -> FOR CHECKBOX SELECTION
+                    //SECOND PARAM -> TRUE -> FOR VISIBILITY OF CHECK BOX TRUE
+                    updateRevealitHistoryList(false, true);
+                }
                 break;
 
-             case R.id.txtSelectionCancel:
+            case R.id.txtSelectDeselectAll:
 
-               if(linearRevealSelection.getVisibility() == View.VISIBLE){
-                   linearRevealTitle.setVisibility(View.VISIBLE);
-                   linearRevealSelection.setVisibility(View.GONE);
-               }
+                if (txtSelectDeselectAll.getText().equals(getResources().getString(R.string.strSelectALl))) {
+
+                    //DISPLAY LIST WITH CHECK BOX SELECTED TRUE
+                    updateRevealitHistoryList(true, true);
+
+                    //CHANGE SELECT ALL TO DESELECT ALL
+                    txtSelectDeselectAll.setText(getResources().getString(R.string.strDeselectALl));
+                } else {
+
+                    //DISPLAY LIST WITH CHECK BOX SELECTED FALSE
+                    updateRevealitHistoryList(false, true);
+
+                    //CHANGE SELECT ALL TO SELECT ALL
+                    txtSelectDeselectAll.setText(getResources().getString(R.string.strSelectALl));
+                }
+                break;
+
+            case R.id.txtSelectionCancel:
+
+                if (linearRevealSelection.getVisibility() == View.VISIBLE) {
+                    linearRevealTitle.setVisibility(View.VISIBLE);
+                    linearRevealSelection.setVisibility(View.GONE);
+
+                    //CHANGE HOMEPAGE TAB BAR
+                    mHomeScreenTabLayout.changeBottomBarControls(false);
+
+
+                    updateRevealitHistoryList(false, false);
+                }
                 break;
 
             case R.id.imgListen:
@@ -283,17 +320,17 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                 if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
 
                     //IMAGE CLICK FALSE
-                    imgListen.setClickable(true);
+                    imgListen.setClickable(false);
 
                     //START RECORDING
                     startRecording();
-                }else{
+                } else {
 
                     //SET IMAGE CLICKBLE FALSE
-                    imgListen.setClickable(true);
+                    imgListen.setClickable(false);
 
                     //CHECK IF TAPCOUNT IS MUST LESS THAN DATA
-                    if(tapCount < (mDatabaseHelper.getCategoryWisePlayList().size()+1)) {
+                    if (tapCount < (mDatabaseHelper.getCategoryWisePlayList().size() + 1)) {
 
                         //START ANIMATION
                         rippleBackground.startRippleAnimation();
@@ -341,15 +378,15 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
             txtReveal.setVisibility(View.INVISIBLE);
 
             //CREATE FILE PATH WHERE WE WILL STORE RECORDERD AUDIO FOR IDENTIFY
-            String filePath =getActivity().getApplicationContext().getFilesDir().getPath();
+            String filePath = getActivity().getApplicationContext().getFilesDir().getPath();
 
-            File file= new File(filePath);
+            File file = new File(filePath);
 
-            if (!file.exists()){
+            if (!file.exists()) {
                 file.mkdirs();
             }
 
-            mFileName= file + Constants.SAVED_AUDIOFILE_NAME;
+            mFileName = file + Constants.SAVED_AUDIOFILE_NAME;
 
             mRecorder = new MediaRecorder();
 
@@ -375,7 +412,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
             } catch (IOException e) {
 
                 //SHOW DIALOGUE IF AUDIO THROW ANY ERROR
-                CommonMethods.buildDialog(mContext , Constants.MICROPHONE_CANNOT_WORK);
+                CommonMethods.buildDialog(mContext, Constants.MICROPHONE_CANNOT_WORK);
 
             }
 
@@ -405,7 +442,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                     imgListen.setClickable(true);
 
 
-
                 }
             }, 5000);
 
@@ -418,16 +454,23 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     @Override
     public void removeListenHistory(boolean isFromLivemode) {
 
-        if(isFromLivemode) {
+        if (isFromLivemode) {
             //GET REVEAL IT HISTORY DATA ON FRAGMENT LOAD
             callGetRevealitVideoHistory();
-        }else{
+        } else {
             //START COUNT FROM 1ST
             tapCount = 1;
 
             //UPDATE LIST AS PER USERS CHOICE
             updateRevealitHistoryListSimulation();
         }
+    }
+
+    @Override
+    public void getSelectedIds(ArrayList<String> selectedIdsList) {
+
+        //UPDATE SELECTED IDS COUNTS AND TOTAL COUNTS
+        txtRevealSelectedCount.setText(selectedIdsList.size()+"/"+mRevealItHistoryListAdapter.getItemCount()+ " "+getResources().getString(R.string.strRevealSelected) );
     }
 
     class RecThread extends Thread {
@@ -438,7 +481,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
             if (file.canRead()) {
                 getAudioIdentityFromACRCloud();
             } else {
-                CommonMethods.buildDialog(mContext , Constants.AUDIO_CAN_NOT_RECORD);
+                CommonMethods.buildDialog(mContext, Constants.AUDIO_CAN_NOT_RECORD);
 
                 return;
             }
@@ -452,7 +495,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         Map<String, Object> config = new HashMap<String, Object>();
         config.put(Constants.KEY_ACCESS_KEY, Constants.KEY_ACCESS_KEY_VALUE);
         config.put(Constants.KEY_ACCESS_SECRET, Constants.KEY_ACCESS_SECRET_VALUE);
-        config.put( Constants.KEY_HOST, Constants.KEY_HOST_VALUE);
+        config.put(Constants.KEY_HOST, Constants.KEY_HOST_VALUE);
         config.put(Constants.KEY_TIMEOUT, Constants.KEY_TIMEOUT_VALUE);
 
         ACRCloudRecognizer re = new ACRCloudRecognizer(config);
@@ -470,7 +513,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         } catch (Exception e) {
 
-            CommonMethods.buildDialog(mContext , Constants.AUDIO_NOT_RECOGNISED);
+            CommonMethods.buildDialog(mContext, Constants.AUDIO_NOT_RECOGNISED);
 
         }
 
@@ -521,7 +564,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
 
-        Call<JsonElement> call = patchService1.getVideoDetailsFromACRID(Constants.API_GET_VIDEO_DETAILS_LISTEN_SCREEN_FROM_ACRID+strACRID+"?play_offset_ms="+strPlayOffsetMS);
+        Call<JsonElement> call = patchService1.getVideoDetailsFromACRID(Constants.API_GET_VIDEO_DETAILS_LISTEN_SCREEN_FROM_ACRID + strACRID + "?play_offset_ms=" + strPlayOffsetMS);
 
         call.enqueue(new Callback<JsonElement>() {
             @Override
@@ -544,8 +587,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
 
-                CommonMethods.printLogE("Response @ getVideoDetails Error", "" +t.getMessage());
-
+                CommonMethods.printLogE("Response @ getVideoDetails Error", "" + t.getMessage());
 
 
             }
@@ -610,10 +652,10 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                     mDatabaseHelper.clearRevealitHistoryListTable();
 
                     //INSERT DATA IN TO DATABASE
-                    for (int i =0 ; i < response.body().getData().size() ; i++){
+                    for (int i = 0; i < response.body().getData().size(); i++) {
 
 
-                        if(mDatabaseHelper.getRevealitHistoryItemFromMediaID(response.body().getData().get(i).getMedia_id()).size() != 0){
+                        if (mDatabaseHelper.getRevealitHistoryItemFromMediaID(response.body().getData().get(i).getMedia_id()).size() != 0) {
 
                             //GET STRING DISPLAY TIME STAMP DISPLAY
                             String mStringsAllTimeStamp = mDatabaseHelper.getRevealitHistoryItemFromMediaID(response.body().getData().get(i).getMedia_id()).get(0).getAllTimeStamp();
@@ -625,7 +667,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                             mListAllTimeStamp.add(response.body().getData().get(i).getPlayback_display());
 
 
-
                             //GET STRING DISPLAY TIME STAMP OFFSET
                             String mStringsAllTimeStampOffset = mDatabaseHelper.getRevealitHistoryItemFromMediaID(response.body().getData().get(i).getMedia_id()).get(0).getAllTimeStampOffset();
 
@@ -634,7 +675,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
                             //ADD TIME STAMP OFFSET TO ARRAY LIST AND THAN UPDATE STRING IN TO DATABASE
                             mListAllTimeStampOffset.add(response.body().getData().get(i).getPlayback_offset());
-
 
 
                             mDatabaseHelper.updateRevealitHistoryList(response.body().getData().get(i).getMatch_id(),
@@ -651,7 +691,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                                     mListAllTimeStampOffset.toString(),
                                     0);
 
-                        }else{
+                        } else {
 
                             mDatabaseHelper.insertRevealitHistoryData(response.body().getData().get(i).getMatch_id(),
                                     response.body().getData().get(i).getMedia_id(),
@@ -673,8 +713,17 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
                 }
 
+                //RESET ALL VIEW
+                linearRevealTitle.setVisibility(View.VISIBLE);
+                linearRevealSelection.setVisibility(View.GONE);
+
+
+                //RESET BOTTOM BAR
+                //CHANGE HOMEPAGE TAB BAR
+                mHomeScreenTabLayout.changeBottomBarControls(false);
+
                 //RELOAD HISTORY LIST IF NOT EMPTY
-                updateRevealitHistoryList();
+                updateRevealitHistoryList(false, false);
 
                 //HIDE PROGRESSBAR
                 pDialog.cancel();
@@ -683,7 +732,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
             @Override
             public void onFailure(Call<RevealitHistoryModel> call, Throwable t) {
 
-                CommonMethods.printLogE("Response @ callGetRevealitVideoHistory Error", "" +t.getMessage());
+                CommonMethods.printLogE("Response @ callGetRevealitVideoHistory Error", "" + t.getMessage());
 
                 //BUILD ERROR DIALOG DIALOG
                 CommonMethods.buildDialog(mContext, Constants.SOMETHING_WENT_WRONG);
@@ -709,74 +758,101 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         ActivityCompat.requestPermissions(getActivity(), PERMISSIONS, REQUEST_AUDIO_PERMISSION_CODE);
     }
 
-    private void updateRevealitHistoryList() {
-        ArrayList<RevealitHistoryModel.Data> list = mDatabaseHelper.getRevealitHistoryData();
-        //SET REVEAL IT HISTORY FOR LIVE MODE
-        if (mRevealItHistoryListAdapter==null){
-            mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mActivity, mDatabaseHelper.getRevealitHistoryData(),mRemoveListenHistory);
-            recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
+    public void updateRevealitHistoryList(boolean isCheckBoxSelected, boolean shouldCheckBoxVisible) {
 
-            new SwipeHelper(mActivity, recycleRevealList) {
-                @Override
-                public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+        ArrayList<RevealitHistoryModel.Data> mHistoryListFromDatabase = null;
+        try {
+             mHistoryListFromDatabase =  new NetworkQueryTask().execute(mDatabaseHelper).get();
 
-                    underlayButtons.add(new SwipeHelper.UnderlayButton(
-                            R.mipmap.icn_share_with_text,
-                            mActivity,
-                            new UnderlayButtonClickListener() {
-                                @Override
-                                public void onClick(int pos) {
+            //SET REVEAL IT HISTORY FOR LIVE MODE
+            //IF LIST ATTACH FOR THE FIRST TIME ELSE JUST NOTIFY LISTENER WITH FRESH LIST
+            if (mRevealItHistoryListAdapter == null) {
 
-                                    Log.e("Share","Share ::: "+mRevealItHistoryListAdapter.revealitHistoryData.get(pos).media_title);
+                mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mActivity, mHistoryListFromDatabase, mRemoveListenHistory, isCheckBoxSelected, shouldCheckBoxVisible);
+                recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
+
+                //SWIPE HELPER SHOULD ATTACH FIRST TIME
+                ArrayList<RevealitHistoryModel.Data> finalMHistoryListFromDatabase = mHistoryListFromDatabase;
+
+                new SwipeHelper(mActivity, recycleRevealList) {
+                    @Override
+                    public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+
+                        underlayButtons.add(new SwipeHelper.UnderlayButton(
+                                R.mipmap.icn_share_with_text,
+                                mActivity,
+                                new UnderlayButtonClickListener() {
+                                    @Override
+                                    public void onClick(int pos) {
+
+                                        Log.e("Share", "Share ::: " + mRevealItHistoryListAdapter.revealitHistoryData.get(pos).media_title);
+                                    }
                                 }
-                            }
-                    ));
+                        ));
 
-                    underlayButtons.add(new SwipeHelper.UnderlayButton(
-                            R.mipmap.icn_delete_with_text,
-                            mActivity,
-                            new SwipeHelper.UnderlayButtonClickListener() {
-                                @Override
-                                public void onClick(int pos) {
-                                    // TODO: onDelete
-                                    //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API
-                                    //ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
-                                    if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
+                        underlayButtons.add(new SwipeHelper.UnderlayButton(
+                                R.mipmap.icn_delete_with_text,
+                                mActivity,
+                                new SwipeHelper.UnderlayButtonClickListener() {
+                                    @Override
+                                    public void onClick(int pos) {
+                                        // TODO: onDelete
+                                        //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API
+                                        //ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
+                                        if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
 
-                                        //CALL API REMOVE SINGLE VIDEO
-                                        callRemoveVideo(false, mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
+                                            //CALL API REMOVE SINGLE VIDEO
+                                            callRemoveVideo(false, finalMHistoryListFromDatabase.get(pos).getMedia_id());
 
-                                    }else{
+                                        } else {
 
-                                        //REMOVE SINGLE VIDEO FROM DATABASE
-                                        mDatabaseHelper.clearSimulationHistoryItem(mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
+                                            //REMOVE SINGLE VIDEO FROM DATABASE
+                                            mDatabaseHelper.clearSimulationHistoryItem(mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
 
-                                        //UPDATE LIST THROUGH INTERFACE
-                                        mRemoveListenHistory.removeListenHistory(false);
+                                            //UPDATE LIST THROUGH INTERFACE
+                                            mRemoveListenHistory.removeListenHistory(false);
+
+                                        }
 
                                     }
-
                                 }
-                            }
-                    ));
+                        ));
 
-                }
-            };
+                    }
+                };
 
 
-        }else{
-            mRevealItHistoryListAdapter.updateListData(list);
+            } else {
+
+                //ELSE -> NOTIFY LIST WITH LATEST LIST DATA
+                mRevealItHistoryListAdapter.updateListData(mHistoryListFromDatabase, isCheckBoxSelected, shouldCheckBoxVisible);
+            }
+
+
+            //SET SIZE TO REVEAL IT
+            txtRevealCount.setText("" + mHistoryListFromDatabase.size() + " reveals");
+
+            //SET TOTAL SELECTED REVEALS
+            txtRevealSelectedCount.setText("0/"+mRevealItHistoryListAdapter.getItemCount()+ " "+getResources().getString(R.string.strRevealSelected) );
+
+
+            //ENABLE BUTTON
+            imgListen.setClickable(true);
+
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
 
-        //SET SIZE TO REVEAL IT
-        txtRevealCount.setText(""+mDatabaseHelper.getRevealitHistoryData().size()+" reveals");
-
-        //ENABLE BUTTON
-        imgListen.setClickable(true);
+        
 
 
     }
+
+
     private void callRemoveVideo(boolean isClearHistory, int media_id) {
 
         //SHOW PROGRESS DIALOG
@@ -872,7 +948,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     private void updateRevealitHistoryListSimulation() {
 
         //SET REVEAL IT HISTORY FOR SIMULATION MODE
-        RevealItHistoryListAdapter mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mActivity, mDatabaseHelper.getRevealitHistoryDataSimulation(),mRemoveListenHistory);
+        RevealItHistoryListAdapter mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mActivity, mDatabaseHelper.getRevealitHistoryDataSimulation(), mRemoveListenHistory, false, false);
         recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
 
         new SwipeHelperSimulation(getContext(), recycleRevealList) {
@@ -887,7 +963,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                             @Override
                             public void onClick(int pos) {
                                 // TODO: OnTransfer
-                                CommonMethods.displayToast(mContext,"Share button clicked!");
+                                CommonMethods.displayToast(mContext, "Share button clicked!");
                             }
                         }
                 ));
@@ -902,11 +978,11 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                                 //CONDITION
                                 //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API'S
                                 //IF ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
-                                if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
+                                if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
 
                                     //CALL API REMOVE SINGLE VIDEO
                                     callRemoveVideo(false, mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
-                                }else{
+                                } else {
 
                                     //IN ELSE CONDITION
                                     //REMOVE SINGLE VIDEO DATA FROM DATABASE
@@ -925,7 +1001,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         };
 
         //SET SIZE TO REVEAL IT
-        txtRevealCount.setText(""+mDatabaseHelper.getRevealitHistoryDataSimulation().size()+" reveals");
+        txtRevealCount.setText("" + mDatabaseHelper.getRevealitHistoryDataSimulation().size() + " reveals");
 
         //ENABLE BUTTON
         imgListen.setClickable(true);
@@ -946,7 +1022,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                     if (permissionToRecord && permissionToStore) {
                         startRecording();
                     } else {
-                        CommonMethods.buildDialog(mContext , "Permission denied!");
+                        CommonMethods.buildDialog(mContext, "Permission denied!");
                     }
                 }
                 break;
@@ -956,9 +1032,9 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     private void updateUI(int from, int to) {
 
         //GET SUBLIST BASED ON COUNT AND THAN SAVE DUMMY DATA TO THE DATABASE
-        for(int i= 0; i < mCategoryWisePlayListModel.subList(from, to).size() ; i++){
+        for (int i = 0; i < mCategoryWisePlayListModel.subList(from, to).size(); i++) {
 
-            if(mDatabaseHelper.getRevealitHistoryItemFromMediaIDSimulation(mCategoryWisePlayListModel.subList(from, to).get(i).getMediaID()).size() == 0)
+            if (mDatabaseHelper.getRevealitHistoryItemFromMediaIDSimulation(mCategoryWisePlayListModel.subList(from, to).get(i).getMediaID()).size() == 0)
                 mDatabaseHelper.insertRevealitHistoryDataSimulation(mCategoryWisePlayListModel.subList(from, to).get(i).getMediaID(),
                         mCategoryWisePlayListModel.subList(from, to).get(i).getMediaID(),
                         mCategoryWisePlayListModel.subList(from, to).get(i).getMediaTitle(),
@@ -969,8 +1045,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                         "00",
                         "0:0:10",
                         "0",
-                        "0:00:"+(to+5),
-                        ""+(to+5));
+                        "0:00:" + (to + 5),
+                        "" + (to + 5));
 
         }
 
@@ -980,4 +1056,24 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     }
 
 
+}
+
+class NetworkQueryTask extends AsyncTask<DatabaseHelper, Integer, ArrayList<RevealitHistoryModel.Data>> {
+
+
+    @Override
+    protected ArrayList<RevealitHistoryModel.Data> doInBackground(DatabaseHelper... databaseHelpers) {
+        return databaseHelpers[0].getRevealitHistoryData();
+    }
+
+    @Override
+    protected void onPreExecute() {
+
+    }
+
+    @Override
+    protected void onPostExecute(ArrayList<RevealitHistoryModel.Data> searchResults) {
+        super.onPostExecute(searchResults);
+
+    }
 }

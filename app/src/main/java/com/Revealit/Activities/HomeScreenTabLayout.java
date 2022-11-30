@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -64,6 +66,8 @@ public class HomeScreenTabLayout extends AppCompatActivity {
 
     private static final String TAG ="HomeScreenTabLayout" ;
     public static CustomViewPager viewPager;
+    public static RelativeLayout relativeTab;
+    public static LinearLayout linearListenScreenControls;
     public static TabLayout tabLayout;
     ArrayList<Fragment> fragments;
     Toolbar toolbar;
@@ -111,6 +115,9 @@ public class HomeScreenTabLayout extends AppCompatActivity {
 
         viewPager = (CustomViewPager) findViewById(R.id.pager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+
+        relativeTab =(RelativeLayout)findViewById(R.id.relativeTab);
+        linearListenScreenControls =(LinearLayout)findViewById(R.id.linearListenScreenControls);
 
         viewBottomLine=(View)findViewById(R.id.viewBottomLine);
 
@@ -314,6 +321,9 @@ public class HomeScreenTabLayout extends AppCompatActivity {
 
         //CREATE PUSHER TOKEN PROVIDER
         pusherTokenProvider();
+
+        //SHOW BOTTOM BAR CONTROL
+        changeBottomBarControls(false);
 
 
 
@@ -594,6 +604,18 @@ public class HomeScreenTabLayout extends AppCompatActivity {
             }
         });
 
+    }
+
+    //CHANGE BOTTOM BAR TAB CONTROLS WITH LISTEN SCREEN CONTROLS
+    public static void changeBottomBarControls(boolean isChangeControls){
+
+        if(isChangeControls){
+            tabLayout.setVisibility(View.GONE);
+            linearListenScreenControls.setVisibility(View.VISIBLE);
+        }else{
+            tabLayout.setVisibility(View.VISIBLE);
+            linearListenScreenControls.setVisibility(View.GONE);
+        }
     }
 
 
