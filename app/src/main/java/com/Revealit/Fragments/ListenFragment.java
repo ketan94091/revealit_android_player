@@ -84,7 +84,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
     private ImageView imgScanQRcode,imgListen;
-    private TextView txtReveal,txtRevealCount;
+    private TextView txtRevealSelectedCount,txtSelectDeselectAll,txtSelectionCancel,txtSelect,txtReveal,txtRevealCount;
     private RecyclerView recycleRevealList;
     private LinearLayoutManager recylerViewLayoutManager;
     private RippleBackground rippleBackground;
@@ -95,7 +95,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     private ArrayList<CategoryWisePlayListModel.DataBean> mCategoryWisePlayListModel = new ArrayList<>();
     private ArrayList<Long> mLongRevealTime = new ArrayList<>();
     private Activity homeScreenTabLayout;
-    private LinearLayout linearWavingBackground;
+    private LinearLayout linearRevealTitle,linearRevealSelection,linearWavingBackground;
     private RevealItHistoryListAdapter mRevealItHistoryListAdapter;
 
     private static String[] PERMISSIONS = {
@@ -174,10 +174,16 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         txtRevealCount = (TextView) mView.findViewById(R.id.txtRevealCount);
         txtReveal = (TextView) mView.findViewById(R.id.txtReveal);
+        txtSelect = (TextView) mView.findViewById(R.id.txtSelect);
+        txtSelectionCancel = (TextView) mView.findViewById(R.id.txtSelectionCancel);
+        txtSelectDeselectAll = (TextView) mView.findViewById(R.id.txtSelectDeselectAll);
+        txtRevealSelectedCount = (TextView) mView.findViewById(R.id.txtRevealSelectedCount);
 
         rippleBackground = (RippleBackground) mView.findViewById(R.id.content);
 
         linearWavingBackground =(LinearLayout)mView.findViewById(R.id.linearWavingBackground);
+        linearRevealSelection =(LinearLayout)mView.findViewById(R.id.linearRevealSelection);
+        linearRevealTitle =(LinearLayout)mView.findViewById(R.id.linearRevealTitle);
 
         recycleRevealList = (RecyclerView) mView.findViewById(R.id.recycleRevealList);
         recylerViewLayoutManager = new LinearLayoutManager(mActivity);
@@ -237,6 +243,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         imgListen.setOnClickListener(this);
         imgScanQRcode.setOnClickListener(this);
+        txtSelect.setOnClickListener(this);
+        txtSelectionCancel.setOnClickListener(this);
     }
 
 
@@ -252,6 +260,22 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
                 break;
 
+            case R.id.txtSelect:
+
+               if(linearRevealTitle.getVisibility() == View.VISIBLE){
+                   linearRevealTitle.setVisibility(View.GONE);
+                   linearRevealSelection.setVisibility(View.VISIBLE);
+               }
+                break;
+
+             case R.id.txtSelectionCancel:
+
+               if(linearRevealSelection.getVisibility() == View.VISIBLE){
+                   linearRevealTitle.setVisibility(View.VISIBLE);
+                   linearRevealSelection.setVisibility(View.GONE);
+               }
+                break;
+
             case R.id.imgListen:
 
                 //IF TRUE APP MODE IS LIVE
@@ -259,14 +283,14 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                 if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
 
                     //IMAGE CLICK FALSE
-                    imgListen.setClickable(false);
+                    imgListen.setClickable(true);
 
                     //START RECORDING
                     startRecording();
                 }else{
 
                     //SET IMAGE CLICKBLE FALSE
-                    imgListen.setClickable(false);
+                    imgListen.setClickable(true);
 
                     //CHECK IF TAPCOUNT IS MUST LESS THAN DATA
                     if(tapCount < (mDatabaseHelper.getCategoryWisePlayList().size()+1)) {
@@ -580,8 +604,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                 CommonMethods.printLogE("Response @ callGetRevealitVideoHistory: ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callGetRevealitVideoHistory: ", "" + response.body().getData());
 
-
-
                 if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
                     //CLEAR TABLE AND INSERT NEW DATA
@@ -626,7 +648,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                                     response.body().getData().get(i).getPlayback_display(),
                                     response.body().getData().get(i).getMatch_time_stamp(),
                                     mListAllTimeStamp.toString(),
-                                    mListAllTimeStampOffset.toString());
+                                    mListAllTimeStampOffset.toString(),
+                                    0);
 
                         }else{
 
@@ -641,7 +664,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                                     response.body().getData().get(i).getPlayback_display(),
                                     response.body().getData().get(i).getMatch_time_stamp(),
                                     response.body().getData().get(i).getPlayback_display(),
-                                    response.body().getData().get(i).getPlayback_offset());
+                                    response.body().getData().get(i).getPlayback_offset(),
+                                    0);
 
                         }
 
@@ -686,59 +710,63 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     }
 
     private void updateRevealitHistoryList() {
-
-
+        ArrayList<RevealitHistoryModel.Data> list = mDatabaseHelper.getRevealitHistoryData();
         //SET REVEAL IT HISTORY FOR LIVE MODE
-        mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mActivity, mDatabaseHelper.getRevealitHistoryData(),mRemoveListenHistory);
-        recycleRevealList.setAdapter(null);
-        recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
+        if (mRevealItHistoryListAdapter==null){
+            mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mActivity, mDatabaseHelper.getRevealitHistoryData(),mRemoveListenHistory);
+            recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
 
-      new SwipeHelper(mActivity, recycleRevealList) {
-            @Override
-            public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+            new SwipeHelper(mActivity, recycleRevealList) {
+                @Override
+                public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
 
+                    underlayButtons.add(new SwipeHelper.UnderlayButton(
+                            R.mipmap.icn_share_with_text,
+                            mActivity,
+                            new UnderlayButtonClickListener() {
+                                @Override
+                                public void onClick(int pos) {
 
-                underlayButtons.add(new SwipeHelper.UnderlayButton(
-                        R.mipmap.icn_share_with_text,
-                        mActivity,
-                        new UnderlayButtonClickListener() {
-                            @Override
-                            public void onClick(int pos) {
-                                Log.e("Share","Sjare");
+                                    Log.e("Share","Share ::: "+mRevealItHistoryListAdapter.revealitHistoryData.get(pos).media_title);
+                                }
                             }
-                        }
-                ));
+                    ));
 
-                underlayButtons.add(new SwipeHelper.UnderlayButton(
-                        R.mipmap.icn_delete_with_text,
-                        mActivity,
-                        new SwipeHelper.UnderlayButtonClickListener() {
-                            @Override
-                            public void onClick(int pos) {
-                                // TODO: onDelete
-                                //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API
-                                //ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
-                                if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
+                    underlayButtons.add(new SwipeHelper.UnderlayButton(
+                            R.mipmap.icn_delete_with_text,
+                            mActivity,
+                            new SwipeHelper.UnderlayButtonClickListener() {
+                                @Override
+                                public void onClick(int pos) {
+                                    // TODO: onDelete
+                                    //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API
+                                    //ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
+                                    if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
 
-                                    //CALL API REMOVE SINGLE VIDEO
-                                    callRemoveVideo(false, mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
-                                }else{
+                                        //CALL API REMOVE SINGLE VIDEO
+                                        callRemoveVideo(false, mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
 
-                                    //IN ELSE CONDITION
-                                    //REMOVE SINGLE VIDEO DATA FROM DATABASE
-                                    mDatabaseHelper.clearSimulationHistoryItem(mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
+                                    }else{
 
-                                    //UPDATE LIST THROUGH INTERFACE
-                                    mRemoveListenHistory.removeListenHistory(false);
+                                        //REMOVE SINGLE VIDEO FROM DATABASE
+                                        mDatabaseHelper.clearSimulationHistoryItem(mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
+
+                                        //UPDATE LIST THROUGH INTERFACE
+                                        mRemoveListenHistory.removeListenHistory(false);
+
+                                    }
 
                                 }
-
                             }
-                        }
-                ));
+                    ));
 
-            }
-        };
+                }
+            };
+
+
+        }else{
+            mRevealItHistoryListAdapter.updateListData(list);
+        }
 
 
         //SET SIZE TO REVEAL IT

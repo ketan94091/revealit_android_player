@@ -23,6 +23,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <RadioButton
+                android:id="@+id/radioSelection"
+                android:checked="false"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"/>
+
             <RelativeLayout
                 android:layout_width="100dp"
                 android:layout_height="80dp"

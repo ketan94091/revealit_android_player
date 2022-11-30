@@ -133,6 +133,10 @@
                 android:layout_marginTop="15dp"
                >
 
+                <RelativeLayout
+                    android:id="@+id/relativeActions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
                 <LinearLayout
                     android:id="@+id/linearRevealTitle"
                     android:layout_width="match_parent"
@@ -176,11 +180,57 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/linearRevealSelection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:id="@+id/txtSelectDeselectAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/strSelectALl"
+                        android:textAlignment="textStart"
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:textFontWeight="700"
+                        android:textColor="@color/colorRevealitGrey"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/txtRevealSelectedCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:textFontWeight="700"
+                        android:textColor="@color/colorRevealitGrey"
+                        android:textSize="15dp"/>
+                    <TextView
+                        android:id="@+id/txtSelectionCancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/strCancel"
+                        android:textAlignment="textEnd"
+                        android:fontFamily="@font/quasimoda_bold"
+                        android:textFontWeight="700"
+                        android:textColor="@color/colorRevealitGrey"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
+
+                </RelativeLayout>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycleRevealList"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@+id/linearRevealTitle"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeActions"
                     android:layout_marginTop="15dp" />
 
 

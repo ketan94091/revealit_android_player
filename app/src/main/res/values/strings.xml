@@ -107,6 +107,8 @@
     <string name="strFetchingData">Fetching Data....</string>
     <string name="strTapToRevealit">Tap to revealit</string>
     <string name="strMyReveals">My Reveals</string>
+    <string name="strSelectALl">Select All</string>
+    <string name="strDeselectALl">Deselect All</string>
     <string name="strCancel">Cancel</string>
     <string name="strShare">Share</string>
     <string name="strFavorite">Favorite</string>
@@ -119,6 +121,8 @@
     <string name="strClear">Clear</string>
     <string name="strClearAll">Clear All</string>
     <string name="strUsernotfound">User not found! Please create new user</string>
+    <string name="strUsernotfoundForThisName">User Not Found</string>
+    <string name="strUsernotfoundPleaseCreateNewUser">The username mentioned cannot be found.\n Please create new user.</string>
 
 
     <string name="strEnterUserName">Please enter username!</string>
@@ -225,6 +229,7 @@
     <string name="strCredentialsIssues">Credential Issue</string>
     <string name="strCameraPermissionDenied">Camera Permission Dined</string>
     <string name="strIncorrectQRcodeData">In correct Qr code data! Please try again</string>
+    <string name="strFetchingAppSettingData">Fetching app settings...</string>
 
 
     <string name="strBeta">Beta</string>

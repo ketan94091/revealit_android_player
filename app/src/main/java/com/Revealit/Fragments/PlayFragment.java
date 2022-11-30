@@ -292,32 +292,20 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                 if (jsonObject.get(strCategoryName) instanceof JSONObject) {
 
                                     // CommonMethods.printLogE("KEY : ", "" + strCategoryName);
-
                                     // CommonMethods.printLogE(" MEDIA DATA TYPE", " : " + gson.toJson(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get("media_type")).replaceAll("^\"|\"$", ""));
-
 
                                     //INSERT DATA IN TO DATABASE
                                     //FURTHER WE WILL ONLY USE IT FROM DATABASE
-
                                     String strSlug = gson.toJson(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("slug")).replaceAll("^\"|\"$", "");
 
-                                    //CommonMethods.printLogE("SLUG : ", "" + strSlug);
-
-                                    //INSERT CATEGORY NAMES
-                                   /* if(i == 0){
-                                        if(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().size() != 1){
-
-                                            //CHECK IF FIRST CATEGORY HAS ONLY ONE VIDEO WHICH SHOULD CONSIDER AS FEATURED VIDEO AND SHOULD NOT DISPLAY THIS CATEGOTY IN VIDEO LIST
-                                            //IF MORE THAN 1 VIDEO FOUND IN FIRST CATEGORY THEN DISPLAY FIRST VIDEO FROM THIS CATEGORY AS FEATURED VIDEO AND REST OF VIDEO SHOULD DISPLAY IN VIDEO LIST
-                                            mDatabaseHelper.insertCategoryNames(strCategoryName, strSlug);
-                                        }
-                                    } else {
-                                        mDatabaseHelper.insertCategoryNames(strCategoryName, strSlug);
-                                    }*/
 
                                     //FEATURED VIDEO SHOULD NOT ADD IN DATABASE
                                    if(!strSlug.equalsIgnoreCase("Featured")) {
-                                       mDatabaseHelper.insertCategoryNames(strCategoryName, strSlug);
+
+                                       //CHECK IF PARTICULAR CATEGORY DONT HAVE ANY DATA
+                                       if(Integer.valueOf(gson.toJson(response.body().getAsJsonObject().get("data").getAsJsonArray().get(i).getAsJsonObject().get(strCategoryName).getAsJsonObject().get("data").getAsJsonArray().size())) != 0){
+                                           mDatabaseHelper.insertCategoryNames(strCategoryName, strSlug);
+                                       }
                                    }
 
                                     String strMediaShowTitle, strMediaTitle;
@@ -352,26 +340,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                         //CommonMethods.printLogE("MEDIA URL : ", "" + strMediaUrl);
                                         //CommonMethods.printLogE("MEDIA COVER ART : ", "" + strMediaCoverArt);
 
-                                        //FIRST VIDEO SHOULD CONSIDER AS FEATURED VIDEO
-                                     /*   if(i == 0 && j == 0) {
-
-                                            strFeaturedMidiaURL = ""+strMediaUrl;
-                                            strFeaturedMidiaID = ""+intMediaID;
-                                            strFeaturedMediaTitle = ""+strMediaTitle;
-                                            strFeaturedMediaCoverImage = ""+strMediaCoverArt;
-                                        }else {
-
-                                            mDatabaseHelper.insertCategoryWisePlayData(strCategoryName,
-                                                    strSlug,
-                                                    intMediaID,
-                                                    strMediaShowTitle,
-                                                    strMediaTitle,
-                                                    strMediaType,
-                                                    strMediaUrl,
-                                                    strMediaCoverArt);
-                                        }*/
-
                                         //FEATURED VIDEO SHOULD NOT ADD IN DATABASE
+                                        //IT SHOULD CONSIDER AS STATIC VIDEO
                                         if(strSlug.equalsIgnoreCase("Featured")) {
                                             strFeaturedMidiaURL = ""+strMediaUrl;
                                             strFeaturedMidiaID = ""+intMediaID;

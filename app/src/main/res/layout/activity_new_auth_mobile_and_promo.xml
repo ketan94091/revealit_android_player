@@ -43,14 +43,27 @@
                         android:textFontWeight="700"
                         android:textSize="18dp" />
 
-                    <ImageView
-                        android:id="@+id/imgCancel"
+                    <LinearLayout
+                        android:id="@+id/linearImgCancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentRight="true"
                         android:layout_centerInParent="true"
-                        android:src="@mipmap/icon_cross" />
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/imgCancel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:src="@mipmap/icon_cross" />
+                    </LinearLayout>
+
                 </RelativeLayout>
 
             </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.Revealit.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -70,7 +72,7 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
     private Context mContext;
     private Activity mActivity;
     private ViewHolder viewHolder;
-    ArrayList<RevealitHistoryModel.Data> revealitHistoryData;
+    public ArrayList<RevealitHistoryModel.Data> revealitHistoryData;
     private LinearLayoutManager recylerViewLayoutManager;
     private SessionManager mSessionManager;
     private RemoveListenHistory mRemoveListenHistory;
@@ -94,6 +96,12 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
 
     }
 
+    public void updateListData(ArrayList<RevealitHistoryModel.Data> list) {
+revealitHistoryData.clear();
+revealitHistoryData.addAll(list);
+notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView txtVideoName;
@@ -101,6 +109,7 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
         private final ProgressBar progressImgLoad;
         private final RelativeLayout relatativeMain;
         private final RecyclerView recycleRevealHistoryTimestamps;
+        private final RadioButton radioSelection;
 
 
         public ViewHolder(View mView) {
@@ -113,6 +122,7 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
             progressImgLoad = (ProgressBar) mView.findViewById(R.id.progressImgLoad);
             relatativeMain = (RelativeLayout) mView.findViewById(R.id.relatativeMain);
             recycleRevealHistoryTimestamps = (RecyclerView) mView.findViewById(R.id.recycleRevealHistoryTimestamps);
+            radioSelection =(RadioButton)mView.findViewById(R.id.radioSelection);
 
 
         }
@@ -131,12 +141,7 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-
-        //SET LAYOUT MANAGER TO LISTVIEW
-        //recylerViewLayoutManager = new LinearLayoutManager(mActivity);
-        //holder.recycleRevealHistoryTimestamps.setLayoutManager(recylerViewLayoutManager);
-        //holder.recycleRevealHistoryTimestamps.setLayoutManager(new GridLayoutManager(mActivity, 3));
+    public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext,2);
         gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL); // set Horizontal Orientation
@@ -183,6 +188,26 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
             }
         });
 
+        //CHECK CHECK BOX
+        if(revealitHistoryData.get(position).getIsSelected() == 1){
+            holder.radioSelection.setSelected(true);
+        }else{
+            holder.radioSelection.setSelected(false);
+        }
+
+        //SET DATA SET CHANGE LISTENER
+        holder.radioSelection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(revealitHistoryData.get(position).getIsSelected() == 1 ){
+                    revealitHistoryData.get(position).setIsSelected(0);
+                }else {
+                    revealitHistoryData.get(position).setIsSelected(1);
+                }
+                notifyDataSetChanged();
+            }
+        });
 
     }
 

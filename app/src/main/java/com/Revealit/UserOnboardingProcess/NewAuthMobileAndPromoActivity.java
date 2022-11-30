@@ -102,7 +102,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
     };
     private RecyclerView recyclerViewRecipesList;
     private boolean isOtpRecieved;
-    private LinearLayout linearMain;
+    private LinearLayout linearImgCancel,linearMain;
 
 
     @Override
@@ -143,6 +143,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         linearCountryList = (LinearLayout) findViewById(R.id.linearCountryList);
         linearCountryPicker = (LinearLayout) findViewById(R.id.linearCountryPicker);
         linearMain = (LinearLayout) findViewById(R.id.linearMain);
+        linearImgCancel = (LinearLayout) findViewById(R.id.linearImgCancel);
 
 
         txtMobileWarnings = (TextView) findViewById(R.id.txtMobileWarnings);
@@ -162,8 +163,6 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         //SET UNDERLINE
         txtTermsOfService.setPaintFlags(txtTermsOfService.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-        //GET COUNTRY DATA
-        getCountryCodeList();
 
         //GET ON TOUCH OF THE SCREEN TO HIDE COUNTRY PICKER
         linearMain.setOnTouchListener(new View.OnTouchListener() {
@@ -241,6 +240,11 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
         );
 
+
+        //GET COUNTRY DATA
+        getCountryCodeList();
+
+
     }
 
     private void setOnClicks() {
@@ -250,6 +254,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         imgCancel.setOnClickListener(this);
         linearPrivacyPolicy.setOnClickListener(this);
         linearCountryPicker.setOnClickListener(this);
+        linearImgCancel.setOnClickListener(this);
 
     }
 
@@ -257,7 +262,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
     public void onClick(View mView) {
 
         switch (mView.getId()) {
-            case R.id.imgLogo:
+            case R.id.linearImgCancel:
 
                 finish();
 
@@ -638,6 +643,9 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
     }
     private void getCountryCodeList(){
 
+        //OPEN DIALOGUE
+        CommonMethods.showDialogWithCustomMessage(mContext,getResources().getString(R.string.strFetchingAppSettingData));
+
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -677,6 +685,9 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         call.enqueue(new Callback<CountryCodes>() {
             @Override
             public void onResponse(Call<CountryCodes> call, Response<CountryCodes> response) {
+
+                //CLOSE THE DIALOGUE
+                CommonMethods.closeDialog();
 
                 CommonMethods.printLogE("Response @ getCountryCodeList: ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ getCountryCodeList: ", "" + response.code());

@@ -111,7 +111,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 + DatabaseHelper.KEY_REVEALIT_HISTORY_PLAYBACK_DISPLAY + " text, "
                 + DatabaseHelper.KEY_REVEALIT_HISTORY_MATCH_TIMESTAMP + " text, "
                 + DatabaseHelper.KEY_REVEALIT_HISTORY_ALL_TIMESTAMP + " text, "
-                + DatabaseHelper.KEY_REVEALIT_HISTORY_ALL_TIMESTAMP_OFFSET + " text);";
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_ALL_TIMESTAMP_OFFSET + " text, "
+                + DatabaseHelper.KEY_REVEALIT_HISTORY_IS_ITEM_SELECTED + " INTEGER);";
     }
 
     private String tableRevealitHistoryListSimulation() {

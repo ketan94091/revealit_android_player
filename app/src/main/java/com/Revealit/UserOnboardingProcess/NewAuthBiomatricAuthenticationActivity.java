@@ -7,13 +7,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -64,6 +65,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
     private BiometricPrompt.PromptInfo promptInfo;
     private RelativeLayout relativeMain;
     private boolean isFromLoginScreen;
+    private AlertDialog mAlertDialog;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -311,7 +313,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                 }else {
 
-                    displayAlertDialogue(getResources().getString(R.string.strUsernotfound));
+                    displayAlertDialogue();
 
 
                 }
@@ -353,19 +355,35 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
     }
 
-    private void displayAlertDialogue(String strMessege) {
+    private void displayAlertDialogue() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(mContext.getResources().getString(R.string.app_name));
-        builder.setMessage(strMessege);
-        builder.setNegativeButton(mContext.getResources().getString(R.string.strOk), new DialogInterface.OnClickListener() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mActivity);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.no_user_available_for_this_name, null);
+        dialogBuilder.setView(dialogView);
+
+        mAlertDialog = dialogBuilder.create();
+        mAlertDialog.setCancelable(true);
+
+        TextView txtOk = (TextView)dialogView. findViewById(R.id.txtOk);
+
+        txtOk.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
+            public void onClick(View v) {
+
+                //CLOSE DIALOGUE
+                mAlertDialog.cancel();
+
+                //GO TO SIGN IN OR SIGN UP ACTIVITY
+                Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, NewAuthGetStartedActivity.class);
+                startActivity(mIntent);
+                finishAffinity();
+
+
             }
         });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+
+        mAlertDialog.show();
     }
 
     private void callAuthenticationAPI() {
@@ -478,7 +496,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                 }else {
 
-                    displayAlertDialogue(getResources().getString(R.string.strUsernotfound));
+                    displayAlertDialogue();
 
                 }
             }

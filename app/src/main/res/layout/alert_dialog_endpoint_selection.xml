@@ -45,6 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
+                android:background="@drawable/new_auth_round_button"
                 android:padding="10dp">
 
                 <TextView
@@ -70,6 +71,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/new_auth_round_button"
                 android:padding="10dp">
 
                 <TextView
@@ -97,6 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
+                android:background="@drawable/new_auth_round_button"
                 android:padding="10dp">
 
                 <TextView
@@ -123,6 +127,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
+                android:background="@drawable/new_auth_round_button"
                 android:padding="10dp">
 
                 <TextView
@@ -183,6 +188,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
+                android:background="@drawable/new_auth_round_button"
                 android:padding="10dp">
 
                 <TextView
