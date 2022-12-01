@@ -222,7 +222,7 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
 
         }else{
             //MAKE VIEW PAGER SCROLLABLE TURE
-            viewPager.disableScroll(false);
+            viewPager.disableScroll(true);
 
             //DISABLE BOTTOM BAR ICON CLICK IF USER IS NOT ACTIVE
             enableDisableBottomBar(true);

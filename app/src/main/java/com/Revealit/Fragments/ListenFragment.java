@@ -479,6 +479,13 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         txtRevealSelectedCount.setText(selectedIdsList.size()+"/"+mRevealItHistoryListAdapter.getItemCount()+ " "+getResources().getString(R.string.strRevealSelected) );
     }
 
+    @Override
+    public void isSingleTimeStampDeleted(boolean isTimeStampDeleted) {
+   if(isTimeStampDeleted){
+       callGetRevealitVideoHistory();
+   }
+    }
+
     class RecThread extends Thread {
 
         public void run() {
@@ -774,7 +781,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
             //IF LIST ATTACH FOR THE FIRST TIME ELSE JUST NOTIFY LISTENER WITH FRESH LIST
             if (mRevealItHistoryListAdapter == null) {
 
-                mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mActivity, mHistoryListFromDatabase, mRemoveListenHistory, isCheckBoxSelected, shouldCheckBoxVisible);
+                mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mHomeScreenTabLayout, mHistoryListFromDatabase, mRemoveListenHistory, isCheckBoxSelected, shouldCheckBoxVisible);
                 recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
 
                 //SWIPE HELPER SHOULD ATTACH FIRST TIME

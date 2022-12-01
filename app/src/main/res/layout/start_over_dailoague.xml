@@ -90,7 +90,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/txtRetrieve"
+                    android:id="@+id/txtAddAccount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -103,7 +103,7 @@
                     android:paddingTop="15dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="15dp"
-                    android:text="@string/strRetrieve"
+                    android:text="@string/strAddAccount"
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite"
                     android:textFontWeight="700"

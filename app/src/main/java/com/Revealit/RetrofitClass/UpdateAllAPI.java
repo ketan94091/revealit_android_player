@@ -140,19 +140,20 @@ public interface UpdateAllAPI {
     @POST(Constants.API_NEW_AUTH_PHONE_VERIFY)
     Call<NewAuthStatusModel> verifyPhone(@Body JsonObject body);
 
-    //NEW AUTH PHONE
+    //SUBMIT PROFILE
     @POST(Constants.API_NEW_AUTH_SUBMIT_PROFILE)
     Call<SubmitProfileModel> submitProfile(@Body JsonObject body);
 
-    //NEW AUTH PHONE
+
+    //CREATE PROTON ACCOUNT
     @POST(Constants.API_NEW_AUTH_CREATE_PROTON)
     Call<JsonElement> createProtonAccount(@Body JsonObject body);
 
-    //NEW AUTH PHONE
+    //CREATE TOKEN
     @POST(Constants.API_NEW_AUTH_CREATE_TOKENS)
     Call<JsonElement> createTokens(@Body JsonObject body);
 
-    //NEW AUTH PHONE
+    //VERIFY OTP
     @POST(Constants.API_NEW_AUTH_OTP_VERIFY)
     Call<NewAuthStatusModel> verifyOTPPhone(@Body JsonObject body);
 

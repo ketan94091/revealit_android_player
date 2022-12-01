@@ -168,7 +168,7 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
 
         //SET ADAPTER TO TIME STAMP LIST
         //SET CATEGORY LIST
-        RevealItHistoryTimestampListAdapter mRevealItHistoryTimestampListAdapter = new RevealItHistoryTimestampListAdapter(mContext, mActivity, revealitHistoryData.get(position));
+        RevealItHistoryTimestampListAdapter mRevealItHistoryTimestampListAdapter = new RevealItHistoryTimestampListAdapter(mContext, mActivity, revealitHistoryData.get(position),mRemoveListenHistory);
         holder.recycleRevealHistoryTimestamps.setAdapter(mRevealItHistoryTimestampListAdapter);
        // holder.recycleRevealHistoryTimestamps.setLayoutManager(new GridLayoutManager(mContext,3, LinearLayoutManager.VERTICAL, true));
 

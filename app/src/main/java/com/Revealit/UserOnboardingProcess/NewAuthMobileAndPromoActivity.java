@@ -489,7 +489,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
         final AlertDialog mAlertDialog = dialogBuilder.create();
         TextView txtStartOver = (TextView) dialogView.findViewById(R.id.txtStartOver);
-        TextView txtRetrieve = (TextView) dialogView.findViewById(R.id.txtRetrieve);
+        TextView txtAddAccount = (TextView) dialogView.findViewById(R.id.txtAddAccount);
         ImageView imgCancel = (ImageView) dialogView.findViewById(R.id.imgCancel);
 
 
@@ -516,11 +516,16 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             }
         });
 
-        txtRetrieve.setOnClickListener(new View.OnClickListener() {
+        txtAddAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 mAlertDialog.dismiss();
+
+                //CALL ADD ACCOUNT
+                apiSendOTPtoMobile(2);
+
+
 
             }
         });
@@ -608,7 +613,6 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                         startActivity(mIntent);
 
                     }else{
-
                         updateMobileErrorUI(false);
                     }
 

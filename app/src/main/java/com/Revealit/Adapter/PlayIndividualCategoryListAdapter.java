@@ -1,5 +1,6 @@
 package com.Revealit.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -83,7 +84,7 @@ public  class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Pla
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
         //SET TWO ITEMS IN SCREEN
         holder.relativeLayout.getLayoutParams().width = (int) ((getScreenWidth() - 30) / 3);

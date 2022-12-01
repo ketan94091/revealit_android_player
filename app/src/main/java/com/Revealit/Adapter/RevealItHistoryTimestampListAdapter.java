@@ -26,6 +26,7 @@ import com.Revealit.Activities.LoginActivityActivity;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
+import com.Revealit.Interfaces.RemoveListenHistory;
 import com.Revealit.ModelClasses.ItemListFromItemIdModel;
 import com.Revealit.ModelClasses.RevealitHistoryModel;
 import com.Revealit.R;
@@ -34,6 +35,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
@@ -68,12 +71,14 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
     private TextView txtNoPublishedVideo;
     private LinearLayout linearHeaderView;
     int intMediaId, intMediaOffset, intMatchId;
+    RemoveListenHistory mRemoveListenHistoryInterface;
 
 
-    public RevealItHistoryTimestampListAdapter(Context mContext, Activity mActivity, RevealitHistoryModel.Data revealitHistoryData) {
+    public RevealItHistoryTimestampListAdapter(Context mContext, Activity mActivity, RevealitHistoryModel.Data revealitHistoryData, RemoveListenHistory mRemoveListenHistoryInterface) {
         this.mContext = mContext;
         this.mActivity = mActivity;
         this.revealitHistoryData =revealitHistoryData;
+        this.mRemoveListenHistoryInterface =mRemoveListenHistoryInterface;
 
         //REPLACE STRING PARENTHESIS [
         String replace = revealitHistoryData.allTimeStamp.replace("[","");
@@ -460,6 +465,8 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
                 CommonMethods.printLogE("Response @ callRemoveTimeStamp: ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callRemoveTimeStamp: ", "" + response.code());
 
+                mDialogeForItems.dismiss();
+
 
                 if (response.code() == Constants.API_CODE_200) {
 
@@ -468,11 +475,15 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
                             .serializeNulls()
                             .create();
 
-                    mDialogeForItems.dismiss();
+
+
+                    //CALL INTERFACE TO LISTEN FRAGMENT
+                    //RELOAD HISTORY LIST
+                    mRemoveListenHistoryInterface.isSingleTimeStampDeleted(true);
+
 
                 } else if (response.code() == Constants.API_CODE_401) {
 
-                    progressLoadData.setVisibility(View.GONE);
                     mDialogeForItems.dismiss();
 
                     Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
@@ -480,10 +491,14 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
                     mActivity.finish();
 
                 } else {
-                    progressLoadData.setVisibility(View.GONE);
-                    mDialogeForItems.dismiss();
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        CommonMethods.buildDialog(mContext,"Error : "+ jObjError.getString("message"));
+                    } catch (Exception e) {
+                        CommonMethods.buildDialog(mContext,"Error : "+e.getMessage());
 
-                    CommonMethods.buildDialog(mContext, mActivity.getResources().getString(R.string.strNoDataFound));
+                    }
+
 
                 }
             }

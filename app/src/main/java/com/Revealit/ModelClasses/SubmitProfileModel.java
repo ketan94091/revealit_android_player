@@ -11,6 +11,7 @@ public class SubmitProfileModel {
         private String is_activated;
         private String message;
         private int error_code;
+        private String serverInstance;
 
 
     public String getStatus() {
@@ -21,16 +22,15 @@ public class SubmitProfileModel {
         this.status = status;
     }
 
-    public String isActivated() {
+    public String getIs_activated() {
         return is_activated;
     }
 
-    public void setActivated(String activated) {
-        this.is_activated = activated;
+    public void setIs_activated(String is_activated) {
+        this.is_activated = is_activated;
     }
 
-
-        public String getrevealit_private_key() {
+    public String getrevealit_private_key() {
             return revealit_private_key;
         }
 
@@ -86,7 +86,15 @@ public class SubmitProfileModel {
         this.error_code = error_code;
     }
 
-    public class Proton {
+    public String getServerInstance() {
+        return serverInstance;
+    }
+
+    public void setServerInstance(String serverInstance) {
+        this.serverInstance = serverInstance;
+    }
+
+    public static  class Proton {
 
         private String account_name;
         private String public_key;

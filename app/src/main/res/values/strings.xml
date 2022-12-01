@@ -10,6 +10,7 @@
     <string name="strOK">OK</string>
     <string name="strStartOver">Start Over</string>
     <string name="strRetrieve">Retrieve</string>
+    <string name="strAddAccount">Add Account</string>
     <string name="strAuthWarningMsg">Are you willing to authorise?</string>
     <string name="strAuthWarningMsgTwo">If not, simply decline the request by exiting the page.</string>
     <string name="strAccountAlreadyExists">Account Already Exists</string>

@@ -3,7 +3,6 @@ package com.Revealit.UserOnboardingProcess;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -15,13 +14,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.ModelClasses.CheckUserNameStatusModel;
+import com.Revealit.ModelClasses.KeyStoreServerInstancesModel;
 import com.Revealit.ModelClasses.SubmitProfileModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
@@ -33,6 +32,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -43,6 +44,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import javax.crypto.BadPaddingException;
@@ -83,7 +85,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
             }
         }
     };
-
+    private Gson mGson;
 
 
     @Override
@@ -164,6 +166,13 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
                                                }
 
         );
+
+        mGson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                .serializeNulls()
+                .create();
+
+
     }
 
     private void setOnClicks() {
@@ -248,7 +257,6 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         Call<SubmitProfileModel> call = patchService1.submitProfile(paramObject);
 
         call.enqueue(new Callback<SubmitProfileModel>() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onResponse(Call<SubmitProfileModel> call, Response<SubmitProfileModel> response) {
 
@@ -290,15 +298,9 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void updateUI(SubmitProfileModel body) {
-        Gson gson = new GsonBuilder()
-                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-                .serializeNulls()
-                .create();
 
-
-        mSessionManager.updatePreferenceString(Constants.KEY_USER_DATA, ""+gson.toJson(body));
+        mSessionManager.updatePreferenceString(Constants.KEY_USER_DATA, ""+mGson.toJson(body));
         mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN ,body.getauth_token());
         mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE ,getResources().getString(R.string.strTokenBearer));
         mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME ,body.getProton().getAccountName());
@@ -307,6 +309,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_REGISTRATION_DONE ,true);
 
         //STORE DATA IN TO KEYSTORE
+        //FOR DISPLAY PURPOSE
         encryptKey(body.getProton().getPrivateKey(), Constants.KEY_PRIVATE_KEY ,body.getrevealit_private_key());
         encryptKey(body.getProton().getPublicKey(),Constants.KEY_PUBLIC_KEY,body.getrevealit_private_key());
         encryptKey(body.getProton().getMnemonic(),Constants.KEY_MNEMONICS,body.getrevealit_private_key());
@@ -323,7 +326,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         }
 
         //UPDATE ACTIVE FLAG
-        if(body.isActivated().equals("1")){
+        if(body.getIs_activated().equals("1")){
             mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
         }else{
             mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
@@ -332,10 +335,10 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         //UPDATE FLAG FOR APPLICATION MODE
         mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
 
-        //STORE DATA FOR SWAPPING SILOS
-        //THIS IS TEMPORARY FOR ADMIN USERS
-        //OVERRIDE EXISTING SILOS IF ADMIN CREATE NEW WITH FOR EXISTING SAVED SILOS
-        encryptKey(""+gson.toJson(body),  Constants.KEY_SILOS_DATA+""+mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID),Constants.KEY_SILOS_ALIAS);
+
+        //SET KEY STORE INSTANCE DATA
+        storeKeyStoreInstances(body);
+
 
         //GO TO NEXT ACTIVITY
         Intent mIntent = new Intent(NewAuthEnterUserNameActivity.this,InviteAndEarnActivity.class);
@@ -343,9 +346,131 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         startActivity(mIntent);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void encryptKey(String keyToStore, String alias, String keyStoreName) {
+    private void storeKeyStoreInstances(SubmitProfileModel body) {
 
+        //STORE DATA FOR SWAPPING SILOS
+        //THIS IS TEMPORARY FOR ADMIN USERS
+        //OVERRIDE EXISTING SILOS IF ADMIN CREATE NEW WITH FOR EXISTING SAVED SILOS
+       //encryptKey(""+mGson.toJson(body),  Constants.KEY_SILOS_DATA+""+mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID),Constants.KEY_SILOS_ALIAS);
+
+        //CREATE LIST WHICH COULD ENCRYPT AND THAN STORE IN THE KEY STORE AS A STRING
+        ArrayList<KeyStoreServerInstancesModel.Data> mInstancesModel = new ArrayList<>();
+        KeyStoreServerInstancesModel.Data mModelData = new KeyStoreServerInstancesModel.Data();
+        mModelData.setServerInstanceName(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME));
+        mModelData.setServerInstanceId(mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID));
+        mModelData.setSubmitProfileModel(body);
+        mInstancesModel.add(mModelData);
+
+        //CHECK IF DATA IS ALREADY STORED IN TO KEYSTORE
+        //IF STORED -> FETCH FROM KEYSTORE, CONVERT TO LIST, CREATE NEW OBJECT AND ADD THAT OBJECT TO LIST.
+        //ELSE -> TREAT AS FIRST USER
+        if(!checkIfInstanceKeyStoreData().isEmpty()){
+
+            //CONVERT DATA TO JSON ARRAY
+            //CREATE NEW ARRAY FROM THE STRING ARRAY
+            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
+            try {
+                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData());
+                ArrayList<KeyStoreServerInstancesModel.Data> dataArrayList = new ArrayList<>();
+
+                for (int i=0 ;i < jsonArray.length();i++){
+
+                    KeyStoreServerInstancesModel.Data mModel = new KeyStoreServerInstancesModel.Data();
+                    mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
+                    mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
+
+                    SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
+                    mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
+                    mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("auth_token"));
+                    mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
+                    mSubmitProfileModel.setIs_activated(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
+                    mSubmitProfileModel.setMessage(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("message"));
+                    mSubmitProfileModel.setrevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("revealit_private_key"));
+                    mSubmitProfileModel.setRole(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("role"));
+                    mSubmitProfileModel.setServerInstance(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("serverInstance"));
+                    mSubmitProfileModel.setStatus(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("status"));
+
+                    SubmitProfileModel.Proton mProton = new SubmitProfileModel.Proton();
+                    mProton.setAccountName(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("account_name"));
+                    mProton.setMnemonic(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("mnemonic"));
+                    mProton.setPrivateKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key"));
+                    mProton.setPrivate_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_pem"));
+                    mProton.setPublicKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_key"));
+                    mProton.setPublic_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_pem"));
+                    mSubmitProfileModel.setProton(mProton);
+
+                    mModel.setSubmitProfileModel(mSubmitProfileModel);
+
+                    dataArrayList.add(mModel);
+                }
+
+                //ADD NEWLY CREATED INSTANCE OBJECT TO THE ARRAYLIST
+                dataArrayList.add(mModelData);
+
+
+                //STORE WHOLE ARRAY IN TO STRING FORMAT IN KEYSTORE
+                encryptKey(""+mGson.toJson(dataArrayList),  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS);
+
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            //STORE WHOLE JSON IN TO STRING
+            encryptKey(""+mGson.toJson(mInstancesModel),  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS);
+        }
+
+    }
+
+    private String checkIfInstanceKeyStoreData() {
+
+        try {
+            //OPEN KEYSTORE
+            //THIS KEY STORE IS FOR SILOS
+            Cryptography mCryptography = new Cryptography(Constants.KEY_SILOS_ALIAS);
+            //CHECK IF THE SELECTED SILOS IS AVAILABLE TO THE SESSION MANAGER IN ENCRYPTED FORMAT
+            //IF TRUE -> RETURN TRUE
+            //ELSE -> RETURN FALSE
+            if(!mSessionManager.getPreference(Constants.KEY_SILOS_DATA).isEmpty()){
+
+                //FETCH USER DATA FROM KEYSTORE
+                String  userData = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_SILOS_DATA));
+
+                if(!userData.isEmpty()){
+                    return userData;
+                }else{
+                    return "";
+                }
+            }
+            return "";
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
+
+         return "";
+    }
+
+    private void encryptKey(String keyToStore, String alias, String keyStoreName) {
 
         try{
 

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +40,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
@@ -392,7 +392,6 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void checkUserAvailable() throws JSONException {
 
         try{
@@ -403,62 +402,64 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
             //CHECK IF THE SELECTED SILOS IS AVAILABLE TO THE SESSION MANAGER IN ENCRYPTED FORMAT
             //IF TRUE -> FETCH EXISTING DATA FROM KEYSTORE AND CALL AUTH API
             //ELSE -> DISPLAY USER NOT AVAILABLE TO SELECTED SILOS SILOS
-            if(!mSessionManager.getPreference(Constants.KEY_SILOS_DATA+""+mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)).isEmpty()){
+            if(!mSessionManager.getPreference(Constants.KEY_SILOS_DATA).isEmpty()){
 
                 //FETCH USER DATA FROM KEYSTORE
-                String  userData = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_SILOS_DATA+""+mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)));
+                String  userData = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_SILOS_DATA));
 
-                //CHECK IF USER DATA IS NOT NULL
-                //IF TRUE -> CONTINUE FETCHING DATA
-                //ELSE -> DISPLAY NOT FOUND MSG
-                if(!userData.isEmpty()){
+                Log.e("USER_DATA",""+userData);
 
-                    //CONVERT DATA TO JSON OBJECT
-                    JSONObject mJson= new JSONObject(userData);
-
-                    //UPDATE SESSION MANAGER
-                    //THIS IS SAME AS THE USER CREATION DATA
-                    //UPDATE ALL THE DATA
-                    mSessionManager.updatePreferenceString(Constants.KEY_USER_DATA, mSessionManager.getPreference(""+mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)));
-                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN ,mJson.getString("auth_token"));
-                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE ,getResources().getString(R.string.strTokenBearer));
-                    mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME ,mJson.getJSONObject("proton").getString("account_name"));
-                    //mSessionManager.updatePreferenceString(Constants.KEY_PROTON_WALLET_DETAILS,gson.toJson(body.getProton()));
-                    mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY ,mJson.getString("revealit_private_key"));
-                    mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_REGISTRATION_DONE ,true);
-
-                    //STORE DATA IN TO KEYSTORE
-                    encryptKey(mJson.getJSONObject("proton").getString("private_key"), Constants.KEY_PRIVATE_KEY ,mJson.getString("revealit_private_key"));
-                    encryptKey(mJson.getJSONObject("proton").getString("public_key"),Constants.KEY_PUBLIC_KEY,mJson.getString("revealit_private_key"));
-                    encryptKey(mJson.getJSONObject("proton").getString("mnemonic"),Constants.KEY_MNEMONICS,mJson.getString("revealit_private_key"));
-                    encryptKey(mJson.getJSONObject("proton").getString("private_pem"),Constants.KEY_PRIVATE_KEY_PEM,mJson.getString("revealit_private_key"));
-                    encryptKey(mJson.getJSONObject("proton").getString("public_pem"),Constants.KEY_PUBLIC_KEY_PEM,mJson.getString("revealit_private_key"));
-
-
-                    //UPDATE FLAG IF USER IS ADMIN OR NOT
-                    if(mJson.getString("role").equals(getResources().getString(R.string.strAdmin))){
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,true);
-                    }else{
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,false);
-                    }
-
-                    //UPDATE ACTIVE FLAG
-                    if(mJson.getString("is_activated").equals("1")){
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
-                    }else{
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
-                    }
-
-                    //UPDATE FLAG FOR APPLICATION MODE
-                    mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
-
-                    //CALL USER AUTHENTICATION API
-                    callAuthenticationAPI(mJson.getString("revealit_private_key"),mJson.getJSONObject("proton").getString("account_name"));
-
-
-                }else{
-                    displayAlertForUserNotFound();
-                }
+//                //CHECK IF USER DATA IS NOT NULL
+//                //IF TRUE -> CONTINUE FETCHING DATA
+//                //ELSE -> DISPLAY NOT FOUND MSG
+//                if(!userData.isEmpty()){
+//
+//                    //CONVERT DATA TO JSON OBJECT
+//                    JSONObject mJson= new JSONObject(userData);
+//
+//                    //UPDATE SESSION MANAGER
+//                    //THIS IS SAME AS THE USER CREATION DATA
+//                    //UPDATE ALL THE DATA
+//                    mSessionManager.updatePreferenceString(Constants.KEY_USER_DATA, mSessionManager.getPreference(""+mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)));
+//                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN ,mJson.getString("auth_token"));
+//                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE ,getResources().getString(R.string.strTokenBearer));
+//                    mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME ,mJson.getJSONObject("proton").getString("account_name"));
+//                    //mSessionManager.updatePreferenceString(Constants.KEY_PROTON_WALLET_DETAILS,gson.toJson(body.getProton()));
+//                    mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY ,mJson.getString("revealit_private_key"));
+//                    mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_REGISTRATION_DONE ,true);
+//
+//                    //STORE DATA IN TO KEYSTORE
+//                    encryptKey(mJson.getJSONObject("proton").getString("private_key"), Constants.KEY_PRIVATE_KEY ,mJson.getString("revealit_private_key"));
+//                    encryptKey(mJson.getJSONObject("proton").getString("public_key"),Constants.KEY_PUBLIC_KEY,mJson.getString("revealit_private_key"));
+//                    encryptKey(mJson.getJSONObject("proton").getString("mnemonic"),Constants.KEY_MNEMONICS,mJson.getString("revealit_private_key"));
+//                    encryptKey(mJson.getJSONObject("proton").getString("private_pem"),Constants.KEY_PRIVATE_KEY_PEM,mJson.getString("revealit_private_key"));
+//                    encryptKey(mJson.getJSONObject("proton").getString("public_pem"),Constants.KEY_PUBLIC_KEY_PEM,mJson.getString("revealit_private_key"));
+//
+//
+//                    //UPDATE FLAG IF USER IS ADMIN OR NOT
+//                    if(mJson.getString("role").equals(getResources().getString(R.string.strAdmin))){
+//                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,true);
+//                    }else{
+//                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,false);
+//                    }
+//
+//                    //UPDATE ACTIVE FLAG
+//                    if(mJson.getString("is_activated").equals("1")){
+//                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
+//                    }else{
+//                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
+//                    }
+//
+//                    //UPDATE FLAG FOR APPLICATION MODE
+//                    mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
+//
+//                    //CALL USER AUTHENTICATION API
+//                    callAuthenticationAPI(mJson.getString("revealit_private_key"),mJson.getJSONObject("proton").getString("account_name"));
+//
+//
+//                }else{
+//                    displayAlertForUserNotFound();
+//                }
             }else{
                 displayAlertForUserNotFound();
             }
