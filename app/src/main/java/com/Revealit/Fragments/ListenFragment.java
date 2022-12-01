@@ -268,7 +268,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                     linearRevealSelection.setVisibility(View.VISIBLE);
 
                     //CHANGE HOMEPAGE TAB BAR
-                    mHomeScreenTabLayout.changeBottomBarControls(true);
+                    resetBottomBarLayout(true);
+
 
                     //CHANGE SELECT ALL TO SELECT ALL
                     txtSelectDeselectAll.setText(getResources().getString(R.string.strSelectALl));
@@ -306,7 +307,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                     linearRevealSelection.setVisibility(View.GONE);
 
                     //CHANGE HOMEPAGE TAB BAR
-                    mHomeScreenTabLayout.changeBottomBarControls(false);
+                    resetBottomBarLayout(false);
 
 
                     updateRevealitHistoryList(false, false);
@@ -366,6 +367,11 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         }
 
+    }
+
+    private void resetBottomBarLayout(boolean isLayoutReset) {
+
+        mHomeScreenTabLayout.isVideoDeleteMultiSelectionActive(isLayoutReset);
     }
 
     private void startRecording() {
@@ -717,10 +723,10 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                 linearRevealTitle.setVisibility(View.VISIBLE);
                 linearRevealSelection.setVisibility(View.GONE);
 
-
                 //RESET BOTTOM BAR
                 //CHANGE HOMEPAGE TAB BAR
-                mHomeScreenTabLayout.changeBottomBarControls(false);
+                //CHANGE HOMEPAGE TAB BAR
+                resetBottomBarLayout(false);
 
                 //RELOAD HISTORY LIST IF NOT EMPTY
                 updateRevealitHistoryList(false, false);

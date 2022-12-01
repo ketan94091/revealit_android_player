@@ -1,5 +1,6 @@
 package com.Revealit.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -31,6 +32,7 @@ import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -65,6 +67,7 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
     private int dialogHight,dialogWidth;
     private TextView txtNoPublishedVideo;
     private LinearLayout linearHeaderView;
+    int intMediaId, intMediaOffset, intMatchId;
 
 
     public RevealItHistoryTimestampListAdapter(Context mContext, Activity mActivity, RevealitHistoryModel.Data revealitHistoryData) {
@@ -129,12 +132,9 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         holder.txtTimeOffsetDisplay.setText(mListAllTimeStamp.get(position).replace(" ",""));
-        //holder.txtTimeOffsetDisplay.setPaintFlags(holder.txtTimeOffsetDisplay.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-
-
 
         holder.txtTimeOffsetDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,6 +153,11 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
         holder.txtTimeOffsetDisplay.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+
+                //SET DATA
+                intMediaId =revealitHistoryData.media_id;
+                intMediaOffset = Integer.valueOf(mListAllTimeStampOffset.get(position).replace(" ",""));
+                intMatchId = revealitHistoryData.match_id;
 
                 openItemList(revealitHistoryData.media_id , mListAllTimeStampOffset.get(position).replace(" ",""),mListAllTimeStamp.get(position).replace(" ",""));
 
@@ -275,26 +280,6 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
                         //UPDATE UI
                         updateItemsDialogue(dialogView, response.body().getData(), mDialogeForItems , revealitHistoryData.media_title , strTimeStamp);
 
-//                        if(response.body().getData().size() != 0){
-//                            updateItemsDialogue(dialogView, response.body().getData(), mDialogeForItems , revealitHistoryData.media_title , strTimeStamp);
-//                        }else {
-//
-//                            //DISMISS DIALOGUE
-//                            mDialogeForItems.dismiss();
-//
-//                            Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
-//                            mIntent.putExtra(Constants.MEDIA_URL, "" + revealitHistoryData.media_url);
-//                            mIntent.putExtra(Constants.MEDIA_ID, "" + revealitHistoryData.media_id);
-//                            mIntent.putExtra(Constants.VIDEO_NAME, "" + revealitHistoryData.media_title);
-//                            mIntent.putExtra(Constants.VIDEO_SEEK_TO, strItemId);
-//                            mIntent.putExtra(Constants.IS_VIDEO_SEEK, true);
-//                            mActivity.startActivity(mIntent);
-//
-//
-//                        }
-
-
-
                     } else if (response.code() == Constants.API_CODE_401) {
 
                         progressLoadData.setVisibility(View.GONE);
@@ -346,6 +331,21 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
             }
         });
 
+        //LINEAR DELETE VIEW
+        LinearLayout mlinearDeleteTimeStamp = (LinearLayout)dialogView.findViewById(R.id.linearDeleteTimeStamp);
+        mlinearDeleteTimeStamp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mActivity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        //CREATE DIALOGUE
+                       createDeleteDialogue(mDialogeForItems);
+                    }
+                });
+            }
+        });
+
         //SET ITEMS LIST
         RecyclerView recyclerViewRecipesList = (RecyclerView) dialogView.findViewById(R.id.recycleRecipesList);
         LinearLayoutManager recylerViewLayoutManager = new LinearLayoutManager(mActivity);
@@ -370,4 +370,132 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
 
 
     }
+
+    private void createDeleteDialogue(AlertDialog mDialogeForItems) {
+
+            android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
+            dialogBuilder.setCancelable(false);
+            LayoutInflater inflater = mActivity.getLayoutInflater();
+            final View dialogView = inflater.inflate(R.layout.delete_timestamp_confirmation_dailoague, null);
+            mActivity.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialogBuilder.setView(dialogView);
+
+
+            final AlertDialog mAlertDialog = dialogBuilder.create();
+            TextView txtYes = (TextView) dialogView.findViewById(R.id.txtYes);
+            TextView txtNo = (TextView) dialogView.findViewById(R.id.txtNo);
+
+
+        txtNo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    mAlertDialog.dismiss();
+
+                }
+            });
+
+
+        txtYes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    mAlertDialog.dismiss();
+
+                    callRemoveTimeStamp(mDialogeForItems);
+
+
+                }
+            });
+
+            mAlertDialog.show();
+
+        }
+
+    private void callRemoveTimeStamp(AlertDialog mDialogeForItems) {
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+        JsonObject paramObject = new JsonObject();
+        paramObject.addProperty("match_id", intMatchId);
+        paramObject.addProperty("media_id", intMediaId);
+        paramObject.addProperty("playback_offset", intMediaOffset);
+
+        Call<JsonElement> call = patchService1.removeSingleTimeStamp(paramObject);
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+
+                CommonMethods.printLogE("Response @ callRemoveTimeStamp: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callRemoveTimeStamp: ", "" + response.code());
+
+
+                if (response.code() == Constants.API_CODE_200) {
+
+                    Gson gson = new GsonBuilder()
+                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                            .serializeNulls()
+                            .create();
+
+                    mDialogeForItems.dismiss();
+
+                } else if (response.code() == Constants.API_CODE_401) {
+
+                    progressLoadData.setVisibility(View.GONE);
+                    mDialogeForItems.dismiss();
+
+                    Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
+                    mActivity.startActivity(mLoginIntent);
+                    mActivity.finish();
+
+                } else {
+                    progressLoadData.setVisibility(View.GONE);
+                    mDialogeForItems.dismiss();
+
+                    CommonMethods.buildDialog(mContext, mActivity.getResources().getString(R.string.strNoDataFound));
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+
+
+            }
+        });
+
+    }
+
 }

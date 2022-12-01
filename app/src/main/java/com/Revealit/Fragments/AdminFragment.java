@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -81,6 +80,8 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
     private AlertDialog mAlertDialog = null;
     private Gson gsonBuilder;
     private String strSelectedServerName;
+    private TextView txtDemoRegistration,txtDemoMobile,txtIntegrationRegistration,txtIntegrationMobile,txtTesting3Registration,txtTesting3Mobile,txtTesting2Registration,txtTesting2Mobile,txtTesting1Registration,txtTesting1Mobile,txtStagingRegistration,txtStagingMobile,txtBetaCuratorRegistration,txtBetaCuratorMobile,txtLive,txtSimulation;
+    private LinearLayout linearDemo,linearIntegration,linearTesting3,linearTesting2,linearTesting1,linearStaging,linearBetacurator;
 
 
     public AdminFragment(HomeScreenTabLayout homeScreenTabLayout) {
@@ -117,38 +118,38 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
 
         SwitchCompat switchModeOfApp =(SwitchCompat) mView.findViewById(R.id.switchModeOfApp);
 
-        LinearLayout linearBetacurator = (LinearLayout) mView.findViewById(R.id.linearBetacurator);
-        LinearLayout linearStaging = (LinearLayout) mView.findViewById(R.id.linearStaging);
-        LinearLayout linearTesting1 = (LinearLayout) mView.findViewById(R.id.linearTesting1);
-        LinearLayout linearTesting2 = (LinearLayout) mView.findViewById(R.id.linearTesting2);
-        LinearLayout linearTesting3 = (LinearLayout) mView.findViewById(R.id.linearTesting3);
-        LinearLayout linearIntegration = (LinearLayout) mView.findViewById(R.id.linearIntegration);
-        LinearLayout linearDemo = (LinearLayout) mView.findViewById(R.id.linearDemo);
+         linearBetacurator = (LinearLayout) mView.findViewById(R.id.linearBetacurator);
+         linearStaging = (LinearLayout) mView.findViewById(R.id.linearStaging);
+         linearTesting1 = (LinearLayout) mView.findViewById(R.id.linearTesting1);
+         linearTesting2 = (LinearLayout) mView.findViewById(R.id.linearTesting2);
+         linearTesting3 = (LinearLayout) mView.findViewById(R.id.linearTesting3);
+         linearIntegration = (LinearLayout) mView.findViewById(R.id.linearIntegration);
+         linearDemo = (LinearLayout) mView.findViewById(R.id.linearDemo);
 
 
-        TextView txtSimulation = (TextView) mView.findViewById(R.id.txtSimulation);
-        TextView txtLive = (TextView) mView.findViewById(R.id.txtLive);
+         txtSimulation = (TextView) mView.findViewById(R.id.txtSimulation);
+         txtLive = (TextView) mView.findViewById(R.id.txtLive);
 
-        TextView txtBetaCuratorMobile = (TextView) mView.findViewById(R.id.txtBetaCuratorMobile);
-        TextView txtBetaCuratorRegistration = (TextView) mView.findViewById(R.id.txtBetaCuratorRegistration);
+         txtBetaCuratorMobile = (TextView) mView.findViewById(R.id.txtBetaCuratorMobile);
+         txtBetaCuratorRegistration = (TextView) mView.findViewById(R.id.txtBetaCuratorRegistration);
 
-        TextView txtStagingMobile = (TextView) mView.findViewById(R.id.txtStagingMobile);
-        TextView txtStagingRegistration = (TextView) mView.findViewById(R.id.txtStagingRegistration);
+         txtStagingMobile = (TextView) mView.findViewById(R.id.txtStagingMobile);
+         txtStagingRegistration = (TextView) mView.findViewById(R.id.txtStagingRegistration);
 
-        TextView txtTesting1Mobile = (TextView) mView.findViewById(R.id.txtTesting1Mobile);
-        TextView txtTesting1Registration = (TextView) mView.findViewById(R.id.txtTesting1Registration);
+         txtTesting1Mobile = (TextView) mView.findViewById(R.id.txtTesting1Mobile);
+         txtTesting1Registration = (TextView) mView.findViewById(R.id.txtTesting1Registration);
 
-        TextView txtTesting2Mobile = (TextView) mView.findViewById(R.id.txtTesting2Mobile);
-        TextView txtTesting2Registration = (TextView) mView.findViewById(R.id.txtTesting2Registration);
+         txtTesting2Mobile = (TextView) mView.findViewById(R.id.txtTesting2Mobile);
+         txtTesting2Registration = (TextView) mView.findViewById(R.id.txtTesting2Registration);
 
-        TextView txtTesting3Mobile = (TextView) mView.findViewById(R.id.txtTesting3Mobile);
-        TextView txtTesting3Registration = (TextView) mView.findViewById(R.id.txtTesting3Registration);
+         txtTesting3Mobile = (TextView) mView.findViewById(R.id.txtTesting3Mobile);
+         txtTesting3Registration = (TextView) mView.findViewById(R.id.txtTesting3Registration);
 
-        TextView txtIntegrationMobile = (TextView) mView.findViewById(R.id.txtIntegrationMobile);
-        TextView txtIntegrationRegistration = (TextView) mView.findViewById(R.id.txtIntegrationRegistration);
+         txtIntegrationMobile = (TextView) mView.findViewById(R.id.txtIntegrationMobile);
+         txtIntegrationRegistration = (TextView) mView.findViewById(R.id.txtIntegrationRegistration);
 
-        TextView txtDemoMobile = (TextView) mView.findViewById(R.id.txtDemoMobile);
-        TextView txtDemoRegistration = (TextView) mView.findViewById(R.id.txtDemoRegistration);
+         txtDemoMobile = (TextView) mView.findViewById(R.id.txtDemoMobile);
+         txtDemoRegistration = (TextView) mView.findViewById(R.id.txtDemoRegistration);
 
 
 
@@ -181,22 +182,18 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-
-
                 if (isChecked){
 
                     //UPDATE FLAG FOR APPLICATION MODE
+                    //IF TRUE APP IS IN LIVE MODE
+                    //ELSE APP IS IN SIMULATION MODE
                     mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorNewAppGreen));
-
-                    mHomeScreenTabLayout.viewBottomLine.setBackgroundColor(getResources().getColor(R.color.colorNewAppGreen));
 
                     txtSimulation.setTextColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
                     txtLive.setTextColor(getResources().getColor(R.color.colorBlack));
+
+                    //CALL INTERFACE HOMESCREEN TAB LAYOUT FOR CHANGING TABS
+                    mHomeScreenTabLayout.isSimulationModeActive(isChecked);
 
                 }else{
                     //CLEAR DUMMY DATA
@@ -204,22 +201,15 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
 
                     //UPDATE FLAG FOR APPLICATION MODE
                     mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, false);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_IN);
-                    mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorBlue));
-
-                    mHomeScreenTabLayout.viewBottomLine.setBackgroundColor(getResources().getColor(R.color.colorBlue));
 
                     txtSimulation.setTextColor(getResources().getColor(R.color.colorBlack));
                     txtLive.setTextColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
+
+                    //CALL INTERFACE HOMESCREEN TAB LAYOUT FOR CHANGING TABS
+                    mHomeScreenTabLayout.isSimulationModeActive(isChecked);
                 }
 
             }
-
-
-
 
         });
 

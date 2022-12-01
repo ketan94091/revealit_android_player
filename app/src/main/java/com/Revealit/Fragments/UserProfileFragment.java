@@ -5,7 +5,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -240,12 +239,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             viewSettings.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
             viewHelp.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
             viewAdmin.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
-
-            mHomeScreenTabLayout.tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorInActiveGrey), PorterDuff.Mode.SRC_IN);
-            mHomeScreenTabLayout.tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorInActiveGrey), PorterDuff.Mode.SRC_IN);
-            mHomeScreenTabLayout.tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorInActiveGrey), PorterDuff.Mode.SRC_IN);
-            mHomeScreenTabLayout.tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
-            mHomeScreenTabLayout.tabLayout.setTabTextColors(getResources().getColor(R.color.colorInActiveGrey) , getResources().getColor(R.color.colorNewAppGreen));
 
 
         } else if (isUserIsActive) {

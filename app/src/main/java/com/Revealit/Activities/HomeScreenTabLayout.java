@@ -31,6 +31,8 @@ import com.Revealit.Fragments.ListenFragment;
 import com.Revealit.Fragments.PlayFragment;
 import com.Revealit.Fragments.ProfileFragmentContainer;
 import com.Revealit.Fragments.WalletFragment;
+import com.Revealit.Interfaces.DeleteVideoRevealsInterface;
+import com.Revealit.Interfaces.IsSimulationModeIsActiveInterface;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
@@ -62,13 +64,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class HomeScreenTabLayout extends AppCompatActivity {
+public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVideoRevealsInterface, IsSimulationModeIsActiveInterface {
 
     private static final String TAG ="HomeScreenTabLayout" ;
-    public static CustomViewPager viewPager;
-    public static RelativeLayout relativeTab;
-    public static LinearLayout linearListenScreenControls;
-    public static TabLayout tabLayout;
+    private CustomViewPager viewPager;
+    private RelativeLayout relativeTab;
+    private LinearLayout linearListenScreenControls;
+    private TabLayout tabLayout;
     ArrayList<Fragment> fragments;
     Toolbar toolbar;
     private Activity mActivity;
@@ -76,10 +78,12 @@ public class HomeScreenTabLayout extends AppCompatActivity {
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
     private boolean isUserIsActive,isFromRegistrationScreen;
-    public static View viewBottomLine;
+    private View viewBottomLine;
     private int REQUEST_CAMERA_PERMISSIONc=100;
     private BeamsTokenProvider tokenProvider;
     private Gson gson;
+    private DeleteVideoRevealsInterface mDeleteVideoRevealsInterface;
+    private IsSimulationModeIsActiveInterface mIsSimulationModeIsActiveInterface;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -112,6 +116,13 @@ public class HomeScreenTabLayout extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        
+        //INITIALIZE INTERFACE FOR MULTI VIDEO DELETE FROM LISTEN SCREEN
+        mDeleteVideoRevealsInterface = (DeleteVideoRevealsInterface) this;
+
+        //INITIALIZE THE INTERFACE FOR CHANGING APP MODE LIVE MODE TO SIMULATION MODE
+        mIsSimulationModeIsActiveInterface = (IsSimulationModeIsActiveInterface) this;
+
 
         viewPager = (CustomViewPager) findViewById(R.id.pager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -142,8 +153,6 @@ public class HomeScreenTabLayout extends AppCompatActivity {
 
         //SET PAGER OFFSET LIMIT - LOADING ALL PAGES
         viewPager.setOffscreenPageLimit(3);
-
-
 
         tabLayout.getTabAt(0).setIcon(getResources().getDrawable(R.mipmap.icon_mic_home));
         //tabLayout.getTabAt(0).setText(getResources().getString(R.string.strListen));
@@ -213,7 +222,7 @@ public class HomeScreenTabLayout extends AppCompatActivity {
 
         }else{
             //MAKE VIEW PAGER SCROLLABLE TURE
-            viewPager.disableScroll(true);
+            viewPager.disableScroll(false);
 
             //DISABLE BOTTOM BAR ICON CLICK IF USER IS NOT ACTIVE
             enableDisableBottomBar(true);
@@ -323,7 +332,7 @@ public class HomeScreenTabLayout extends AppCompatActivity {
         pusherTokenProvider();
 
         //SHOW BOTTOM BAR CONTROL
-        changeBottomBarControls(false);
+        isVideoDeleteMultiSelectionActive(false);
 
 
 
@@ -345,7 +354,6 @@ public class HomeScreenTabLayout extends AppCompatActivity {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestCamaraPermission() {
 
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -606,9 +614,10 @@ public class HomeScreenTabLayout extends AppCompatActivity {
 
     }
 
-    //CHANGE BOTTOM BAR TAB CONTROLS WITH LISTEN SCREEN CONTROLS
-    public static void changeBottomBarControls(boolean isChangeControls){
 
+    @Override
+    public void isVideoDeleteMultiSelectionActive(boolean isChangeControls) {
+        //CHANGE BOTTOM BAR TAB CONTROLS WITH LISTEN SCREEN CONTROLS
         if(isChangeControls){
             tabLayout.setVisibility(View.GONE);
             linearListenScreenControls.setVisibility(View.VISIBLE);
@@ -618,5 +627,25 @@ public class HomeScreenTabLayout extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void isSimulationModeActive(boolean isSimulationModeActive) {
+        if(isSimulationModeActive){
+            tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+            tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+            tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+            tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorNewAppGreen), PorterDuff.Mode.SRC_IN);
+            tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorNewAppGreen));
+            viewBottomLine.setBackgroundColor(getResources().getColor(R.color.colorNewAppGreen));
+        }else{
+            tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+            tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+            tabLayout.getTabAt(2).getIcon().setColorFilter(getResources().getColor(R.color.colorBottomBarActiveGrey), PorterDuff.Mode.SRC_IN);
+            tabLayout.getTabAt(3).getIcon().setColorFilter(getResources().getColor(R.color.colorBlue), PorterDuff.Mode.SRC_IN);
+            tabLayout.setTabTextColors(getResources().getColor(R.color.colorBottomBarActiveGrey) , getResources().getColor(R.color.colorBlue));
+            viewBottomLine.setBackgroundColor(getResources().getColor(R.color.colorBlue));
 
+        }
+
+
+    }
 }

@@ -87,6 +87,7 @@ public class Constants {
   public static final String API_NEW_AUTH_COUNTRY_CODE = "api/country";
   public static final String API_PUSH_AUTHORISATION = "api/authorize";
   public static final String API_PUSH_AUTHORISATION_CANCEL = "api/authorizecancel";
+  public static final String API_REMOVE_SINGLE_TIMESTAMP = "api/video/matchhistory/match/remove";
 
 
     public static final String AUTH_TOKEN = "access_token";

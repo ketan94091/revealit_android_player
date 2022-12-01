@@ -314,6 +314,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         encryptKey(body.getProton().getPublic_pem(),Constants.KEY_PUBLIC_KEY_PEM,body.getrevealit_private_key());
 
 
+
         //UPDATE FLAG IF USER IS ADMIN OR NOT
         if(body.getRole().equals(getResources().getString(R.string.strAdmin))){
             mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,true);
@@ -344,6 +345,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void encryptKey(String keyToStore, String alias, String keyStoreName) {
+
 
         try{
 

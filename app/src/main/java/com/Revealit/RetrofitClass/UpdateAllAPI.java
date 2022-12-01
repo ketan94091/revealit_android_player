@@ -196,6 +196,10 @@ public interface UpdateAllAPI {
     @POST(Constants.API_PUSH_AUTHORISATION_CANCEL)
     Call<JsonElement> pushAuthorisationCancel(@Body JsonObject body);
 
+    //REMOVE SINGLE TIME STAMP
+    @POST(Constants.API_REMOVE_SINGLE_TIMESTAMP)
+    Call<JsonElement> removeSingleTimeStamp(@Body JsonObject body);
+
 }
 
 

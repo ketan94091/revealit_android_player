@@ -234,11 +234,13 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-
-
                 if (isChecked){
+
                     //UPDATE FLAG FOR APPLICATION MODE
+                    //IF TRUE APP IS IN LIVE MODE
+                    //ELSE APP IS IN SIMULATION MODE
                     mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
+
                     txtSimulation.setTextColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
                     txtLive.setTextColor(getResources().getColor(R.color.colorBlack));
 
@@ -248,8 +250,11 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
 
                     //UPDATE FLAG FOR APPLICATION MODE
                     mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, false);
+
                     txtSimulation.setTextColor(getResources().getColor(R.color.colorBlack));
                     txtLive.setTextColor(getResources().getColor(R.color.colorBottomBarActiveGrey));
+
+
                 }
 
             }

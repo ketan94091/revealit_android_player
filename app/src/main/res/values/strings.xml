@@ -17,6 +17,7 @@
     <string name="strAccountAlreadyExistsWarningMsg">Your account already exists on a different device. Do you wish to retrieve your revealit TV account on this device?</string>
     <string name="strBioMetricActivationRequire">To be a revealit TV user you must have biometrics activated on your phone or tablet.</string>
     <string name="strNoARproduct">No AR Product Available</string>
+    <string name="strSureToDeleteThisDialogue">Are you sure you wish to delete the timestamp?</string>
     <string name="strValidEmail">Please Enter Valid Emailid</string>
     <string name="strNoFeatureVideos">No feature video available</string>
     <string name="strPleaseWait">Please Wait</string>
@@ -28,6 +29,8 @@
     <string name="strButton">Play Video</string>
     <string name="strARmode">Launch AR mode</string>
     <string name="strLogin">Login</string>
+    <string name="strNO">No</string>
+    <string name="strYES">Yes</string>
     <string name="strBack">Back</string>
     <string name="strBackUpLater">Backup Later</string>
     <string name="strAlreadyBackUp">Already Backup</string>
