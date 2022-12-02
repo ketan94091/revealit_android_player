@@ -1,5 +1,6 @@
 package com.Revealit.SqliteDatabase;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -73,7 +74,6 @@ public class DatabaseHelper {
     public static String KEY_REVEALIT_HISTORY_MATCH_TIMESTAMP= "tableRevealitHistoryTimeStamp";
     public static String KEY_REVEALIT_HISTORY_ALL_TIMESTAMP= "tableRevealitHistoryAllTimeStamp";
     public static String KEY_REVEALIT_HISTORY_ALL_TIMESTAMP_OFFSET= "tableRevealitHistoryAllTimeStampOffset";
-    public static String KEY_REVEALIT_HISTORY_IS_ITEM_SELECTED= "tableRevealitHistoryIsItemSelected";
 
 
     public static String KEY_BYTE_ARRY = "keyByteArry";
@@ -179,7 +179,7 @@ public class DatabaseHelper {
         Cursor cursor = mSqLiteDatabase.query(TABLE_CATEGORY_WISE_PLAY_LIST, null, null, null, null, null, null);
 
         if(cursor.moveToFirst()) {
-            String rowId = cursor.getString(cursor.getColumnIndex(KEY_ID));
+            @SuppressLint("Range") String rowId = cursor.getString(cursor.getColumnIndex(KEY_ID));
 
             mSqLiteDatabase.delete(TABLE_CATEGORY_WISE_PLAY_LIST, KEY_ID + "=?",  new String[]{"0"});
         }
@@ -380,8 +380,7 @@ public class DatabaseHelper {
               String strPlaybackDisplay,
               String strMatchTimeStamp,
               String strAllTimeStamp,
-              String strAllTimeStampOffset,
-              int isItemSelected
+              String strAllTimeStampOffset
                                            ) {
         ContentValues values = new ContentValues();
         values.put(KEY_REVEALIT_HISTORY_MATCH_ID, intMatchID);
@@ -396,7 +395,6 @@ public class DatabaseHelper {
         values.put(KEY_REVEALIT_HISTORY_MATCH_TIMESTAMP, strMatchTimeStamp);
         values.put(KEY_REVEALIT_HISTORY_ALL_TIMESTAMP, strAllTimeStamp);
         values.put(KEY_REVEALIT_HISTORY_ALL_TIMESTAMP_OFFSET, strAllTimeStampOffset);
-        values.put(KEY_REVEALIT_HISTORY_IS_ITEM_SELECTED, isItemSelected);
         return mSqLiteDatabase.insert(TABLE_REVEALIT_HISTORY, null, values);
 
     }
@@ -424,7 +422,6 @@ public class DatabaseHelper {
                     mRevealitHistoryModel.setMatch_time_stamp(result.getString(10));
                     mRevealitHistoryModel.setAllTimeStamp(result.getString(11));
                     mRevealitHistoryModel.setAllTimeStampOffset(result.getString(12));
-                    mRevealitHistoryModel.setIsSelected(result.getInt(13));
                     mRevealitHistoryList.add(mRevealitHistoryModel);
 
                 } while (result.moveToNext());
@@ -459,8 +456,7 @@ public class DatabaseHelper {
                             KEY_REVEALIT_HISTORY_PLAYBACK_DISPLAY,
                             KEY_REVEALIT_HISTORY_MATCH_TIMESTAMP,
                             KEY_REVEALIT_HISTORY_ALL_TIMESTAMP,
-                            KEY_REVEALIT_HISTORY_ALL_TIMESTAMP_OFFSET,
-                            KEY_REVEALIT_HISTORY_IS_ITEM_SELECTED
+                            KEY_REVEALIT_HISTORY_ALL_TIMESTAMP_OFFSET
                     },
                     KEY_REVEALIT_HISTORY_MEDIA_ID + "=?", new String[]{String.valueOf(mediaID)},
                     null, null, null, null);
@@ -479,7 +475,6 @@ public class DatabaseHelper {
                     mRevealitHistoryModel.setMatch_time_stamp(result.getString(10));
                     mRevealitHistoryModel.setAllTimeStamp(result.getString(11));
                     mRevealitHistoryModel.setAllTimeStampOffset(result.getString(12));
-                    mRevealitHistoryModel.setIsSelected(result.getInt(13));
                     mRevealitHistoryList.add(mRevealitHistoryModel);
 
                 } while (result.moveToNext());
@@ -503,8 +498,7 @@ public class DatabaseHelper {
                                       String strPlaybackDisplay,
                                       String strMatchTimeStamp,
                                       String strAllTimeStamp,
-                                      String strAllTimeStampOffset,
-                                         int isItemSelected) {
+                                      String strAllTimeStampOffset) {
 
         ContentValues values = new ContentValues();
         values.put(KEY_REVEALIT_HISTORY_MATCH_ID, intMatchID);
@@ -519,7 +513,6 @@ public class DatabaseHelper {
         values.put(KEY_REVEALIT_HISTORY_MATCH_TIMESTAMP, strMatchTimeStamp);
         values.put(KEY_REVEALIT_HISTORY_ALL_TIMESTAMP, strAllTimeStamp);
         values.put(KEY_REVEALIT_HISTORY_ALL_TIMESTAMP_OFFSET, strAllTimeStampOffset);
-        values.put(KEY_REVEALIT_HISTORY_IS_ITEM_SELECTED, isItemSelected);
 
         String whereArgs[] = new String[1];
         whereArgs[0] = "" + intMediaID;

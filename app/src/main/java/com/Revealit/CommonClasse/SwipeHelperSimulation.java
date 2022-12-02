@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,17 +53,22 @@ public abstract class SwipeHelperSimulation extends ItemTouchHelper.SimpleCallba
             Point point = new Point((int) e.getRawX(), (int) e.getRawY());
 
             RecyclerView.ViewHolder swipedViewHolder = recyclerView.findViewHolderForAdapterPosition(swipedPos);
-            View swipedItem = swipedViewHolder.itemView;
-            Rect rect = new Rect();
-            swipedItem.getGlobalVisibleRect(rect);
+            if (swipedViewHolder!=null){
+                View swipedItem = swipedViewHolder.itemView;
 
-            if (e.getAction() == MotionEvent.ACTION_DOWN || e.getAction() == MotionEvent.ACTION_UP ||e.getAction() == MotionEvent.ACTION_MOVE) {
-                if (rect.top < point.y && rect.bottom > point.y)
-                    gestureDetector.onTouchEvent(e);
-                else {
-                    recoverQueue.add(swipedPos);
-                    swipedPos = -1;
-                    recoverSwipedItem();
+
+                Rect rect = new Rect();
+                swipedItem.getGlobalVisibleRect(rect);
+
+                if (e.getAction() == MotionEvent.ACTION_DOWN || e.getAction() == MotionEvent.ACTION_UP ||e.getAction() == MotionEvent.ACTION_MOVE) {
+                    if (rect.top < point.y && rect.bottom > point.y)
+                        gestureDetector.onTouchEvent(e);
+                    else {
+                        recoverQueue.add(swipedPos);
+                        swipedPos = -1;
+                        recoverSwipedItem();
+
+                    }
                 }
             }
             return false;
@@ -197,6 +201,7 @@ public abstract class SwipeHelperSimulation extends ItemTouchHelper.SimpleCallba
 
     public void attachSwipe(){
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(this);
+        itemTouchHelper.attachToRecyclerView(null);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
@@ -218,9 +223,12 @@ public abstract class SwipeHelperSimulation extends ItemTouchHelper.SimpleCallba
         }
 
         public boolean onClick(float x, float y){
+            if (clickRegion != null && clickRegion.contains(x, y)){
+                clickListener.onClick(pos);
+                return true;
+            }
 
-            clickListener.onClick(pos);
-            return true;
+            return false;
         }
 
         public void onDraw(Canvas c, RectF rect, int pos, View itemView){

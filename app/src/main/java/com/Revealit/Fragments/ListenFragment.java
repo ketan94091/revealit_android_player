@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,6 @@ import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.CommonClasse.SwipeHelper;
-import com.Revealit.CommonClasse.SwipeHelperSimulation;
 import com.Revealit.CustomViews.RippleBackground;
 import com.Revealit.Interfaces.RemoveListenHistory;
 import com.Revealit.ModelClasses.CategoryWisePlayListModel;
@@ -218,7 +216,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
             tapCount = 1;
 
             //RELOAD HISTORY LIST IF NOT EMPTY
-            updateRevealitHistoryListSimulation();
+            updateRevealitHistoryListSimulation(false, false);
 
 
         }
@@ -277,7 +275,13 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                     //DISPLAY LIST WITH CHECK BOX
                     //FIRST PARAM -> FALSE -> FOR CHECKBOX SELECTION
                     //SECOND PARAM -> TRUE -> FOR VISIBILITY OF CHECK BOX TRUE
-                    updateRevealitHistoryList(false, true);
+                    //ELSE APP MODE IS SIMULATION
+                    if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+                        updateRevealitHistoryList(false, true);
+
+                    } else {
+                        updateRevealitHistoryListSimulation(false, true);
+                    }
                 }
                 break;
 
@@ -285,15 +289,27 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
                 if (txtSelectDeselectAll.getText().equals(getResources().getString(R.string.strSelectALl))) {
 
+
                     //DISPLAY LIST WITH CHECK BOX SELECTED TRUE
-                    updateRevealitHistoryList(true, true);
+                    if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+                        updateRevealitHistoryList(true, true);
+
+                    } else {
+                        updateRevealitHistoryListSimulation(true, true);
+                    }
 
                     //CHANGE SELECT ALL TO DESELECT ALL
                     txtSelectDeselectAll.setText(getResources().getString(R.string.strDeselectALl));
                 } else {
 
                     //DISPLAY LIST WITH CHECK BOX SELECTED FALSE
-                    updateRevealitHistoryList(false, true);
+                    //DISPLAY LIST WITH CHECK BOX SELECTED TRUE
+                    if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+                        updateRevealitHistoryList(false, true);
+
+                    } else {
+                        updateRevealitHistoryListSimulation(false, true);
+                    }
 
                     //CHANGE SELECT ALL TO SELECT ALL
                     txtSelectDeselectAll.setText(getResources().getString(R.string.strSelectALl));
@@ -310,7 +326,13 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                     resetBottomBarLayout(false);
 
 
-                    updateRevealitHistoryList(false, false);
+                    //DISPLAY LIST WITH CHECK BOX SELECTED TRUE
+                    if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+                        updateRevealitHistoryList(false, false);
+
+                    } else {
+                        updateRevealitHistoryListSimulation(false, false);
+                    }
                 }
                 break;
 
@@ -319,9 +341,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                 //IF TRUE APP MODE IS LIVE
                 //ELSE APP MODE IS SIMULATION
                 if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
-
-                    //IMAGE CLICK FALSE
-                    imgListen.setClickable(false);
 
                     //START RECORDING
                     startRecording();
@@ -378,6 +397,9 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         if (CheckPermissions()) {
 
+            //IMAGE CLICK FALSE
+            imgListen.setClickable(false);
+
             //START RIPPLE ANIMATION
             rippleBackground.startRippleAnimation();
             linearWavingBackground.setVisibility(View.VISIBLE);
@@ -413,7 +435,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
 
             try {
-                //PREPAIR AUDIO
+                //PREPARE AUDIO
                 mRecorder.prepare();
             } catch (IOException e) {
 
@@ -468,7 +490,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
             tapCount = 1;
 
             //UPDATE LIST AS PER USERS CHOICE
-            updateRevealitHistoryListSimulation();
+            updateRevealitHistoryListSimulation(false,false);
         }
     }
 
@@ -701,8 +723,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                                     response.body().getData().get(i).getPlayback_display(),
                                     response.body().getData().get(i).getMatch_time_stamp(),
                                     mListAllTimeStamp.toString(),
-                                    mListAllTimeStampOffset.toString(),
-                                    0);
+                                    mListAllTimeStampOffset.toString());
 
                         } else {
 
@@ -717,8 +738,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                                     response.body().getData().get(i).getPlayback_display(),
                                     response.body().getData().get(i).getMatch_time_stamp(),
                                     response.body().getData().get(i).getPlayback_display(),
-                                    response.body().getData().get(i).getPlayback_offset(),
-                                    0);
+                                    response.body().getData().get(i).getPlayback_offset());
 
                         }
 
@@ -771,99 +791,25 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         ActivityCompat.requestPermissions(getActivity(), PERMISSIONS, REQUEST_AUDIO_PERMISSION_CODE);
     }
 
-    public void updateRevealitHistoryList(boolean isCheckBoxSelected, boolean shouldCheckBoxVisible) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
-        ArrayList<RevealitHistoryModel.Data> mHistoryListFromDatabase = null;
-        try {
-             mHistoryListFromDatabase =  new NetworkQueryTask().execute(mDatabaseHelper).get();
-
-            //SET REVEAL IT HISTORY FOR LIVE MODE
-            //IF LIST ATTACH FOR THE FIRST TIME ELSE JUST NOTIFY LISTENER WITH FRESH LIST
-            if (mRevealItHistoryListAdapter == null) {
-
-                mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mHomeScreenTabLayout, mHistoryListFromDatabase, mRemoveListenHistory, isCheckBoxSelected, shouldCheckBoxVisible);
-                recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
-
-                //SWIPE HELPER SHOULD ATTACH FIRST TIME
-                ArrayList<RevealitHistoryModel.Data> finalMHistoryListFromDatabase = mHistoryListFromDatabase;
-
-                new SwipeHelper(mActivity, recycleRevealList) {
-                    @Override
-                    public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
-
-                        underlayButtons.add(new SwipeHelper.UnderlayButton(
-                                R.mipmap.icn_share_with_text,
-                                mActivity,
-                                new UnderlayButtonClickListener() {
-                                    @Override
-                                    public void onClick(int pos) {
-
-                                        Log.e("Share", "Share ::: " + mRevealItHistoryListAdapter.revealitHistoryData.get(pos).media_title);
-                                    }
-                                }
-                        ));
-
-                        underlayButtons.add(new SwipeHelper.UnderlayButton(
-                                R.mipmap.icn_delete_with_text,
-                                mActivity,
-                                new SwipeHelper.UnderlayButtonClickListener() {
-                                    @Override
-                                    public void onClick(int pos) {
-                                        // TODO: onDelete
-                                        //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API
-                                        //ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
-                                        if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
-
-                                            //CALL API REMOVE SINGLE VIDEO
-                                            callRemoveVideo(false, finalMHistoryListFromDatabase.get(pos).getMedia_id());
-
-                                        } else {
-
-                                            //REMOVE SINGLE VIDEO FROM DATABASE
-                                            mDatabaseHelper.clearSimulationHistoryItem(mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
-
-                                            //UPDATE LIST THROUGH INTERFACE
-                                            mRemoveListenHistory.removeListenHistory(false);
-
-                                        }
-
-                                    }
-                                }
-                        ));
-
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_EXTERNAL_STORAGE:
+                if (grantResults.length > 0) {
+                    boolean permissionToRecord = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean permissionToStore = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if (permissionToRecord && permissionToStore) {
+                        startRecording();
+                    } else {
+                        CommonMethods.buildDialog(mContext, "Permission denied!");
                     }
-                };
-
-
-            } else {
-
-                //ELSE -> NOTIFY LIST WITH LATEST LIST DATA
-                mRevealItHistoryListAdapter.updateListData(mHistoryListFromDatabase, isCheckBoxSelected, shouldCheckBoxVisible);
-            }
-
-
-            //SET SIZE TO REVEAL IT
-            txtRevealCount.setText("" + mHistoryListFromDatabase.size() + " reveals");
-
-            //SET TOTAL SELECTED REVEALS
-            txtRevealSelectedCount.setText("0/"+mRevealItHistoryListAdapter.getItemCount()+ " "+getResources().getString(R.string.strRevealSelected) );
-
-
-            //ENABLE BUTTON
-            imgListen.setClickable(true);
-
-
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+                }
+                break;
         }
-
-
-        
-
-
     }
+
 
 
     private void callRemoveVideo(boolean isClearHistory, int media_id) {
@@ -957,61 +903,185 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
 
     }
+    public void updateRevealitHistoryList(boolean isCheckBoxSelected, boolean shouldCheckBoxVisible) {
 
-    private void updateRevealitHistoryListSimulation() {
+        ArrayList<RevealitHistoryModel.Data> mHistoryListFromDatabase = null;
+        try {
+            mHistoryListFromDatabase =  new FatchDataFromDatabaseTask().execute(mDatabaseHelper).get();
 
-        //SET REVEAL IT HISTORY FOR SIMULATION MODE
-        RevealItHistoryListAdapter mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mActivity, mDatabaseHelper.getRevealitHistoryDataSimulation(), mRemoveListenHistory, false, false);
-        recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
+            //SET REVEAL IT HISTORY FOR LIVE MODE
+            //IF LIST ATTACH FOR THE FIRST TIME ELSE JUST NOTIFY LISTENER WITH FRESH LIST
+            if (mRevealItHistoryListAdapter == null) {
 
-        new SwipeHelperSimulation(getContext(), recycleRevealList) {
-            @Override
-            public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<SwipeHelperSimulation.UnderlayButton> underlayButtons) {
+                mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mHomeScreenTabLayout, mHistoryListFromDatabase, mRemoveListenHistory, isCheckBoxSelected, shouldCheckBoxVisible);
+                recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
 
+                //SWIPE HELPER SHOULD ATTACH FIRST TIME
+                ArrayList<RevealitHistoryModel.Data> finalMHistoryListFromDatabase = mHistoryListFromDatabase;
 
-                underlayButtons.add(new SwipeHelperSimulation.UnderlayButton(
-                        R.mipmap.icn_share_with_text,
-                        getContext(),
-                        new SwipeHelperSimulation.UnderlayButtonClickListener() {
-                            @Override
-                            public void onClick(int pos) {
-                                // TODO: OnTransfer
-                                CommonMethods.displayToast(mContext, "Share button clicked!");
-                            }
-                        }
-                ));
+                new SwipeHelper(mActivity, recycleRevealList) {
+                    @Override
+                    public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
 
-                underlayButtons.add(new SwipeHelperSimulation.UnderlayButton(
-                        R.mipmap.icn_delete_with_text,
-                        getContext(),
-                        new SwipeHelperSimulation.UnderlayButtonClickListener() {
-                            @Override
-                            public void onClick(int pos) {
-                                // TODO: onDelete
-                                //CONDITION
-                                //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API'S
-                                //IF ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
-                                if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+                        underlayButtons.add(new SwipeHelper.UnderlayButton(
+                                R.mipmap.icn_share_with_text,
+                                mActivity,
+                                new UnderlayButtonClickListener() {
+                                    @Override
+                                    public void onClick(int pos) {
 
-                                    //CALL API REMOVE SINGLE VIDEO
-                                    callRemoveVideo(false, mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
-                                } else {
-
-                                    //IN ELSE CONDITION
-                                    //REMOVE SINGLE VIDEO DATA FROM DATABASE
-                                    mDatabaseHelper.clearSimulationHistoryItem(mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
-
-                                    //UPDATE LIST THROUGH INTERFACE
-                                    mRemoveListenHistory.removeListenHistory(false);
-
+                                        CommonMethods.displayToast(mContext,"In Progress...");
+                                    }
                                 }
+                        ));
 
-                            }
-                        }
-                ));
+                        underlayButtons.add(new SwipeHelper.UnderlayButton(
+                                R.mipmap.icn_delete_with_text,
+                                mActivity,
+                                new SwipeHelper.UnderlayButtonClickListener() {
+                                    @Override
+                                    public void onClick(int pos) {
+                                        // TODO: onDelete
+                                        //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API
+                                        //ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
+                                        if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
 
+                                            //CALL API REMOVE SINGLE VIDEO
+                                            callRemoveVideo(false, finalMHistoryListFromDatabase.get(pos).getMedia_id());
+
+                                        } else {
+
+                                            //REMOVE SINGLE VIDEO FROM DATABASE
+                                            mDatabaseHelper.clearSimulationHistoryItem(mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
+
+                                            //UPDATE LIST THROUGH INTERFACE
+                                            mRemoveListenHistory.removeListenHistory(false);
+
+                                        }
+
+                                    }
+                                }
+                        ));
+
+                    }
+                };
+
+
+            } else {
+
+                //ELSE -> NOTIFY LIST WITH LATEST LIST DATA
+                mRevealItHistoryListAdapter.updateListData(mHistoryListFromDatabase, isCheckBoxSelected, shouldCheckBoxVisible);
             }
-        };
+
+
+            //SET SIZE TO REVEAL IT
+            txtRevealCount.setText("" + mHistoryListFromDatabase.size() + " reveals");
+
+            //SET TOTAL SELECTED REVEALS
+            txtRevealSelectedCount.setText("0/"+mRevealItHistoryListAdapter.getItemCount()+ " "+getResources().getString(R.string.strRevealSelected) );
+
+
+            //ENABLE BUTTON
+            imgListen.setClickable(true);
+
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void updateRevealitHistoryListSimulation(boolean isCheckBoxSelected, boolean shouldCheckBoxVisible) {
+
+        ArrayList<RevealitHistoryModel.Data> mHistoryListFromDatabase = null;
+        try {
+            mHistoryListFromDatabase = new FetchDataFromDatabaseSimulationTask().execute(mDatabaseHelper).get();
+
+            //SET REVEAL IT HISTORY FOR LIVE MODE
+            //IF LIST ATTACH FOR THE FIRST TIME ELSE JUST NOTIFY LISTENER WITH FRESH LIST
+            if (mRevealItHistoryListAdapter == null) {
+
+                mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mHomeScreenTabLayout, mHistoryListFromDatabase, mRemoveListenHistory, isCheckBoxSelected, shouldCheckBoxVisible);
+                recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
+
+                //SWIPE HELPER SHOULD ATTACH FIRST TIME
+                ArrayList<RevealitHistoryModel.Data> finalMHistoryListFromDatabase = mHistoryListFromDatabase;
+
+                new SwipeHelper(mActivity, recycleRevealList) {
+                    @Override
+                    public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+
+                        underlayButtons.add(new SwipeHelper.UnderlayButton(
+                                R.mipmap.icn_share_with_text,
+                                mActivity,
+                                new UnderlayButtonClickListener() {
+                                    @Override
+                                    public void onClick(int pos) {
+
+                                        CommonMethods.displayToast(mContext, "In Progress...");
+                                    }
+                                }
+                        ));
+
+                        underlayButtons.add(new SwipeHelper.UnderlayButton(
+                                R.mipmap.icn_delete_with_text,
+                                mActivity,
+                                new SwipeHelper.UnderlayButtonClickListener() {
+                                    @Override
+                                    public void onClick(int pos) {
+                                        // TODO: onDelete
+                                        //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API
+                                        //ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
+                                        if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+
+                                            //CALL API REMOVE SINGLE VIDEO
+                                            callRemoveVideo(false, finalMHistoryListFromDatabase.get(pos).getMedia_id());
+
+                                        } else {
+
+                                            //REMOVE SINGLE VIDEO FROM DATABASE
+                                            mDatabaseHelper.clearSimulationHistoryItem(mDatabaseHelper.getRevealitHistoryDataSimulation().get(pos).getMedia_id());
+
+                                            //UPDATE LIST THROUGH INTERFACE
+                                            mRemoveListenHistory.removeListenHistory(false);
+
+                                        }
+
+                                    }
+                                }
+                        ));
+
+                    }
+                };
+
+
+            } else {
+
+                //ELSE -> NOTIFY LIST WITH LATEST LIST DATA
+                mRevealItHistoryListAdapter.updateListData(mHistoryListFromDatabase, isCheckBoxSelected, shouldCheckBoxVisible);
+            }
+
+
+            //SET SIZE TO REVEAL IT
+            txtRevealCount.setText("" + mHistoryListFromDatabase.size() + " reveals");
+
+            //SET TOTAL SELECTED REVEALS
+            txtRevealSelectedCount.setText("0/" + mRevealItHistoryListAdapter.getItemCount() + " " + getResources().getString(R.string.strRevealSelected));
+
+
+            //ENABLE BUTTON
+            imgListen.setClickable(true);
+
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
         //SET SIZE TO REVEAL IT
         txtRevealCount.setText("" + mDatabaseHelper.getRevealitHistoryDataSimulation().size() + " reveals");
@@ -1022,25 +1092,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
     }
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_EXTERNAL_STORAGE:
-                if (grantResults.length > 0) {
-                    boolean permissionToRecord = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    boolean permissionToStore = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-                    if (permissionToRecord && permissionToStore) {
-                        startRecording();
-                    } else {
-                        CommonMethods.buildDialog(mContext, "Permission denied!");
-                    }
-                }
-                break;
-        }
-    }
 
     private void updateUI(int from, int to) {
 
@@ -1064,19 +1115,38 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         }
 
         //UPDATE DATA
-        updateRevealitHistoryListSimulation();
+        updateRevealitHistoryListSimulation(false, false);
 
     }
 
 
 }
 
-class NetworkQueryTask extends AsyncTask<DatabaseHelper, Integer, ArrayList<RevealitHistoryModel.Data>> {
+class FatchDataFromDatabaseTask extends AsyncTask<DatabaseHelper, Integer, ArrayList<RevealitHistoryModel.Data>> {
 
 
     @Override
     protected ArrayList<RevealitHistoryModel.Data> doInBackground(DatabaseHelper... databaseHelpers) {
         return databaseHelpers[0].getRevealitHistoryData();
+    }
+
+    @Override
+    protected void onPreExecute() {
+
+    }
+
+    @Override
+    protected void onPostExecute(ArrayList<RevealitHistoryModel.Data> searchResults) {
+        super.onPostExecute(searchResults);
+
+    }
+}
+class FetchDataFromDatabaseSimulationTask extends AsyncTask<DatabaseHelper, Integer, ArrayList<RevealitHistoryModel.Data>> {
+
+
+    @Override
+    protected ArrayList<RevealitHistoryModel.Data> doInBackground(DatabaseHelper... databaseHelpers) {
+        return databaseHelpers[0].getRevealitHistoryDataSimulation();
     }
 
     @Override

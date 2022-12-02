@@ -16,6 +16,7 @@ public class KeyStoreServerInstancesModel {
     public static class Data {
 
         String serverInstanceName;
+        String mobileNumber;
         int serverInstanceId;
         SubmitProfileModel submitProfileModel;
 
@@ -33,6 +34,14 @@ public class KeyStoreServerInstancesModel {
 
         public void setServerInstanceId(int serverInstanceId) {
             this.serverInstanceId = serverInstanceId;
+        }
+
+        public String getMobileNumber() {
+            return mobileNumber;
+        }
+
+        public void setMobileNumber(String mobileNumber) {
+            this.mobileNumber = mobileNumber;
         }
 
         public SubmitProfileModel getSubmitProfileModel() {

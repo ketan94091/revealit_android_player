@@ -4,8 +4,8 @@ public class Constants {
 
 
     //B CURATOR
-    public static String API_END_POINTS_MOBILE = "https://beta.revealit.io";
-    public static String API_END_POINTS_REGISTRATION = "https://bcapi.revealit.io/";
+    public static String API_END_POINTS_MOBILE = "https://beta.revealit.tv";
+    public static String API_END_POINTS_REGISTRATION = "https://bcapi.revealit.tv/";
 
 
   //END POINTS FOR SELECTIONS
@@ -15,8 +15,11 @@ public class Constants {
   public static final String API_END_POINTS_SERVER_NAME = "endPointServerName";
 
   //BETA CURATOR
-  public static final String API_END_POINTS_MOBILE_B_CURATOR = "https://beta.revealit.io";
-  public static final String API_END_POINTS_REGISTRATION_B_CURATOR = "https://bcapi.revealit.io/";
+//  public static final String API_END_POINTS_MOBILE_B_CURATOR = "https://beta.revealit.io";
+//  public static final String API_END_POINTS_REGISTRATION_B_CURATOR = "https://bcapi.revealit.io/";
+
+  public static final String API_END_POINTS_MOBILE_B_CURATOR = "https://beta.revealit.tv";
+  public static final String API_END_POINTS_REGISTRATION_B_CURATOR = "https://bcapi.revealit.tv/";
 
   //STAGING CURATOR
   public static final String API_END_POINTS_MOBILE_S_CURATOR = "https://staging.revealit.io/";
@@ -174,6 +177,7 @@ public class Constants {
   public  static  final  String KEY_PROTON_ACCOUNTNAME ="keyProtonAccountName";
   public  static  final  String KEY_MNEMONICS ="keyMnemonics";
   public  static  final  String KEY_MOBILE_NUMBER ="keyMobileNumber";
+  public  static  final  String KEY_MOBILE_NUMBER_KEYSTORE_SILOS ="keyMobileNumberKeyStoreSilos";
   public  static  final  String KEY_COUNTRY_CODE ="keyCountryCode";
   public  static  final  String KEY_CAMPAIGNID ="keyCampaignId";
   public  static  final  String KEY_REFFERALID ="keyRefferalId";

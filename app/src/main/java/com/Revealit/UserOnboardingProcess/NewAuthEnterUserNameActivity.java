@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,7 +24,6 @@ import com.Revealit.ModelClasses.SubmitProfileModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
-import com.Revealit.Utils.Cryptography;
 import com.Revealit.Utils.DeCryptor;
 import com.Revealit.Utils.EnCryptor;
 import com.google.gson.Gson;
@@ -38,18 +36,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -247,12 +235,6 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         paramObject.addProperty("country_code",strCountryCode);
         paramObject.addProperty("username",edtUsername.getText().toString());
 
-        Log.e("receiver_number :" ,strMobileNumber);
-        Log.e("campaign_id :" ,""+Long.valueOf(strCampaignId));
-        Log.e("referral_id :" ,""+Long.valueOf(strRefferalId));
-        Log.e("country_code :" ,strCountryCode);
-        Log.e("username :" ,edtUsername.getText().toString());
-
 
         Call<SubmitProfileModel> call = patchService1.submitProfile(paramObject);
 
@@ -307,14 +289,15 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         //mSessionManager.updatePreferenceString(Constants.KEY_PROTON_WALLET_DETAILS,gson.toJson(body.getProton()));
         mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY ,body.getrevealit_private_key());
         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_REGISTRATION_DONE ,true);
+        mSessionManager.updatePreferenceString(Constants.KEY_MOBILE_NUMBER,strCountryCode+strMobileNumber);
 
         //STORE DATA IN TO KEYSTORE
         //FOR DISPLAY PURPOSE
-        encryptKey(body.getProton().getPrivateKey(), Constants.KEY_PRIVATE_KEY ,body.getrevealit_private_key());
-        encryptKey(body.getProton().getPublicKey(),Constants.KEY_PUBLIC_KEY,body.getrevealit_private_key());
-        encryptKey(body.getProton().getMnemonic(),Constants.KEY_MNEMONICS,body.getrevealit_private_key());
-        encryptKey(body.getProton().getPrivate_pem(),Constants.KEY_PRIVATE_KEY_PEM,body.getrevealit_private_key());
-        encryptKey(body.getProton().getPublic_pem(),Constants.KEY_PUBLIC_KEY_PEM,body.getrevealit_private_key());
+        CommonMethods.encryptKey(body.getProton().getPrivateKey(), Constants.KEY_PRIVATE_KEY ,body.getrevealit_private_key(), mSessionManager);
+        CommonMethods.encryptKey(body.getProton().getPublicKey(),Constants.KEY_PUBLIC_KEY,body.getrevealit_private_key(), mSessionManager);
+        CommonMethods.encryptKey(body.getProton().getMnemonic(),Constants.KEY_MNEMONICS,body.getrevealit_private_key(), mSessionManager);
+        CommonMethods.encryptKey(body.getProton().getPrivate_pem(),Constants.KEY_PRIVATE_KEY_PEM,body.getrevealit_private_key(), mSessionManager);
+        CommonMethods.encryptKey(body.getProton().getPublic_pem(),Constants.KEY_PUBLIC_KEY_PEM,body.getrevealit_private_key(), mSessionManager);
 
 
 
@@ -339,11 +322,6 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         //SET KEY STORE INSTANCE DATA
         storeKeyStoreInstances(body);
 
-
-        //GO TO NEXT ACTIVITY
-        Intent mIntent = new Intent(NewAuthEnterUserNameActivity.this,InviteAndEarnActivity.class);
-        mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME ,body.getProton().getAccountName());
-        startActivity(mIntent);
     }
 
     private void storeKeyStoreInstances(SubmitProfileModel body) {
@@ -357,6 +335,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         ArrayList<KeyStoreServerInstancesModel.Data> mInstancesModel = new ArrayList<>();
         KeyStoreServerInstancesModel.Data mModelData = new KeyStoreServerInstancesModel.Data();
         mModelData.setServerInstanceName(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME));
+        mModelData.setMobileNumber(mSessionManager.getPreference(Constants.KEY_MOBILE_NUMBER));
         mModelData.setServerInstanceId(mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID));
         mModelData.setSubmitProfileModel(body);
         mInstancesModel.add(mModelData);
@@ -364,19 +343,20 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         //CHECK IF DATA IS ALREADY STORED IN TO KEYSTORE
         //IF STORED -> FETCH FROM KEYSTORE, CONVERT TO LIST, CREATE NEW OBJECT AND ADD THAT OBJECT TO LIST.
         //ELSE -> TREAT AS FIRST USER
-        if(!checkIfInstanceKeyStoreData().isEmpty()){
+        if(!CommonMethods.checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
 
             //CONVERT DATA TO JSON ARRAY
             //CREATE NEW ARRAY FROM THE STRING ARRAY
             //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
             try {
-                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData());
+                JSONArray jsonArray =new JSONArray(CommonMethods.checkIfInstanceKeyStoreData(mSessionManager));
                 ArrayList<KeyStoreServerInstancesModel.Data> dataArrayList = new ArrayList<>();
 
                 for (int i=0 ;i < jsonArray.length();i++){
 
                     KeyStoreServerInstancesModel.Data mModel = new KeyStoreServerInstancesModel.Data();
                     mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
+                    mModel.setMobileNumber(jsonArray.getJSONObject(i).getString("mobileNumber"));
                     mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
 
                     SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
@@ -409,7 +389,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
 
 
                 //STORE WHOLE ARRAY IN TO STRING FORMAT IN KEYSTORE
-                encryptKey(""+mGson.toJson(dataArrayList),  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS);
+                CommonMethods.encryptKey(""+mGson.toJson(dataArrayList),  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS, mSessionManager);
 
 
 
@@ -419,76 +399,18 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
 
         }else{
             //STORE WHOLE JSON IN TO STRING
-            encryptKey(""+mGson.toJson(mInstancesModel),  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS);
+            CommonMethods.encryptKey(""+mGson.toJson(mInstancesModel),  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS, mSessionManager);
         }
+
+        //GO TO NEXT ACTIVITY
+        Intent mIntent = new Intent(NewAuthEnterUserNameActivity.this,InviteAndEarnActivity.class);
+        mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME ,body.getProton().getAccountName());
+        startActivity(mIntent);
 
     }
 
-    private String checkIfInstanceKeyStoreData() {
-
-        try {
-            //OPEN KEYSTORE
-            //THIS KEY STORE IS FOR SILOS
-            Cryptography mCryptography = new Cryptography(Constants.KEY_SILOS_ALIAS);
-            //CHECK IF THE SELECTED SILOS IS AVAILABLE TO THE SESSION MANAGER IN ENCRYPTED FORMAT
-            //IF TRUE -> RETURN TRUE
-            //ELSE -> RETURN FALSE
-            if(!mSessionManager.getPreference(Constants.KEY_SILOS_DATA).isEmpty()){
-
-                //FETCH USER DATA FROM KEYSTORE
-                String  userData = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_SILOS_DATA));
-
-                if(!userData.isEmpty()){
-                    return userData;
-                }else{
-                    return "";
-                }
-            }
-            return "";
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
-
-         return "";
-    }
-
-    private void encryptKey(String keyToStore, String alias, String keyStoreName) {
-
-        try{
-
-            //CREATE CRYPTOGRAPHY
-            Cryptography mCryptography = new Cryptography(keyStoreName);
-
-            //STORE AND ENCRYPT DATA IN KEYSTORE// returns base 64 data: 'BASE64_DATA,BASE64_IV'
-            String encrypted = mCryptography.encrypt(keyToStore);
-
-            //SAVE ENCRYPTED DATA TO PREFERENCE FOR SMOOTH TRANSITION
-            mSessionManager.updatePreferenceString(alias,encrypted);
 
 
-        } catch (CertificateException |NoSuchAlgorithmException |KeyStoreException |IOException |NoSuchProviderException | InvalidAlgorithmParameterException| NoSuchPaddingException| IllegalBlockSizeException |BadPaddingException |InvalidKeyException ex) {
-            ex.printStackTrace();
-        }
-
-    }
 
     private void apiCheckIfUsernameExist(){
 

@@ -27,18 +27,36 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Revealit.BuildConfig;
+import com.Revealit.ModelClasses.KeyStoreServerInstancesModel;
+import com.Revealit.ModelClasses.SubmitProfileModel;
 import com.Revealit.R;
+import com.Revealit.Utils.Cryptography;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.cert.CertificateException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class CommonMethods {
 
@@ -644,5 +662,130 @@ public class CommonMethods {
         mAlertDialog.show();
 
     }
+    public static String checkIfInstanceKeyStoreData(SessionManager mSessionManager) {
+
+        try {
+            //OPEN KEYSTORE
+            //THIS KEY STORE IS FOR SILOS
+            Cryptography mCryptography = new Cryptography(Constants.KEY_SILOS_ALIAS);
+            //CHECK IF THE SELECTED SILOS IS AVAILABLE TO THE SESSION MANAGER IN ENCRYPTED FORMAT
+            //IF TRUE -> RETURN TRUE
+            //ELSE -> RETURN FALSE
+            if(!mSessionManager.getPreference(Constants.KEY_SILOS_DATA).isEmpty()){
+
+                //FETCH USER DATA FROM KEYSTORE
+                String  userData = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_SILOS_DATA));
+
+                if(!userData.isEmpty()){
+                    return userData;
+                }else{
+                    return "";
+                }
+            }
+            return "";
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    public static ArrayList<KeyStoreServerInstancesModel.Data> fetchUserSelectedSilosDataInList(SessionManager mSessionManager) {
+        ArrayList<KeyStoreServerInstancesModel.Data> dataArrayList = new ArrayList<>();
+
+        if(!checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
+
+            //CONVERT DATA TO JSON ARRAY
+            //CREATE NEW ARRAY FROM THE STRING ARRAY
+            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
+            try {
+                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData(mSessionManager));
+
+                for (int i=0 ;i < jsonArray.length();i++){
+
+                    if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)) {
+                        KeyStoreServerInstancesModel.Data mModel = new KeyStoreServerInstancesModel.Data();
+                        mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
+                        mModel.setMobileNumber(jsonArray.getJSONObject(i).getString("mobileNumber"));
+                        mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
+
+                        SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
+                        mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
+                        mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("auth_token"));
+                        mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
+                        mSubmitProfileModel.setIs_activated(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
+                        mSubmitProfileModel.setMessage(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("message"));
+                        mSubmitProfileModel.setrevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("revealit_private_key"));
+                        mSubmitProfileModel.setRole(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("role"));
+                        mSubmitProfileModel.setServerInstance(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("serverInstance"));
+                        mSubmitProfileModel.setStatus(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("status"));
+
+                        SubmitProfileModel.Proton mProton = new SubmitProfileModel.Proton();
+                        mProton.setAccountName(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("account_name"));
+                        mProton.setMnemonic(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("mnemonic"));
+                        mProton.setPrivateKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key"));
+                        mProton.setPrivate_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_pem"));
+                        mProton.setPublicKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_key"));
+                        mProton.setPublic_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_pem"));
+                        mSubmitProfileModel.setProton(mProton);
+
+                        mModel.setSubmitProfileModel(mSubmitProfileModel);
+
+                        dataArrayList.add(mModel);
+                    }
+                }
+
+                return dataArrayList;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+           return null;
+        }
+
+
+        return null;
+    }
+
+    public static void encryptKey(String keyToStore, String alias, String keyStoreName, SessionManager mSessionManager) {
+
+        try{
+
+            //CREATE CRYPTOGRAPHY
+            Cryptography mCryptography = new Cryptography(keyStoreName);
+
+            //STORE AND ENCRYPT DATA IN KEYSTORE// returns base 64 data: 'BASE64_DATA,BASE64_IV'
+            String encrypted = mCryptography.encrypt(keyToStore);
+
+            //SAVE ENCRYPTED DATA TO PREFERENCE FOR SMOOTH TRANSITION
+            mSessionManager.updatePreferenceString(alias,encrypted);
+
+
+        } catch (CertificateException |NoSuchAlgorithmException |KeyStoreException |IOException |NoSuchProviderException | InvalidAlgorithmParameterException| NoSuchPaddingException| IllegalBlockSizeException |BadPaddingException |InvalidKeyException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
 
 }

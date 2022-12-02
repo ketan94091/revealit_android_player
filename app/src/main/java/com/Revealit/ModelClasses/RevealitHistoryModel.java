@@ -28,7 +28,6 @@ public class RevealitHistoryModel {
         public  String match_time_stamp;
         public  String allTimeStamp;
         public  String allTimeStampOffset;
-        public int isSelected = 0;
 
 
         public int getMatch_id() {
@@ -125,14 +124,6 @@ public class RevealitHistoryModel {
 
         public void setAllTimeStampOffset(String allTimeStampOffset) {
             this.allTimeStampOffset = allTimeStampOffset;
-        }
-
-        public int getIsSelected() {
-            return isSelected;
-        }
-
-        public void setIsSelected(int isSelected) {
-            this.isSelected = isSelected;
         }
     }
 }

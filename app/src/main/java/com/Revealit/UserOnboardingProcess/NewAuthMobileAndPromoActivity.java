@@ -297,8 +297,6 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                 mIntent.putExtra(Constants.RESEARCH_URL_SPONSER, "Privacy Policy");
                 startActivity(mIntent);
 
-
-
                 break;
 
             case R.id.linearCountryPicker:

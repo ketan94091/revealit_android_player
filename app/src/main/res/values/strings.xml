@@ -18,6 +18,10 @@
     <string name="strAccountAlreadyExistsWarningMsg">Your account already exists on a different device. Do you wish to retrieve your revealit TV account on this device?</string>
     <string name="strBioMetricActivationRequire">To be a revealit TV user you must have biometrics activated on your phone or tablet.</string>
     <string name="strNoARproduct">No AR Product Available</string>
+    <string name="strImportAccount">Import Account</string>
+    <string name="strRestoreFromBackup">Restore from Backup</string>
+    <string name="strAddAccountFromBackup">Add your account from backup</string>
+    <string name="strLoginWithPrivateKey">Login with your private key</string>
     <string name="strSureToDeleteThisDialogue">Are you sure you wish to delete the timestamp?</string>
     <string name="strValidEmail">Please Enter Valid Emailid</string>
     <string name="strNoFeatureVideos">No feature video available</string>
@@ -52,6 +56,7 @@
     <string name="strCreateAccountTitleOne">We need some basic information to create</string>
     <string name="strCreateAccountTitleTwo">your revealit account</string>
     <string name="strRegisterAccount">Register</string>
+    <string name="strSelectAccount">Select Account</string>
     <string name="strAppIsInMaintenace">The App is Currently Under Maintenance</string>
     <string name="strAppIsInMaintenaceMsg">We are undergoing some scheduled maintenance to make your experience better. This won’t take long.</string>
     <string name="strRevealitName">Revealit Name</string>
@@ -239,7 +244,7 @@
 
 
     <string name="strBeta">Beta</string>
-    <string name="strBetaURL">https://beta.revealit.io</string>
+    <string name="strBetaURL">https://beta.revealit.tv</string>
 
     <string name="strStaging">Staging</string>
     <string name="strStagingURL">https://staging.revealit.io</string>
