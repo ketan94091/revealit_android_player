@@ -288,6 +288,65 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/linearUsernameHint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical"
+                        >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:drawableLeft="@mipmap/round_black"
+                            android:drawablePadding="20dp"
+                            android:fontFamily="@font/quasimoda_medium"
+                            android:text="@string/strMinimumCharcter"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="500"
+                            android:textSize="15dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:drawableLeft="@mipmap/round_black"
+                            android:drawablePadding="20dp"
+                            android:fontFamily="@font/quasimoda_medium"
+                            android:text="@string/strMaxCharcter"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="500"
+                            android:textSize="15dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:drawableLeft="@mipmap/round_black"
+                            android:drawablePadding="20dp"
+                            android:fontFamily="@font/quasimoda_medium"
+                            android:text="@string/strOnlyLowerCase"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="500"
+                            android:textSize="15dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:drawableLeft="@mipmap/round_black"
+                            android:drawablePadding="20dp"
+                            android:fontFamily="@font/quasimoda_medium"
+                            android:text="@string/strUsernameAvailable"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="500"
+                            android:textSize="15dp" />
+
+
+                    </LinearLayout>
+
                 </RelativeLayout>
 
             </LinearLayout>

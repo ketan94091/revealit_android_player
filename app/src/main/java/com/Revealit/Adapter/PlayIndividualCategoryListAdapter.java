@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -28,7 +27,6 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
@@ -94,8 +92,7 @@ public  class PlayIndividualCategoryListAdapter extends RecyclerView.Adapter<Pla
         //LOAD COVER IMAGE WITH GLIDE
         Glide.with(mActivity)
                 .load("" + strCategoryList.get(position).getMediaCoverArt())
-                .placeholder(R.drawable.placeholder)
-                //.apply(new RequestOptions().override(120, 100))
+                .placeholder(R.drawable.placeholder).transforms(new RoundedCorners(20))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

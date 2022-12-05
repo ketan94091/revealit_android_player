@@ -71,7 +71,7 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
             selectedSilosAccountsList = new FetchDataFromAndroidKeyStoreTask().execute(mSessionManager).get();
 
             //CHECK IF THERE IS DATA AVAILABLE FOR SELECTED SILOS
-            if(selectedSilosAccountsList.size() != 0){
+            if(selectedSilosAccountsList != null && selectedSilosAccountsList.size() != 0){
                 SilosAvailableAccountsListAdapter mSilosAvailableAccountsListAdapter = new SilosAvailableAccountsListAdapter(mContext, this, selectedSilosAccountsList, mSessionManager);
                 recycleAccountList.setAdapter(mSilosAvailableAccountsListAdapter);
             }

@@ -4,8 +4,11 @@ public class Constants {
 
 
     //B CURATOR
-    public static String API_END_POINTS_MOBILE = "https://beta.revealit.tv";
-    public static String API_END_POINTS_REGISTRATION = "https://bcapi.revealit.tv/";
+//    public static String API_END_POINTS_MOBILE = "https://beta.revealit.io";
+//    public static String API_END_POINTS_REGISTRATION = "https://bcapi.revealit.io/";
+
+  public static String API_END_POINTS_MOBILE = "https://beta.revealit.tv";
+  public static String API_END_POINTS_REGISTRATION = "https://bcapi.revealit.tv/";
 
 
   //END POINTS FOR SELECTIONS

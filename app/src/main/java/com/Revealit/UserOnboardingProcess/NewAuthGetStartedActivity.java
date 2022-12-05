@@ -2,6 +2,8 @@ package com.Revealit.UserOnboardingProcess;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
     private int intEnvironmetID;
     AlertDialog mAlertDialog = null;
     private Gson gsonBuilder;
+    private ImageView imgRevealitLogo;
 
 
     @Override
@@ -62,6 +65,7 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
         txtLogin =(TextView) findViewById(R.id.txtLogin);
         txtSignup =(TextView) findViewById(R.id.txtSignup);
         txtSwappingSilo =(TextView) findViewById(R.id.txtSwappingSilo);
+        imgRevealitLogo =(ImageView) findViewById(R.id.imgRevealitLogo);
 
         //SET APPLICATION INSTALLED VERSION NAME AND SERVER NAME
         txtSwappingSilo.setText(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME) +" Server : "+  BuildConfig.VERSION_NAME);
@@ -90,6 +94,21 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
                 .serializeNulls()
                 .create();
 
+        //IMG LONG PRESS
+        imgRevealitLogo.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText(getString(R.string.strUsername), CommonMethods.checkIfInstanceKeyStoreData(mSessionManager));
+                clipboard.setPrimaryClip(clip);
+
+                //TOAST MSG
+                CommonMethods.displayToast(mContext, getString(R.string.strUsernameCopied));
+                return true;
+
+            }
+        });
+
 
     }
 
@@ -101,6 +120,7 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
 
         txtSignup.setOnClickListener(this);
         txtSwappingSilo.setOnClickListener(this);
+        imgRevealitLogo.setOnClickListener(this);
 
     }
 
@@ -124,6 +144,17 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
 
                 //OPEN END POINT SELECTION DIALOG
                 openEndPointSelectionDialog();
+
+                break;
+
+            case R.id.imgRevealitLogo:
+
+//                ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+//                ClipData clip = ClipData.newPlainText(getString(R.string.strUsername), CommonMethods.checkIfInstanceKeyStoreData(mSessionManager));
+//                clipboard.setPrimaryClip(clip);
+//
+//                //TOAST MSG
+//                CommonMethods.displayToast(mContext, getString(R.string.strUsernameCopied));
 
                 break;
 
