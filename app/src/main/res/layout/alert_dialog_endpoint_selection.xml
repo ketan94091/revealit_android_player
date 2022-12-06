@@ -7,7 +7,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
         android:padding="10dp">
 
         <ImageView
@@ -23,19 +22,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imgCloseDailoge"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:text="@string/strSelectEndPoint"
             android:textColor="@color/colorGrayBottomBar"
             android:textSize="20dp"
             android:textStyle="bold" />
 
 
+        <ScrollView
+            android:id="@+id/scrollContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtTitle">
         <LinearLayout
             android:id="@+id/relativeContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtTitle"
-            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical"
             android:padding="10dp">
 
@@ -44,25 +47,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:orientation="vertical"
                 android:background="@drawable/new_auth_round_button"
-                android:padding="10dp">
+                android:orientation="horizontal"
+                android:padding="15dp"
+                android:weightSum="3">
 
                 <TextView
                     android:id="@+id/txtBetaCuratorMobile"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/quasimoda_bold"
                     android:text="@string/strBeta"
                     android:textColor="@color/colorWalletText"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:textFontWeight="700"
+                    android:textSize="15dp" />
 
                 <TextView
                     android:id="@+id/txtBetaCuratorRegistration"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/quasimoda_medium"
                     android:text="@string/strBetaURL"
+                    android:textAlignment="textEnd"
                     android:textColor="@color/colorWalletText"
+                    android:textFontWeight="500"
                     android:textSize="14dp" />
             </LinearLayout>
 
@@ -70,27 +80,34 @@
                 android:id="@+id/linearStaging"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/new_auth_round_button"
-                android:padding="10dp">
+                android:orientation="horizontal"
+                android:padding="15dp"
+                android:weightSum="3">
 
                 <TextView
                     android:id="@+id/txtStagingMobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/imgCloseDailoge"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/quasimoda_bold"
                     android:text="@string/strStaging"
                     android:textColor="@color/colorWalletText"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:textFontWeight="700"
+                    android:textSize="15dp" />
 
                 <TextView
                     android:id="@+id/txtStagingRegistration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/quasimoda_medium"
                     android:text="@string/strStagingURL"
+                    android:textAlignment="textEnd"
                     android:textColor="@color/colorWalletText"
+                    android:textFontWeight="500"
                     android:textSize="14dp" />
             </LinearLayout>
 
@@ -99,25 +116,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:orientation="vertical"
                 android:background="@drawable/new_auth_round_button"
-                android:padding="10dp">
+                android:orientation="horizontal"
+                android:padding="15dp"
+                android:weightSum="3">
 
                 <TextView
                     android:id="@+id/txtTesting1Mobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/quasimoda_bold"
                     android:text="@string/strTesting1"
                     android:textColor="@color/colorWalletText"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:textFontWeight="700"
+                    android:textSize="15dp" />
 
                 <TextView
                     android:id="@+id/txtTesting1Registration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/quasimoda_medium"
                     android:text="@string/strTesting1URL"
+                    android:textAlignment="textEnd"
                     android:textColor="@color/colorWalletText"
+                    android:textFontWeight="500"
                     android:textSize="14dp" />
             </LinearLayout>
 
@@ -126,86 +150,100 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:orientation="vertical"
                 android:background="@drawable/new_auth_round_button"
-                android:padding="10dp">
+                android:orientation="horizontal"
+                android:padding="15dp"
+                android:weightSum="3">
 
                 <TextView
                     android:id="@+id/txtTesting2Mobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/quasimoda_bold"
                     android:text="@string/strTesting2"
                     android:textColor="@color/colorWalletText"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:textFontWeight="700"
+                    android:textSize="15dp" />
 
                 <TextView
                     android:id="@+id/txtTesting2Registration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/quasimoda_medium"
                     android:text="@string/strTesting2URL"
+                    android:textAlignment="textEnd"
                     android:textColor="@color/colorWalletText"
+                    android:textFontWeight="500"
                     android:textSize="14dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/linearTesting3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="3"
-                android:orientation="horizontal"
-                android:background="@drawable/new_auth_round_button"
                 android:layout_marginTop="10dp"
-                android:padding="15dp">
+                android:background="@drawable/new_auth_round_button"
+                android:orientation="horizontal"
+                android:padding="15dp"
+                android:weightSum="3">
 
                 <TextView
                     android:id="@+id/txtTesting3Mobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/strTesting3"
-                    android:textColor="@color/colorWalletText"
-                    android:textSize="18dp"
                     android:layout_weight="2"
                     android:fontFamily="@font/quasimoda_bold"
-                    android:textFontWeight="700" />
+                    android:text="@string/strTesting3"
+                    android:textColor="@color/colorWalletText"
+                    android:textFontWeight="700"
+                    android:textSize="15dp" />
 
                 <TextView
                     android:id="@+id/txtTesting3Registration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/strTesting3URL"
                     android:layout_weight="1"
+                    android:fontFamily="@font/quasimoda_medium"
+                    android:text="@string/strTesting3URL"
                     android:textAlignment="textEnd"
                     android:textColor="@color/colorWalletText"
-                    android:fontFamily="@font/quasimoda_medium"
                     android:textFontWeight="500"
                     android:textSize="14dp" />
             </LinearLayout>
-
 
             <LinearLayout
                 android:id="@+id/linearIntegration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:orientation="vertical"
                 android:background="@drawable/new_auth_round_button"
-                android:padding="10dp">
+                android:orientation="horizontal"
+                android:padding="15dp"
+                android:weightSum="3">
 
                 <TextView
                     android:id="@+id/txtIntegrationMobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/quasimoda_bold"
                     android:text="@string/strIntegration"
                     android:textColor="@color/colorWalletText"
-                    android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:textFontWeight="700"
+                    android:textSize="15dp" />
 
                 <TextView
                     android:id="@+id/txtIntegrationRegistration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/quasimoda_medium"
                     android:text="@string/strIntegrationURL"
+                    android:textAlignment="textEnd"
                     android:textColor="@color/colorWalletText"
+                    android:textFontWeight="500"
                     android:textSize="14dp" />
             </LinearLayout>
 
@@ -213,71 +251,106 @@
                 android:id="@+id/linearDemo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="3"
-                android:orientation="horizontal"
-                android:background="@drawable/new_auth_round_button"
                 android:layout_marginTop="10dp"
-                android:padding="15dp">
+                android:background="@drawable/new_auth_round_button"
+                android:orientation="horizontal"
+                android:padding="15dp"
+                android:weightSum="3">
 
                 <TextView
                     android:id="@+id/txtDemoMobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/strDemo"
-                    android:textColor="@color/colorWalletText"
-                    android:textSize="18dp"
                     android:layout_weight="2"
                     android:fontFamily="@font/quasimoda_bold"
-                    android:textFontWeight="700" />
+                    android:text="@string/strDemo"
+                    android:textColor="@color/colorWalletText"
+                    android:textFontWeight="700"
+                    android:textSize="15dp" />
 
                 <TextView
                     android:id="@+id/txtDemoRegistration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/strDemoURL"
-                    android:textColor="@color/colorWalletText"
                     android:layout_weight="1"
-                    android:textAlignment="textEnd"
                     android:fontFamily="@font/quasimoda_medium"
+                    android:text="@string/strDemoURL"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/colorWalletText"
                     android:textFontWeight="500"
                     android:textSize="14dp" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/linearMobileDevTwo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/new_auth_round_button"
+                android:orientation="horizontal"
+                android:padding="15dp"
+                android:weightSum="3">
+
+                <TextView
+                    android:id="@+id/txtMobileDevTwo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:text="@string/strAndroidMobile1"
+                    android:textColor="@color/colorWalletText"
+                    android:textFontWeight="700"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:id="@+id/txtMobileDevTwoRegistration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/quasimoda_medium"
+                    android:text="@string/strAndroidMobile1URL"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/colorWalletText"
+                    android:textFontWeight="500"
+                    android:textSize="14dp" />
+            </LinearLayout>
 
         </LinearLayout>
+        </ScrollView>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/relativeContent"
-           android:layout_centerInParent="true"
-            >
+            android:layout_below="@+id/scrollContent"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/txtSimulation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/strSimulation"
                 android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:text="@string/strSimulation"
                 android:textColor="@color/colorBlack"
-                android:textSize="18dp"
-                android:layout_marginRight="10dp"/>
+                android:textSize="15dp" />
+
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchModeOfApp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:thumb="@drawable/thumb_selector"
-                app:track="@drawable/track_selector"/>
+                app:track="@drawable/track_selector" />
+
             <TextView
                 android:id="@+id/txtLive"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="@string/strLive"
                 android:textColor="@color/colorBlack"
-                android:textSize="18dp"
-                android:layout_marginLeft="10dp"/>
+                android:textSize="15dp" />
 
         </LinearLayout>
 

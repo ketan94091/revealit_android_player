@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.Activities.QrCodeScannerActivity;
 import com.Revealit.BuildConfig;
@@ -41,7 +42,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private String strUsername, strCopymsg;
     private boolean isUserIsActive =false;
     private LinearLayout linearAccount,linearSettings,linearSavedItems,linearUserStatus,linearAdmin,linearHelp;
-    private ImageView imgScanQRcode;
+    private ImageView imgLogo,imgScanQRcode;
 
     public UserProfileFragment(HomeScreenTabLayout homeScreenTabLayout) {
         this.mHomeScreenTabLayout = homeScreenTabLayout;
@@ -103,6 +104,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         linearUserStatus=(LinearLayout)mView.findViewById(R.id.linearUserStatus);
 
         imgScanQRcode =(ImageView)mView.findViewById(R.id.imgScanQRcode);
+        imgLogo =(ImageView)mView.findViewById(R.id.imgLogo);
 
         //GET USER STATUS
         //TRUE = USER IS ACTIVE AND VERIFIED
@@ -150,6 +152,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             linearHelp.setOnClickListener(this);
             linearAdmin.setOnClickListener(this);
             imgScanQRcode.setOnClickListener(this);
+            imgLogo.setOnClickListener(this);
         }
 
     }
@@ -202,9 +205,20 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.imgScanQRcode:
 
-                Intent mIntent = new Intent(mActivity, QrCodeScannerActivity.class);
-                mActivity.startActivity(mIntent);
+                Intent mIntentQRCodeActivity = new Intent(mActivity, QrCodeScannerActivity.class);
+                mActivity.startActivity(mIntentQRCodeActivity);
 
+
+                break;
+            case R.id.imgLogo:
+
+                Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
+                mIntent.putExtra(Constants.MEDIA_URL, Constants.EDUCATION_VIDEO_URL);
+                mIntent.putExtra(Constants.MEDIA_ID, "0");
+                mIntent.putExtra(Constants.VIDEO_NAME,Constants.EDUCATION_VIDEO_TITLE);
+                mIntent.putExtra(Constants.VIDEO_SEEK_TO,"0");
+                mIntent.putExtra(Constants.IS_VIDEO_SEEK, false);
+                mActivity.startActivity(mIntent);
 
                 break;
         }

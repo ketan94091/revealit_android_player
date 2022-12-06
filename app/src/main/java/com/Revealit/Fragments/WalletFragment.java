@@ -1,20 +1,18 @@
 package com.Revealit.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -23,14 +21,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.Revealit.Activities.GettingStartedActivity;
+import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.Activities.LoginActivityActivity;
 import com.Revealit.Activities.QrCodeScannerActivity;
@@ -38,7 +35,6 @@ import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.ModelClasses.GetAccountDetailsModel;
-import com.Revealit.ModelClasses.LoginAuthModel;
 import com.Revealit.ModelClasses.RewardHistoryDatabaseModel;
 import com.Revealit.ModelClasses.RewardHistoryModel;
 import com.Revealit.R;
@@ -48,7 +44,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
@@ -80,8 +75,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recycleRewardHistory;
     private LinearLayoutManager recylerViewLayoutManager;
     private RewardSummeryListAdapter2 mRewardSummeryListAdapter2;
-    private ImageView imgScanQRcode,imgSponsor, imgRefresh;
-    private TextView txtVersionName, txtCurrencyType, txtAmount, txtAccountName;
+    private ImageView imgLogo,imgScanQRcode,imgSponsor, imgRefresh;
+    private TextView txtRefreshingHistory,txtVersionName, txtCurrencyType, txtAmount, txtAccountName;
     private RelativeLayout relativeAccountDetails;
     private LinearLayout linearCurrency, linearRewardHistory;
     private int intPageCount = 1;
@@ -107,8 +102,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
         mView = inflater.inflate(R.layout.fragment_wallet, container, false);
 
-        //setIds();
-       // setOnClicks();
+        setIds();
+        setOnClicks();
 
         return mView;
 
@@ -134,12 +129,14 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         imgRefresh = (ImageView) mView.findViewById(R.id.imgRefresh);
         imgSponsor = (ImageView) mView.findViewById(R.id.imgSponsor);
         imgScanQRcode =(ImageView)mView.findViewById(R.id.imgScanQRcode);
+        imgLogo =(ImageView)mView.findViewById(R.id.imgLogo);
 
 
         txtAccountName = (TextView) mView.findViewById(R.id.txtAccountName);
         txtAmount = (TextView) mView.findViewById(R.id.txtAmount);
         txtCurrencyType = (TextView) mView.findViewById(R.id.txtCurrencyType);
         txtVersionName = (TextView) mView.findViewById(R.id.txtVersionName);
+        txtRefreshingHistory = (TextView) mView.findViewById(R.id.txtRefreshingHistory);
 
         relativeAccountDetails = (RelativeLayout) mView.findViewById(R.id.relativeAccountDetails);
 
@@ -152,12 +149,13 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
 
         //SET VISIBILITY
-        relativeAccountDetails.setVisibility(View.GONE);
+        relativeAccountDetails.setVisibility(View.VISIBLE);
         linearRewardHistory.setVisibility(View.GONE);
+        txtRefreshingHistory.setVisibility(View.VISIBLE);
 
         //CLEAR AMOUNT AND CURRENCY TYPE DATA
-        txtAmount.setText("");
-        txtCurrencyType.setText("");
+        //txtAmount.setText("");
+        //txtCurrencyType.setText("");
 
         //SET APPLICATION INSTALLED VERSION NAME
         txtVersionName.setText(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME) +" Server : "+CommonMethods.installedAppVersion(mContext));
@@ -177,8 +175,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         if (menuVisible) {
 
             //SET IDS
-            setIds();
-            setOnClicks();
+           // setIds();
+            //setOnClicks();
 
 
 
@@ -188,11 +186,11 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     private void setOnClicks() {
 
-
         imgRefresh.setOnClickListener(this);
         linearCurrency.setOnClickListener(this);
         txtVersionName.setOnClickListener(this);
         imgScanQRcode.setOnClickListener(this);
+        imgLogo.setOnClickListener(this);
     }
 
 
@@ -202,9 +200,20 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         switch (mView.getId()) {
             case R.id.imgScanQRcode:
 
-                Intent mIntent = new Intent(mActivity, QrCodeScannerActivity.class);
-                mActivity.startActivity(mIntent);
+                Intent mIntentQRCodeActivity = new Intent(mActivity, QrCodeScannerActivity.class);
+                mActivity.startActivity(mIntentQRCodeActivity);
 
+
+                break;
+            case R.id.imgLogo:
+
+                Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
+                mIntent.putExtra(Constants.MEDIA_URL, Constants.EDUCATION_VIDEO_URL);
+                mIntent.putExtra(Constants.MEDIA_ID, "0");
+                mIntent.putExtra(Constants.VIDEO_NAME,Constants.EDUCATION_VIDEO_TITLE);
+                mIntent.putExtra(Constants.VIDEO_SEEK_TO,"0");
+                mIntent.putExtra(Constants.IS_VIDEO_SEEK, false);
+                mActivity.startActivity(mIntent);
 
                 break;
 
@@ -262,11 +271,11 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     private void callWalletDetails() {
 
-        //DISPLAY DIALOG
-        pDialog = new ProgressDialog(mContext);
-        pDialog.setMessage(mContext.getResources().getString(R.string.strFacingWalletDetails));
-        pDialog.setCancelable(false);
-        pDialog.show();
+//        //DISPLAY DIALOG
+//        pDialog = new ProgressDialog(mContext);
+//        pDialog.setMessage(mContext.getResources().getString(R.string.strFacingWalletDetails));
+//        pDialog.setCancelable(false);
+//        pDialog.show();
 
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -302,7 +311,6 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
 
          Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
-        //Call<GetAccountDetailsModel> call = patchService1.getUserAccountDetails("poifull");
 
 
 
@@ -311,7 +319,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             public void onResponse(Call<GetAccountDetailsModel> call, Response<GetAccountDetailsModel> response) {
 
                 //CLOSE DIALOGUE
-                pDialog.cancel();
+                //pDialog.cancel();
 
                 CommonMethods.printLogE("Response @ callWalletDetails : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callWalletDetails : ", "" + response.code());
@@ -374,19 +382,14 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                             }
                         }
 
-                        //CALL REWARD HISTORY
-                        callRewardHistory(0);
-
-                    } else {
-
-
-                        //OPEN IF ACCOUNT NOT FOUND
-                        //openAccountNotFoundDialogue();
-
-                        //CALL REWARD HISTORY
-                        callRewardHistory(0);
 
                     }
+
+
+
+                    //CALL REWARD HISTORY
+                    callRewardHistory(0);
+
 
                 } else {
 
@@ -403,11 +406,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                 CommonMethods.printLogE("Response @ callWalletDetails : ", "" + t);
 
-                //OPEN IF ACCOUNT NOT FOUND
-                openAccountNotFoundDialogue();
-
                 //CLOSE DIALOGUE
-               pDialog.cancel();
+                //pDialog.cancel();
 
             }
         });
@@ -441,11 +441,11 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
     private void callRewardHistory(int i) {
 
-        //DISPLAY DIALOG
-        pDialog = new ProgressDialog(mContext);
-        pDialog.setMessage(mContext.getResources().getString(R.string.strFatchingRewardHistoryData));
-        pDialog.setCancelable(false);
-        pDialog.show();
+//        //DISPLAY DIALOG
+//        pDialog = new ProgressDialog(mContext);
+//        pDialog.setMessage(mContext.getResources().getString(R.string.strFatchingRewardHistoryData));
+//        pDialog.setCancelable(false);
+//        pDialog.show();
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -488,7 +488,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
 
                 //CLOSE DIALOG
-                pDialog.cancel();
+                //pDialog.cancel();
 
                 CommonMethods.printLogE("Response @ callRewardHistory : ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callRewardHistory : ", "" + response.code());
@@ -541,7 +541,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onFailure(Call<RewardHistoryModel> call, Throwable t) {
 
-                pDialog.cancel();
+                //pDialog.cancel();
 
                 CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 
@@ -658,6 +658,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         //VISIBLE UI
         linearRewardHistory.setVisibility(View.VISIBLE);
+        txtRefreshingHistory.setVisibility(View.GONE);
 
         //UPDATE SPONSOR IMAGE
         //SET BITE IMAGE
@@ -825,7 +826,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         }
 
         @Override
-        public void onBindViewHolder(CurrencyListAdapter.ViewHolder holder, final int position) {
+        public void onBindViewHolder(CurrencyListAdapter.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
             holder.txtCurrencyTitle.setText(currencyList.get(position).getSymbol());
             holder.txtName.setText(currencyList.get(position).getName());

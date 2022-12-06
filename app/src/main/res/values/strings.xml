@@ -9,8 +9,10 @@
     <string name="strOk">Ok</string>
     <string name="strOK">OK</string>
     <string name="strStartOver">Start Over</string>
+    <string name="stWaitListed">Waitlisted</string>
     <string name="strRetrieve">Retrieve</string>
     <string name="strAddAccount">Add Account</string>
+    <string name="strStarted">Get Started</string>
     <string name="strAuthWarningMsg">Are you willing to authorise?</string>
     <string name="strAuthWarningMsgTwo">If not, simply decline the request by exiting the page.</string>
     <string name="strAccountAlreadyExists">Account Already Exists</string>
@@ -18,6 +20,7 @@
     <string name="strAccountAlreadyExistsWarningMsg">Your account already exists on a different device. Do you wish to retrieve your revealit TV account on this device?</string>
     <string name="strBioMetricActivationRequire">To be a revealit TV user you must have biometrics activated on your phone or tablet.</string>
     <string name="strNoARproduct">No AR Product Available</string>
+    <string name="strRefreshingRewardHistory">Refreshing reward history...</string>
     <string name="strImportAccount">Import Account</string>
     <string name="strRestoreFromBackup">Restore from Backup</string>
     <string name="strAddAccountFromBackup">Add your account from backup</string>
@@ -73,6 +76,8 @@
     <string name="strAmount">Amount</string>
     <string name="strWhen">When</string>
     <string name="strLoadMore">Load More...</string>
+    <string name="strLoading">Loading...</string>
+    <string name="strXpr">XPR</string>
     <string name="strCurrencySelection">Select Currency</string>
 
     <string name="strWarningTitleOne">Minimum password length 6</string>
@@ -263,6 +268,9 @@
 
     <string name="strDemo">Demo</string>
     <string name="strDemoURL">https://demo.revealit.io</string>
+
+    <string name="strAndroidMobile1">Mobile Dev 2</string>
+    <string name="strAndroidMobile1URL">https://mobiledev2.revealit.io/</string>
 
     <string name="key_testfairy_android">SDK-5f7VDJMC</string>
     <string name="key_testfairy_android_pvt_key">5f8216034f7b9cb7327d84aa34f4c2301c794960</string>

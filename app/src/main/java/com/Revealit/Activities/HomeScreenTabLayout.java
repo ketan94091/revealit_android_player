@@ -334,9 +334,8 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
         //SHOW BOTTOM BAR CONTROL
         isVideoDeleteMultiSelectionActive(false);
 
-
-
     }
+
 
     private void pusherTokenProvider() {
 
@@ -646,6 +645,6 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
 
         }
 
-
     }
+
 }

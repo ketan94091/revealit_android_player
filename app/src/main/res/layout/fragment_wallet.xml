@@ -9,8 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/relativeTopview"
@@ -141,10 +140,11 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/quasimoda_semibold"
+                                android:maxLength="40"
                                 android:singleLine="true"
+                                android:text="@string/strLoading"
                                 android:textColor="@color/colorNewAppGreen"
                                 android:textFontWeight="600"
-                                android:maxLength="40"
                                 android:textSize="30dp" />
 
 
@@ -176,7 +176,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/quasimoda_bold"
-                                android:text="USD"
+                                android:text="@string/strXpr"
                                 android:textAllCaps="true"
                                 android:textColor="@color/colorNewAppGreen"
                                 android:textFontWeight="700"
@@ -192,16 +192,18 @@
             </LinearLayout>
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/relativeAccountDetails">
+
         <LinearLayout
             android:id="@+id/linearRewardHistory"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/relativeAccountDetails"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
             android:visibility="gone"
-
-
             >
 
             <TextView
@@ -316,7 +318,16 @@
 
         </LinearLayout>
 
+            <TextView
+                android:id="@+id/txtRefreshingHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/quasimoda_semibold"
+                android:text="@string/strRefreshingRewardHistory"
+                android:textSize="15dp" />
 
+        </RelativeLayout>
     </RelativeLayout>
 
 

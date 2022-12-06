@@ -767,11 +767,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     mActivity.startActivity(mLoginIntent);
                     mActivity.finish();
 
-                } else {
-
-
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
-
                 }
 
             }
@@ -779,7 +774,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onFailure(Call<DotsLocationsModel> call, Throwable t) {
 
-                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+               // CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
 
 
             }

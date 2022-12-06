@@ -31,6 +31,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.Activities.QrCodeScannerActivity;
 import com.Revealit.Adapter.RevealItHistoryListAdapter;
@@ -83,7 +84,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private ImageView imgScanQRcode, imgListen;
+    private ImageView imgLogo,imgScanQRcode, imgListen;
     private TextView txtRevealSelectedCount, txtSelectDeselectAll, txtSelectionCancel, txtSelect, txtReveal, txtRevealCount;
     private RecyclerView recycleRevealList;
     private LinearLayoutManager recylerViewLayoutManager;
@@ -173,6 +174,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         imgListen = (ImageView) mView.findViewById(R.id.imgListen);
         imgScanQRcode = (ImageView) mView.findViewById(R.id.imgScanQRcode);
+        imgLogo = (ImageView) mView.findViewById(R.id.imgLogo);
 
 
         txtRevealCount = (TextView) mView.findViewById(R.id.txtRevealCount);
@@ -245,6 +247,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         txtSelect.setOnClickListener(this);
         txtSelectionCancel.setOnClickListener(this);
         txtSelectDeselectAll.setOnClickListener(this);
+        imgLogo.setOnClickListener(this);
     }
 
 
@@ -252,10 +255,21 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     public void onClick(View mView) {
 
         switch (mView.getId()) {
+            case R.id.imgLogo:
+
+                Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
+                mIntent.putExtra(Constants.MEDIA_URL, Constants.EDUCATION_VIDEO_URL);
+                mIntent.putExtra(Constants.MEDIA_ID, "0");
+                mIntent.putExtra(Constants.VIDEO_NAME,Constants.EDUCATION_VIDEO_TITLE);
+                mIntent.putExtra(Constants.VIDEO_SEEK_TO,"0");
+                mIntent.putExtra(Constants.IS_VIDEO_SEEK, false);
+                mActivity.startActivity(mIntent);
+
+                break;
             case R.id.imgScanQRcode:
 
-                Intent mIntent = new Intent(mActivity, QrCodeScannerActivity.class);
-                mActivity.startActivity(mIntent);
+                Intent mIntentQRCodeActivity = new Intent(mActivity, QrCodeScannerActivity.class);
+                mActivity.startActivity(mIntentQRCodeActivity);
 
                 break;
 
@@ -1118,6 +1132,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         updateRevealitHistoryListSimulation(false, false);
 
     }
+
 
 
 }

@@ -185,31 +185,11 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
         LinearLayout linearTesting3 = (LinearLayout) dialogView.findViewById(R.id.linearTesting3);
         LinearLayout linearIntegration = (LinearLayout) dialogView.findViewById(R.id.linearIntegration);
         LinearLayout linearDemo = (LinearLayout) dialogView.findViewById(R.id.linearDemo);
+        LinearLayout linearMobileDevTwo = (LinearLayout) dialogView.findViewById(R.id.linearMobileDevTwo);
 
 
         TextView txtSimulation = (TextView)dialogView. findViewById(R.id.txtSimulation);
         TextView txtLive = (TextView)dialogView. findViewById(R.id.txtLive);
-
-        TextView txtBetaCuratorMobile = (TextView)dialogView. findViewById(R.id.txtBetaCuratorMobile);
-        TextView txtBetaCuratorRegistration = (TextView)dialogView. findViewById(R.id.txtBetaCuratorRegistration);
-
-        TextView txtStagingMobile = (TextView)dialogView. findViewById(R.id.txtStagingMobile);
-        TextView txtStagingRegistration = (TextView)dialogView. findViewById(R.id.txtStagingRegistration);
-
-        TextView txtTesting1Mobile = (TextView)dialogView. findViewById(R.id.txtTesting1Mobile);
-        TextView txtTesting1Registration = (TextView)dialogView. findViewById(R.id.txtTesting1Registration);
-
-        TextView txtTesting2Mobile = (TextView)dialogView. findViewById(R.id.txtTesting2Mobile);
-        TextView txtTesting2Registration = (TextView)dialogView. findViewById(R.id.txtTesting2Registration);
-
-        TextView txtTesting3Mobile = (TextView) dialogView.findViewById(R.id.txtTesting3Mobile);
-        TextView txtTesting3Registration = (TextView) dialogView.findViewById(R.id.txtTesting3Registration);
-
-        TextView txtIntegrationMobile = (TextView)dialogView. findViewById(R.id.txtIntegrationMobile);
-        TextView txtIntegrationRegistration = (TextView)dialogView. findViewById(R.id.txtIntegrationRegistration);
-
-        TextView txtDemoMobile = (TextView) dialogView.findViewById(R.id.txtDemoMobile);
-        TextView txtDemoRegistration = (TextView) dialogView.findViewById(R.id.txtDemoRegistration);
 
 
         //SET SELECT ENVIRONMENT
@@ -304,6 +284,11 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
                 linearDemo.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
 
                 break;
+            case 8:
+
+                linearMobileDevTwo.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
+
+                break;
         }
 
         imgCloseDailoge.setOnClickListener(new View.OnClickListener() {
@@ -380,6 +365,16 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
 
                 //UPDATE ENVIRONMENT
                 updateEnvironment(Constants.API_END_POINTS_MOBILE_DEMO_CURATOR,Constants.API_END_POINTS_REGISTRATION_DEMO_CURATOR, mActivity.getResources().getString(R.string.strDemo),7);
+
+            }
+        });
+        linearMobileDevTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //UPDATE ENVIRONMENT
+                updateEnvironment(Constants.API_END_POINTS_MOBILE_ANDROID_M1_CURATOR,Constants.API_END_POINTS_REGISTRATION__ANDROID_M1_CURATOR, mActivity.getResources().getString(R.string.strAndroidMobile1),8);
+
 
             }
         });

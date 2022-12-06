@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -94,8 +93,7 @@ public class NewAuthSplashScreen extends AppCompatActivity {
         ArrayList<KeyStoreServerInstancesModel.Data> dataArrayList = new ArrayList<>();
 
         //LOOP FOR 7 TIMES AS WE HAVE 7 SERVES AND PROBABLY ADMIN USERS CREATED USERS IN ALL SILOS
-        for (int j =1 ; j < 8 ;j++){
-            Log.e("JJ",""+j);
+        for (int j =1 ; j < 9 ;j++){
 
             mGson = new GsonBuilder()
                     .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -111,7 +109,7 @@ public class NewAuthSplashScreen extends AppCompatActivity {
                 if(!mSessionManager.getPreference(Constants.KEY_SILOS_DATA+""+j).isEmpty()){
                     //FETCH USER DATA FROM KEYSTORE
                     String  userData = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_SILOS_DATA+""+j));
-                    Log.e("USER",""+userData);
+                    //Log.e("USER",""+userData);
                     //CHECK IF USER DATA IS NOT NULL
                     //IF TRUE -> CONTINUE FETCHING DATA
                     //ELSE -> DISPLAY NOT FOUND MSG
@@ -167,6 +165,9 @@ public class NewAuthSplashScreen extends AppCompatActivity {
                                 break;
                             case 7:
                                 mModelData.setServerInstanceName(getResources().getString(R.string.strDemo));
+                                break;
+                            case 8:
+                                mModelData.setServerInstanceName(getResources().getString(R.string.strAndroidMobile1));
                                 break;
                         }
                         mModelData.setMobileNumber("");
@@ -291,12 +292,21 @@ public class NewAuthSplashScreen extends AppCompatActivity {
                 if (!mSessionManager.getPreferenceBoolean(Constants.IS_APP_OPEN_FIRST_TIME)) {
                     //SAVE TESTING END POINTS
                     //CHANGE API END POINT TO ALPHA T CURATOR
-                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_B_CURATOR);
-                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_B_CURATOR);
-                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strBeta));
+//                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_B_CURATOR);
+//                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_B_CURATOR);
+//                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strBeta));
 
+                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_T1_CURATOR);
+                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_T1_CURATOR);
+                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strTesting1));
 
-                    switch (Constants.API_END_POINTS_MOBILE_B_CURATOR) {
+//
+//                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_ANDROID_M1_CURATOR);
+//                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION__ANDROID_M1_CURATOR);
+//                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strAndroidMobile1));
+//
+
+                    switch (Constants.API_END_POINTS_MOBILE_T1_CURATOR) {
 
                         case Constants.API_END_POINTS_MOBILE_B_CURATOR:
                             mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 1);
@@ -318,6 +328,9 @@ public class NewAuthSplashScreen extends AppCompatActivity {
                             break;
                         case Constants.API_END_POINTS_MOBILE_DEMO_CURATOR:
                             mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 7);
+                            break;
+                        case Constants.API_END_POINTS_MOBILE_ANDROID_M1_CURATOR:
+                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 8);
                             break;
                     }
 

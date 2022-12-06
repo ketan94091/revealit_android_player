@@ -48,6 +48,10 @@ public class Constants {
   public static final String API_END_POINTS_MOBILE_DEMO_CURATOR = "https://demo.revealit.io/";
   public static final String API_END_POINTS_REGISTRATION_DEMO_CURATOR = "https://dcapi.revealit.io/";
 
+  //EXCLUSIVE ANDROID MOBILE SERVER  CURATOR
+  public static final String API_END_POINTS_MOBILE_ANDROID_M1_CURATOR = "https://mobiledev2.revealit.io/";
+  public static final String API_END_POINTS_REGISTRATION__ANDROID_M1_CURATOR = "https://mcapi2.revealit.io/";
+
   //PROTON SDK APIS
   //MAIN API
   public static  final String API_PROTON_MAIN_NET ="https://api.protonchain.com";
@@ -119,6 +123,7 @@ public class Constants {
     public static final String PROTON_USERNAME = "friendly_name";
     public static final String IS_ALLOW_BIOMETRIC = "isUserAllowBioMetric";
     public static final String IS_FIRST_LOGIN = "isFirstLogin";
+    public static final String IS_USER_OPEN_APP_FIRST_TIME = "isUserOpenAppFirstTime";
     public static final String PROTON_ACCOUNT_NAME = "protonAccountNAme";
     public  static  final String KEY_USERNAME ="userName";
     public  static  final String KEY_IS_USER_ACTIVE ="keyIsUserActive";
@@ -180,6 +185,7 @@ public class Constants {
   public  static  final  String KEY_PROTON_ACCOUNTNAME ="keyProtonAccountName";
   public  static  final  String KEY_MNEMONICS ="keyMnemonics";
   public  static  final  String KEY_MOBILE_NUMBER ="keyMobileNumber";
+  public  static  final  String KEY_IS_EDUCATION_VIDEO_PLAYED ="keyIsEducationVideoPlayed";
   public  static  final  String KEY_MOBILE_NUMBER_KEYSTORE_SILOS ="keyMobileNumberKeyStoreSilos";
   public  static  final  String KEY_COUNTRY_CODE ="keyCountryCode";
   public  static  final  String KEY_CAMPAIGNID ="keyCampaignId";
@@ -216,6 +222,10 @@ public class Constants {
     public static String PUSHER_INSTANCE_ID_PRODUCTION = "3d9abdc3-c6f6-4221-94a5-4004dcf833c4";//STAGING + TESTING1 + TESTING2
 
 
+    public static String EDUCATION_VIDEO_URL = "https://framecluster.b-cdn.net/video_media/_dhtem%C2%80trtape.mp4";
+    public static String EDUCATION_VIDEO_TITLE = "Welcome to revealit TV";
+
+
 
 
     public static final String COMMON_TIME_FORMAT = "HH:mm a";
@@ -234,28 +244,12 @@ public class Constants {
     public static final int API_CODE_500 = 500;
     public static final int API_CODE_400 = 400;
 
-    //SWAPPING SILOS AND ITS DATA
-    //WE MANAGE THESE DATA LOCALLY FOR THE ADMIN USERS
-
     //KEY_ALIS_FOR_SILOS
     public static final String KEY_SILOS_ALIAS = "keyAliasRevealitSilos";
     public static final String KEY_SILOS_DATA= "keyAliasUserSilosData";
 
-   // public static final int KEY_SILOS_BETA = 1;
-//    public static final int KEY_SILOS_STAGING = 2;
-//    public static final int KEY_SILOS_TESTING_1 = 3;
-//    public static final int KEY_SILOS_TESTING_2 = 4;
-//    public static final int KEY_SILOS_TESTING_3 = 5;
-//    public static final int KEY_SILOS_INTEGRATION = 6;
-//    public static final int KEY_SILOS_DEMO = 7;
 
-    public static final String KEY_SILOS_BETA_VALUE = "keySilosBeta";
-    public static final String KEY_SILOS_STAGING_VALUE = "keySilosBeta";
-    public static final String KEY_SILOS_TESTING_1_VALUE ="keySilosTesting1";
-    public static final String KEY_SILOS_TESTING_2_VALUE = "keySilosTesting2";
-    public static final String KEY_SILOS_TESTING_3_VALUE = "keySilosTesting3";
-    public static final String KEY_SILOS_INTEGRATION_VALUE ="keySilosIntegration";
-    public static final String KEY_SILOS_DEMO_VALUE ="keySilosDemo";
+
 
 
 }

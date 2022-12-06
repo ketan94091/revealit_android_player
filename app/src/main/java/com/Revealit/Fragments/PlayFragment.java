@@ -1,9 +1,11 @@
 package com.Revealit.Fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,13 +67,13 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     private GridLayoutManager mGridLayoutManager;
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private ImageView imgScanQRcode,imgPlay,imgBiteBrandLogo, imgBiteBanner;
+    private ImageView imgLogo,imgScanQRcode,imgPlay,imgBiteBrandLogo, imgBiteBanner;
     private TextView txtNoPublishedVideo, txtSubTitleThree, txtSubTitleTwo, txtSubTitleOne, txtBiteTitle;
     private PlayCategoryListAdapter mPlayCategoryListAdapter;
     private LinearLayoutManager recylerViewLayoutManager;
     private RecyclerView recycleCategoryList;
     private LinearLayout ralativeMain;
-    private boolean isForFirstTime = true;
+    private boolean isForFirstTime = true,isUserIsActive;
     String strFeaturedMediaCoverImage ="", strFeaturedMediaTitle = "" , strFeaturedMidiaID = "" ,strFeaturedMidiaURL = "";
     private Activity homeScreenTabLayout;
 
@@ -101,22 +103,13 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        if (!isForFirstTime) {
-            //CALL HOME SCREEN PLAY DATA API
-            getVideoPlayerRawData();
-        }
+
+        Log.e("RESUME","KEATN");
+
+        //CALL HOME SCREEN PLAY DATA API
+        getVideoPlayerRawData();
     }
 
-    @Override
-    public void setMenuVisibility(boolean menuVisible) {
-        if (menuVisible) {
-            if (!isForFirstTime) {
-                //CALL HOME SCREEN PLAY DATA API
-                getVideoPlayerRawData();
-            }
-        }
-        super.setMenuVisibility(menuVisible);
-    }
 
     private void setIds() {
 
@@ -133,6 +126,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         imgBiteBrandLogo = (ImageView) mView.findViewById(R.id.imgBiteBrandLogo);
         imgPlay = (ImageView) mView.findViewById(R.id.imgPlay);
         imgScanQRcode =(ImageView)mView.findViewById(R.id.imgScanQRcode);
+        imgLogo =(ImageView)mView.findViewById(R.id.imgLogo);
 
 
         txtBiteTitle = (TextView) mView.findViewById(R.id.txtBiteTitle);
@@ -148,9 +142,24 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         recycleCategoryList.setLayoutManager(recylerViewLayoutManager);
 
 
-        //CALL HOME SCREEN PLAY DATA API
-        getVideoPlayerRawData();
+        //SHOW WELCOME DIALOGUE
+        //IF -> USER IS ACTIVE -> SHOW WELCOME DIALOGUE ONLY ONCE
+        //ELSE -> USER IS IN ACTIVE -> DISPLAY WHITELISTED DIALOGUE
+        //UPDATE FIRST OPEN FLAG
+        isUserIsActive =mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_ACTIVE);
+        //UPDATE FIRST OPEN FLAG
+        mActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                if(isUserIsActive){
+                    if(!mSessionManager.getPreferenceBoolean(Constants.IS_USER_OPEN_APP_FIRST_TIME)){
+                        showWelcomeDialogue(isUserIsActive);
+                    }
 
+                }else{
+                    showWelcomeDialogue(false);
+                }
+            }
+        });
 
     }
 
@@ -161,6 +170,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         txtSubTitleThree.setOnClickListener(this);
         imgPlay.setOnClickListener(this);
         imgScanQRcode.setOnClickListener(this);
+        imgLogo.setOnClickListener(this);
     }
 
     @Override
@@ -181,6 +191,10 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
 
                 if (!strFeaturedMidiaURL.isEmpty()) {
+
+                    //UPDATE EDUCATIONAL VIDEO FLAG
+                    mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_EDUCATION_VIDEO_PLAYED, true);
+
                     Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
                     mIntent.putExtra(Constants.MEDIA_URL, strFeaturedMidiaURL);
                     mIntent.putExtra(Constants.MEDIA_ID, strFeaturedMidiaID);
@@ -188,6 +202,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                     mIntent.putExtra(Constants.VIDEO_SEEK_TO,"0");
                     mIntent.putExtra(Constants.IS_VIDEO_SEEK, false);
                     mActivity.startActivity(mIntent);
+
+
 
                 } else {
 
@@ -197,9 +213,20 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.imgScanQRcode:
 
-                Intent mIntent = new Intent(mActivity, QrCodeScannerActivity.class);
-                mActivity.startActivity(mIntent);
+                Intent mIntentQRCodeActivity = new Intent(mActivity, QrCodeScannerActivity.class);
+                mActivity.startActivity(mIntentQRCodeActivity);
 
+
+                break;
+            case R.id.imgLogo:
+
+                Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
+                mIntent.putExtra(Constants.MEDIA_URL, Constants.EDUCATION_VIDEO_URL);
+                mIntent.putExtra(Constants.MEDIA_ID, "0");
+                mIntent.putExtra(Constants.VIDEO_NAME,Constants.EDUCATION_VIDEO_TITLE);
+                mIntent.putExtra(Constants.VIDEO_SEEK_TO,"0");
+                mIntent.putExtra(Constants.IS_VIDEO_SEEK, false);
+                mActivity.startActivity(mIntent);
 
                 break;
 
@@ -343,10 +370,24 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                         //FEATURED VIDEO SHOULD NOT ADD IN DATABASE
                                         //IT SHOULD CONSIDER AS STATIC VIDEO
                                         if(strSlug.equalsIgnoreCase("Featured")) {
-                                            strFeaturedMidiaURL = ""+strMediaUrl;
-                                            strFeaturedMidiaID = ""+intMediaID;
-                                            strFeaturedMediaTitle = ""+strMediaTitle;
-                                            strFeaturedMediaCoverImage = ""+strMediaCoverArt;
+
+                                            //SET FEATURED VIDEO AS EDUCATION VIDEO UNTIL USER VIED THIS
+                                            //IF -> TURE -> DISPLAY FEATURED VIDEO
+                                            //ELSE -> DISPLAY -> REVEAL IT CURATOR ACADEMY VIDEO
+                                            //UPDATE FLAG ON FEATURE VIDEO PLAY BUTTON
+                                            if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_EDUCATION_VIDEO_PLAYED)){
+                                                strFeaturedMidiaURL = ""+strMediaUrl;
+                                                strFeaturedMidiaID = ""+intMediaID;
+                                                strFeaturedMediaTitle = ""+strMediaTitle;
+                                                strFeaturedMediaCoverImage = ""+strMediaCoverArt;
+                                            }else{
+
+                                                strFeaturedMidiaURL = Constants.EDUCATION_VIDEO_URL;
+                                                strFeaturedMidiaID = "0";
+                                                strFeaturedMediaTitle = Constants.EDUCATION_VIDEO_TITLE;
+                                                strFeaturedMediaCoverImage = "";
+                                            }
+
                                         }else {
                                             mDatabaseHelper.insertCategoryWisePlayData(strCategoryName,
                                                     strSlug,
@@ -459,5 +500,58 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
 
     }
+    private void showWelcomeDialogue(boolean isUserIsActive) {
+
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
+        dialogBuilder.setCancelable(false);
+        LayoutInflater inflater = mActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.user_welcome_dialogue, null);
+        dialogBuilder.setView(dialogView);
+
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        TextView txtGetStarted = (TextView) dialogView.findViewById(R.id.txtGetStarted);
+        TextView txtWaitListed = (TextView) dialogView.findViewById(R.id.txtWaitListed);
+
+        //HIDE SHOW BUTTON BASED ON USER ACTIVATION STATUS
+        if(isUserIsActive){
+            txtWaitListed.setVisibility(View.GONE);
+            txtGetStarted.setVisibility(View.VISIBLE);
+        }else{
+            txtWaitListed.setVisibility(View.VISIBLE);
+            txtGetStarted.setVisibility(View.GONE);
+        }
+
+
+
+        txtGetStarted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+                //UPDATE FIRST OPEN FLAG
+                mSessionManager.updatePreferenceBoolean(Constants.IS_USER_OPEN_APP_FIRST_TIME,true);
+
+            }
+        });
+
+
+        txtWaitListed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+                //EXIT FROM THE APP UNTIL USER TURN TO ACTIVE FROM THE BACKEND
+                mActivity.finishAffinity();
+
+
+            }
+        });
+
+        mAlertDialog.show();
+    }
+
 
 }

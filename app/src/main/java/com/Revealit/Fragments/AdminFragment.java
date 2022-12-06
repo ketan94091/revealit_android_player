@@ -67,8 +67,8 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
     private AlertDialog mAlertDialog = null;
     private Gson gsonBuilder;
     private String strSelectedServerName;
-    private TextView txtDemoRegistration,txtDemoMobile,txtIntegrationRegistration,txtIntegrationMobile,txtTesting3Registration,txtTesting3Mobile,txtTesting2Registration,txtTesting2Mobile,txtTesting1Registration,txtTesting1Mobile,txtStagingRegistration,txtStagingMobile,txtBetaCuratorRegistration,txtBetaCuratorMobile,txtLive,txtSimulation;
-    private LinearLayout linearDemo,linearIntegration,linearTesting3,linearTesting2,linearTesting1,linearStaging,linearBetacurator;
+    private LinearLayout linearMobileDevTwo,linearDemo,linearIntegration,linearTesting3,linearTesting2,linearTesting1,linearStaging,linearBetacurator;
+    private TextView txtLive,txtSimulation;
 
 
     public AdminFragment(HomeScreenTabLayout homeScreenTabLayout) {
@@ -112,32 +112,11 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
          linearTesting3 = (LinearLayout) mView.findViewById(R.id.linearTesting3);
          linearIntegration = (LinearLayout) mView.findViewById(R.id.linearIntegration);
          linearDemo = (LinearLayout) mView.findViewById(R.id.linearDemo);
+        linearMobileDevTwo = (LinearLayout) mView.findViewById(R.id.linearMobileDevTwo);
 
 
          txtSimulation = (TextView) mView.findViewById(R.id.txtSimulation);
          txtLive = (TextView) mView.findViewById(R.id.txtLive);
-
-         txtBetaCuratorMobile = (TextView) mView.findViewById(R.id.txtBetaCuratorMobile);
-         txtBetaCuratorRegistration = (TextView) mView.findViewById(R.id.txtBetaCuratorRegistration);
-
-         txtStagingMobile = (TextView) mView.findViewById(R.id.txtStagingMobile);
-         txtStagingRegistration = (TextView) mView.findViewById(R.id.txtStagingRegistration);
-
-         txtTesting1Mobile = (TextView) mView.findViewById(R.id.txtTesting1Mobile);
-         txtTesting1Registration = (TextView) mView.findViewById(R.id.txtTesting1Registration);
-
-         txtTesting2Mobile = (TextView) mView.findViewById(R.id.txtTesting2Mobile);
-         txtTesting2Registration = (TextView) mView.findViewById(R.id.txtTesting2Registration);
-
-         txtTesting3Mobile = (TextView) mView.findViewById(R.id.txtTesting3Mobile);
-         txtTesting3Registration = (TextView) mView.findViewById(R.id.txtTesting3Registration);
-
-         txtIntegrationMobile = (TextView) mView.findViewById(R.id.txtIntegrationMobile);
-         txtIntegrationRegistration = (TextView) mView.findViewById(R.id.txtIntegrationRegistration);
-
-         txtDemoMobile = (TextView) mView.findViewById(R.id.txtDemoMobile);
-         txtDemoRegistration = (TextView) mView.findViewById(R.id.txtDemoRegistration);
-
 
 
         //SET SELECTED ENVIRONMENT
@@ -238,6 +217,11 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
             case 7:
 
                 linearDemo.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
+
+                break;
+            case 8:
+
+                linearMobileDevTwo.setBackground(getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
 
                 break;
         }
@@ -364,6 +348,24 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
 
                 //UPDATE ENVIRONMENT
                 updateEnvironment(Constants.API_END_POINTS_MOBILE_DEMO_CURATOR,Constants.API_END_POINTS_REGISTRATION_DEMO_CURATOR, mActivity.getResources().getString(R.string.strDemo),7);
+
+                //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
+                //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN
+                try {
+                    checkUserAvailable();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        linearMobileDevTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //UPDATE ENVIRONMENT
+                updateEnvironment(Constants.API_END_POINTS_MOBILE_ANDROID_M1_CURATOR,Constants.API_END_POINTS_REGISTRATION__ANDROID_M1_CURATOR, mActivity.getResources().getString(R.string.strAndroidMobile1),8);
 
                 //CHECK IF THE SAME USER IS AVAILABLE IN SELECTED CURATOR
                 //IF AVAIlABlE THEN LOGIN API CALL AND SAVE NEW TOKEN
