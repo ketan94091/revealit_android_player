@@ -576,7 +576,6 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         JsonObject paramObject = new JsonObject();
         paramObject.addProperty("receiver_number", edtMobilenumber.getText().toString());
         paramObject.addProperty("country_code", edtCountryCode.getText().toString());
-        if(isStartOver == 1)
         paramObject.addProperty("start_over", isStartOver);
 
 

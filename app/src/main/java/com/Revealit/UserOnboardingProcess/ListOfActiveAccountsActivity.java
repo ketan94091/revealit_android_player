@@ -82,6 +82,10 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
         }
 
 
+        //CHECK USER ACCOUNT IN TO THE PROTON
+
+
+
 
 
     }

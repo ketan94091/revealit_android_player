@@ -456,13 +456,16 @@ public class QrCodeScannerActivity extends AppCompatActivity {
 
 
                     //GET CALLBACK FROM SIGNING REQUEST
-                    ResolvedCallback callback = resolved.getCallback( processor.getSignatures(),signingRequest.getChainId().getChainId(), CommonMethods.returnDateString(),qrCodeData, "PUB_K1_7KxbJA9qrEu9RrhrEsErkBE8T5orDNuLfy5sjA2vyXHrPvwXHS");
+                    //ResolvedCallback callback = resolved.getCallback( processor.getSignatures(),signingRequest.getChainId().getChainId(), CommonMethods.returnDateString(),qrCodeData, "PUB_K1_7KxbJA9qrEu9RrhrEsErkBE8T5orDNuLfy5sjA2vyXHrPvwXHS");
+                    ResolvedCallback callback = resolved.getCallback( processor.getSignatures(),signingRequest.getChainId().getChainId(), CommonMethods.returnDateString(),qrCodeData, mPublicKey);
 
 
                     //CALL CALL BACK URL IF SIGNATURE AND RESOLVED REQUEST NOT NULL
                     Log.e("CALLBACK_response", gson.toJson(callback));
 
                     callSignInCallBack(callback);
+
+
 
 
                 } catch (TransactionPrepareError | TransactionSignError | ESRException | SerializationProviderError | EosioJavaRpcProviderInitializerError | ImportKeyError  transactionPrepareError) {
