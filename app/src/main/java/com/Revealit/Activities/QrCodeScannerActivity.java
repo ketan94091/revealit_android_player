@@ -326,15 +326,12 @@ public class QrCodeScannerActivity extends AppCompatActivity {
     }
     class RetrieveFeedTask extends AsyncTask<String, Void, Void> {
 
-        String qrCodeData, strESRdata,qrRevealitDataFromCamera;
-        //String strPEMprivateKey ="5Kj7AAZ8n2Bc2gC4yehhVP1cVeLKncNiSSbDrTZy8xz1Z2B3yL1";
-        //String account_name1 = "revdev";
-        //String baseURl ="https://proton.eosusa.news";
-        String baseURl ="https://proton.greymass.com";
-        String permission="active";
-        String strActionAccount ="eosio";
-        String strVoteProducer ="voteproducer";
-        String strGreyMassVote ="greymassvote";
+        String qrCodeData, strESRdata;
+        String baseURl =Constants.PROTON_BASE_URL;
+        String permission=Constants.PROTON_PERMISSION;
+        String strActionAccount =Constants.PROTON_ACTION_ACCOUNT;
+        String strVoteProducer =Constants.PROTON_VOTE_PRODUCER;
+        String strGreyMassVote =Constants.PROTON_GREYMASS_VOTE;
         private static final boolean ENABLE_NETWORK_LOG = true;
 
         Gson gson = new GsonBuilder()
@@ -375,6 +372,7 @@ public class QrCodeScannerActivity extends AppCompatActivity {
 
             try {
                 signingRequest.load(strESRdata);
+
             } catch (ESRException e) {
                 e.printStackTrace();
             }
@@ -404,6 +402,7 @@ public class QrCodeScannerActivity extends AppCompatActivity {
                     IRPCProvider rpcProvider;
                     rpcProvider = new EosioJavaRpcProviderImpl(baseURl, ENABLE_NETWORK_LOG);
 
+
                     // Creating ABI provider
                     IABIProvider abiProvider = new ABIProviderImpl(rpcProvider, serializationProvider);
 
@@ -411,13 +410,11 @@ public class QrCodeScannerActivity extends AppCompatActivity {
                     ISignatureProvider signatureProvider = new SoftKeySignatureProviderImpl();
 
 
-
                     ((SoftKeySignatureProviderImpl) signatureProvider).importKey(mPrivateKey);
 
                     // Creating TransactionProcess
                     TransactionSession session = new TransactionSession(serializationProvider, rpcProvider, abiProvider, signatureProvider);
                     TransactionProcessor processor = session.getTransactionProcessor();
-
 
 
                     // Now the TransactionConfig can be altered, if desired
@@ -463,12 +460,13 @@ public class QrCodeScannerActivity extends AppCompatActivity {
                     //CALL CALL BACK URL IF SIGNATURE AND RESOLVED REQUEST NOT NULL
                     Log.e("CALLBACK_response", gson.toJson(callback));
 
+
                     callSignInCallBack(callback);
 
 
 
 
-                } catch (TransactionPrepareError | TransactionSignError | ESRException | SerializationProviderError | EosioJavaRpcProviderInitializerError | ImportKeyError  transactionPrepareError) {
+                } catch (TransactionPrepareError | TransactionSignError | ESRException | SerializationProviderError | EosioJavaRpcProviderInitializerError | ImportKeyError transactionPrepareError) {
 
 
                     //CALL CALL BACK URL IF SIGNATURE AND RESOLVED REQUEST NOT NULL

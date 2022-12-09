@@ -9,6 +9,7 @@ import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.ModelClasses.GetAccountDetailsModel;
 import com.Revealit.ModelClasses.GetMultiColorGLB;
 import com.Revealit.ModelClasses.GetProductDetailsModel;
+import com.Revealit.ModelClasses.GetProtonUsername;
 import com.Revealit.ModelClasses.GetRecipesDetails;
 import com.Revealit.ModelClasses.InfluencersModel;
 import com.Revealit.ModelClasses.InviteModel;
@@ -200,6 +201,10 @@ public interface UpdateAllAPI {
     //REMOVE SINGLE TIME STAMP
     @POST(Constants.API_REMOVE_SINGLE_TIMESTAMP)
     Call<JsonElement> removeSingleTimeStamp(@Body JsonObject body);
+
+    //NEW AUTH PHONE
+    @POST(Constants.API_FETCH_ACCOUNT_NAME_FROM_PROTON)
+    Call<GetProtonUsername> getProtonAccountName(@Body JsonObject body);
 
 }
 

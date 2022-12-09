@@ -2,6 +2,7 @@ package com.Revealit.UserOnboardingProcess;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Activities.ImportAccountFromPrivateKey;
 import com.Revealit.Adapter.SilosAvailableAccountsListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.SessionManager;
@@ -105,8 +107,10 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
                 finish();
                 break;
             case R.id.relativeRestoreFromCloud:
+                break;
             case R.id.relativeImportKey:
-                CommonMethods.displayToast(mContext ,"In Progress...");
+                Intent mIntent = new Intent(this, ImportAccountFromPrivateKey.class);
+                startActivity(mIntent);
                 break;
         }
 

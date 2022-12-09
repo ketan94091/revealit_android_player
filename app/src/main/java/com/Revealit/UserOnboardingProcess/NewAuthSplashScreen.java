@@ -80,10 +80,63 @@ public class NewAuthSplashScreen extends AppCompatActivity {
         }
 
 
+
+//        try {
+//
+//            EosPrivateKey pvtPem = new EosPrivateKey("PVT_K1_2SzE19ujcHS8nSGApcvEUD1hNkkauneF67w6jQjzUFw6yqCjcd");
+//            Log.e("private_pem",""+pvtPem);
+//            Log.e("public_pem",""+pvtPem.getPublicKey().toString());
+//
+//            // Creating serialization provider
+//            ISerializationProvider serializationProvider;
+//            serializationProvider = new AbiEosSerializationProviderImpl();
+//
+//            // Creating RPC Provider
+//            IRPCProvider rpcProvider;
+//            rpcProvider = new EosioJavaRpcProviderImpl(Constants.PROTON_BASE_URL, true);
+//
+//
+//            // Creating ABI provider
+//            IABIProvider abiProvider = new ABIProviderImpl(rpcProvider, serializationProvider);
+//
+//            // Creating Signature provider
+//            ISignatureProvider signatureProvider = new SoftKeySignatureProviderImpl();
+//
+//
+//            ((SoftKeySignatureProviderImpl) signatureProvider).importKey(""+pvtPem);
+//
+//            // Creating TransactionProcess
+//            TransactionSession session = new TransactionSession(serializationProvider, rpcProvider, abiProvider, signatureProvider);
+//            TransactionProcessor processor = session.getTransactionProcessor();
+//
+//            Log.e("PUB_KEY",""+session.getSignatureProvider().getAvailableKeys().get(0));
+//
+//            // Now the TransactionConfig can be altered, if desired
+//            TransactionConfig transactionConfig = processor.getTransactionConfig();
+//
+//            // Use blocksBehind (default 3) the current head block to calculate TAPOS
+//            transactionConfig.setUseLastIrreversible(false);
+//            // Set the expiration time of transactions 600 seconds later than the timestamp
+//
+//            // of the block used to calculate TAPOS
+//            transactionConfig.setExpiresSeconds(6);
+//
+//            // Update the TransactionProcessor with the config changes
+//            processor.setTransactionConfig(transactionConfig);
+//
+//
+//
+//
+//        } catch (SerializationProviderError | EosioJavaRpcProviderInitializerError | ImportKeyError | GetAvailableKeysError  transactionPrepareError) {
+//
+//            Log.e("ERROR ", ""+transactionPrepareError);
+//
+//        }
+//
+
+
         //MERGER OLD KEYSTORE ARCHITECTURE IN TO NEW ARCHITECTURE
         checkBackwardCompatibilityForAccounts();
-
-
 
 
     }

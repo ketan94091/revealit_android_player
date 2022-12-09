@@ -57,9 +57,13 @@ public class Constants {
   public static  final String API_PROTON_MAIN_NET ="https://api.protonchain.com";
   //TEST NET API
   public static final  String API_PROTON_TEST_NET ="https://api-dev.protonchain.com";
-
-
-
+  //PROTON EOSIO
+  public static final  String PROTON_BASE_URL ="https://proton.greymass.com";
+  public static final  String GET_PROTON_ACCOUNT_NAME_BASE_URL ="https://proton.cryptolions.io/v1/history/";
+  public static final  String PROTON_PERMISSION ="active";
+  public static final  String PROTON_ACTION_ACCOUNT ="eosio";
+  public static final  String PROTON_VOTE_PRODUCER ="voteproducer";
+  public static final  String PROTON_GREYMASS_VOTE="greymassvote";
 
 
   //API'S
@@ -98,6 +102,7 @@ public class Constants {
   public static final String API_PUSH_AUTHORISATION = "api/authorize";
   public static final String API_PUSH_AUTHORISATION_CANCEL = "api/authorizecancel";
   public static final String API_REMOVE_SINGLE_TIMESTAMP = "api/video/matchhistory/match/remove";
+  public static final String API_FETCH_ACCOUNT_NAME_FROM_PROTON = "get_key_accounts";
 
 
     public static final String AUTH_TOKEN = "access_token";

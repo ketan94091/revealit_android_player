@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    tools:context=".UserOnboardingProcess.NewAuthGetStartedActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:weightSum="5">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imgLogo"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/app_icon_round" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:gravity="center_vertical"
+                    android:text="@string/strWelcomeToRevealitTV"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="700"
+                    android:textSize="18dp" />
+
+                <ImageView
+                    android:id="@+id/imgCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:src="@mipmap/icon_cross" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="top"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/strEnterYourPrivateKey"
+                android:fontFamily="@font/quasimoda_semibold"
+                android:textSize="17dp"
+                android:textFontWeight="600"
+                android:textColor="@color/colorBlack"
+                android:layout_marginTop="50dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/new_auth_round_button"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <EditText
+                    android:id="@+id/edtImportKey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:focusable="true"
+                    android:fontFamily="@font/quasimoda_semibold"
+                    android:gravity="center_vertical"
+                    android:hint="@string/strImportYourPrivateKey"
+                    android:inputType="text"
+                    android:paddingLeft="15dp"
+                    android:layout_weight="1"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="600"
+                    android:textSize="15dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="9"
+                    android:layout_marginRight="15dp"
+                    >
+
+                    <ImageView
+                        android:id="@+id/imgScanQRcode"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:src="@mipmap/icn_qr_scan" />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtUserAccountName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:fontFamily="@font/quasimoda_semibold"
+                android:textSize="25dp"
+                android:textFontWeight="600"
+                android:gravity="center"
+                android:textColor="@color/colorRedDark"
+                android:layout_marginTop="50dp"/>
+
+            <TextView
+                android:id="@+id/txtPubicKey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/quasimoda_semibold"
+                android:gravity="center"
+                android:padding="5dp"
+                android:textColor="@color/colorRedDark"
+                android:textFontWeight="600"
+                android:textSize="15dp" />
+            <TextView
+                android:id="@+id/txtPrivatePem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:fontFamily="@font/quasimoda_semibold"
+                android:textSize="15dp"
+                android:textFontWeight="600"
+                android:gravity="center"
+                android:textColor="@color/colorRedDark"
+                android:layout_marginTop="5dp"/>
+            <TextView
+                android:id="@+id/txtPublicPem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:fontFamily="@font/quasimoda_semibold"
+                android:textSize="15dp"
+                android:textFontWeight="600"
+                android:gravity="center"
+                android:textColor="@color/colorRedDark"
+                android:layout_marginTop="5dp"/>
+
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtContinueDisable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/new_auth_round_button_app_green_light"
+                android:fontFamily="@font/quasimoda_bold"
+                android:gravity="center_horizontal"
+                android:padding="15dp"
+                android:text="@string/strContinue"
+                android:textColor="@color/colorWhite"
+                android:textFontWeight="700"
+                android:textSize="15dp"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/txtContinueEnabled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:background="@drawable/new_auth_round_button_app_green"
+                android:fontFamily="@font/quasimoda_bold"
+                android:gravity="center_horizontal"
+                android:padding="15dp"
+                android:text="@string/strContinue"
+                android:textColor="@color/colorWhite"
+                android:textFontWeight="700"
+                android:textSize="15dp"
+                android:visibility="gone" />
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

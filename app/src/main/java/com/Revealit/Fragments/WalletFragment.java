@@ -662,7 +662,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         //UPDATE SPONSOR IMAGE
         //SET BITE IMAGE
-        Glide.with(mActivity)
+        Glide.with(mHomeScreenTabLayout)
                 .load("https://apac.sgp1.digitaloceanspaces.com/glacier/9692/1e7c6277-4014-444f-be46-c37249c700e2.jpeg")
                 .apply(new RequestOptions().override(500, 225))
                 .placeholder(getResources().getDrawable(R.drawable.placeholder))

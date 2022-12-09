@@ -51,6 +51,9 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:node="merge">
         <activity
+            android:name=".Activities.ImportAccountFromPrivateKey"
+            android:exported="false" />
+        <activity
             android:name=".UserOnboardingProcess.ListOfActiveAccountsActivity"
             android:exported="true" />
         <activity
@@ -63,7 +66,7 @@
         <activity
             android:name=".Activities.QrCodeScannerActivity"
             android:exported="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UserOnboardingProcess.GoogleCloudBackupActivity"
             android:exported="false"

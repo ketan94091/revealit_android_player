@@ -20,6 +20,8 @@
     <string name="strAccountAlreadyExistsWarningMsg">Your account already exists on a different device. Do you wish to retrieve your revealit TV account on this device?</string>
     <string name="strBioMetricActivationRequire">To be a revealit TV user you must have biometrics activated on your phone or tablet.</string>
     <string name="strNoARproduct">No AR Product Available</string>
+    <string name="strEnterYourPrivateKey">Enter your private key to continue</string>
+    <string name="strImportYourPrivateKey">Import Private Key:</string>
     <string name="strRefreshingRewardHistory">Refreshing reward history...</string>
     <string name="strImportAccount">Import Account</string>
     <string name="strRestoreFromBackup">Restore from Backup</string>

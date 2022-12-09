@@ -7,6 +7,10 @@
     android:background="@color/colorWhite"
     >
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
 
     <LinearLayout
         android:id="@+id/linearMain"
@@ -16,6 +20,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
+        android:paddingBottom="100dp"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -285,4 +290,5 @@
         </RelativeLayout>
 
     </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
