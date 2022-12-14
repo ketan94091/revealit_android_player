@@ -78,7 +78,7 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
     private SessionManager mSessionManager;
     private RemoveListenHistory mRemoveListenHistory;
     private boolean isCheckSelected,shouldCheckBoxVisible;
-    private ArrayList<String> mSelectedVideoIds = new ArrayList<>();
+    private ArrayList<Integer> mSelectedVideoIds = new ArrayList<>();
 
 
 
@@ -226,7 +226,7 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
                         mSelectedVideoIds.remove(String.valueOf(revealitHistoryData.get(position).getMedia_id()));
                     }
                 }else{
-                    mSelectedVideoIds.add(String.valueOf(revealitHistoryData.get(position).getMedia_id()));
+                    mSelectedVideoIds.add(revealitHistoryData.get(position).getMedia_id());
                 }
 
                 //UPDATE LIST THROUGH INTERFACE
@@ -247,7 +247,7 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
         MediaSource audioSource = new ExtractorMediaSource(Uri.parse(media_url),
                 new CacheDataSourceFactory(mContext, 100 * 1024 * 1024, 5 * 1024 * 1024), new DefaultExtractorsFactory(), null, null);
     }
-    public  ArrayList<String> getSelectedIds(){
+    public  ArrayList<Integer> getSelectedIds(){
         return  mSelectedVideoIds;
     }
 

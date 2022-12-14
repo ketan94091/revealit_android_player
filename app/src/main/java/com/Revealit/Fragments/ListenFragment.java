@@ -40,6 +40,7 @@ import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.CommonClasse.SwipeHelper;
 import com.Revealit.CustomViews.RippleBackground;
+import com.Revealit.Interfaces.ClearListHistory;
 import com.Revealit.Interfaces.RemoveListenHistory;
 import com.Revealit.ModelClasses.CategoryWisePlayListModel;
 import com.Revealit.ModelClasses.RevealitHistoryModel;
@@ -74,7 +75,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class ListenFragment extends Fragment implements View.OnClickListener, RemoveListenHistory {
+public class ListenFragment extends Fragment implements View.OnClickListener, RemoveListenHistory{
 
     private Activity mActivity;
     private Context mContext;
@@ -92,12 +93,14 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     private RemoveListenHistory mRemoveListenHistory;
+    private ClearListHistory mClearListHistory;
     private int tapCount = 1;// IGONORE FIRST COUNT AND THEN START GETTING DATA FROM ITEMS TO END ITEMS.
     private ArrayList<CategoryWisePlayListModel.DataBean> mCategoryWisePlayListModel = new ArrayList<>();
     private ArrayList<Long> mLongRevealTime = new ArrayList<>();
     private HomeScreenTabLayout mHomeScreenTabLayout;
     private LinearLayout linearRevealTitle, linearRevealSelection, linearWavingBackground;
     private RevealItHistoryListAdapter mRevealItHistoryListAdapter;
+    public static ArrayList<Integer> selectedIdsList;
 
     private static String[] PERMISSIONS = {
             Manifest.permission.ACCESS_NETWORK_STATE,
@@ -124,6 +127,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         ;
     };
+
 
     enum ButtonsState {
         GONE,
@@ -403,8 +407,13 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     }
 
     private void resetBottomBarLayout(boolean isLayoutReset) {
-
         mHomeScreenTabLayout.isVideoDeleteMultiSelectionActive(isLayoutReset);
+    }
+
+    public static void clearListenHistory(boolean isFromLiveMode) {
+
+        //removeSelectedVideos(selectedIdsList);
+
     }
 
     private void startRecording() {
@@ -509,7 +518,9 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     }
 
     @Override
-    public void getSelectedIds(ArrayList<String> selectedIdsList) {
+    public void getSelectedIds(ArrayList<Integer> selectedIdsList) {
+
+        this.selectedIdsList =selectedIdsList;
 
         //UPDATE SELECTED IDS COUNTS AND TOTAL COUNTS
         txtRevealSelectedCount.setText(selectedIdsList.size()+"/"+mRevealItHistoryListAdapter.getItemCount()+ " "+getResources().getString(R.string.strRevealSelected) );

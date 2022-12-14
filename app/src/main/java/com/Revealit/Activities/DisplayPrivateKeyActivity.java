@@ -120,18 +120,21 @@ public class DisplayPrivateKeyActivity extends AppCompatActivity implements View
 
             //SPLIT MNEMONIC
             String[] animalsArray = mMnemonics.split(" ");
-            txtPrivateKeyPhrase1.setText("1. "+animalsArray[0]);
-            txtPrivateKeyPhrase2.setText("2. "+animalsArray[1]);
-            txtPrivateKeyPhrase3.setText("3. "+animalsArray[2]);
-            txtPrivateKeyPhrase4.setText("4. "+animalsArray[3]);
-            txtPrivateKeyPhrase5.setText("5. "+animalsArray[4]);
-            txtPrivateKeyPhrase6.setText("6. "+animalsArray[5]);
-            txtPrivateKeyPhrase7.setText("7. "+animalsArray[6]);
-            txtPrivateKeyPhrase8.setText("8. "+animalsArray[7]);
-            txtPrivateKeyPhrase9.setText("9. "+animalsArray[8]);
-            txtPrivateKeyPhrase10.setText("10. "+animalsArray[9]);
-            txtPrivateKeyPhrase11.setText("11. "+animalsArray[10]);
-            txtPrivateKeyPhrase12.setText("12. "+animalsArray[11]);
+            if(animalsArray.length == 12){
+                txtPrivateKeyPhrase1.setText("1. "+animalsArray[0]);
+                txtPrivateKeyPhrase2.setText("2. "+animalsArray[1]);
+                txtPrivateKeyPhrase3.setText("3. "+animalsArray[2]);
+                txtPrivateKeyPhrase4.setText("4. "+animalsArray[3]);
+                txtPrivateKeyPhrase5.setText("5. "+animalsArray[4]);
+                txtPrivateKeyPhrase6.setText("6. "+animalsArray[5]);
+                txtPrivateKeyPhrase7.setText("7. "+animalsArray[6]);
+                txtPrivateKeyPhrase8.setText("8. "+animalsArray[7]);
+                txtPrivateKeyPhrase9.setText("9. "+animalsArray[8]);
+                txtPrivateKeyPhrase10.setText("10. "+animalsArray[9]);
+                txtPrivateKeyPhrase11.setText("11. "+animalsArray[10]);
+                txtPrivateKeyPhrase12.setText("12. "+animalsArray[11]);
+            }
+
 
         } catch (CertificateException |NoSuchAlgorithmException |KeyStoreException |IOException |NoSuchProviderException | InvalidAlgorithmParameterException| NoSuchPaddingException| IllegalBlockSizeException |BadPaddingException |InvalidKeyException ex) {
             ex.printStackTrace();

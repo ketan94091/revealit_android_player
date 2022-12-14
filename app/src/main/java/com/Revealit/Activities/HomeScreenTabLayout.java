@@ -64,7 +64,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVideoRevealsInterface, IsSimulationModeIsActiveInterface {
+public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVideoRevealsInterface, IsSimulationModeIsActiveInterface, View.OnClickListener {
 
     private static final String TAG ="HomeScreenTabLayout" ;
     private CustomViewPager viewPager;
@@ -84,9 +84,9 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
     private Gson gson;
     private DeleteVideoRevealsInterface mDeleteVideoRevealsInterface;
     private IsSimulationModeIsActiveInterface mIsSimulationModeIsActiveInterface;
+    private LinearLayout linearDelete;
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +94,24 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
 
 
             setId();
+            setOnClicks();
+
+    }
+
+    private void setOnClicks() {
+
+        linearDelete.setOnClickListener(this);
+    }
+
+
+    @Override
+    public void onClick(View mView) {
+
+        switch (mView.getId()){
+            case R.id.linearDelete:
+                ListenFragment.clearListenHistory(true);
+                break;
+        }
 
     }
 
@@ -126,6 +144,9 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
 
         viewPager = (CustomViewPager) findViewById(R.id.pager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+
+        linearDelete =(LinearLayout)findViewById(R.id.linearDelete);
+
 
         relativeTab =(RelativeLayout)findViewById(R.id.relativeTab);
         linearListenScreenControls =(LinearLayout)findViewById(R.id.linearListenScreenControls);

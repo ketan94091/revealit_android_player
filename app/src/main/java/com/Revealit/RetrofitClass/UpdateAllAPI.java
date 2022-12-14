@@ -21,6 +21,7 @@ import com.Revealit.ModelClasses.NewAuthStatusModel;
 import com.Revealit.ModelClasses.RevealitHistoryModel;
 import com.Revealit.ModelClasses.RewardHistoryModel;
 import com.Revealit.ModelClasses.SubmitProfileModel;
+import com.Revealit.ModelClasses.UserDetailsFromPublicKeyModel;
 import com.Revealit.ModelClasses.UserDetailsModel;
 import com.Revealit.ModelClasses.UserRegistrationModel;
 import com.google.gson.JsonElement;
@@ -205,6 +206,10 @@ public interface UpdateAllAPI {
     //NEW AUTH PHONE
     @POST(Constants.API_FETCH_ACCOUNT_NAME_FROM_PROTON)
     Call<GetProtonUsername> getProtonAccountName(@Body JsonObject body);
+
+    //GET USER DETAILS FROM API
+    @GET()
+    Call<UserDetailsFromPublicKeyModel> getUserDetailsFromPubKeyAndName(@Url String url);
 
 }
 

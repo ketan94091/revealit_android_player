@@ -81,58 +81,6 @@ public class NewAuthSplashScreen extends AppCompatActivity {
 
 
 
-//        try {
-//
-//            EosPrivateKey pvtPem = new EosPrivateKey("PVT_K1_2SzE19ujcHS8nSGApcvEUD1hNkkauneF67w6jQjzUFw6yqCjcd");
-//            Log.e("private_pem",""+pvtPem);
-//            Log.e("public_pem",""+pvtPem.getPublicKey().toString());
-//
-//            // Creating serialization provider
-//            ISerializationProvider serializationProvider;
-//            serializationProvider = new AbiEosSerializationProviderImpl();
-//
-//            // Creating RPC Provider
-//            IRPCProvider rpcProvider;
-//            rpcProvider = new EosioJavaRpcProviderImpl(Constants.PROTON_BASE_URL, true);
-//
-//
-//            // Creating ABI provider
-//            IABIProvider abiProvider = new ABIProviderImpl(rpcProvider, serializationProvider);
-//
-//            // Creating Signature provider
-//            ISignatureProvider signatureProvider = new SoftKeySignatureProviderImpl();
-//
-//
-//            ((SoftKeySignatureProviderImpl) signatureProvider).importKey(""+pvtPem);
-//
-//            // Creating TransactionProcess
-//            TransactionSession session = new TransactionSession(serializationProvider, rpcProvider, abiProvider, signatureProvider);
-//            TransactionProcessor processor = session.getTransactionProcessor();
-//
-//            Log.e("PUB_KEY",""+session.getSignatureProvider().getAvailableKeys().get(0));
-//
-//            // Now the TransactionConfig can be altered, if desired
-//            TransactionConfig transactionConfig = processor.getTransactionConfig();
-//
-//            // Use blocksBehind (default 3) the current head block to calculate TAPOS
-//            transactionConfig.setUseLastIrreversible(false);
-//            // Set the expiration time of transactions 600 seconds later than the timestamp
-//
-//            // of the block used to calculate TAPOS
-//            transactionConfig.setExpiresSeconds(6);
-//
-//            // Update the TransactionProcessor with the config changes
-//            processor.setTransactionConfig(transactionConfig);
-//
-//
-//
-//
-//        } catch (SerializationProviderError | EosioJavaRpcProviderInitializerError | ImportKeyError | GetAvailableKeysError  transactionPrepareError) {
-//
-//            Log.e("ERROR ", ""+transactionPrepareError);
-//
-//        }
-//
 
 
         //MERGER OLD KEYSTORE ARCHITECTURE IN TO NEW ARCHITECTURE
@@ -345,13 +293,13 @@ public class NewAuthSplashScreen extends AppCompatActivity {
                 if (!mSessionManager.getPreferenceBoolean(Constants.IS_APP_OPEN_FIRST_TIME)) {
                     //SAVE TESTING END POINTS
                     //CHANGE API END POINT TO ALPHA T CURATOR
-//                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_B_CURATOR);
-//                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_B_CURATOR);
-//                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strBeta));
+                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_B_CURATOR);
+                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_B_CURATOR);
+                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strBeta));
 
-                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_T1_CURATOR);
-                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_T1_CURATOR);
-                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strTesting1));
+//                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_T1_CURATOR);
+//                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_T1_CURATOR);
+//                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strTesting1));
 
 //
 //                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_ANDROID_M1_CURATOR);
@@ -359,7 +307,7 @@ public class NewAuthSplashScreen extends AppCompatActivity {
 //                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strAndroidMobile1));
 //
 
-                    switch (Constants.API_END_POINTS_MOBILE_T1_CURATOR) {
+                    switch (Constants.API_END_POINTS_MOBILE_B_CURATOR) {
 
                         case Constants.API_END_POINTS_MOBILE_B_CURATOR:
                             mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 1);

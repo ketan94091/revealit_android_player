@@ -119,52 +119,6 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/txtUserAccountName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:fontFamily="@font/quasimoda_semibold"
-                android:textSize="25dp"
-                android:textFontWeight="600"
-                android:gravity="center"
-                android:textColor="@color/colorRedDark"
-                android:layout_marginTop="50dp"/>
-
-            <TextView
-                android:id="@+id/txtPubicKey"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/quasimoda_semibold"
-                android:gravity="center"
-                android:padding="5dp"
-                android:textColor="@color/colorRedDark"
-                android:textFontWeight="600"
-                android:textSize="15dp" />
-            <TextView
-                android:id="@+id/txtPrivatePem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:fontFamily="@font/quasimoda_semibold"
-                android:textSize="15dp"
-                android:textFontWeight="600"
-                android:gravity="center"
-                android:textColor="@color/colorRedDark"
-                android:layout_marginTop="5dp"/>
-            <TextView
-                android:id="@+id/txtPublicPem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:fontFamily="@font/quasimoda_semibold"
-                android:textSize="15dp"
-                android:textFontWeight="600"
-                android:gravity="center"
-                android:textColor="@color/colorRedDark"
-                android:layout_marginTop="5dp"/>
-
 
         </LinearLayout>
 
