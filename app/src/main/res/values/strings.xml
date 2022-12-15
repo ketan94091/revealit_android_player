@@ -17,6 +17,7 @@
     <string name="strAuthWarningMsgTwo">If not, simply decline the request by exiting the page.</string>
     <string name="strAccountAlreadyExists">Account Already Exists</string>
     <string name="strSignUpCanNotBeComplete">Signup Can Not Be Complete</string>
+    <string name="strImportKeyUserAlreadyExists">User already exists. Do you want to Login?</string>
     <string name="strAccountAlreadyExistsWarningMsg">Your account already exists on a different device. Do you wish to retrieve your revealit TV account on this device?</string>
     <string name="strBioMetricActivationRequire">To be a revealit TV user you must have biometrics activated on your phone or tablet.</string>
     <string name="strNoARproduct">No AR Product Available</string>
@@ -210,6 +211,8 @@
     <string name="strWelcomeToTV">Welcome to revealitTV</string>
     <string name="strSetting">Settings</string>
     <string name="strProfile">Profile</string>
+    <string name="strEnterPrivateKey">Please enter private key!</string>
+    <string name="strInvalidPrivateKey">Invalid Account. Please select valid wallet account</string>
     <string name="strMultifactorAuthentication">Multi-factor Authentication</string>
     <string name="strNotYourNumber">Not your number?</string>
     <string name="strClickToEdit">click to edit</string>

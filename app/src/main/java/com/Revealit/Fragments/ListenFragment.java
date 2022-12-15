@@ -77,29 +77,38 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ListenFragment extends Fragment implements View.OnClickListener, RemoveListenHistory{
 
-    private Activity mActivity;
-    private Context mContext;
+    private static Activity mActivity;
+    private static Context mContext;
     private static final String TAG = "ListenFragment";
     private View mView;
     private String path = "";
 
-    private SessionManager mSessionManager;
-    private DatabaseHelper mDatabaseHelper;
-    private ImageView imgLogo,imgScanQRcode, imgListen;
-    private TextView txtRevealSelectedCount, txtSelectDeselectAll, txtSelectionCancel, txtSelect, txtReveal, txtRevealCount;
-    private RecyclerView recycleRevealList;
+    private static SessionManager mSessionManager;
+    private static DatabaseHelper mDatabaseHelper;
+    private ImageView imgLogo;
+    private ImageView imgScanQRcode;
+    private static ImageView imgListen;
+    private static TextView txtRevealSelectedCount;
+    private TextView txtSelectDeselectAll;
+    private TextView txtSelectionCancel;
+    private TextView txtSelect;
+    private TextView txtReveal;
+    private static TextView txtRevealCount;
+    private static RecyclerView recycleRevealList;
     private LinearLayoutManager recylerViewLayoutManager;
     private RippleBackground rippleBackground;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
-    private RemoveListenHistory mRemoveListenHistory;
+    private static RemoveListenHistory mRemoveListenHistory;
     private ClearListHistory mClearListHistory;
-    private int tapCount = 1;// IGONORE FIRST COUNT AND THEN START GETTING DATA FROM ITEMS TO END ITEMS.
-    private ArrayList<CategoryWisePlayListModel.DataBean> mCategoryWisePlayListModel = new ArrayList<>();
-    private ArrayList<Long> mLongRevealTime = new ArrayList<>();
-    private HomeScreenTabLayout mHomeScreenTabLayout;
-    private LinearLayout linearRevealTitle, linearRevealSelection, linearWavingBackground;
-    private RevealItHistoryListAdapter mRevealItHistoryListAdapter;
+    private static int tapCount = 1;// IGONORE FIRST COUNT AND THEN START GETTING DATA FROM ITEMS TO END ITEMS.
+    private static ArrayList<CategoryWisePlayListModel.DataBean> mCategoryWisePlayListModel = new ArrayList<>();
+    private static ArrayList<Long> mLongRevealTime = new ArrayList<>();
+    private static HomeScreenTabLayout mHomeScreenTabLayout;
+    private static LinearLayout linearRevealTitle;
+    private static LinearLayout linearRevealSelection;
+    private LinearLayout linearWavingBackground;
+    private static RevealItHistoryListAdapter mRevealItHistoryListAdapter;
     public static ArrayList<Integer> selectedIdsList;
 
     private static String[] PERMISSIONS = {
@@ -211,24 +220,30 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         } else {
 
-            //GET WATCH DATA FROM DATABASE
-            mCategoryWisePlayListModel = mDatabaseHelper.getCategoryWisePlayList();
-
-            //CREATE LONG REAVEAL IT TIME STAMP ARRAY
-            mLongRevealTime = new ArrayList<>();
-            mLongRevealTime.clear();
-
-            //SET INITIAL COUNT FOR GETTING SUB LIST FROM DATABASE
-            tapCount = 1;
-
-            //RELOAD HISTORY LIST IF NOT EMPTY
-            updateRevealitHistoryListSimulation(false, false);
+          //BIND SIMULATION MODE
+            bindSimulationMode();
 
 
         }
 
 
     }
+
+    private static void bindSimulationMode() {
+        //GET WATCH DATA FROM DATABASE
+        mCategoryWisePlayListModel = mDatabaseHelper.getCategoryWisePlayList();
+
+        //CREATE LONG REAVEAL IT TIME STAMP ARRAY
+        mLongRevealTime = new ArrayList<>();
+        mLongRevealTime.clear();
+
+        //SET INITIAL COUNT FOR GETTING SUB LIST FROM DATABASE
+        tapCount = 1;
+
+        //RELOAD HISTORY LIST IF NOT EMPTY
+        updateRevealitHistoryListSimulation(false, false);
+    }
+
     @Override
     public void setMenuVisibility(boolean menuVisible) {
 
@@ -306,7 +321,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
             case R.id.txtSelectDeselectAll:
 
                 if (txtSelectDeselectAll.getText().equals(getResources().getString(R.string.strSelectALl))) {
-
 
                     //DISPLAY LIST WITH CHECK BOX SELECTED TRUE
                     if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
@@ -406,14 +420,91 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
     }
 
-    private void resetBottomBarLayout(boolean isLayoutReset) {
+    private static void resetBottomBarLayout(boolean isLayoutReset) {
         mHomeScreenTabLayout.isVideoDeleteMultiSelectionActive(isLayoutReset);
     }
 
-    public static void clearListenHistory(boolean isFromLiveMode) {
+    public static void clearListenHistory(boolean isAppModeIsLive) {
 
-        //removeSelectedVideos(selectedIdsList);
+        if(isAppModeIsLive){
+            removeSelectedVideos();
+        }else{
+            removeSelectedVideosSimulationMode();
+        }
 
+    }
+
+    private static void removeSelectedVideosSimulationMode() {
+
+        //REMOVE VIDEOS FROM LOCAL DATABASE UNTIL ALL SELECTED IDS LIST
+        for (int i =0 ; i< selectedIdsList.size(); i++){
+            //REMOVE SINGLE VIDEO FROM DATABASE
+            mDatabaseHelper.clearSimulationHistoryItem(selectedIdsList.get(i));
+        }
+
+        //CHANGE HOMEPAGE TAB BAR
+        resetBottomBarAndMyRevealsView();
+    }
+
+    private static void removeSelectedVideos() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+
+        Call<JsonElement> call = patchService1.removeMultipleSelectedVidios(selectedIdsList);
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+
+                CommonMethods.printLogE("Response @ clearListenHistory: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ clearListenHistory: ", "" + response.code());
+
+                if(response.code() == 200){
+                    //REFRESH WHOLE SCREEN
+                    //GET HISTORY
+                    callGetRevealitVideoHistory();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+                CommonMethods.printLogE("Response @ clearListenHistory Error", "" + t.getMessage());
+
+
+            }
+        });
     }
 
     private void startRecording() {
@@ -655,7 +746,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
     }
 
-    public void callGetRevealitVideoHistory() {
+    public static void callGetRevealitVideoHistory() {
 
         //SHOW PROGRESS DIALOG
         ProgressDialog pDialog = new ProgressDialog(mContext);
@@ -771,17 +862,9 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
                 }
 
-                //RESET ALL VIEW
-                linearRevealTitle.setVisibility(View.VISIBLE);
-                linearRevealSelection.setVisibility(View.GONE);
+                //RESET BOTTOMBAR VIEW AND MY REVEALS VIEW
+                resetBottomBarAndMyRevealsView();
 
-                //RESET BOTTOM BAR
-                //CHANGE HOMEPAGE TAB BAR
-                //CHANGE HOMEPAGE TAB BAR
-                resetBottomBarLayout(false);
-
-                //RELOAD HISTORY LIST IF NOT EMPTY
-                updateRevealitHistoryList(false, false);
 
                 //HIDE PROGRESSBAR
                 pDialog.cancel();
@@ -803,6 +886,24 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
             }
         });
 
+
+    }
+
+    private static void resetBottomBarAndMyRevealsView() {
+
+        linearRevealTitle.setVisibility(View.VISIBLE);
+        linearRevealSelection.setVisibility(View.GONE);
+
+        //RESET BOTTOM BAR
+        //CHANGE HOMEPAGE TAB BAR
+        resetBottomBarLayout(false);
+
+        //RELOAD HISTORY LIST IF NOT EMPTY
+        if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+        updateRevealitHistoryList(false, false);
+        }else{
+        updateRevealitHistoryListSimulation(false,false);
+        }
 
     }
 
@@ -837,7 +938,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
 
 
-    private void callRemoveVideo(boolean isClearHistory, int media_id) {
+    private static void callRemoveVideo(boolean isClearHistory, int media_id) {
 
         //SHOW PROGRESS DIALOG
         ProgressDialog pDialog = new ProgressDialog(mContext);
@@ -928,7 +1029,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
 
     }
-    public void updateRevealitHistoryList(boolean isCheckBoxSelected, boolean shouldCheckBoxVisible) {
+    public static void updateRevealitHistoryList(boolean isCheckBoxSelected, boolean shouldCheckBoxVisible) {
 
         ArrayList<RevealitHistoryModel.Data> mHistoryListFromDatabase = null;
         try {
@@ -1003,7 +1104,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
             txtRevealCount.setText("" + mHistoryListFromDatabase.size() + " reveals");
 
             //SET TOTAL SELECTED REVEALS
-            txtRevealSelectedCount.setText("0/"+mRevealItHistoryListAdapter.getItemCount()+ " "+getResources().getString(R.string.strRevealSelected) );
+            txtRevealSelectedCount.setText("0/"+mRevealItHistoryListAdapter.getItemCount()+ " "+mActivity.getResources().getString(R.string.strRevealSelected) );
 
 
             //ENABLE BUTTON
@@ -1019,7 +1120,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
     }
 
-    private void updateRevealitHistoryListSimulation(boolean isCheckBoxSelected, boolean shouldCheckBoxVisible) {
+    private static void updateRevealitHistoryListSimulation(boolean isCheckBoxSelected, boolean shouldCheckBoxVisible) {
 
         ArrayList<RevealitHistoryModel.Data> mHistoryListFromDatabase = null;
         try {
@@ -1094,7 +1195,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
             txtRevealCount.setText("" + mHistoryListFromDatabase.size() + " reveals");
 
             //SET TOTAL SELECTED REVEALS
-            txtRevealSelectedCount.setText("0/" + mRevealItHistoryListAdapter.getItemCount() + " " + getResources().getString(R.string.strRevealSelected));
+            txtRevealSelectedCount.setText("0/" + mRevealItHistoryListAdapter.getItemCount() + " " +mActivity.getResources().getString(R.string.strRevealSelected));
 
 
             //ENABLE BUTTON

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -109,13 +107,17 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
 
         switch (mView.getId()){
             case R.id.linearDelete:
-                ListenFragment.clearListenHistory(true);
+                if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+                    ListenFragment.clearListenHistory(true);
+                }else{
+                    ListenFragment.clearListenHistory(false);
+                }
+
                 break;
         }
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void setId()  {
 
         gson = new GsonBuilder()

@@ -41,7 +41,6 @@ import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -662,11 +661,11 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
         //UPDATE SPONSOR IMAGE
         //SET BITE IMAGE
-        Glide.with(mHomeScreenTabLayout)
-                .load("https://apac.sgp1.digitaloceanspaces.com/glacier/9692/1e7c6277-4014-444f-be46-c37249c700e2.jpeg")
-                .apply(new RequestOptions().override(500, 225))
-                .placeholder(getResources().getDrawable(R.drawable.placeholder))
-                .into(imgSponsor);
+//        Glide.with(mActivity)
+//                .load("https://apac.sgp1.digitaloceanspaces.com/glacier/9692/1e7c6277-4014-444f-be46-c37249c700e2.jpeg")
+//                .apply(new RequestOptions().override(500, 225))
+//                .placeholder(getResources().getDrawable(R.drawable.placeholder))
+//                .into(imgSponsor);
 
         imgSponsor.setVisibility(View.GONE);
 

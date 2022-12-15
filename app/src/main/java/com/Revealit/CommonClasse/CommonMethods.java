@@ -767,6 +767,161 @@ public class CommonMethods {
         return null;
     }
 
+    public static ArrayList<KeyStoreServerInstancesModel.Data> fetchUserFromPrivateKey(SessionManager mSessionManager, String privateKey) {
+        ArrayList<KeyStoreServerInstancesModel.Data> dataArrayList = new ArrayList<>();
+
+        if(!checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
+
+            //CONVERT DATA TO JSON ARRAY
+            //CREATE NEW ARRAY FROM THE STRING ARRAY
+            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
+            try {
+                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData(mSessionManager));
+
+                for (int i=0 ;i < jsonArray.length();i++){
+
+                    if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey)) {
+                        KeyStoreServerInstancesModel.Data mModel = new KeyStoreServerInstancesModel.Data();
+                        mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
+                        mModel.setMobileNumber(jsonArray.getJSONObject(i).getString("mobileNumber"));
+                        mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
+
+                        SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
+                        mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
+                        mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("auth_token"));
+                        mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
+                        mSubmitProfileModel.setIs_activated(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
+                        mSubmitProfileModel.setMessage(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("message"));
+                        mSubmitProfileModel.setrevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("revealit_private_key"));
+                        mSubmitProfileModel.setRole(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("role"));
+                        mSubmitProfileModel.setServerInstance(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("serverInstance"));
+                        mSubmitProfileModel.setStatus(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("status"));
+
+                        SubmitProfileModel.Proton mProton = new SubmitProfileModel.Proton();
+                        mProton.setAccountName(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("account_name"));
+                        mProton.setMnemonic(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("mnemonic"));
+                        mProton.setPrivateKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key"));
+                        mProton.setPrivate_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_pem"));
+                        mProton.setPublicKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_key"));
+                        mProton.setPublic_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_pem"));
+                        mSubmitProfileModel.setProton(mProton);
+
+                        mModel.setSubmitProfileModel(mSubmitProfileModel);
+
+                        dataArrayList.add(mModel);
+                        return dataArrayList;
+                    }
+                }
+
+                return dataArrayList;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            return null;
+        }
+
+
+        return null;
+    }
+    public static String fetchUserNameFromPrivateKey(SessionManager mSessionManager, String privateKey) {
+       String strUsername = "";
+
+        if(!checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
+
+            //CONVERT DATA TO JSON ARRAY
+            //CREATE NEW ARRAY FROM THE STRING ARRAY
+            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
+            try {
+                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData(mSessionManager));
+
+                for (int i=0 ;i < jsonArray.length();i++){
+
+                   if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey)) {
+                        strUsername =jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("account_name");
+                        return strUsername;
+                    }
+                }
+
+                return strUsername;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            return null;
+        }
+
+
+        return null;
+    }
+    public static int fetchInstanceNameFromPrivateKey(SessionManager mSessionManager, String privateKey) {
+        int intServerInstanceId = 0;
+
+        if(!checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
+
+            //CONVERT DATA TO JSON ARRAY
+            //CREATE NEW ARRAY FROM THE STRING ARRAY
+            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
+            try {
+                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData(mSessionManager));
+
+                for (int i=0 ;i < jsonArray.length();i++){
+
+                    if( jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey)) {
+                        intServerInstanceId =jsonArray.getJSONObject(i).getInt("serverInstanceId");
+                        return intServerInstanceId;
+                    }
+                }
+
+                return intServerInstanceId;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            return intServerInstanceId;
+        }
+
+
+        return intServerInstanceId;
+    }
+    public static boolean checkEnterPrivateKeyIsFromOtherSilos(SessionManager mSessionManager, String privateKey) {
+        boolean isUserFromSelectedSilos = false;
+
+        if(!checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
+
+            //CONVERT DATA TO JSON ARRAY
+            //CREATE NEW ARRAY FROM THE STRING ARRAY
+            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
+            try {
+                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData(mSessionManager));
+
+                for (int i=0 ;i < jsonArray.length();i++){
+
+                    if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey)) {
+                        isUserFromSelectedSilos = true;
+                        return isUserFromSelectedSilos;
+                    }
+                }
+
+                return isUserFromSelectedSilos;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            return false;
+        }
+
+        return false;
+    }
+
     public static void encryptKey(String keyToStore, String alias, String keyStoreName, SessionManager mSessionManager) {
 
         try{

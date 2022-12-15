@@ -125,6 +125,7 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
                         Intent mIntent = new Intent(mActivity, NewAuthBiomatricAuthenticationActivity.class);
                         mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME, itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
                         mActivity.startActivity(mIntent);
+                        mActivity.finishAffinity();
                     }
                 }
         });

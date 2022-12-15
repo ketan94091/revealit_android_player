@@ -2,7 +2,6 @@ package com.Revealit.Adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -21,13 +20,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.Revealit.CommonClasse.CommonMethods;
-import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.Interfaces.RemoveListenHistory;
 import com.Revealit.ModelClasses.RevealitHistoryModel;
 import com.Revealit.R;
-import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.Revealit.Utils.CacheDataSourceFactory;
 import com.bumptech.glide.Glide;
@@ -46,24 +42,8 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHistoryListAdapter.ViewHolder> {
 
@@ -258,166 +238,5 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
         return revealitHistoryData.size();
     }
 
-    private void showBottomSheetDialog(int media_id) {
 
-        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext);
-        bottomSheetDialog.setContentView(R.layout.bottom_sheet_for_clear_listen_history);
-
-        TextView txtCancel = bottomSheetDialog.findViewById(R.id.txtCancel);
-        TextView txtClear = bottomSheetDialog.findViewById(R.id.txtClear);
-        TextView txtClearAll = bottomSheetDialog.findViewById(R.id.txtClearAll);
-        txtCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetDialog.cancel();
-
-            }
-        });
-        txtClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //FIRST CLOSE DIALOGUE AND THEN CALL API
-                bottomSheetDialog.cancel();
-
-
-
-                //CONDITION
-                //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API'S
-                //IF ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
-                if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
-
-                    //CALL API REMOVE SINGLE VIDEO
-                    callRemoveVideo(false, media_id);
-                }else{
-
-                  //IN ELSE CONDITION
-                  //REMOVE SINGLE VIDEO DATA FROM DATABASE
-                  mDatabaseHelper.clearSimulationHistoryItem(media_id);
-
-                  //UPDATE LIST THROUGH INTERFACE
-                  mRemoveListenHistory.removeListenHistory(false);
-
-                }
-
-
-            }
-        });
-        txtClearAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //FIRST CLOSE DIALOGUE AND THEN CALL API
-                bottomSheetDialog.cancel();
-
-                //CALL API REMOVE ALL VIDEOS
-                if(mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)){
-                    callRemoveVideo(true, media_id);
-                }else{
-
-                    //CLEAR ALL SIMULATION DATA FROM DATABASE
-                    mDatabaseHelper.clearSimulationHistoryDataTable();
-
-                    //UPDATE LIST
-                    mRemoveListenHistory.removeListenHistory(false);
-
-                }
-
-            }
-        });
-
-        bottomSheetDialog.show();
-    }
-
-    private void callRemoveVideo(boolean isClearHistory, int media_id) {
-
-        //SHOW PROGRESS DIALOG
-        ProgressDialog pDialog = new ProgressDialog(mContext);
-        pDialog.setMessage(mContext.getResources().getString(R.string.strPleaseWait));
-        pDialog.setCancelable(false);
-        pDialog.show();
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(logging);
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                okhttp3.Request original = chain.request();
-
-                okhttp3.Request request = original.newBuilder()
-                        .header("Content-Type", "application/json")
-                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
-                        .method(original.method(), original.body())
-                        .build();
-
-                return chain.proceed(request);
-            }
-        });
-
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-
-        final OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
-                .build();
-
-
-        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
-        Call<JsonElement> call;
-
-        List<Integer> mediaIds = new ArrayList<>();
-        mediaIds.add(media_id);
-
-        if (!isClearHistory)
-
-            call = patchService1.removeHistory(mediaIds);
-        else {
-            call = patchService1.removeWholeHistory(isClearHistory);
-        }
-
-        call.enqueue(new Callback<JsonElement>() {
-            @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-
-                CommonMethods.printLogE("Response @ callRemoveVideo: ", "" + response.isSuccessful());
-                CommonMethods.printLogE("Response @ callRemoveVideo: ", "" + response.code());
-
-
-                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
-
-                    CommonMethods.printLogE("Response @ callRemoveVideo: ", "Video removed");
-                    mRemoveListenHistory.removeListenHistory(true);
-
-
-                }
-
-                //HIDE PROGRESSBAR
-                pDialog.cancel();
-
-            }
-
-            @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
-
-                CommonMethods.printLogE("Response @ callRemoveVideo Error", "" + t.getMessage());
-
-                //BUILD ERROR DIALOG DIALOG
-                CommonMethods.buildDialog(mContext, Constants.SOMETHING_WENT_WRONG);
-
-
-                //HIDE PROGRESSBAR
-                pDialog.cancel();
-
-
-            }
-        });
-
-
-    }
 }
