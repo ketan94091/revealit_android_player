@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -46,6 +47,8 @@ public class DisplayPrivateKeyActivity extends AppCompatActivity implements View
     private DeCryptor decryptor;
     private EnCryptor encryptor;
     private String mMnemonics,mPublicPem,mPrivatePem,mPrivateKey;
+    private LinearLayout linearHideForNonAdmin;
+
 
 
     @Override
@@ -70,6 +73,7 @@ public class DisplayPrivateKeyActivity extends AppCompatActivity implements View
         mDatabaseHelper.open();
 
         relativeBack =(RelativeLayout)findViewById(R.id.relativeBack);
+        linearHideForNonAdmin =(LinearLayout)findViewById(R.id.linearHideForNonAdmin);
 
         imgCopy =(ImageView)findViewById(R.id.imgCopy);
         imgCopyPhrase =(ImageView)findViewById(R.id.imgCopyPhrase);
@@ -138,6 +142,11 @@ public class DisplayPrivateKeyActivity extends AppCompatActivity implements View
 
         } catch (CertificateException |NoSuchAlgorithmException |KeyStoreException |IOException |NoSuchProviderException | InvalidAlgorithmParameterException| NoSuchPaddingException| IllegalBlockSizeException |BadPaddingException |InvalidKeyException ex) {
             ex.printStackTrace();
+        }
+
+        //CHECK IF USER IS ADMIN
+        if(!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
+            linearHideForNonAdmin.setVisibility(View.GONE);
         }
 
     }

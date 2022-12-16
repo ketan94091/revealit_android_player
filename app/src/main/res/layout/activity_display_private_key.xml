@@ -179,14 +179,20 @@
 
                 </RelativeLayout>
 
+                <LinearLayout
+                    android:id="@+id/linearHideForNonAdmin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linearWarning"
+                    android:orientation="vertical"
+                    android:layout_marginTop="30dp">
+
 
                 <RelativeLayout
                     android:id="@+id/relativePrivatePem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/linearWarning"
-                    android:layout_marginTop="30dp"
-                    android:orientation="vertical">
+                    >
 
                     <RelativeLayout
                         android:id="@+id/relativePrivateKeyPemImg"
@@ -533,6 +539,7 @@
 
 
                     </RelativeLayout>
+                </LinearLayout>
 
                 </LinearLayout>
 

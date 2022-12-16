@@ -66,6 +66,13 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/linearReferal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+            <LinearLayout
                 android:id="@+id/linearUserStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -166,6 +173,8 @@
 
             </LinearLayout>
 
+            </LinearLayout>
+
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -246,6 +255,7 @@
                     android:orientation="horizontal"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
+                    android:visibility="gone"
                     >
 
 
@@ -258,8 +268,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-                            android:layout_centerInParent="true"
 
+                            android:layout_centerInParent="true"
                             android:fontFamily="@font/quasimoda_bold"
                             android:text="@string/strMySavedItems"
                             android:textColor="@color/colorBlack"
@@ -297,6 +307,7 @@
                     android:orientation="horizontal"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
+                    android:visibility="gone"
                     >
 
 

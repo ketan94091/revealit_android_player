@@ -66,6 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <View
@@ -113,7 +114,14 @@
             android:id="@+id/linearLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
             android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:background="@color/colorInActiveGrey" />
+
 
             <RelativeLayout
                 android:layout_width="match_parent"

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
@@ -102,7 +103,7 @@ public class GetBiomatricPermissionActivity extends AppCompatActivity {
         mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
         mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
 
-        Intent mIntent = new Intent(GetBiomatricPermissionActivity.this, GoogleCloudBackupActivity.class);
+        Intent mIntent = new Intent(GetBiomatricPermissionActivity.this, HomeScreenTabLayout.class);
         startActivity(mIntent);
         finish();
     }

@@ -130,6 +130,10 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         //SET APPLICATION INSTALLED VERSION NAME AND SERVER NAME
         txtAdmin.setText(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME) +" Server : "+  BuildConfig.VERSION_NAME);
 
+        //CHECK IF USER IS ADMIN
+        if(!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
+            linearSettings.setVisibility(View.GONE);
+        }
 
     }
 

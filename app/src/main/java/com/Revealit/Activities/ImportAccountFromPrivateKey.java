@@ -540,11 +540,49 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                 return true;
 
             } catch (IllegalArgumentException | SerializationProviderError | EosioJavaRpcProviderInitializerError | ImportKeyError | GetAvailableKeysError exception) {
-                CommonMethods.buildDialog(mContext,"Exception Occurred @"+exception);
+                displayErrorDialogue();
                 return false;
             }
         }
 
+    }
+
+    private void displayErrorDialogue() {
+
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
+        dialogBuilder.setCancelable(false);
+        LayoutInflater inflater = mActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.invalid_private_key, null);
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialogBuilder.setView(dialogView);
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        TextView txtOk = (TextView) dialogView.findViewById(R.id.txtOk);
+
+
+        imgCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+            }
+        });
+
+
+        txtOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                edtImportKey.setText("");
+                mAlertDialog.dismiss();
+
+
+            }
+        });
+
+        mAlertDialog.show();
     }
 
     private void openUserFoundFromOtherSilosDialogue() {
@@ -661,41 +699,57 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_B_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_B_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strBeta));
+                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 1);
+
                                 break;
                             case 2:
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_S_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_S_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strStaging));
+                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 2);
+
                                 break;
                             case 3:
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_T1_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_T1_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strTesting1));
+                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 3);
+
                                 break;
                             case 4:
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_T2_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_T2_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strTesting2));
+                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 4);
+
                                 break;
                             case 5:
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_T3_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_T3_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strTesting3));
+                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 5);
+
                                 break;
                             case 6:
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_INTEGRATION_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strIntegration));
+                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 6);
+
                                 break;
                             case 7:
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_DEMO_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_DEMO_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strDemo));
+                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 7);
+
                                 break;
                             case 8:
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_ANDROID_M1_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION__ANDROID_M1_CURATOR);
                                 mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strAndroidMobile1));
+                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 8);
+
 
                                 break;
                         }

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.Revealit.Activities.ImportAccountFromPrivateKey;
 import com.Revealit.Adapter.SilosAvailableAccountsListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
+import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.ModelClasses.KeyStoreServerInstancesModel;
 import com.Revealit.R;
@@ -83,8 +84,10 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
             e.printStackTrace();
         }
 
-
-        //CHECK USER ACCOUNT IN TO THE PROTON
+        //CHECK IF USER IS ADMIN
+        if(!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
+            relativeRestoreFromCloud.setVisibility(View.GONE);
+        }
 
 
 

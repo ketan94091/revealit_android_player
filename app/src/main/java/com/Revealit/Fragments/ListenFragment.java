@@ -410,8 +410,12 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                                 txtReveal.setVisibility(View.VISIBLE);
 
 
+                                //RESET BOTTOM BAR VIEW ON EACH NEW VIDEOS
+                                resetBottomBarAndMyRevealsView();
+
+
                             }
-                        }, 2000);
+                        }, 1000);
 
                     }
                 }
@@ -1078,7 +1082,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                                         } else {
 
                                             //REMOVE SINGLE VIDEO FROM DATABASE
-                                            mDatabaseHelper.clearSimulationHistoryItem(mDatabaseHelper.getRevealitHistoryData().get(pos).getMedia_id());
+                                            mDatabaseHelper.clearSimulationHistoryItem(finalMHistoryListFromDatabase.get(pos).getMedia_id());
 
                                             //UPDATE LIST THROUGH INTERFACE
                                             mRemoveListenHistory.removeListenHistory(false);
@@ -1169,7 +1173,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                                         } else {
 
                                             //REMOVE SINGLE VIDEO FROM DATABASE
-                                            mDatabaseHelper.clearSimulationHistoryItem(mDatabaseHelper.getRevealitHistoryDataSimulation().get(pos).getMedia_id());
+                                            mDatabaseHelper.clearSimulationHistoryItem(finalMHistoryListFromDatabase.get(pos).getMedia_id());
 
                                             //UPDATE LIST THROUGH INTERFACE
                                             mRemoveListenHistory.removeListenHistory(false);
