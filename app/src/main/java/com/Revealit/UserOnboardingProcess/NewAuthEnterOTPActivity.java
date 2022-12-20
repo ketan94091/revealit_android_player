@@ -17,10 +17,14 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
+import com.Revealit.ModelClasses.KeyStoreServerInstancesModel;
 import com.Revealit.ModelClasses.NewAuthStatusModel;
+import com.Revealit.ModelClasses.SubmitProfileModel;
+import com.Revealit.ModelClasses.UserDetailsFromPublicKeyModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
@@ -28,10 +32,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -54,6 +61,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
     private EditText edtFive, edtSix, edtFour, edtThree, edtTwo, edtOne;
     private boolean isOtpVarified;
     private String strCountryCode,strMobileNumber,strCampaignId,strRefferalId,strInvitename;
+    private Gson mGson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +128,11 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
         edtFour.setOnKeyListener(new GenericKey(edtFour,edtThree));
         edtFive.setOnKeyListener(new GenericKey(edtFive,edtFour));
         edtSix.setOnKeyListener(new GenericKey(edtSix,edtFive));
+
+        mGson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                .serializeNulls()
+                .create();
 
     }
 
@@ -205,13 +218,265 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
 
     private void openEnterUsernameScreen() {
 
-        Intent mIntent = new Intent(NewAuthEnterOTPActivity.this, NewAuthEnterUserNameActivity.class);
-        mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,strMobileNumber);
-        mIntent.putExtra(Constants.KEY_COUNTRY_CODE ,strCountryCode);
-        mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
-        mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
-        mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,strInvitename);
+
+        if(getIntent().getBooleanExtra(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY, false)){
+            apiCallResubmitProfile();
+        }else {
+
+            Intent mIntent = new Intent(NewAuthEnterOTPActivity.this, NewAuthEnterUserNameActivity.class);
+            mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,strMobileNumber);
+            mIntent.putExtra(Constants.KEY_COUNTRY_CODE ,strCountryCode);
+            mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
+            mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
+            mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,strInvitename);
+            startActivity(mIntent);
+        }
+
+    }
+
+    private void apiCallResubmitProfile() {
+
+
+        //OPEN DIALOGUE
+        CommonMethods.showDialog(mContext);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+        JsonObject paramObject = new JsonObject();
+        paramObject.addProperty("receiver_number", strMobileNumber);
+        paramObject.addProperty("campaign_id",Long.valueOf(strCampaignId));
+        paramObject.addProperty("referral_id",Long.valueOf(strRefferalId));
+        paramObject.addProperty("country_code",strCountryCode);
+        paramObject.addProperty("username",mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME));
+        paramObject.addProperty("public_key",mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY));
+
+
+        Call<UserDetailsFromPublicKeyModel> call = patchService1.reSubmitProfile(paramObject);
+
+        call.enqueue(new Callback<UserDetailsFromPublicKeyModel>() {
+            @Override
+            public void onResponse(Call<UserDetailsFromPublicKeyModel> call, Response<UserDetailsFromPublicKeyModel> response) {
+
+                CommonMethods.printLogE("Response @ apiSubmitProfile: ", "" + response.code());
+                CommonMethods.printLogE("Response @ apiSubmitProfile: ", "" + gson.toJson(response.body()));
+
+                //CLOSED DIALOGUE
+                CommonMethods.closeDialog();
+
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
+
+                    saveDataToTheAndroidKeyStore(response.body(), mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME));
+
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        CommonMethods.buildDialog(mContext,"Error Code : "+jObjError.getString("error_code") +" "+ jObjError.getString("message"));
+                    } catch (Exception e) {
+                        CommonMethods.buildDialog(mContext,"Error Code : "+e.getMessage());
+
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<UserDetailsFromPublicKeyModel> call, Throwable t) {
+
+                //CLOSED DIALOGUE
+                CommonMethods.closeDialog();
+
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+
+
+            }
+        });
+
+    }
+
+    private void saveDataToTheAndroidKeyStore(UserDetailsFromPublicKeyModel body, String username) {
+
+
+        if(body != null ){
+
+            //MAKE SubmitProfileModel CLASS FROM ALL DATA
+            SubmitProfileModel mSubmitModel = new SubmitProfileModel();
+            mSubmitModel.setStatus(body.getStatus());
+            mSubmitModel.setrevealit_private_key(body.getRevealit_private_key());
+            mSubmitModel.setRole(body.getRole());
+            mSubmitModel.setauth_token(body.getAuth_token());
+            mSubmitModel.setAudience(body.getAudience());
+
+            //SET PROTON DATA
+            SubmitProfileModel.Proton mProton = new SubmitProfileModel.Proton();
+            mProton.setAccountName(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME));
+            mProton.setPublicKey(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY));
+            mProton.setPrivateKey(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY));
+            mProton.setMnemonic("");
+            mProton.setPublic_pem(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY_PEM));
+            mProton.setPrivate_pem(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY_PEM));
+            mSubmitModel.setProton(mProton);
+
+            mSubmitModel.setIs_activated(""+body.getIs_activated());
+            mSubmitModel.setMessage("");
+            mSubmitModel.setError_code(0);
+            mSubmitModel.setServerInstance("");
+
+
+
+            mSessionManager.updatePreferenceString(Constants.KEY_USER_DATA, ""+mGson.toJson(mSubmitModel));
+            mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN ,body.getAuth_token());
+            mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE ,getResources().getString(R.string.strTokenBearer));
+            mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME ,username);
+            //mSessionManager.updatePreferenceString(Constants.KEY_PROTON_WALLET_DETAILS,gson.toJson(body.getProton()));
+            mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY ,body.getRevealit_private_key());
+            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_REGISTRATION_DONE ,true);
+            mSessionManager.updatePreferenceString(Constants.KEY_MOBILE_NUMBER,mSessionManager.getPreference(Constants.KEY_MOBILE_NUMBER));
+
+
+            //STORE DATA IN TO KEYSTORE
+            //FOR DISPLAY PURPOSE
+            CommonMethods.encryptKey(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY), Constants.KEY_PRIVATE_KEY ,body.getRevealit_private_key(), mSessionManager);
+            CommonMethods.encryptKey(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY),Constants.KEY_PUBLIC_KEY,body.getRevealit_private_key(), mSessionManager);
+            CommonMethods.encryptKey("xyz",Constants.KEY_MNEMONICS,body.getRevealit_private_key(), mSessionManager);
+            CommonMethods.encryptKey(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY_PEM),Constants.KEY_PRIVATE_KEY_PEM,body.getRevealit_private_key(), mSessionManager);
+            CommonMethods.encryptKey(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY_PEM),Constants.KEY_PUBLIC_KEY_PEM,body.getRevealit_private_key(), mSessionManager);
+
+
+            //UPDATE FLAG IF USER IS ADMIN OR NOT
+            if(body.getRole().equals(getResources().getString(R.string.strAdmin))){
+                mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,true);
+            }else{
+                mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,false);
+            }
+
+            //UPDATE ACTIVE FLAG
+            if(body.getIs_activated() == 1){
+                mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
+            }else{
+                mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
+            }
+
+            //UPDATE FLAG FOR APPLICATION MODE
+            mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
+
+            //SET KEY STORE INSTANCE DATA
+            storeKeyStoreInstances(mSubmitModel);
+
+        }
+
+
+    }
+
+    private void storeKeyStoreInstances(SubmitProfileModel body) {
+
+        //STORE DATA FOR SWAPPING SILOS
+        //THIS IS TEMPORARY FOR ADMIN USERS
+        //OVERRIDE EXISTING SILOS IF ADMIN CREATE NEW WITH FOR EXISTING SAVED SILOS
+        //encryptKey(""+mGson.toJson(body),  Constants.KEY_SILOS_DATA+""+mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID),Constants.KEY_SILOS_ALIAS);
+
+        //CREATE LIST WHICH COULD ENCRYPT AND THAN STORE IN THE KEY STORE AS A STRING
+        ArrayList<KeyStoreServerInstancesModel.Data> mInstancesModel = new ArrayList<>();
+        KeyStoreServerInstancesModel.Data mModelData = new KeyStoreServerInstancesModel.Data();
+        mModelData.setServerInstanceName(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME));
+        mModelData.setMobileNumber(mSessionManager.getPreference(Constants.KEY_MOBILE_NUMBER));
+        mModelData.setServerInstanceId(mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID));
+        mModelData.setSubmitProfileModel(body);
+        mInstancesModel.add(mModelData);
+
+        //CHECK IF DATA IS ALREADY STORED IN TO KEYSTORE
+        //IF STORED -> FETCH FROM KEYSTORE, CONVERT TO LIST, CREATE NEW OBJECT AND ADD THAT OBJECT TO LIST.
+        //ELSE -> TREAT AS FIRST USER
+        if(!CommonMethods.checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
+
+            //CONVERT DATA TO JSON ARRAY
+            //CREATE NEW ARRAY FROM THE STRING ARRAY
+            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
+            try {
+                JSONArray jsonArray =new JSONArray(CommonMethods.checkIfInstanceKeyStoreData(mSessionManager));
+                ArrayList<KeyStoreServerInstancesModel.Data> dataArrayList = new ArrayList<>();
+
+                for (int i=0 ;i < jsonArray.length();i++){
+
+                    KeyStoreServerInstancesModel.Data mModel = new KeyStoreServerInstancesModel.Data();
+                    mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
+                    mModel.setMobileNumber(jsonArray.getJSONObject(i).getString("mobileNumber"));
+                    mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
+
+                    SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
+                    mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
+                    mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("auth_token"));
+                    mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
+                    mSubmitProfileModel.setIs_activated(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
+                    mSubmitProfileModel.setMessage(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("message"));
+                    mSubmitProfileModel.setrevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("revealit_private_key"));
+                    mSubmitProfileModel.setRole(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("role"));
+                    mSubmitProfileModel.setServerInstance(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("serverInstance"));
+                    mSubmitProfileModel.setStatus(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("status"));
+
+                    SubmitProfileModel.Proton mProton = new SubmitProfileModel.Proton();
+                    mProton.setAccountName(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("account_name"));
+                    mProton.setMnemonic(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("mnemonic"));
+                    mProton.setPrivateKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key"));
+                    mProton.setPrivate_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_pem"));
+                    mProton.setPublicKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_key"));
+                    mProton.setPublic_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_pem"));
+                    mSubmitProfileModel.setProton(mProton);
+
+                    mModel.setSubmitProfileModel(mSubmitProfileModel);
+
+                    dataArrayList.add(mModel);
+                }
+
+                //ADD NEWLY CREATED INSTANCE OBJECT TO THE ARRAYLIST
+                dataArrayList.add(mModelData);
+
+
+                //STORE WHOLE ARRAY IN TO STRING FORMAT IN KEYSTORE
+                CommonMethods.encryptKey(""+mGson.toJson(dataArrayList),  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS, mSessionManager);
+
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            //STORE WHOLE JSON IN TO STRING
+            CommonMethods.encryptKey(""+mGson.toJson(mInstancesModel),  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS, mSessionManager);
+        }
+
+        //GO TO NEXT ACTIVITY
+        Intent mIntent = new Intent(NewAuthEnterOTPActivity.this, HomeScreenTabLayout.class);
+        mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME ,body.getProton().getAccountName());
         startActivity(mIntent);
+        finishAffinity();
+
     }
 
     private void apiSendOTPtoMobile(){
@@ -377,6 +642,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
 
                         //HIDE KEY BOARD
                         CommonMethods.hideKeyboard(mActivity);
+
 
                         //OPEN ENTER USERNAME SCREEN
                         openEnterUsernameScreen();

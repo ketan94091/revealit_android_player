@@ -16,11 +16,13 @@
     <string name="strAuthWarningMsg">Are you willing to authorise?</string>
     <string name="strAuthWarningMsgTwo">If not, simply decline the request by exiting the page.</string>
     <string name="strAccountAlreadyExists">Account Already Exists</string>
+    <string name="strMoreInformationNeeded">More Information Needed</string>
     <string name="strSignUpCanNotBeComplete">Signup Can Not Be Complete</string>
     <string name="strImportKeyUserAlreadyExists">User already exists. Do you want to Login?</string>
     <string name="strAccountAlreadyExistsWarningMsg">Your account already exists on a different device. Do you wish to retrieve your revealit TV account on this device?</string>
     <string name="strBioMetricActivationRequire">To be a revealit TV user you must have biometrics activated on your phone or tablet.</string>
     <string name="strNoARproduct">No AR Product Available</string>
+    <string name="strNeedMoreInformation">We need some more information to complete account import.</string>
     <string name="strEnterYourPrivateKey">Enter your private key to continue</string>
     <string name="strImportYourPrivateKey">Import Private Key:</string>
     <string name="strRefreshingRewardHistory">Refreshing reward history...</string>
@@ -122,7 +124,7 @@
     <string name="strSettings">Settings</string>
     <string name="strHelp">Help</string>
     <string name="strFetchingData">Fetching Data....</string>
-    <string name="strTapToRevealit">Tap to revealit</string>
+    <string name="strTapToRevealit">Tap to reveal</string>
     <string name="strMyReveals">My Reveals</string>
     <string name="strSelectALl">Select All</string>
     <string name="strRevealSelected">Reveals Selected</string>

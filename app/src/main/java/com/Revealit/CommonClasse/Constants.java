@@ -59,7 +59,8 @@ public class Constants {
   public static final  String API_PROTON_TEST_NET ="https://api-dev.protonchain.com";
   //PROTON EOSIO
   public static final  String PROTON_BASE_URL ="https://proton.greymass.com";
-  public static final  String GET_PROTON_ACCOUNT_NAME_BASE_URL ="https://proton.cryptolions.io/v1/history/";
+  //public static final  String GET_PROTON_ACCOUNT_NAME_BASE_URL ="https://proton.cryptolions.io/v1/history/";
+  public static final  String GET_PROTON_ACCOUNT_NAME_BASE_URL ="https://proton.eosphere.io/v1/history/";
   public static final  String PROTON_PERMISSION ="active";
   public static final  String PROTON_ACTION_ACCOUNT ="eosio";
   public static final  String PROTON_VOTE_PRODUCER ="voteproducer";
@@ -95,6 +96,7 @@ public class Constants {
   public static final String API_NEW_AUTH_INVITE_SETTINGS = "api/invitesetting";
   public static final String API_NEW_AUTH_USERNAME_EXIST = "api/usernotexists";
   public static final String API_NEW_AUTH_SUBMIT_PROFILE = "api/submitprofile";
+  public static final String API_NEW_AUTH_RE_SUBMIT_PROFILE = "api/submitexistigprofile";
   public static final String API_NEW_AUTH_LOGIN = "api/authlogin";
   public static final String API_NEW_AUTH_CALLBACK = "/api/callback";
   public static final String API_NEW_AUTH_CHECK_MOBILENUMBER = "/api/phonenotexists";
@@ -190,6 +192,12 @@ public class Constants {
   public  static  final  String KEY_PROTON_ACCOUNTNAME ="keyProtonAccountName";
   public  static  final  String KEY_MNEMONICS ="keyMnemonics";
   public  static  final  String KEY_MOBILE_NUMBER ="keyMobileNumber";
+  public  static  final  String KEY_USER_NOT_FOUND_IMPORT_KEY ="keyUserNotfoundImportKey";
+  public  static  final  String KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME ="keyUserNotfoundImportKeyUserName";
+  public  static  final  String KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY ="keyUserNotfoundImportKeyPublicKey";
+  public  static  final  String KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY_PEM ="keyUserNotfoundImportKeyPublicKeyPem";
+  public  static  final  String KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY_PEM ="keyUserNotfoundImportKeyPrivateKeyPem";
+  public  static  final  String KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY ="keyUserNotfoundImportKeyPrivateKey";
   public  static  final  String KEY_IS_EDUCATION_VIDEO_PLAYED ="keyIsEducationVideoPlayed";
   public  static  final  String KEY_MOBILE_NUMBER_KEYSTORE_SILOS ="keyMobileNumberKeyStoreSilos";
   public  static  final  String KEY_COUNTRY_CODE ="keyCountryCode";

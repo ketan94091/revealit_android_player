@@ -619,11 +619,6 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
 
 
-//                Log.e("HEIGHT : ", ""+height);
-//                Log.e("WIDTH : ", ""+ width);
-//                Log.e("pixelWidthHeightRatio : ", ""+ pixelWidthHeightRatio);
-
-
                 //GET VIDEO HEIGHT AND WIDTH
                 heightVideo = height;
                 widthVideo = width;

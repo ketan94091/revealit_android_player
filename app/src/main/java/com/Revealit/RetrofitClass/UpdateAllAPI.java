@@ -215,6 +215,10 @@ public interface UpdateAllAPI {
     @GET()
     Call<UserDetailsFromPublicKeyModel> getUserDetailsFromPubKeyAndName(@Url String url);
 
+    //SUBMIT PROFILE
+    @POST(Constants.API_NEW_AUTH_RE_SUBMIT_PROFILE)
+    Call<UserDetailsFromPublicKeyModel> reSubmitProfile(@Body JsonObject body);
+
 }
 
 

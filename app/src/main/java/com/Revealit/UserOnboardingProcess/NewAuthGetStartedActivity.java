@@ -138,6 +138,7 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
 
             case R.id.txtSignup:
                 Intent mIntent = new Intent(NewAuthGetStartedActivity.this, NewAuthMobileAndPromoActivity.class);
+                mIntent.putExtra(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY, false);
                 startActivity(mIntent);
                 break;
             case R.id.txtSwappingSilo:

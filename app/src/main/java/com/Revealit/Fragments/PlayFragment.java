@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +74,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     private LinearLayout ralativeMain;
     private boolean isForFirstTime = true,isUserIsActive;
     String strFeaturedMediaCoverImage ="", strFeaturedMediaTitle = "" , strFeaturedMidiaID = "" ,strFeaturedMidiaURL = "";
-    private Activity homeScreenTabLayout;
+    private HomeScreenTabLayout homeScreenTabLayout;
 
     public PlayFragment(HomeScreenTabLayout homeScreenTabLayout) {
         this.homeScreenTabLayout = homeScreenTabLayout;
@@ -103,8 +102,6 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-
-        Log.e("RESUME","KEATN");
 
         //CALL HOME SCREEN PLAY DATA API
         getVideoPlayerRawData();
@@ -161,6 +158,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
             }
         });
 
+
     }
 
     private void setOnClicks() {
@@ -192,9 +190,6 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
                 if (!strFeaturedMidiaURL.isEmpty()) {
 
-                    //UPDATE EDUCATIONAL VIDEO FLAG
-                    mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_EDUCATION_VIDEO_PLAYED, true);
-
                     Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
                     mIntent.putExtra(Constants.MEDIA_URL, strFeaturedMidiaURL);
                     mIntent.putExtra(Constants.MEDIA_ID, strFeaturedMidiaID);
@@ -202,8 +197,6 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                     mIntent.putExtra(Constants.VIDEO_SEEK_TO,"0");
                     mIntent.putExtra(Constants.IS_VIDEO_SEEK, false);
                     mActivity.startActivity(mIntent);
-
-
 
                 } else {
 
@@ -375,18 +368,11 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                                             //IF -> TURE -> DISPLAY FEATURED VIDEO
                                             //ELSE -> DISPLAY -> REVEAL IT CURATOR ACADEMY VIDEO
                                             //UPDATE FLAG ON FEATURE VIDEO PLAY BUTTON
-                                            if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_EDUCATION_VIDEO_PLAYED)){
+
                                                 strFeaturedMidiaURL = ""+strMediaUrl;
                                                 strFeaturedMidiaID = ""+intMediaID;
                                                 strFeaturedMediaTitle = ""+strMediaTitle;
                                                 strFeaturedMediaCoverImage = ""+strMediaCoverArt;
-                                            }else{
-
-                                                strFeaturedMidiaURL = Constants.EDUCATION_VIDEO_URL;
-                                                strFeaturedMidiaID = "0";
-                                                strFeaturedMediaTitle = Constants.EDUCATION_VIDEO_TITLE;
-                                                strFeaturedMediaCoverImage = "";
-                                            }
 
                                         }else {
                                             mDatabaseHelper.insertCategoryWisePlayData(strCategoryName,
@@ -502,6 +488,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
     }
     private void showWelcomeDialogue(boolean isUserIsActive) {
 
+
+
         android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
         dialogBuilder.setCancelable(false);
         LayoutInflater inflater = mActivity.getLayoutInflater();
@@ -533,6 +521,17 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                 //UPDATE FIRST OPEN FLAG
                 mSessionManager.updatePreferenceBoolean(Constants.IS_USER_OPEN_APP_FIRST_TIME,true);
 
+                //UPDATE EDUCATIONAL VIDEO FLAG
+                mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_EDUCATION_VIDEO_PLAYED, true);
+
+                Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
+                mIntent.putExtra(Constants.MEDIA_URL, Constants.EDUCATION_VIDEO_URL);
+                mIntent.putExtra(Constants.MEDIA_ID, "0");
+                mIntent.putExtra(Constants.VIDEO_NAME, Constants.EDUCATION_VIDEO_TITLE);
+                mIntent.putExtra(Constants.VIDEO_SEEK_TO,"0");
+                mIntent.putExtra(Constants.IS_VIDEO_SEEK, false);
+                mActivity.startActivity(mIntent);
+
             }
         });
 
@@ -549,9 +548,10 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-
         mAlertDialog.show();
     }
+
+
 
 
 }

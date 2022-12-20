@@ -275,7 +275,12 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                 if(isRefferalValid()){
 
                     if(!isOtpRecieved){
-                        apiSendOTPtoMobile(0);
+                        if(getIntent().getBooleanExtra(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY, false)){
+                            apiSendOTPtoMobile(3);
+                        }else{
+                            apiSendOTPtoMobile(0);
+                        }
+
                     }else{
                         //MOVE TO NEXT ACTIVITY
                         Intent mIntent = new Intent(NewAuthMobileAndPromoActivity.this, NewAuthEnterOTPActivity.class);
@@ -319,33 +324,6 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             txtPromoWarnings.setText(getString(R.string.strEnterRightCampaignId));
             return false;
         }else{
-            return true;
-        }
-    }
-
-    private boolean isCountryCodeValid() {
-
-        if (edtCountryCode.getText().toString().isEmpty()) {
-            linearMobileWarnings.setVisibility(View.VISIBLE);
-            imgMobileStutusFalse.setVisibility(View.VISIBLE);
-            edtMobilenumber.setTextColor(getResources().getColor(R.color.colorCuratorRedError));
-            imgMobileStutusTrue.setVisibility(View.INVISIBLE);
-            disbaledContinueButton();
-            txtMobileWarnings.setText(getString(R.string.strErrorCountryCodeEmpty));
-            return false;
-
-        } else if (edtCountryCode.getText().toString().length() < 2) {
-            linearMobileWarnings.setVisibility(View.VISIBLE);
-            imgMobileStutusFalse.setVisibility(View.VISIBLE);
-            edtMobilenumber.setTextColor(getResources().getColor(R.color.colorCuratorRedError));
-            imgMobileStutusTrue.setVisibility(View.INVISIBLE);
-            disbaledContinueButton();
-            txtMobileWarnings.setText(getString(R.string.strErrorCountryCodeValid));
-            return false;
-
-        }else{
-            edtMobilenumber.requestFocus();
-            isMobileNumberValid();
             return true;
         }
     }
@@ -599,7 +577,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
                 if (response.isSuccessful() && response.code() == Constants.API_CODE_200  ) {
 
-                    if(isStartOver == 0){
+                    if(isStartOver == 0 || isStartOver == 3){
                         //MOVE TO NEXT ACTIVITY
                         Intent mIntent = new Intent(NewAuthMobileAndPromoActivity.this, NewAuthEnterOTPActivity.class);
                         mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,edtMobilenumber.getText().toString());
@@ -607,6 +585,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                         mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
                         mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
                         mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,edtPromo.getText().toString());
+                        mIntent.putExtra(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY, getIntent().getStringExtra(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY));
                         startActivity(mIntent);
 
                     }else{

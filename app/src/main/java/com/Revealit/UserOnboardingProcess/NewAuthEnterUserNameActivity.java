@@ -405,6 +405,12 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
             CommonMethods.encryptKey(""+mGson.toJson(mInstancesModel),  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS, mSessionManager);
         }
 
+        //UPDATE FIRST OPEN FLAG
+        mSessionManager.updatePreferenceBoolean(Constants.IS_USER_OPEN_APP_FIRST_TIME,false);
+
+        //UPDATE EDUCATIONAL VIDEO FLAG
+        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_EDUCATION_VIDEO_PLAYED, false);
+
         //GO TO NEXT ACTIVITY
         Intent mIntent = new Intent(NewAuthEnterUserNameActivity.this,InviteAndEarnActivity.class);
         mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME ,body.getProton().getAccountName());

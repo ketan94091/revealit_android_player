@@ -97,7 +97,7 @@
                             android:focusable="true"
                             android:fontFamily="@font/quasimoda_semibold"
                             android:gravity="center_vertical"
-                            android:hint="Username"
+                            android:hint="@string/strUsername"
                             android:inputType="text"
                             android:maxLength="8"
                             android:paddingLeft="15dp"
@@ -107,6 +107,7 @@
                             android:textAllCaps="false"
                             android:textColor="@color/colorBlack"
                             android:textFontWeight="600"
+                            android:imeOptions="actionDone"
                             android:textSize="15dp" />
 
                         <RelativeLayout

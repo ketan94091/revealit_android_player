@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +29,7 @@ import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.Revealit.UserOnboardingProcess.NewAuthBiomatricAuthenticationActivity;
+import com.Revealit.UserOnboardingProcess.NewAuthMobileAndPromoActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -156,7 +158,6 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
             case R.id.txtContinueEnabled:
 
                 if(checkPrivateKeyIsEmpty()){
-
                     fetchUsername();
                 }
                 break;
@@ -305,11 +306,20 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
+                //SAVE IMPORT KEY USERNAME AND PUBLICK KEY
+                mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME, username.replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", ""));
+                mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY, publicKey);
+                mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY_PEM, publicKeyPem);
+                mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY_PEM, privateKeyPem);
+                mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY, edtImportKey.getText().toString());
+
                 if (response.isSuccessful() && response.code() == Constants.API_CODE_200  ) {
                     CommonMethods.printLogE("Response @ fetchUserDetailsFromPubkeyAndUsername: ", "" + gson.toJson(response.body()));
 
                         saveDataToTheAndroidKeyStore(response.body(),username.replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", ""));
 
+                }else if(response.code() == Constants.API_CODE_404){
+                      displayUserNotFoundDialogue();
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -335,6 +345,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
         });
 
     }
+
 
     private void saveDataToTheAndroidKeyStore(UserDetailsFromPublicKeyModel body, String username) {
 
@@ -506,12 +517,12 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
         }else if(CommonMethods.checkEnterPrivateKeyIsFromOtherSilos(mSessionManager,edtImportKey.getText().toString())) {
             openUserAlreadyAvailableDialogue();
             return false;
-        }else if(CommonMethods.checkIfInstanceKeyStoreData(mSessionManager).contains(edtImportKey.getText().toString())) {
-            openUserFoundFromOtherSilosDialogue();
-            return false;
-        }else{
+//        }else if(CommonMethods.checkIfInstanceKeyStoreData(mSessionManager).contains(edtImportKey.getText().toString())) {
+//            openUserFoundFromOtherSilosDialogue();
+//            return false;
+     }else{
             try {
-                EosPrivateKey mEosPrivateKeyPem = new EosPrivateKey(edtImportKey.getText().toString());
+                EosPrivateKey mEosPrivateKeyPem = new EosPrivateKey(edtImportKey.getText().toString().trim());
                 privateKeyPem = ""+mEosPrivateKeyPem;
                 publicKeyPem = ""+mEosPrivateKeyPem.getPublicKey().toString();
 
@@ -868,6 +879,49 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
         });
         mAlertDialog.show();
     }
+    private void displayUserNotFoundDialogue() {
+
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
+        dialogBuilder.setCancelable(false);
+        LayoutInflater inflater = mActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.import_key_user_notfound, null);
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialogBuilder.setView(dialogView);
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        TextView txtContinue = (TextView) dialogView.findViewById(R.id.txtContinue);
+        LinearLayout linearCancel = (LinearLayout) dialogView.findViewById(R.id.linearCancel);
+
+
+        linearCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+            }
+        });
+
+
+        txtContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //OPEN ENTER MOBILE NUMBER APP
+                Intent mIntent = new Intent(ImportAccountFromPrivateKey.this,NewAuthMobileAndPromoActivity.class);
+                mIntent.putExtra(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY, true);
+                startActivity(mIntent);
+
+
+                mAlertDialog.dismiss();
+
+            }
+        });
+
+        mAlertDialog.show();
+
+    }
+
 }
 class FetchDataFromAndroidKeyStoreTask extends AsyncTask<SessionManager, Integer, ArrayList<KeyStoreServerInstancesModel.Data>> {
 
