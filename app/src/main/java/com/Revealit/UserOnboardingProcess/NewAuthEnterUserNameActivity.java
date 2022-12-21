@@ -145,6 +145,8 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
                                                            imgUsernameStutusTrue.setVisibility(View.INVISIBLE);
                                                            linearUsernameHint.setVisibility(View.VISIBLE);
                                                            txtUsernameInUse.setVisibility(View.GONE);
+                                                           txtContinueDisable.setVisibility(View.VISIBLE);
+                                                           txtContinueEnabled.setVisibility(View.GONE);
                                                        }else{
                                                            linearUsernameWarnings.setVisibility(View.VISIBLE);
                                                            linearUsernameTrue.setVisibility(View.INVISIBLE);
@@ -152,6 +154,8 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
                                                            imgUsernameStutusTrue.setVisibility(View.INVISIBLE);
                                                            linearUsernameHint.setVisibility(View.INVISIBLE);
                                                            txtUsernameInUse.setVisibility(View.GONE);
+                                                           txtContinueDisable.setVisibility(View.GONE);
+                                                           txtContinueEnabled.setVisibility(View.VISIBLE);
                                                        }
                                                    }
                                                }

@@ -22,6 +22,12 @@
         <item name="android:windowIsFloating">false</item>
     </style>
 
+    <style name="AlertDialogCustom" parent="@android:style/Theme.Dialog">
+        <item name="android:textColor">#00FF00</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
     <style name="RadioButton">
         <item name="android:gravity">center</item>
         <item name="android:paddingLeft">5.0dip</item>

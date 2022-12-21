@@ -171,7 +171,7 @@ public class Constants {
   public  static  final  String AUDIO_CAN_NOT_RECORD ="Oops!! Something went wrong please try after sometimes.";
   public  static  final  String AUDIO_NOT_RECOGNISED ="Video not recognized!";
   public  static  final  String MICROPHONE_CANNOT_WORK ="Can not record audio!";
-  public  static  final  String PRIVACY_POLICY_URL ="https://curator.revealit.io/terms";
+  public  static  final  String PRIVACY_POLICY_URL ="https://curator.revealit.tv/terms";
 
   //ACR CLOUD SDK
   public  static  final  String KEY_ACCESS_KEY ="access_key";

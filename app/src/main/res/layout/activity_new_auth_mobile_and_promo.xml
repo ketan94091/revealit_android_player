@@ -211,6 +211,7 @@
                     android:text="@string/strUsedForUniqueAccountCreation"
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="500"
+                    android:visibility="gone"
                     android:textSize="15dp" />
 
                 <LinearLayout

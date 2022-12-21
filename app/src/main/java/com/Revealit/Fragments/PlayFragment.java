@@ -1,7 +1,7 @@
 package com.Revealit.Fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -144,19 +144,6 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         //ELSE -> USER IS IN ACTIVE -> DISPLAY WHITELISTED DIALOGUE
         //UPDATE FIRST OPEN FLAG
         isUserIsActive =mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_ACTIVE);
-        //UPDATE FIRST OPEN FLAG
-        mActivity.runOnUiThread(new Runnable() {
-            public void run() {
-                if(isUserIsActive){
-                    if(!mSessionManager.getPreferenceBoolean(Constants.IS_USER_OPEN_APP_FIRST_TIME)){
-                        showWelcomeDialogue(isUserIsActive);
-                    }
-
-                }else{
-                    showWelcomeDialogue(false);
-                }
-            }
-        });
 
 
     }
@@ -484,22 +471,30 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         //CHANGE VALUE
         isForFirstTime = false;
 
+        //UPDATE FIRST OPEN FLAG
+        mActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                if(isUserIsActive){
+                    if(!mSessionManager.getPreferenceBoolean(Constants.IS_USER_OPEN_APP_FIRST_TIME)){
+                        showWelcomeDialogue(isUserIsActive);
+                    }
+
+                }else{
+                    showWelcomeDialogue(false);
+                }
+            }
+        });
 
     }
     private void showWelcomeDialogue(boolean isUserIsActive) {
 
 
+        Dialog dialog = new Dialog(mActivity,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog.setContentView(R.layout.user_welcome_dialogue);
 
-        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
-        dialogBuilder.setCancelable(false);
-        LayoutInflater inflater = mActivity.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.user_welcome_dialogue, null);
-        dialogBuilder.setView(dialogView);
-
-
-        final AlertDialog mAlertDialog = dialogBuilder.create();
-        TextView txtGetStarted = (TextView) dialogView.findViewById(R.id.txtGetStarted);
-        TextView txtWaitListed = (TextView) dialogView.findViewById(R.id.txtWaitListed);
+        //final AlertDialog mAlertDialog = dialogBuilder.create();
+        TextView txtGetStarted = (TextView) dialog.findViewById(R.id.txtGetStarted);
+        TextView txtWaitListed = (TextView) dialog.findViewById(R.id.txtWaitListed);
 
         //HIDE SHOW BUTTON BASED ON USER ACTIVATION STATUS
         if(isUserIsActive){
@@ -516,7 +511,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
 
-                mAlertDialog.dismiss();
+                dialog.dismiss();
 
                 //UPDATE FIRST OPEN FLAG
                 mSessionManager.updatePreferenceBoolean(Constants.IS_USER_OPEN_APP_FIRST_TIME,true);
@@ -540,7 +535,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
 
-                mAlertDialog.dismiss();
+                dialog.dismiss();
 
                 //EXIT FROM THE APP UNTIL USER TURN TO ACTIVE FROM THE BACKEND
                 mActivity.finishAffinity();
@@ -548,10 +543,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-        mAlertDialog.show();
+        dialog.show();
     }
 
-
-
-
 }
+
