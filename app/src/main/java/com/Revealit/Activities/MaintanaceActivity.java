@@ -201,7 +201,6 @@ public class MaintanaceActivity extends AppCompatActivity implements View.OnClic
                         finish();
                     }else {
                         Intent mIntent = new Intent(MaintanaceActivity.this, HomeScreenTabLayout.class);
-                        mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN, false);
                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(mIntent);
                         finish();
@@ -336,7 +335,6 @@ public class MaintanaceActivity extends AppCompatActivity implements View.OnClic
                     }else {
                         //MOVE TO HOME SCREEN
                         Intent mIntent = new Intent(MaintanaceActivity.this, HomeScreenTabLayout.class);
-                        mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN, false);
                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(mIntent);
                         finish();

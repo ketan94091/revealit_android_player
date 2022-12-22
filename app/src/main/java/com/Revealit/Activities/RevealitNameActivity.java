@@ -377,10 +377,7 @@ public class RevealitNameActivity extends AppCompatActivity implements View.OnCl
 
                     //MOVE TO HOME SCREEN
                     Intent mIntent = new Intent(RevealitNameActivity.this, HomeScreenTabLayout.class);
-                    mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,false);
                     mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                    //FINISH THE CURRENT ACTIVITY
                     startActivity(mIntent);
 
                 }else{

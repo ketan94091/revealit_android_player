@@ -274,24 +274,11 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
                 if(isRefferalValid()){
 
-                    if(!isOtpRecieved){
-                        if(getIntent().getBooleanExtra(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY, false)){
-                            apiSendOTPtoMobile(3);
-                        }else{
-                            apiSendOTPtoMobile(0);
-                        }
-
+                    if(getIntent().getBooleanExtra(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY, false)){
+                        apiSendOTPtoMobile(3);
                     }else{
-                        //MOVE TO NEXT ACTIVITY
-                        Intent mIntent = new Intent(NewAuthMobileAndPromoActivity.this, NewAuthEnterOTPActivity.class);
-                        mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,edtMobilenumber.getText().toString());
-                        mIntent.putExtra(Constants.KEY_COUNTRY_CODE ,edtCountryCode.getText().toString());
-                        mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
-                        mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
-                        mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,edtPromo.getText().toString());
-                        startActivity(mIntent);
+                        apiSendOTPtoMobile(2);
                     }
-
                 }
                 break;
 
@@ -349,8 +336,14 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             txtMobileWarnings.setText(getString(R.string.strInvalidMobileFormat));
             return false;
         }else{
-           //CHECK IF USER EXIST IN DATABASE
-            checkIfMobileAlreadyRegistered();
+            linearMobileWarnings.setVisibility(View.GONE);
+            imgMobileStutusFalse.setVisibility(View.GONE);
+            edtMobilenumber.setTextColor(getResources().getColor(R.color.colorBlack));
+            imgMobileStutusTrue.setVisibility(View.VISIBLE);
+            //CHECK IF USER EXIST IN DATABASE
+            //checkIfMobileAlreadyRegistered();
+
+            enabledContinueButton();
              return true;
          }
 
@@ -577,23 +570,15 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
                 if (response.isSuccessful() && response.code() == Constants.API_CODE_200  ) {
 
-                    if(isStartOver == 0 || isStartOver == 3){
-                        //MOVE TO NEXT ACTIVITY
-                        Intent mIntent = new Intent(NewAuthMobileAndPromoActivity.this, NewAuthEnterOTPActivity.class);
-                        mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,edtMobilenumber.getText().toString());
-                        mIntent.putExtra(Constants.KEY_COUNTRY_CODE ,edtCountryCode.getText().toString());
-                        mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
-                        mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
-                        mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,edtPromo.getText().toString());
-                        mIntent.putExtra(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY, getIntent().getStringExtra(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY));
-                        startActivity(mIntent);
-
-                    }else{
-                        updateMobileErrorUI(false);
-                    }
-
-                    //check if this api is already called
-                    isOtpRecieved = true;
+                    //MOVE TO NEXT ACTIVITY
+                    Intent mIntent = new Intent(NewAuthMobileAndPromoActivity.this, NewAuthEnterOTPActivity.class);
+                    mIntent.putExtra(Constants.KEY_MOBILE_NUMBER ,edtMobilenumber.getText().toString());
+                    mIntent.putExtra(Constants.KEY_COUNTRY_CODE ,edtCountryCode.getText().toString());
+                    mIntent.putExtra(Constants.KEY_CAMPAIGNID ,strCampaignId);
+                    mIntent.putExtra(Constants.KEY_REFFERALID ,strRefferalId);
+                    mIntent.putExtra(Constants.KEY_NAMEOFINVITE ,edtPromo.getText().toString());
+                    mIntent.putExtra(Constants.KEY_IS_FROM_IMPORT_KEY ,getIntent().getBooleanExtra(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY, false));
+                    startActivity(mIntent);
 
                 } else {
                     try {

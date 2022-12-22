@@ -75,7 +75,7 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
     private Context mContext;
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private boolean isUserIsActive,isFromRegistrationScreen;
+    private boolean isUserIsActive;
     private View viewBottomLine;
     private int REQUEST_CAMERA_PERMISSIONc=100;
     private BeamsTokenProvider tokenProvider;
@@ -96,27 +96,6 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
 
     }
 
-    private void setOnClicks() {
-
-        linearDelete.setOnClickListener(this);
-    }
-
-
-    @Override
-    public void onClick(View mView) {
-
-        switch (mView.getId()){
-            case R.id.linearDelete:
-                if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
-                    ListenFragment.clearListenHistory(true);
-                }else{
-                    ListenFragment.clearListenHistory(false);
-                }
-
-                break;
-        }
-
-    }
 
     private void setId()  {
 
@@ -156,7 +135,6 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
         viewBottomLine=(View)findViewById(R.id.viewBottomLine);
 
         //GET INTENT DATA
-        isFromRegistrationScreen = getIntent().getBooleanExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN, false);
         isUserIsActive = mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_ACTIVE);
 
         //INITIALISE FRAGMENTS FOR VIEW PAGER
@@ -250,7 +228,6 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
             //DISABLE BOTTOM BAR ICON CLICK IF USER IS NOT ACTIVE
             enableDisableBottomBar(true);
         }
-
 
 
         //CHANGE BOTTOM VIEW COLOR
@@ -358,6 +335,28 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
         isVideoDeleteMultiSelectionActive(false);
 
     }
+    private void setOnClicks() {
+
+        linearDelete.setOnClickListener(this);
+    }
+
+
+    @Override
+    public void onClick(View mView) {
+
+        switch (mView.getId()){
+            case R.id.linearDelete:
+                if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+                    ListenFragment.clearListenHistory(true);
+                }else{
+                    ListenFragment.clearListenHistory(false);
+                }
+
+                break;
+        }
+
+    }
+
 
 
     private void pusherTokenProvider() {

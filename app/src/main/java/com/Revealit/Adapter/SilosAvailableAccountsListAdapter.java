@@ -40,6 +40,15 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
         this.mSessionManager =mSessionManager;
 
     }
+    public void updateListData(ArrayList<KeyStoreServerInstancesModel.Data> itemListData) {
+
+        //CLEAR CURRENT LIST
+        this.itemListData = itemListData;
+
+        //NOTIFY LISTENER
+        notifyDataSetChanged();
+    }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 

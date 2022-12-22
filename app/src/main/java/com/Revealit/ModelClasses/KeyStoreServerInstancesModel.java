@@ -18,6 +18,7 @@ public class KeyStoreServerInstancesModel {
         String serverInstanceName;
         String mobileNumber;
         int serverInstanceId;
+        int isAccountRemoved;
         SubmitProfileModel submitProfileModel;
 
         public String getServerInstanceName() {
@@ -52,5 +53,12 @@ public class KeyStoreServerInstancesModel {
             this.submitProfileModel = submitProfileModel;
         }
 
+        public int getIsAccountRemoved() {
+            return isAccountRemoved;
+        }
+
+        public void setIsAccountRemoved(int isAccountRemoved) {
+            this.isAccountRemoved = isAccountRemoved;
+        }
     }
 }

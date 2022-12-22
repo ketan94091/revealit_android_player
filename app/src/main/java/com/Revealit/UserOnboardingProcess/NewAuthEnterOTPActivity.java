@@ -59,7 +59,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
     private TextView txtVerifiedSuccessully,txtInvalidOTP,txtContinueEnabled, txtContinueDisable, txtMobileNumber;
     private LinearLayout linearResendCode, linearClickToEdit;
     private EditText edtFive, edtSix, edtFour, edtThree, edtTwo, edtOne;
-    private boolean isOtpVarified;
+    private boolean isOtpVarified, isFromImportKey;
     private String strCountryCode,strMobileNumber,strCampaignId,strRefferalId,strInvitename;
     private Gson mGson;
 
@@ -109,10 +109,10 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
          strCampaignId =getIntent().getStringExtra(Constants.KEY_CAMPAIGNID);
          strRefferalId =getIntent().getStringExtra(Constants.KEY_REFFERALID);
          strInvitename =getIntent().getStringExtra(Constants.KEY_NAMEOFINVITE);
+         isFromImportKey =getIntent().getBooleanExtra(Constants.KEY_IS_FROM_IMPORT_KEY,false);
 
         //SET MOBILE NUMBER
         txtMobileNumber.setText(getString(R.string.strWehaveRecieved) + " (+" + strCountryCode+" "+ strMobileNumber + ") " + getString(R.string.strEnterTheCodeBelow));
-
 
 
         edtOne.addTextChangedListener(new GenericTextWatcher(edtOne, edtTwo));
@@ -219,7 +219,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
     private void openEnterUsernameScreen() {
 
 
-        if(getIntent().getBooleanExtra(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY, false)){
+        if(isFromImportKey){
             apiCallResubmitProfile();
         }else {
 
@@ -235,7 +235,6 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
     }
 
     private void apiCallResubmitProfile() {
-
 
         //OPEN DIALOGUE
         CommonMethods.showDialog(mContext);
@@ -395,11 +394,6 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
 
     private void storeKeyStoreInstances(SubmitProfileModel body) {
 
-        //STORE DATA FOR SWAPPING SILOS
-        //THIS IS TEMPORARY FOR ADMIN USERS
-        //OVERRIDE EXISTING SILOS IF ADMIN CREATE NEW WITH FOR EXISTING SAVED SILOS
-        //encryptKey(""+mGson.toJson(body),  Constants.KEY_SILOS_DATA+""+mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID),Constants.KEY_SILOS_ALIAS);
-
         //CREATE LIST WHICH COULD ENCRYPT AND THAN STORE IN THE KEY STORE AS A STRING
         ArrayList<KeyStoreServerInstancesModel.Data> mInstancesModel = new ArrayList<>();
         KeyStoreServerInstancesModel.Data mModelData = new KeyStoreServerInstancesModel.Data();
@@ -473,7 +467,6 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
 
         //GO TO NEXT ACTIVITY
         Intent mIntent = new Intent(NewAuthEnterOTPActivity.this, HomeScreenTabLayout.class);
-        mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME ,body.getProton().getAccountName());
         startActivity(mIntent);
         finishAffinity();
 

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -72,7 +73,8 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
     private Context mContext;
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private ImageView imgScanQRcode,imgCancel;
+    private ImageView imgCancel;
+    private RelativeLayout imgClearKey;
     private EditText edtImportKey;
     private TextView txtContinueEnabled,txtContinueDisable;
     private String privateKeyPem , publicKeyPem, publicKey, accountName;
@@ -102,7 +104,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
         mDatabaseHelper.open();
 
         imgCancel =(ImageView)findViewById(R.id.imgCancel);
-        imgScanQRcode=(ImageView)findViewById(R.id.imgScanQRcode);
+        imgClearKey=(RelativeLayout)findViewById(R.id.imgClearKey);
 
         edtImportKey=(EditText)findViewById(R.id.edtImportKey);
 
@@ -145,7 +147,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
         txtContinueDisable.setOnClickListener(this);
         txtContinueEnabled.setOnClickListener(this);
         imgCancel.setOnClickListener(this);
-        imgScanQRcode.setOnClickListener(this);
+        imgClearKey.setOnClickListener(this);
     }
 
     @Override
@@ -164,7 +166,10 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
             case R.id.imgCancel:
                 finish();
                 break;
-            case R.id.imgScanQRcode:
+            case R.id.imgClearKey:
+                //CLEAR EDIT TEXT
+                edtImportKey.setText("");
+
                 break;
         }
 
@@ -501,7 +506,6 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
 
         //GO TO NEXT ACTIVITY
         Intent mIntent = new Intent(ImportAccountFromPrivateKey.this, HomeScreenTabLayout.class);
-        mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME ,body.getProton().getAccountName());
         startActivity(mIntent);
         finishAffinity();
 

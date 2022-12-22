@@ -18,11 +18,13 @@ import com.Revealit.Adapter.SilosAvailableAccountsListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
+import com.Revealit.CommonClasse.SwipeHelper;
 import com.Revealit.ModelClasses.KeyStoreServerInstancesModel;
 import com.Revealit.R;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class ListOfActiveAccountsActivity extends AppCompatActivity implements View.OnClickListener {
@@ -36,6 +38,8 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
     private RecyclerView recycleAccountList;
     ArrayList<KeyStoreServerInstancesModel.Data> selectedSilosAccountsList = new ArrayList<>();
     private RelativeLayout relativeRestoreFromCloud,relativeImportKey;
+    private SilosAvailableAccountsListAdapter mSilosAvailableAccountsListAdapter;
+
 
 
     @Override
@@ -60,33 +64,73 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
         mDatabaseHelper = new DatabaseHelper(mContext);
         mDatabaseHelper.open();
 
-        linearImgCancel =(LinearLayout)findViewById(R.id.linearImgCancel);
-        recycleAccountList =(RecyclerView)findViewById(R.id.recycleAccountList);
+        linearImgCancel = (LinearLayout) findViewById(R.id.linearImgCancel);
+        recycleAccountList = (RecyclerView) findViewById(R.id.recycleAccountList);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mActivity);
         recycleAccountList.setLayoutManager(mLinearLayoutManager);
 
-        relativeImportKey =(RelativeLayout)findViewById(R.id.relativeImportKey);
-        relativeRestoreFromCloud =(RelativeLayout)findViewById(R.id.relativeRestoreFromCloud);
+        relativeImportKey = (RelativeLayout) findViewById(R.id.relativeImportKey);
+        relativeRestoreFromCloud = (RelativeLayout) findViewById(R.id.relativeRestoreFromCloud);
 
         //FETCH USER'S SELECTED SILOS DATA
-        //selectedSilosAccountsList = CommonMethods.fetchUserSelectedSilosDataInList(mSessionManager,mActivity);
+        bindRecyclerView();
+
+
+        //CHECK IF USER IS ADMIN
+        if (!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)) {
+            relativeRestoreFromCloud.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void bindRecyclerView() {
+
+
+        ArrayList<KeyStoreServerInstancesModel.Data> selectedSilosAccountsList  = null;
         try {
             selectedSilosAccountsList = new FetchDataFromAndroidKeyStoreTask().execute(mSessionManager).get();
-
             //CHECK IF THERE IS DATA AVAILABLE FOR SELECTED SILOS
             if(selectedSilosAccountsList != null && selectedSilosAccountsList.size() != 0){
-                SilosAvailableAccountsListAdapter mSilosAvailableAccountsListAdapter = new SilosAvailableAccountsListAdapter(mContext, this, selectedSilosAccountsList, mSessionManager);
-                recycleAccountList.setAdapter(mSilosAvailableAccountsListAdapter);
+
+                if(mSilosAvailableAccountsListAdapter == null){
+
+
+                    mSilosAvailableAccountsListAdapter = new SilosAvailableAccountsListAdapter(mContext, this, selectedSilosAccountsList, mSessionManager);
+                    recycleAccountList.setAdapter(mSilosAvailableAccountsListAdapter);
+
+
+                    //SWIPE HELPER SHOULD ATTACH FIRST TIME
+                    ArrayList<KeyStoreServerInstancesModel.Data> mSelectedSilosAccountsList = selectedSilosAccountsList;
+
+                    new SwipeHelper(mActivity, recycleAccountList) {
+                        @Override
+                        public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+
+                            underlayButtons.add(new SwipeHelper.UnderlayButton(
+                                    R.mipmap.icn_delete_with_text,
+                                    mActivity,
+                                    new SwipeHelper.UnderlayButtonClickListener() {
+                                        @Override
+                                        public void onClick(int pos) {
+                                            CommonMethods.displayToast(mContext,"Clicked");
+
+                                        }
+                                    }
+                            ));
+
+                        }
+                    };
+
+
+                } else {
+                    mSilosAvailableAccountsListAdapter.updateListData(selectedSilosAccountsList);
+                }
+
             }
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-
-        //CHECK IF USER IS ADMIN
-        if(!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
-            relativeRestoreFromCloud.setVisibility(View.GONE);
         }
 
 

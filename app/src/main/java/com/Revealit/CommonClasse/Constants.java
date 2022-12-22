@@ -204,6 +204,7 @@ public class Constants {
   public  static  final  String KEY_CAMPAIGNID ="keyCampaignId";
   public  static  final  String KEY_REFFERALID ="keyRefferalId";
   public  static  final  String KEY_NAMEOFINVITE ="keyNameOfInvite";
+  public  static  final  String KEY_IS_FROM_IMPORT_KEY ="keyIsFromImportKey";
   public  static  final  String KEY_NEW_AUTH_USERNAME ="keyNewAuthUsername";
   public  static  final  String KEY_INVITE_MSG ="keyInviteMsg";
   public  static  final  String KEY_INVITE_COPY_CLIPBOARD ="keyInviteCpoyClipBorad";

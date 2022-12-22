@@ -307,7 +307,6 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         CommonMethods.encryptKey(body.getProton().getPublic_pem(),Constants.KEY_PUBLIC_KEY_PEM,body.getrevealit_private_key(), mSessionManager);
 
 
-
         //UPDATE FLAG IF USER IS ADMIN OR NOT
         if(body.getRole().equals(getResources().getString(R.string.strAdmin))){
             mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,true);
@@ -322,8 +321,11 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
             mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
         }
 
-        //UPDATE FLAG FOR APPLICATION MODE
+        //UPDATE SESSION VALUES
         mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
+        mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
+        mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
+
 
 
         //SET KEY STORE INSTANCE DATA
