@@ -81,8 +81,6 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
     private Gson mGson;
     ArrayList<KeyStoreServerInstancesModel.Data> selectedSilosAccountsList = new ArrayList<>();
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -460,6 +458,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                     mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
                     mModel.setMobileNumber(jsonArray.getJSONObject(i).getString("mobileNumber"));
                     mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
+
 
                     SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
                     mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));

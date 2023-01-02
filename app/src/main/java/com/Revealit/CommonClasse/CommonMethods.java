@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -21,7 +19,6 @@ import android.provider.Settings;
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -37,12 +34,15 @@ import com.Revealit.Utils.Cryptography;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyStoreException;
@@ -724,11 +724,12 @@ public class CommonMethods {
 
                 for (int i=0 ;i < jsonArray.length();i++){
 
-                    if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)) {
+                    if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) && jsonArray.getJSONObject(i).getInt("isAccountRemoved")  == 0 ) {
                         KeyStoreServerInstancesModel.Data mModel = new KeyStoreServerInstancesModel.Data();
                         mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
                         mModel.setMobileNumber(jsonArray.getJSONObject(i).getString("mobileNumber"));
                         mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
+                        mModel.setIsAccountRemoved(jsonArray.getJSONObject(i).getInt("isAccountRemoved"));
 
                         SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
                         mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
@@ -788,6 +789,7 @@ public class CommonMethods {
                         mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
                         mModel.setMobileNumber(jsonArray.getJSONObject(i).getString("mobileNumber"));
                         mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
+                        mModel.setIsAccountRemoved(jsonArray.getJSONObject(i).getInt("isAccountRemoved"));
 
                         SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
                         mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
@@ -924,6 +926,86 @@ public class CommonMethods {
 
         return false;
     }
+    public static boolean updateUserAccountActivationFlag(SessionManager mSessionManager, String privateKey, String username) {
+        Gson mGson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                .serializeNulls()
+                .create();
+
+        if(!checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
+
+            //CONVERT DATA TO JSON ARRAY
+            //CREATE NEW ARRAY FROM THE STRING ARRAY
+            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
+            try {
+                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData(mSessionManager));
+                ArrayList<KeyStoreServerInstancesModel.Data>  dataArrayList = new ArrayList<>();
+
+                for (int i=0 ;i < jsonArray.length();i++){
+
+                        KeyStoreServerInstancesModel.Data mModel = new KeyStoreServerInstancesModel.Data();
+                        mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
+                        mModel.setMobileNumber(jsonArray.getJSONObject(i).getString("mobileNumber"));
+                        mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
+
+
+                    if(jsonArray.getJSONObject(i).getInt("isAccountRemoved") == 1){
+                        mModel.setIsAccountRemoved(1);
+                    }
+
+                       if( jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("account_name").equals(username)) {
+                           if(jsonArray.getJSONObject(i).getInt("isAccountRemoved") == 1){
+                               mModel.setIsAccountRemoved(0);
+                           }else{
+                               mModel.setIsAccountRemoved(1);
+                           }
+                       }
+
+
+                        SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
+                        mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
+                        mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("auth_token"));
+                        mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
+                        mSubmitProfileModel.setIs_activated(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
+                        mSubmitProfileModel.setMessage(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("message"));
+                        mSubmitProfileModel.setrevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("revealit_private_key"));
+                        mSubmitProfileModel.setRole(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("role"));
+                        mSubmitProfileModel.setServerInstance(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("serverInstance"));
+                        mSubmitProfileModel.setStatus(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("status"));
+
+                        SubmitProfileModel.Proton mProton = new SubmitProfileModel.Proton();
+                        mProton.setAccountName(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("account_name"));
+                        mProton.setMnemonic(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("mnemonic"));
+                        mProton.setPrivateKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key"));
+                        mProton.setPrivate_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_pem"));
+                        mProton.setPublicKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_key"));
+                        mProton.setPublic_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_pem"));
+                        mSubmitProfileModel.setProton(mProton);
+
+                        mModel.setSubmitProfileModel(mSubmitProfileModel);
+
+                        dataArrayList.add(mModel);
+
+
+
+                }
+
+                //STORE WHOLE ARRAY IN TO STRING FORMAT IN KEYSTORE
+                CommonMethods.encryptKey(""+mGson.toJson(dataArrayList),  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS, mSessionManager);
+
+
+                return true;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            return false;
+        }
+
+        return false;
+    }
 
     public static void encryptKey(String keyToStore, String alias, String keyStoreName, SessionManager mSessionManager) {
 
@@ -943,190 +1025,6 @@ public class CommonMethods {
             ex.printStackTrace();
         }
 
-    }
-
-    public static Bitmap takeScreenShot(Activity activity) {
-        View view = activity.getWindow().getDecorView();
-        view.setDrawingCacheEnabled(true);
-        view.buildDrawingCache();
-
-
-        Bitmap b1 = view.getDrawingCache();
-        Rect frame = new Rect();
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-        int statusBarHeight = frame.top;
-
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-
-        Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height - statusBarHeight);
-        view.destroyDrawingCache();
-        return b;
-    }
-
-    public static Bitmap fastblur(Bitmap sentBitmap, int radius) {
-        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
-        if (radius < 1) {
-            return (null);
-        }
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        int[] pix = new int[w * h];
-        Log.e("pix", w + " " + h + " " + pix.length);
-        bitmap.getPixels(pix, 0, w, 0, 0, w, h);
-        int wm = w - 1;
-        int hm = h - 1;
-        int wh = w * h;
-        int div = radius + radius + 1;
-        int r[] = new int[wh];
-        int g[] = new int[wh];
-        int b[] = new int[wh];
-        int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
-        int vmin[] = new int[Math.max(w, h)];
-        int divsum = (div + 1) >> 1;
-        divsum *= divsum;
-        int dv[] = new int[256 * divsum];
-        for (i = 0; i < 256 * divsum; i++) {
-            dv[i] = (i / divsum);
-        }
-        yw = yi = 0;
-        int[][] stack = new int[div][3];
-        int stackpointer;
-        int stackstart;
-        int[] sir;
-        int rbs;
-        int r1 = radius + 1;
-        int routsum, goutsum, boutsum;
-        int rinsum, ginsum, binsum;
-        for (y = 0; y < h; y++) {
-            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
-            for (i = -radius; i <= radius; i++) {
-                p = pix[yi + Math.min(wm, Math.max(i, 0))];
-                sir = stack[i + radius];
-                sir[0] = (p & 0xff0000) >> 16;
-                sir[1] = (p & 0x00ff00) >> 8;
-                sir[2] = (p & 0x0000ff);
-                rbs = r1 - Math.abs(i);
-                rsum += sir[0] * rbs;
-                gsum += sir[1] * rbs;
-                bsum += sir[2] * rbs;
-                if (i > 0) {
-                    rinsum += sir[0];
-                    ginsum += sir[1];
-                    binsum += sir[2];
-                } else {
-                    routsum += sir[0];
-                    goutsum += sir[1];
-                    boutsum += sir[2];
-                }
-            }
-            stackpointer = radius;
-            for (x = 0; x < w; x++) {
-                r[yi] = dv[rsum];
-                g[yi] = dv[gsum];
-                b[yi] = dv[bsum];
-                rsum -= routsum;
-                gsum -= goutsum;
-                bsum -= boutsum;
-                stackstart = stackpointer - radius + div;
-                sir = stack[stackstart % div];
-                routsum -= sir[0];
-                goutsum -= sir[1];
-                boutsum -= sir[2];
-                if (y == 0) {
-                    vmin[x] = Math.min(x + radius + 1, wm);
-                }
-                p = pix[yw + vmin[x]];
-                sir[0] = (p & 0xff0000) >> 16;
-                sir[1] = (p & 0x00ff00) >> 8;
-                sir[2] = (p & 0x0000ff);
-                rinsum += sir[0];
-                ginsum += sir[1];
-                binsum += sir[2];
-                rsum += rinsum;
-                gsum += ginsum;
-                bsum += binsum;
-                stackpointer = (stackpointer + 1) % div;
-                sir = stack[(stackpointer) % div];
-                routsum += sir[0];
-                goutsum += sir[1];
-                boutsum += sir[2];
-                rinsum -= sir[0];
-                ginsum -= sir[1];
-                binsum -= sir[2];
-                yi++;
-            }
-            yw += w;
-        }
-        for (x = 0; x < w; x++) {
-            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
-            yp = -radius * w;
-            for (i = -radius; i <= radius; i++) {
-                yi = Math.max(0, yp) + x;
-                sir = stack[i + radius];
-                sir[0] = r[yi];
-                sir[1] = g[yi];
-                sir[2] = b[yi];
-                rbs = r1 - Math.abs(i);
-                rsum += r[yi] * rbs;
-                gsum += g[yi] * rbs;
-                bsum += b[yi] * rbs;
-                if (i > 0) {
-                    rinsum += sir[0];
-                    ginsum += sir[1];
-                    binsum += sir[2];
-                } else {
-                    routsum += sir[0];
-                    goutsum += sir[1];
-                    boutsum += sir[2];
-                }
-                if (i < hm) {
-                    yp += w;
-                }
-            }
-            yi = x;
-            stackpointer = radius;
-            for (y = 0; y < h; y++) {
-                // Preserve alpha channel: ( 0xff000000 & pix[yi] )
-                pix[yi] = ( 0xff000000 & pix[yi] ) | ( dv[rsum] << 16 ) | ( dv[gsum] << 8 ) | dv[bsum];
-                rsum -= routsum;
-                gsum -= goutsum;
-                bsum -= boutsum;
-                stackstart = stackpointer - radius + div;
-                sir = stack[stackstart % div];
-                routsum -= sir[0];
-                goutsum -= sir[1];
-                boutsum -= sir[2];
-                if (x == 0) {
-                    vmin[y] = Math.min(y + r1, hm) * w;
-                }
-                p = x + vmin[y];
-                sir[0] = r[p];
-                sir[1] = g[p];
-                sir[2] = b[p];
-                rinsum += sir[0];
-                ginsum += sir[1];
-                binsum += sir[2];
-                rsum += rinsum;
-                gsum += ginsum;
-                bsum += binsum;
-                stackpointer = (stackpointer + 1) % div;
-                sir = stack[stackpointer];
-                routsum += sir[0];
-                goutsum += sir[1];
-                boutsum += sir[2];
-                rinsum -= sir[0];
-                ginsum -= sir[1];
-                binsum -= sir[2];
-                yi += w;
-            }
-        }
-        Log.e("pix", w + " " + h + " " + pix.length);
-        bitmap.setPixels(pix, 0, w, 0, 0, w, h);
-        return (bitmap);
     }
 
 

@@ -87,6 +87,10 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
         holder.txtAccountUsername.setText(itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
         holder.txtAccountName.setText("@"+itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
 
+        if(itemListData.get(position).getIsAccountRemoved() == 1){
+            holder.txtAccountName.setText("@@@@@"+itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
+        }
+
         holder.relativeMain.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

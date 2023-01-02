@@ -1,13 +1,17 @@
 package com.Revealit.UserOnboardingProcess;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -47,11 +51,16 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_active_accounts);
 
-        setIds();
-        setOnClicks();
+
 
     }
 
+    @Override
+    protected void onResume() {
+        setIds();
+        setOnClicks();
+        super.onResume();
+    }
 
     private void setIds() {
 
@@ -112,7 +121,7 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
                                     new SwipeHelper.UnderlayButtonClickListener() {
                                         @Override
                                         public void onClick(int pos) {
-                                            CommonMethods.displayToast(mContext,"Clicked");
+                                            displayWarningDialogue(mSelectedSilosAccountsList.get(pos).getSubmitProfileModel().getProton().getPrivateKey(),mSelectedSilosAccountsList.get(pos).getSubmitProfileModel().getProton().getAccountName());
 
                                         }
                                     }
@@ -134,9 +143,59 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
         }
 
 
+    }
+
+    private void displayWarningDialogue(String strPrivateKey, String strAccountName) {
+
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
+        dialogBuilder.setCancelable(false);
+        LayoutInflater inflater = mActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.delete_user_warning_dailoague, null);
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialogBuilder.setView(dialogView);
+
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        TextView txtOk = (TextView) dialogView.findViewById(R.id.txtOk);
+        TextView txtCancel = (TextView) dialogView.findViewById(R.id.txtCancel);
+        LinearLayout linearCancel = (LinearLayout) dialogView.findViewById(R.id.linearCancel);
+
+
+        txtOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+                Intent mIntent = new Intent(ListOfActiveAccountsActivity.this, BiomatricAuthenticationDeleteAccontActivity.class);
+                mIntent.putExtra(Constants.KEY_PRIVATE_KEY, strPrivateKey);
+                mIntent.putExtra(Constants.KEY_PROTON_ACCOUNTNAME, strAccountName);
+                startActivity(mIntent);
 
 
 
+            }
+        });
+
+
+        txtCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+            }
+        });
+
+        linearCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+            }
+        });
+        mAlertDialog.show();
     }
 
     private void setOnClicks() {

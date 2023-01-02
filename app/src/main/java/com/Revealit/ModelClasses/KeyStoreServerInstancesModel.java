@@ -18,7 +18,7 @@ public class KeyStoreServerInstancesModel {
         String serverInstanceName;
         String mobileNumber;
         int serverInstanceId;
-        int isAccountRemoved;
+        int isAccountRemoved ;
         SubmitProfileModel submitProfileModel;
 
         public String getServerInstanceName() {

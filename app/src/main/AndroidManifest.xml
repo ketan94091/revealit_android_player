@@ -142,6 +142,9 @@
             android:name=".Activities.LoginActivityActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".UserOnboardingProcess.BiomatricAuthenticationDeleteAccontActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".Activities.HomeScreenTabLayout"
             android:screenOrientation="portrait" />
         <activity

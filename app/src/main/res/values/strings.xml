@@ -16,6 +16,8 @@
     <string name="strAuthWarningMsg">Are you willing to authorise?</string>
     <string name="strAuthWarningMsgTwo">If not, simply decline the request by exiting the page.</string>
     <string name="strAccountAlreadyExists">Account Already Exists</string>
+    <string name="strAreYouSure">Are you sure?</string>
+    <string name="strDeleteWarningMessage">Removing your account may prohibit access to your wallet and rewards. Please ensure you have backed up your private key to be able to re-instate this account in the future</string>
     <string name="strMoreInformationNeeded">More Information Needed</string>
     <string name="strSignUpCanNotBeComplete">Signup Can Not Be Complete</string>
     <string name="strImportKeyUserAlreadyExists">User already exists. Do you want to Login?</string>
