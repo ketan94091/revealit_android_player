@@ -105,6 +105,7 @@ public class Constants {
   public static final String API_PUSH_AUTHORISATION_CANCEL = "api/authorizecancel";
   public static final String API_REMOVE_SINGLE_TIMESTAMP = "api/video/matchhistory/match/remove";
   public static final String API_FETCH_ACCOUNT_NAME_FROM_PROTON = "get_key_accounts";
+  public static final String API_DELETE_USER = "/api/user/remove";
 
 
     public static final String AUTH_TOKEN = "access_token";

@@ -121,7 +121,7 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
                                     new SwipeHelper.UnderlayButtonClickListener() {
                                         @Override
                                         public void onClick(int pos) {
-                                            displayWarningDialogue(mSelectedSilosAccountsList.get(pos).getSubmitProfileModel().getProton().getPrivateKey(),mSelectedSilosAccountsList.get(pos).getSubmitProfileModel().getProton().getAccountName());
+                                            displayWarningDialogue(mSelectedSilosAccountsList.get(pos).getSubmitProfileModel().getrevealit_private_key(),mSelectedSilosAccountsList.get(pos).getSubmitProfileModel().getProton().getPrivateKey(),mSelectedSilosAccountsList.get(pos).getSubmitProfileModel().getProton().getAccountName());
 
                                         }
                                     }
@@ -145,7 +145,10 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
 
     }
 
-    private void displayWarningDialogue(String strPrivateKey, String strAccountName) {
+
+
+
+    private void displayWarningDialogue(String revealitPrivateKey,String strPrivateKey, String strAccountName) {
 
         android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
         dialogBuilder.setCancelable(false);
@@ -168,6 +171,7 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
                 mAlertDialog.dismiss();
 
                 Intent mIntent = new Intent(ListOfActiveAccountsActivity.this, BiomatricAuthenticationDeleteAccontActivity.class);
+                mIntent.putExtra(Constants.KEY_REVEALIT_PRIVATE_KEY, revealitPrivateKey);
                 mIntent.putExtra(Constants.KEY_PRIVATE_KEY, strPrivateKey);
                 mIntent.putExtra(Constants.KEY_PROTON_ACCOUNTNAME, strAccountName);
                 startActivity(mIntent);

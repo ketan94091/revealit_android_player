@@ -219,6 +219,10 @@ public interface UpdateAllAPI {
     @POST(Constants.API_NEW_AUTH_RE_SUBMIT_PROFILE)
     Call<UserDetailsFromPublicKeyModel> reSubmitProfile(@Body JsonObject body);
 
+    //DELETE USER
+    @POST(Constants.API_DELETE_USER)
+    Call<JsonElement> removeUser();
+
 }
 
 

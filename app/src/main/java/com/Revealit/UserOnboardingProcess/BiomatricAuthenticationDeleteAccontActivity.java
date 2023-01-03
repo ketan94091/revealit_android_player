@@ -3,13 +3,11 @@ package com.Revealit.UserOnboardingProcess;
 import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
 import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -23,13 +21,31 @@ import androidx.core.content.ContextCompat;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
+import com.Revealit.ModelClasses.NewAuthLogin;
 import com.Revealit.R;
+import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
+import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
-public class BiomatricAuthenticationDeleteAccontActivity extends AppCompatActivity implements View.OnClickListener {
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class BiomatricAuthenticationDeleteAccontActivity extends AppCompatActivity {
 
     private Activity mActivity;
     private Context mContext;
@@ -44,9 +60,8 @@ public class BiomatricAuthenticationDeleteAccontActivity extends AppCompatActivi
     private RelativeLayout relativeMain;
     private boolean isFromLoginScreen;
     private AlertDialog mAlertDialog;
-    private String strUsername, privateKey;
+    private String strUsername, privateKey, revealitPrivateKey;
 
-    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +71,7 @@ public class BiomatricAuthenticationDeleteAccontActivity extends AppCompatActivi
 
 
         setIds();
-        setOnclick();
+
 
     }
 
@@ -83,6 +98,7 @@ public class BiomatricAuthenticationDeleteAccontActivity extends AppCompatActivi
 
         strUsername = getIntent().getStringExtra(Constants.KEY_PROTON_ACCOUNTNAME);
         privateKey = getIntent().getStringExtra(Constants.KEY_PRIVATE_KEY);
+        revealitPrivateKey = getIntent().getStringExtra(Constants.KEY_REVEALIT_PRIVATE_KEY);
 
         //CHECK IF BIOMETRIC HARDWARE AVAILABLE OR NOT
         //ALSO USER ALLOW TO USE BIOMETRIC WHILE REGISTRAION OR FIRST LOGIN
@@ -103,27 +119,6 @@ public class BiomatricAuthenticationDeleteAccontActivity extends AppCompatActivi
     }
 
 
-    private void setOnclick() {
-
-    }
-
-    @Override
-    public void onClick(View mView) {
-
-        switch (mView.getId()) {
-
-            case R.id.imgGoBack:
-
-                finish();
-
-                break;
-            case R.id.txtNextEnabled:
-
-
-                break;
-        }
-    }
-
     private void loadBiomatricPrompt() {
 
         executor = ContextCompat.getMainExecutor(this);
@@ -135,7 +130,7 @@ public class BiomatricAuthenticationDeleteAccontActivity extends AppCompatActivi
                 super.onAuthenticationError(errorCode, errString);
 
 
-                finishAffinity();
+                finish();
 
 
             }
@@ -146,14 +141,9 @@ public class BiomatricAuthenticationDeleteAccontActivity extends AppCompatActivi
                 super.onAuthenticationSucceeded(result);
 
 
-                try {
-                    deleteAccountFromAndroidKeyStore();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
+                    //CALL AUTHENTICATION API
+                    //TO GET AUTH TOKEN
+                    callAuthenticationAPI(revealitPrivateKey, strUsername, privateKey);
 
             }
 
@@ -174,6 +164,182 @@ public class BiomatricAuthenticationDeleteAccontActivity extends AppCompatActivi
 
         biometricPrompt.authenticate(promptInfo);
 
+    }
+    private void callAuthenticationAPI(String revealItPrivateKey, String username, String strPrivateKey) {
+
+        //DISPLAY DIALOG
+        CommonMethods.showDialog(mContext);
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+        JsonObject paramObject = new JsonObject();
+        paramObject.addProperty("revealit_private_key",revealItPrivateKey);
+        paramObject.addProperty("name", username);
+
+
+        Call<NewAuthLogin> call = patchService1.newAuthLogin(paramObject);
+
+        call.enqueue(new Callback<NewAuthLogin>() {
+            @Override
+            public void onResponse(Call<NewAuthLogin> call, Response<NewAuthLogin> response) {
+
+                CommonMethods.printLogE("Response @ callAuthenticationAPI: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callAuthenticationAPI: ", "" + response.code());
+
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+
+                CommonMethods.printLogE("Response @ callAuthenticationAPI: ", "" + gson.toJson(response.body()));
+
+                //CLOSE DIALOG
+                CommonMethods.closeDialog();
+
+
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200 && response.body().getToken() != null) {
+
+                    //IF - USER FOUND THAN CALL REMOVE USER API -> THAN DELETE USER FROM LOCAL ANDROID KEYSTORE
+                    //ELSE - DELETE DIRECTLY FROM LOCAL
+                    callDeleteUserApi(response.body().getToken());
+
+                }else {
+
+                    try {
+                        deleteAccountFromAndroidKeyStore();
+                    } catch (ExecutionException |InterruptedException  e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NewAuthLogin> call, Throwable t) {
+
+
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+
+
+                CommonMethods.closeDialog();
+
+            }
+        });
+
+    }
+    private void callDeleteUserApi(String token) {
+
+        //DISPLAY DIALOG
+        CommonMethods.showDialog(mContext);
+
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " +token)
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+
+
+        Call<JsonElement> call = patchService1.removeUser();
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+
+                CommonMethods.printLogE("Response @ callDeleteUserApi: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callDeleteUserApi: ", "" + response.code());
+
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+
+                CommonMethods.printLogE("Response @ callDeleteUserApi: ", "" + gson.toJson(response.body()));
+
+
+                //CLOSE DIALOG
+                CommonMethods.closeDialog();
+
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
+                    try {
+                        deleteAccountFromAndroidKeyStore();
+                    } catch (ExecutionException |InterruptedException  e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+
+
+                CommonMethods.closeDialog();
+
+                finish();
+
+            }
+        });
     }
 
     private void deleteAccountFromAndroidKeyStore() throws ExecutionException, InterruptedException {

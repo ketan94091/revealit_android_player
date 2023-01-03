@@ -517,13 +517,15 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
         }else if(edtImportKey.getText().toString().length() < 10){
             CommonMethods.buildDialog(mContext,getResources().getString(R.string.strInvalidPrivateKey));
            return false;
+        }else if(CommonMethods.checkEnterPrivateKeyIsFromOtherSilos(mSessionManager,edtImportKey.getText().toString()) && CommonMethods.checkEnterPrivateKeyUserHasDeletedAccount(mSessionManager,edtImportKey.getText().toString())) {
+            openUserAlreadyAvailableDialogue();
+            return false;
+
         }else if(CommonMethods.checkEnterPrivateKeyIsFromOtherSilos(mSessionManager,edtImportKey.getText().toString())) {
             openUserAlreadyAvailableDialogue();
             return false;
-//        }else if(CommonMethods.checkIfInstanceKeyStoreData(mSessionManager).contains(edtImportKey.getText().toString())) {
-//            openUserFoundFromOtherSilosDialogue();
-//            return false;
-     }else{
+
+       }else{
             try {
                 EosPrivateKey mEosPrivateKeyPem = new EosPrivateKey(edtImportKey.getText().toString().trim());
                 privateKeyPem = ""+mEosPrivateKeyPem;
@@ -599,194 +601,6 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
         mAlertDialog.show();
     }
 
-    private void openUserFoundFromOtherSilosDialogue() {
-     String strServerInstanceName = "";
-     int serverInstanceId  = CommonMethods.fetchInstanceNameFromPrivateKey(mSessionManager, edtImportKey.getText().toString());
-        switch (serverInstanceId) {
-
-            case 1:
-                strServerInstanceName = getResources().getString(R.string.strBeta);
-                break;
-            case 2:
-                strServerInstanceName = getResources().getString(R.string.strStaging);
-                break;
-            case 3:
-                strServerInstanceName = getResources().getString(R.string.strTesting1);
-                break;
-            case 4:
-                strServerInstanceName=getResources().getString(R.string.strTesting2);
-                break;
-            case 5:
-                strServerInstanceName = getResources().getString(R.string.strTesting3);
-                break;
-            case 6:
-                strServerInstanceName = getResources().getString(R.string.strIntegration);
-                break;
-            case 7:
-                strServerInstanceName = getResources().getString(R.string.strDemo);
-                break;
-            case 8:
-                strServerInstanceName = getResources().getString(R.string.strAndroidMobile1);
-                break;
-        }
-
-        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
-        dialogBuilder.setCancelable(false);
-        LayoutInflater inflater = mActivity.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.import_key_user_exist_from_other_silos_dialogue, null);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialogBuilder.setView(dialogView);
-
-        final AlertDialog mAlertDialog = dialogBuilder.create();
-        TextView txtYes = (TextView) dialogView.findViewById(R.id.txtYes);
-        TextView txtNo = (TextView) dialogView.findViewById(R.id.txtNo);
-        TextView txtWarningMsg = (TextView) dialogView.findViewById(R.id.txtWarningMsg);
-        txtWarningMsg.setText("Account exists from other silos. Would you like to switch the silos to "+strServerInstanceName);
-
-
-        imgCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                mAlertDialog.dismiss();
-
-            }
-        });
-
-
-        txtNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                mAlertDialog.dismiss();
-                finish();
-
-            }
-        });
-
-        txtYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    selectedSilosAccountsList = new FetchDataFromAndroidKeyStoreTask(edtImportKey.getText().toString()).execute(mSessionManager).get();
-
-                    //CHECK IF THERE IS DATA AVAILABLE FOR SELECTED SILOS
-                    if(selectedSilosAccountsList != null && selectedSilosAccountsList.size() != 0){
-                        mSessionManager.updatePreferenceString(Constants.KEY_USER_DATA, mSessionManager.getPreference("" + serverInstanceId));
-                        mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN, selectedSilosAccountsList.get(0).getSubmitProfileModel().getauth_token());
-                        mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE, mContext.getResources().getString(R.string.strTokenBearer));
-                        mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME, selectedSilosAccountsList.get(0).getSubmitProfileModel().getProton().getAccountName());
-                        //mSessionManager.updatePreferenceString(Constants.KEY_PROTON_WALLET_DETAILS,gson.toJson(body.getProton()));
-                        mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY, selectedSilosAccountsList.get(0).getSubmitProfileModel().getrevealit_private_key());
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_REGISTRATION_DONE, true);
-                        mSessionManager.updatePreferenceString(Constants.KEY_MOBILE_NUMBER,selectedSilosAccountsList.get(0).getMobileNumber());
-
-                        //STORE DATA IN TO KEYSTORE
-                        CommonMethods.encryptKey(selectedSilosAccountsList.get(0).getSubmitProfileModel().getProton().getPrivateKey(), Constants.KEY_PRIVATE_KEY,selectedSilosAccountsList.get(0).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
-                        CommonMethods.encryptKey(selectedSilosAccountsList.get(0).getSubmitProfileModel().getProton().getPublicKey(),Constants.KEY_PUBLIC_KEY, selectedSilosAccountsList.get(0).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
-                        CommonMethods.encryptKey(selectedSilosAccountsList.get(0).getSubmitProfileModel().getProton().getMnemonic(),Constants.KEY_MNEMONICS, selectedSilosAccountsList.get(0).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
-                        CommonMethods.encryptKey(selectedSilosAccountsList.get(0).getSubmitProfileModel().getProton().getPrivate_pem(),Constants.KEY_PRIVATE_KEY_PEM, selectedSilosAccountsList.get(0).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
-                        CommonMethods.encryptKey(selectedSilosAccountsList.get(0).getSubmitProfileModel().getProton().getPublic_pem(), Constants.KEY_PUBLIC_KEY_PEM,selectedSilosAccountsList.get(0).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
-
-
-                        //UPDATE FLAG IF USER IS ADMIN OR NOT
-                        if (selectedSilosAccountsList.get(0).getSubmitProfileModel().getRole().equals(mContext.getResources().getString(R.string.strAdmin))) {
-                            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN, true);
-                        } else {
-                            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN, false);
-                        }
-
-                        //UPDATE ACTIVE FLAG
-                        if (selectedSilosAccountsList.get(0).getSubmitProfileModel().getIs_activated().equals("1")) {
-                            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE, true);
-                        } else {
-                            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE, false);
-                        }
-
-                        //UPDATE FLAG FOR APPLICATION MODE
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
-
-                        //UPDATE SILOS SELECTION AS WELL
-                        switch (serverInstanceId) {
-
-                            case 1:
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_B_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_B_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strBeta));
-                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 1);
-
-                                break;
-                            case 2:
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_S_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_S_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strStaging));
-                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 2);
-
-                                break;
-                            case 3:
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_T1_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_T1_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strTesting1));
-                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 3);
-
-                                break;
-                            case 4:
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_T2_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_T2_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strTesting2));
-                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 4);
-
-                                break;
-                            case 5:
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_T3_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_T3_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strTesting3));
-                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 5);
-
-                                break;
-                            case 6:
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_INTEGRATION_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strIntegration));
-                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 6);
-
-                                break;
-                            case 7:
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_DEMO_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_DEMO_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strDemo));
-                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 7);
-
-                                break;
-                            case 8:
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_ANDROID_M1_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION__ANDROID_M1_CURATOR);
-                                mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strAndroidMobile1));
-                                mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 8);
-
-
-                                break;
-                        }
-
-                        //GO TO BIOMETRIC CONFIRMATION ACTIVITY
-                        Intent mIntent = new Intent(mActivity, NewAuthBiomatricAuthenticationActivity.class);
-                        mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME, selectedSilosAccountsList.get(0).getSubmitProfileModel().getProton().getAccountName());
-                        mActivity.startActivity(mIntent);
-                        finishAffinity();
-                    }
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                mAlertDialog.dismiss();
-
-            }
-        });
-        mAlertDialog.show();
-
-    }
 
     private void openUserAlreadyAvailableDialogue() {
 

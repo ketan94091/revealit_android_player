@@ -926,6 +926,37 @@ public class CommonMethods {
 
         return false;
     }
+    public static boolean checkEnterPrivateKeyUserHasDeletedAccount(SessionManager mSessionManager, String privateKey) {
+        boolean isAccountDeleted = false;
+
+        if(!checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
+
+            //CONVERT DATA TO JSON ARRAY
+            //CREATE NEW ARRAY FROM THE STRING ARRAY
+            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
+            try {
+                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData(mSessionManager));
+
+                for (int i=0 ;i < jsonArray.length();i++){
+
+                    if( jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey) && jsonArray.getJSONObject(i).getInt("isAccountRemoved") == 1) {
+                        isAccountDeleted = true;
+                        return isAccountDeleted;
+                    }
+                }
+
+                return isAccountDeleted;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            return false;
+        }
+
+        return false;
+    }
     public static boolean updateUserAccountActivationFlag(SessionManager mSessionManager, String privateKey, String username) {
         Gson mGson = new GsonBuilder()
                 .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
