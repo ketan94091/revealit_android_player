@@ -106,7 +106,8 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
         //CHECK IF BIOMETRIC HARDWARE AVAILABLE OR NOT
         //ALSO USER ALLOW TO USE BIOMETRIC WHILE REGISTRAION OR FIRST LOGIN
         BiometricManager biometricManager = BiometricManager.from(mContext);
-        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK | BIOMETRIC_STRONG | DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS && mSessionManager.getPreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC )) {
+        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK | BIOMETRIC_STRONG | DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS) {
+        //if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK | BIOMETRIC_STRONG | DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS && mSessionManager.getPreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC )) {
 
             //OPEN BIOMETRIC PROMPT
             loadBiomatricPrompt();
@@ -233,7 +234,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
         JsonObject paramObject = new JsonObject();
-        paramObject.addProperty("name", mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+        //paramObject.addProperty("name", mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
 
 
         Call<NewAuthLoginCallbackModel> call = patchService1.newAuthCallback(paramObject);

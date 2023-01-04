@@ -309,17 +309,18 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
 
-                //SAVE IMPORT KEY USERNAME AND PUBLICK KEY
+                //SAVE IMPORT KEY USERNAME AND PUBLIC KEY
                 mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME, username.replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", ""));
                 mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY, publicKey);
                 mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY_PEM, publicKeyPem);
                 mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY_PEM, privateKeyPem);
                 mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY, edtImportKey.getText().toString());
+                mSessionManager.updatePreferenceBoolean(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_IS_USER_DELETED, false);
+
 
                 if (response.isSuccessful() && response.code() == Constants.API_CODE_200  ) {
                     CommonMethods.printLogE("Response @ fetchUserDetailsFromPubkeyAndUsername: ", "" + gson.toJson(response.body()));
-
-                        saveDataToTheAndroidKeyStore(response.body(),username.replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", ""));
+                    saveDataToTheAndroidKeyStore(response.body(),username.replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", ""));
 
                 }else if(response.code() == Constants.API_CODE_404){
                       displayUserNotFoundDialogue();
@@ -407,7 +408,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
             }
 
             //UPDATE ACTIVE FLAG
-            if(body.getIs_activated() == 1){
+            if(body.getIs_activated().equals("1")){
                 mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
             }else{
                 mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
@@ -517,12 +518,13 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
         }else if(edtImportKey.getText().toString().length() < 10){
             CommonMethods.buildDialog(mContext,getResources().getString(R.string.strInvalidPrivateKey));
            return false;
-        }else if(CommonMethods.checkEnterPrivateKeyIsFromOtherSilos(mSessionManager,edtImportKey.getText().toString()) && CommonMethods.checkEnterPrivateKeyUserHasDeletedAccount(mSessionManager,edtImportKey.getText().toString())) {
-            openUserAlreadyAvailableDialogue();
-            return false;
-
         }else if(CommonMethods.checkEnterPrivateKeyIsFromOtherSilos(mSessionManager,edtImportKey.getText().toString())) {
-            openUserAlreadyAvailableDialogue();
+           if(CommonMethods.checkEnterPrivateKeyUserHasDeletedAccount(mSessionManager,edtImportKey.getText().toString())){
+               openDeletedUserInfoNeededDialogue();
+           }else{
+               openUserAlreadyAvailableDialogue();
+           }
+
             return false;
 
        }else{
@@ -559,6 +561,34 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                 displayErrorDialogue();
                 return false;
             }
+        }
+
+    }
+
+    private void openDeletedUserInfoNeededDialogue() {
+
+        try {
+            selectedSilosAccountsList = new FetchDataFromAndroidKeyStoreTask(edtImportKey.getText().toString()).execute(mSessionManager).get();
+
+            //CHECK IF THERE IS DATA AVAILABLE FOR SELECTED SILOS
+            if(selectedSilosAccountsList != null && selectedSilosAccountsList.size() != 0){
+
+
+                //SAVE IMPORT KEY USERNAME AND PUBLICK KEY
+                mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME, selectedSilosAccountsList.get(0).getSubmitProfileModel().getProton().getAccountName());
+                mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY, selectedSilosAccountsList.get(0).getSubmitProfileModel().getProton().getPublicKey());
+                mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY_PEM, selectedSilosAccountsList.get(0).getSubmitProfileModel().getProton().getPublic_pem());
+                mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY_PEM, selectedSilosAccountsList.get(0).getSubmitProfileModel().getProton().getPrivate_pem());
+                mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY, selectedSilosAccountsList.get(0).getSubmitProfileModel().getProton().getPrivateKey());
+                mSessionManager.updatePreferenceBoolean(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_IS_USER_DELETED, true);
+
+                //OPEN MORE INFO NEEDED DIALOGUE
+                displayUserNotFoundDialogue();
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
     }

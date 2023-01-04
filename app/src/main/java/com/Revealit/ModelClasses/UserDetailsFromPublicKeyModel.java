@@ -6,7 +6,7 @@ public class UserDetailsFromPublicKeyModel {
     String revealit_private_key;
     String auth_token;
     String role;
-    int is_activated;
+    String is_activated;
     String audience;
 
     public String getStatus() {
@@ -41,11 +41,11 @@ public class UserDetailsFromPublicKeyModel {
         this.role = role;
     }
 
-    public int getIs_activated() {
+    public String getIs_activated() {
         return is_activated;
     }
 
-    public void setIs_activated(int is_activated) {
+    public void setIs_activated(String is_activated) {
         this.is_activated = is_activated;
     }
 

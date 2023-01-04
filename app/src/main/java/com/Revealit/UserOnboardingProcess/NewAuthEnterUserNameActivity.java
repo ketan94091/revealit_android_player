@@ -367,6 +367,8 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
                     mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
                     mModel.setMobileNumber(jsonArray.getJSONObject(i).getString("mobileNumber"));
                     mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
+                    mModel.setIsAccountRemoved(jsonArray.getJSONObject(i).getInt("isAccountRemoved"));
+
 
                     SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
                     mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));

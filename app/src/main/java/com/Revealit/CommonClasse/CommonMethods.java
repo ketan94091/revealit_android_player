@@ -980,9 +980,9 @@ public class CommonMethods {
                         mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
 
 
-                    if(jsonArray.getJSONObject(i).getInt("isAccountRemoved") == 1){
+                       if(jsonArray.getJSONObject(i).getInt("isAccountRemoved") == 1){
                         mModel.setIsAccountRemoved(1);
-                    }
+                       }
 
                        if( jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("account_name").equals(username)) {
                            if(jsonArray.getJSONObject(i).getInt("isAccountRemoved") == 1){

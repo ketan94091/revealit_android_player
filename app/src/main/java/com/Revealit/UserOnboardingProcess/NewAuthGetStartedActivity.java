@@ -114,10 +114,7 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
 
     private void setOnClicks() {
 
-        if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_REGISTRATION_DONE)){
-            txtLogin.setOnClickListener(this);
-        }
-
+        txtLogin.setOnClickListener(this);
         txtSignup.setOnClickListener(this);
         txtSwappingSilo.setOnClickListener(this);
         imgRevealitLogo.setOnClickListener(this);

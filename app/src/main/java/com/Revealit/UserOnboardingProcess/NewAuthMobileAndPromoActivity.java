@@ -548,6 +548,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         paramObject.addProperty("receiver_number", edtMobilenumber.getText().toString());
         paramObject.addProperty("country_code", edtCountryCode.getText().toString());
         paramObject.addProperty("start_over", isStartOver);
+        Log.e("start", ""+isStartOver);
 
 
         Call<NewAuthStatusModel> call = patchService1.verifyPhone(paramObject);

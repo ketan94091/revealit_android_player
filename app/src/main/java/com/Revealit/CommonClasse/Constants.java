@@ -199,6 +199,7 @@ public class Constants {
   public  static  final  String KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY_PEM ="keyUserNotfoundImportKeyPublicKeyPem";
   public  static  final  String KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY_PEM ="keyUserNotfoundImportKeyPrivateKeyPem";
   public  static  final  String KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY ="keyUserNotfoundImportKeyPrivateKey";
+  public  static  final  String KEY_USER_NOT_FOUND_IMPORT_KEY_IS_USER_DELETED ="keyUserNotfoundImportKeyIsUserDelete";
   public  static  final  String KEY_IS_EDUCATION_VIDEO_PLAYED ="keyIsEducationVideoPlayed";
   public  static  final  String KEY_MOBILE_NUMBER_KEYSTORE_SILOS ="keyMobileNumberKeyStoreSilos";
   public  static  final  String KEY_COUNTRY_CODE ="keyCountryCode";

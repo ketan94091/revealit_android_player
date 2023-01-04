@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -258,6 +259,8 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                 .setLenient()
                 .create();
 
+        Log.e("tst",""+mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY));
+
         final OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
@@ -289,7 +292,19 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
 
                 if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
-                    saveDataToTheAndroidKeyStore(response.body(), mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME));
+                    //IF USER AVAILABLE IN TO KEYSTORE BUT DELETED FLAG =1
+                    //UPDATE USER DELETED FLAG = 0
+                    if(mSessionManager.getPreferenceBoolean(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_IS_USER_DELETED)){
+                        if(CommonMethods.updateUserAccountActivationFlag(mSessionManager,mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY),mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME))){
+
+                            //AFTER UPDATING FLAG
+                            //GET USER DETAILS AND LOGGED IN BY SAVING REQUIRE PARAMETERS TO SESSION MANAGER
+                            getEnteredPrivateKeyDetails(response.body());
+                        }
+                    }else{
+                        saveDataToTheAndroidKeyStore(response.body(), mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME));
+
+                    }
 
                 } else {
                     try {
@@ -316,6 +331,48 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
             }
         });
 
+    }
+
+    private void getEnteredPrivateKeyDetails(UserDetailsFromPublicKeyModel body) {
+
+        mSessionManager.updatePreferenceString(Constants.KEY_USER_DATA, mSessionManager.getPreference("" + mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)));
+        mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN, body.getAuth_token());
+        mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE, mContext.getResources().getString(R.string.strTokenBearer));
+        mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME, mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME));
+        mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY, body.getRevealit_private_key());
+        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_REGISTRATION_DONE, true);
+        mSessionManager.updatePreferenceString(Constants.KEY_MOBILE_NUMBER,strMobileNumber);
+
+        //STORE DATA IN TO KEYSTORE
+        CommonMethods.encryptKey(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY), Constants.KEY_PRIVATE_KEY,body.getRevealit_private_key(), mSessionManager);
+        CommonMethods.encryptKey(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY),Constants.KEY_PUBLIC_KEY, body.getRevealit_private_key(), mSessionManager);
+        CommonMethods.encryptKey("xyz",Constants.KEY_MNEMONICS, body.getRevealit_private_key(), mSessionManager);
+        CommonMethods.encryptKey(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY_PEM),Constants.KEY_PRIVATE_KEY_PEM, body.getRevealit_private_key(), mSessionManager);
+        CommonMethods.encryptKey(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY_PEM), Constants.KEY_PUBLIC_KEY_PEM,body.getRevealit_private_key(), mSessionManager);
+
+
+        //UPDATE FLAG IF USER IS ADMIN OR NOT
+        if (body.getRole().equals(mContext.getResources().getString(R.string.strAdmin))) {
+            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN, true);
+        } else {
+            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN, false);
+        }
+
+        //UPDATE ACTIVE FLAG
+        if (body.getIs_activated().equals("1")) {
+            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE, true);
+        } else {
+            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE, false);
+        }
+
+        //UPDATE FLAG FOR APPLICATION MODE
+        mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
+
+        //GO TO BIOMETRIC CONFIRMATION ACTIVITY
+        Intent mIntent = new Intent(mActivity, NewAuthBiomatricAuthenticationActivity.class);
+        mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME, mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME));
+        mActivity.startActivity(mIntent);
+        mActivity.finishAffinity();
     }
 
     private void saveDataToTheAndroidKeyStore(UserDetailsFromPublicKeyModel body, String username) {
@@ -375,7 +432,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
             }
 
             //UPDATE ACTIVE FLAG
-            if(body.getIs_activated() == 1){
+            if(body.getIs_activated().equals("1")){
                 mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
             }else{
                 mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
@@ -421,6 +478,9 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                     mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
                     mModel.setMobileNumber(jsonArray.getJSONObject(i).getString("mobileNumber"));
                     mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
+                    if(jsonArray.getJSONObject(i).getInt("isAccountRemoved") == 1){
+                        mModel.setIsAccountRemoved(1);
+                    }
 
                     SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
                     mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));

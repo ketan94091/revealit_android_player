@@ -194,7 +194,7 @@
     <string name="strAuthorise">Authorise</string>
     <string name="strCopyTo">Copy to clipboard</string>
     <string name="strOffers">Hurry! This offer will end after 5,000 new users.</string>
-    <string name="strByClicking">By clicking ‘Create Account’ you agree to our</string>
+    <string name="strByClicking">By clicking ‘Continue’ you agree to our</string>
     <string name="strTermsOfService">Terms of Service and Privacy Policy</string>
     <string name="strTermsAndConditions">Terms &amp; Conditions</string>
     <string name="strErrorCountryCodeEmpty">Country code should not be empty</string>
