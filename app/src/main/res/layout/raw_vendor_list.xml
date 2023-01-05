@@ -124,6 +124,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/circle_white"
                         android:orientation="vertical"
+                        android:visibility="gone"
                         android:padding="10dp">
 
                         <ImageView

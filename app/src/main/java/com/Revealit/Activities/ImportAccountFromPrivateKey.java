@@ -222,15 +222,21 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
                             .serializeNulls()
                             .create();
-
+                    CommonMethods.printLogE("Response @ fetchUsername: ", "" + gson.toJson(response.body().getAccount_names().get(0)));
 
                     //CLOSED DIALOGUE
                     CommonMethods.closeDialog();
 
                     if (response.isSuccessful() && response.code() == Constants.API_CODE_200  ) {
-                        CommonMethods.printLogE("Response @ fetchUsername: ", "" + gson.toJson(response.body().getAccount_names().get(0)));
 
-                        fetchUserDetailsFromPubkeyAndUsername(publicKey,gson.toJson(response.body().getAccount_names().get(0)));
+                        //CHECK IF PROTON ACCOUNT BELONGS TO REVEALIT
+                        if(response.body().getAccount_names().get(0).contains(".rtv")){
+                            fetchUserDetailsFromPubkeyAndUsername(publicKey,gson.toJson(response.body().getAccount_names().get(0)));
+                        }else{
+
+                            //
+                            openAccountNotValidDialogue();
+                        }
 
                     } else {
                         try {
@@ -611,6 +617,49 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
             public void onClick(View v) {
 
                 mAlertDialog.dismiss();
+
+            }
+        });
+
+
+        txtOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                edtImportKey.setText("");
+                mAlertDialog.dismiss();
+
+
+            }
+        });
+
+        mAlertDialog.show();
+    }
+
+    private void openAccountNotValidDialogue() {
+
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
+        dialogBuilder.setCancelable(false);
+        LayoutInflater inflater = mActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.account_not_valid_dialogue, null);
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialogBuilder.setView(dialogView);
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        TextView txtOk = (TextView) dialogView.findViewById(R.id.txtOk);
+        LinearLayout linearCancel =(LinearLayout)dialogView.findViewById(R.id.linearCancel);
+
+
+        linearCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+
+                //CLEAR EDIT TEXT
+                edtImportKey.setText("");
 
             }
         });

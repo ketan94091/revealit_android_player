@@ -302,6 +302,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                             getEnteredPrivateKeyDetails(response.body());
                         }
                     }else{
+                        //SAVE DATA TO THE KEYSTORE IF USER IS DELETED FROM LOCAL/FROM SERVER
                         saveDataToTheAndroidKeyStore(response.body(), mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME));
 
                     }

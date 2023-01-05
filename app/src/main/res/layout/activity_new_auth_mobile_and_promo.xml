@@ -8,96 +8,98 @@
     tools:context=".UserOnboardingProcess.NewAuthGetStartedActivity">
 
 
-        <LinearLayout
-            android:id="@+id/linearMain"
+    <LinearLayout
+        android:id="@+id/linearMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        android:weightSum="5">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="20dp"
-            android:orientation="vertical"
-            android:weightSum="5">
+            android:layout_height="wrap_content">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="wrap_content">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/imgLogo"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/app_icon_round" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:gravity="center_vertical"
+                    android:text="@string/strRegisterAccount"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="700"
+                    android:textSize="18dp" />
+
+                <LinearLayout
+                    android:id="@+id/linearImgCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/imgLogo"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_alignParentLeft="true"
-                        android:src="@drawable/app_icon_round" />
-
-                    <TextView
+                        android:id="@+id/imgCancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:fontFamily="@font/quasimoda_bold"
-                        android:gravity="center_vertical"
-                        android:text="@string/strRegisterAccount"
-                        android:textColor="@color/colorBlack"
-                        android:textFontWeight="700"
-                        android:textSize="18dp" />
-
-                    <LinearLayout
-                        android:id="@+id/linearImgCancel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerInParent="true"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/imgCancel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:src="@mipmap/icon_cross" />
-                    </LinearLayout>
-
-                </RelativeLayout>
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:src="@mipmap/icon_cross" />
+                </LinearLayout>
 
             </RelativeLayout>
 
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/quasimoda_bold"
+                android:text="@string/strEnterMobilNumber"
+                android:textColor="@color/colorBlack"
+                android:textFontWeight="700"
+                android:textSize="15dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/quasimoda_bold"
-                    android:text="@string/strEnterMobilNumber"
-                    android:textColor="@color/colorBlack"
-                    android:textFontWeight="700"
-                    android:textSize="15dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/new_auth_round_button"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/new_auth_round_button"
+                    android:id="@+id/linearCountryPicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/linearCountryPicker"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/imgCountryFlag"
@@ -105,21 +107,20 @@
                         android:layout_height="20dp"
                         android:layout_alignParentLeft="true"
                         android:layout_gravity="center_vertical"
-                        android:scaleType="fitXY"
-                        android:layout_marginLeft="15dp" />
+                        android:layout_marginLeft="15dp"
+                        android:scaleType="fitXY" />
 
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="2dp"
                         android:fontFamily="@font/quasimoda_semibold"
                         android:text="+"
                         android:textColor="@color/colorBlack"
                         android:textFontWeight="600"
-                        android:textSize="15dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="2dp"
-                        />
+                        android:textSize="15dp" />
 
 
                     <EditText
@@ -127,81 +128,89 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@null"
+                        android:focusable="false"
+                        android:fontFamily="@font/quasimoda_semibold"
                         android:gravity="center_vertical"
+                        android:hint="61"
                         android:inputType="number"
                         android:maxLength="3"
                         android:paddingTop="15dp"
-                        android:focusable="false"
-                        android:textFontWeight="600"
+                        android:paddingRight="10dp"
                         android:paddingBottom="15dp"
-                        android:paddingRight="15dp"
                         android:text="61"
-                        android:hint="61"
-                        android:fontFamily="@font/quasimoda_semibold"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="15dp" />
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:inputType="number"
-                        android:maxLength="3"
-                        android:text="|"
-                        android:textColor="@color/colorGrayLight"
-                        android:textSize="25dp" />
-
-                    <EditText
-                        android:id="@+id/edtMobilenumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:gravity="center_vertical"
-                        android:hint="@string/strMobileNumber"
-                        android:inputType="number"
-                        android:maxLength="10"
-                        android:padding="15dp"
                         android:textColor="@color/colorBlack"
                         android:textFontWeight="600"
-                        android:fontFamily="@font/quasimoda_semibold"
                         android:textSize="15dp" />
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="20dp">
-
-                        <ImageView
-                            android:id="@+id/imgMobileStutusTrue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:src="@mipmap/icon_check"
-                            android:visibility="gone" />
-
-                        <ImageView
-                            android:id="@+id/imgMobileStutusFalse"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:src="@mipmap/icon_cross_red"
-                            android:visibility="gone" />
-
-
-                    </RelativeLayout>
-
+                        android:layout_marginLeft="5dp"
+                        android:src="@mipmap/down_arrow" />
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/linearErrorMsgs"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:text="|"
+                    android:textColor="@color/colorGrayLight"
+                    android:textSize="25dp" />
+
+                <EditText
+                    android:id="@+id/edtMobilenumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:fontFamily="@font/quasimoda_semibold"
+                    android:gravity="center_vertical"
+                    android:hint="@string/strMobileNumber"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:padding="15dp"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="600"
+                    android:textSize="15dp" />
+
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="20dp">
+
+                    <ImageView
+                        android:id="@+id/imgMobileStutusTrue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:src="@mipmap/icon_check"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/imgMobileStutusFalse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:src="@mipmap/icon_cross_red"
+                        android:visibility="gone" />
+
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearErrorMsgs"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -211,8 +220,8 @@
                     android:text="@string/strUsedForUniqueAccountCreation"
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="500"
-                    android:visibility="gone"
-                    android:textSize="15dp" />
+                    android:textSize="15dp"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/linearMobileWarnings"
@@ -244,94 +253,95 @@
 
                 </LinearLayout>
 
-                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearCountryList"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/new_auth_round_button"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycleCourseList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/txtInviteQuestion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:text="@string/strSomeoneInviteyou"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="700"
+                    android:textSize="15dp" />
 
                 <LinearLayout
-                    android:id="@+id/linearCountryList"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    android:layout_marginTop="10dp"
-                    android:padding="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:background="@drawable/new_auth_round_button"
-                    >
+                    android:orientation="horizontal">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycleCourseList"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                    <EditText
+                        android:id="@+id/edtPromo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:fontFamily="@font/quasimoda_semibold"
+                        android:gravity="center_vertical"
+                        android:hint="@string/strEnterInviteeName"
+                        android:inputType="text"
+                        android:maxLength="15"
+                        android:padding="15dp"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="600"
+                        android:textSize="15dp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="20dp">
+
+                        <ImageView
+                            android:id="@+id/imgPromoStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:src="@mipmap/icon_check"
+                            android:visibility="invisible" />
+
+                        <ImageView
+                            android:id="@+id/imgPromoStatusFalse"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:src="@mipmap/icon_cross_red"
+                            android:visibility="invisible" />
+
+                    </RelativeLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp"
-                    android:visibility="gone"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/txtInviteQuestion"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/quasimoda_bold"
-                        android:text="@string/strSomeoneInviteyou"
-                        android:textColor="@color/colorBlack"
-                        android:textFontWeight="700"
-                        android:textSize="15dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/new_auth_round_button"
-                        android:orientation="horizontal">
-
-                        <EditText
-                            android:id="@+id/edtPromo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:gravity="center_vertical"
-                            android:hint="@string/strEnterInviteeName"
-                            android:inputType="text"
-                            android:maxLength="15"
-                            android:padding="15dp"
-                            android:textColor="@color/colorBlack"
-                            android:textFontWeight="600"
-                            android:fontFamily="@font/quasimoda_semibold"
-                            android:textSize="15dp" />
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="20dp">
-
-                            <ImageView
-                                android:id="@+id/imgPromoStatus"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:src="@mipmap/icon_check"
-                                android:visibility="invisible" />
-                            <ImageView
-                                android:id="@+id/imgPromoStatusFalse"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:src="@mipmap/icon_cross_red"
-                                android:visibility="invisible" />
-
-                        </RelativeLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
                     <TextView
                         android:id="@+id/txtPromoAmount"
                         android:layout_width="wrap_content"
@@ -343,77 +353,76 @@
                         android:textFontWeight="500"
                         android:textSize="12dp" />
 
-                        <ImageView
-                            android:id="@+id/imgCurrencyIcon"
-                            android:layout_width="10dp"
-                            android:layout_height="10dp"
-                            android:layout_gravity="center_vertical"
-                            android:foregroundGravity="center_vertical"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginTop="5dp" />
-                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/imgCurrencyIcon"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:foregroundGravity="center_vertical" />
+                </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/linearPromoWarnings"
+                <LinearLayout
+                    android:id="@+id/linearPromoWarnings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal"
+                    android:visibility="invisible">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="top"
+                        android:layout_margin="15dp"
+                        android:src="@mipmap/icon_cross_red" />
+
+
+                    <TextView
+                        android:id="@+id/txtPromoWarnings"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal"
-                        android:visibility="invisible">
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/quasimoda_medium"
+                        android:text="@string/strMobileAlreadyUsed"
+                        android:textColor="@color/colorCuratorRedError"
+                        android:textFontWeight="500"
+                        android:textSize="15dp" />
 
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_gravity="top"
-                            android:layout_margin="15dp"
-                            android:src="@mipmap/icon_cross_red" />
-
-
-                        <TextView
-                            android:id="@+id/txtPromoWarnings"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:fontFamily="@font/quasimoda_medium"
-                            android:text="@string/strMobileAlreadyUsed"
-                            android:textColor="@color/colorCuratorRedError"
-                            android:textFontWeight="500"
-                            android:textSize="15dp" />
-
-
-                    </LinearLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
 
+        </LinearLayout>
 
-            <LinearLayout
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="4"
+            android:gravity="top"
+            android:orientation="vertical">
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:gravity="bottom"
-                android:layout_weight="4"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <RelativeLayout
+                <TextView
+                    android:id="@+id/txtContinueDisable"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/txtContinueDisable"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/new_auth_round_button_app_green_light"
-                        android:fontFamily="@font/quasimoda_bold"
-                        android:gravity="center_horizontal"
-                        android:padding="15dp"
-                        android:text="@string/strContinue"
-                        android:textColor="@color/colorWhite"
-                        android:textFontWeight="700"
-                        android:textSize="15dp"
-                        android:visibility="visible" />
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/new_auth_round_button_app_green_light"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:gravity="center_horizontal"
+                    android:padding="15dp"
+                    android:text="@string/strContinue"
+                    android:textColor="@color/colorWhite"
+                    android:textFontWeight="700"
+                    android:textSize="15dp"
+                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/txtContinueEnabled"
@@ -431,44 +440,43 @@
                     android:textSize="15dp"
                     android:visibility="gone" />
 
-                </RelativeLayout>
+            </RelativeLayout>
 
-                <LinearLayout
-                    android:id="@+id/linearPrivacyPolicy"
+            <LinearLayout
+                android:id="@+id/linearPrivacyPolicy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:orientation="vertical">
+                    android:fontFamily="@font/quasimoda_medium"
+                    android:gravity="center"
+                    android:text="@string/strByClicking"
+                    android:textColor="@color/colorCuratorHighlightGrey"
+                    android:textFontWeight="500"
+                    android:textSize="12dp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:fontFamily="@font/quasimoda_medium"
-                        android:gravity="center"
-                        android:text="@string/strByClicking"
-                        android:textColor="@color/colorCuratorHighlightGrey"
-                        android:textFontWeight="500"
-                        android:textSize="12dp" />
-
-                    <TextView
-                        android:id="@+id/txtTermsOfService"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/quasimoda_semibold"
-                        android:gravity="center"
-                        android:text="@string/strTermsOfService"
-                        android:textColor="@color/colorBlack"
-                        android:textFontWeight="500"
-                        android:textSize="12dp" />
-
-
-
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/txtTermsOfService"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/quasimoda_semibold"
+                    android:gravity="center"
+                    android:text="@string/strTermsOfService"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="500"
+                    android:textSize="12dp" />
 
 
             </LinearLayout>
 
 
         </LinearLayout>
+
+
+    </LinearLayout>
 </RelativeLayout>

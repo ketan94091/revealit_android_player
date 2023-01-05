@@ -182,7 +182,7 @@
     <string name="strCloudThree">You can do that simply by pressing the ‘Backup Now’ button below.</string>
     <string name="strCloudBackups">Cloud Backup</string>
     <string name="strWelcomeToRevealitTV">Welcome to revealit TV</string>
-    <string name="strEnterMobilNumber">Enter your mobile number</string>
+    <string name="strEnterMobilNumber">Enter your mobile number : </string>
     <string name="strUsedForUniqueAccountCreation">Your phone number will be used once for unique account creation and never again.</string>
     <string name="strMobileAlreadyUsed">Mobile Number is already in use on the revealit TV platform. revealit TV only allows one account per mobile.</string>
     <string name="strInvalidMobileFormat">Invalid Mobile Number Format</string>
@@ -217,6 +217,7 @@
     <string name="strProfile">Profile</string>
     <string name="strEnterPrivateKey">Please enter private key!</string>
     <string name="strInvalidPrivateKey">Invalid Account. Please select valid wallet account</string>
+    <string name="strEnterValidAccountKey">Please enter a valid Revealit account key</string>
     <string name="strMultifactorAuthentication">Multi-factor Authentication</string>
     <string name="strNotYourNumber">Not your number?</string>
     <string name="strClickToEdit">click to edit</string>

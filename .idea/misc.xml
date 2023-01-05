@@ -39,6 +39,7 @@
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/font/quasimoda_font.xml" value="0.13444816053511705" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/about_fragment.xml" value="0.11621621621621622" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/account_fragment.xml" value="0.25" />
+        <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/account_not_valid_dialogue.xml" value="0.11621621621621622" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/activity_biomatric_authentication.xml" value="0.11621621621621622" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/activity_biomatric_confirmation.xml" value="0.1070945945945946" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/activity_cloud_backup.xml" value="0.11621621621621622" />
@@ -106,7 +107,7 @@
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/raw_revealit_history_timestamp_list.xml" value="0.11621621621621622" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/raw_reward_summery_list.xml" value="0.25" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/raw_silos_account_list_items.xml" value="0.125" />
-        <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/raw_vendor_list.xml" value="0.3287037037037037" />
+        <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/raw_vendor_list.xml" value="0.11" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/settings_fragment.xml" value="0.11621621621621622" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/share_anchor_view_popup_content.xml" value="0.11621621621621622" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/start_over_dailoague.xml" value="0.11621621621621622" />
