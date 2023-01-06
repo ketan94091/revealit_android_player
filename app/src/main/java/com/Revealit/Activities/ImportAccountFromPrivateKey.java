@@ -233,7 +233,6 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                         if(response.body().getAccount_names().get(0).contains(".rtv")){
                             fetchUserDetailsFromPubkeyAndUsername(publicKey,gson.toJson(response.body().getAccount_names().get(0)));
                         }else{
-
                             //
                             openAccountNotValidDialogue();
                         }
