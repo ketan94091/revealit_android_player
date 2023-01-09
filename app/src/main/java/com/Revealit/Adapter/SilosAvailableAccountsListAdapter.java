@@ -3,6 +3,7 @@ package com.Revealit.Adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,9 +88,6 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
         holder.txtAccountUsername.setText(itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
         holder.txtAccountName.setText("@"+itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
 
-        if(itemListData.get(position).getIsAccountRemoved() == 1){
-            holder.txtAccountName.setText("@@@@@"+itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
-        }
 
         holder.relativeMain.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -98,8 +96,9 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
                     //CHECK IF USER DATA IS NOT NULL
                     //IF TRUE -> CONTINUE FETCHING DATA
                     //ELSE -> DISPLAY NOT FOUND MSG
+                    Log.e("OUT","OUT");
                     if (itemListData.get(position) != null) {
-
+                        Log.e("IN","IN" +itemListData.get(position).getSubmitProfileModel().getauth_token() );
                         mSessionManager.updatePreferenceString(Constants.KEY_USER_DATA, mSessionManager.getPreference("" + mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)));
                         mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN, itemListData.get(position).getSubmitProfileModel().getauth_token());
                         mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE, mContext.getResources().getString(R.string.strTokenBearer));

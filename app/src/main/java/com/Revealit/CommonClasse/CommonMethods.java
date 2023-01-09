@@ -784,7 +784,7 @@ public class CommonMethods {
 
                 for (int i=0 ;i < jsonArray.length();i++){
 
-                    if(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey)) {
+                    if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey)) {
                         KeyStoreServerInstancesModel.Data mModel = new KeyStoreServerInstancesModel.Data();
                         mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
                         mModel.setMobileNumber(jsonArray.getJSONObject(i).getString("mobileNumber"));
@@ -939,7 +939,7 @@ public class CommonMethods {
 
                 for (int i=0 ;i < jsonArray.length();i++){
 
-                    if( jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey) && jsonArray.getJSONObject(i).getInt("isAccountRemoved") == 1) {
+                    if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey) && jsonArray.getJSONObject(i).getInt("isAccountRemoved") == 1) {
                         isAccountDeleted = true;
                         return isAccountDeleted;
                     }
@@ -1026,6 +1026,43 @@ public class CommonMethods {
 
 
                 return true;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            return false;
+        }
+
+        return false;
+    }
+
+    public static boolean checkIfUserIsSuperAdmin(SessionManager mSessionManager,Context mContext) {
+        boolean isUserSuperAdmin = false;
+
+        if(!checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
+
+            //CONVERT DATA TO JSON ARRAY
+            //CREATE NEW ARRAY FROM THE STRING ARRAY
+            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
+            try {
+                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData(mSessionManager));
+
+                for (int i=0 ;i < jsonArray.length();i++){
+
+                    if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mContext.getResources().getString(R.string.strBeta)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == 1 ) {
+
+                       if(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("role").equals(mContext.getResources().getString(R.string.strAdmin))) {
+
+                           isUserSuperAdmin = true;
+
+                           return isUserSuperAdmin;
+                       }
+                    }
+                }
+
+                return isUserSuperAdmin;
 
             } catch (JSONException e) {
                 e.printStackTrace();

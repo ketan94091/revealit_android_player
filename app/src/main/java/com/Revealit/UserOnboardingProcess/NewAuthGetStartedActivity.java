@@ -71,7 +71,10 @@ public class NewAuthGetStartedActivity extends AppCompatActivity implements View
         txtSwappingSilo.setText(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME) +" Server : "+  BuildConfig.VERSION_NAME);
 
         //HIDE SHOW ADMIN DETAILS
-        if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
+        //CHECK USER IS ADMIN USER OR SUPER ADMIN USER
+        //ADMIN -> USER MUST BE ADMIN FROM BACKEND
+        //SUPER ADMIN -> IF ANY BETA USER IS ADMIN THAN CONSIDER USER AS ADMIN
+        if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)  | CommonMethods.checkIfUserIsSuperAdmin(mSessionManager,mContext)){
             txtSwappingSilo.setVisibility(View.VISIBLE);
         }else{
             txtSwappingSilo.setVisibility(View.INVISIBLE);
