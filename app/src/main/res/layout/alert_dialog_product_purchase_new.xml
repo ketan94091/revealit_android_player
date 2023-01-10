@@ -52,7 +52,7 @@
                                 android:layout_marginLeft="5dp"
                                 android:layout_gravity="center_vertical"
                                 android:layout_toRightOf="@id/imgBackArrow"
-                                android:fontFamily="@font/quasimoda_semibold"
+                                android:fontFamily="@font/dmsans_medium"
                                 android:text="@string/strBack"
                                 android:gravity="center_vertical"
                                 android:textColor="@color/colorBlack"
@@ -83,7 +83,7 @@
                                 android:textAlignment="center"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="12dp"
-                                android:fontFamily="@font/quasimoda_semibold"
+                                android:fontFamily="@font/dmsans_medium"
                                 android:textFontWeight="600"
                                 android:visibility="gone"
                                 />
@@ -125,7 +125,7 @@
                             android:textAlignment="center"
                             android:textColor="@color/colorBlack"
                             android:textSize="17dp"
-                            android:fontFamily="@font/quasimoda_bold"
+                            android:fontFamily="@font/dmsans_bold"
                             android:textFontWeight="700"/>
 
                     </LinearLayout>
@@ -162,7 +162,7 @@
                                     android:layout_alignParentLeft="true"
                                     android:layout_centerInParent="true"
                                     android:layout_gravity="center_horizontal"
-                                    android:fontFamily="@font/quasimoda_semibold"
+                                    android:fontFamily="@font/dmsans_medium"
                                     android:gravity="center_horizontal"
                                     android:textAlignment="center"
                                     android:textColor="@color/colorBlack"
@@ -222,7 +222,7 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerInParent="true"
                             android:background="@drawable/new_auth_round_button_app_green_small_corner"
-                            android:fontFamily="@font/quasimoda_semibold"
+                            android:fontFamily="@font/dmsans_medium"
                             android:paddingLeft="8dp"
                             android:paddingTop="10dp"
                             android:paddingRight="8dp"
@@ -287,7 +287,7 @@
                                 android:textColor="@color/colorBlack"
                                 android:textSize="17dp"
                                 android:text="@string/strDescription"
-                                android:fontFamily="@font/quasimoda_bold"
+                                android:fontFamily="@font/dmsans_bold"
                                 android:drawableRight="@mipmap/icn_expand"
                                 android:textFontWeight="700"/>
                             <TextView
@@ -323,7 +323,7 @@
                                 android:textSize="17dp"
                                 android:drawableRight="@mipmap/icn_expand"
                                 android:text="@string/strFeatures"
-                                android:fontFamily="@font/quasimoda_bold"
+                                android:fontFamily="@font/dmsans_bold"
                                 android:textFontWeight="700"/>
                             <TextView
                                 android:id="@+id/txtProductFeatures"
@@ -359,7 +359,7 @@
                                 android:textSize="17dp"
                                 android:drawableRight="@mipmap/icn_expand"
                                 android:text="@string/strTechnicalInformation"
-                                android:fontFamily="@font/quasimoda_bold"
+                                android:fontFamily="@font/dmsans_bold"
                                 android:textFontWeight="700"/>
                             <TextView
                                 android:id="@+id/txtProductTechnical"

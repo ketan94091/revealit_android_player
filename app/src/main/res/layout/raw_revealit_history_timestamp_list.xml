@@ -13,7 +13,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/colorNewAppGreen"
                 android:textSize="12dp"
-                android:fontFamily="@font/quasimoda_bold"
+                android:fontFamily="@font/dmsans_bold"
                 android:textFontWeight="700"
                 android:clickable="true"
 

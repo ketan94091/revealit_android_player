@@ -68,7 +68,7 @@
                     android:textColor="@color/colorCuratorHighlightGrey"
                     android:textSize="15dp"
                     android:singleLine="true"
-                    android:fontFamily="@font/quasimoda_bold"
+                    android:fontFamily="@font/dmsans_bold"
                     android:textFontWeight="700"
                     android:text="Title of video"
                     />

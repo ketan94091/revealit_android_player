@@ -1,5 +1,8 @@
 package com.Revealit.Fragments;
 
+import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
+import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,15 +20,22 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.Revealit.Activities.DisplayPrivateKeyActivity;
 import com.Revealit.Activities.HomeScreenTabLayout;
+import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.Revealit.UserOnboardingProcess.NewAuthSplashScreen;
+
+import java.util.concurrent.Executor;
 
 public class PrivacyFragment extends Fragment implements View.OnClickListener {
 
@@ -40,6 +50,9 @@ public class PrivacyFragment extends Fragment implements View.OnClickListener {
     private RelativeLayout relativeBack;
     private LinearLayout linearPrivateKey,linearLogout,linearMultifactorAuth;
     private ImageView imgBackArrow;
+    private Executor executor;
+    private BiometricPrompt biometricPrompt;
+    private BiometricPrompt.PromptInfo promptInfo;
 
 
     public PrivacyFragment(HomeScreenTabLayout homeScreenTabLayout) {
@@ -128,12 +141,66 @@ public class PrivacyFragment extends Fragment implements View.OnClickListener {
 
             case R.id.linearPrivateKey:
 
-               Intent mIntent = new Intent(mActivity, DisplayPrivateKeyActivity.class);
-               mActivity.startActivity(mIntent);
+                //CHECK IF BIOMETRIC HARDWARE AVAILABLE OR NOT
+                //ALSO USER ALLOW TO USE BIOMETRIC WHILE REGISTRAION OR FIRST LOGIN
+                BiometricManager biometricManager = BiometricManager.from(mContext);
+                if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK | BIOMETRIC_STRONG | DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS) {
+
+                    //OPEN BIOMETRIC PROMPT
+                    loadBiomatricPrompt();
+
+                } else {
+
+                    //OPEN NO AUTHENTICATION DIALOGUE
+                    CommonMethods.openBiometricActivatioDailogue(mActivity);
+
+                }
+
 
                 break;
 
         }
+
+    }
+    private void loadBiomatricPrompt() {
+
+        executor = ContextCompat.getMainExecutor(mContext);
+        biometricPrompt = new BiometricPrompt((FragmentActivity) mContext,
+                executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode,
+                                              @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(
+                    @NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+
+                //ALLOW USER TO VIEW PRIVATE KEY
+                Intent mIntent = new Intent(mActivity, DisplayPrivateKeyActivity.class);
+                mActivity.startActivity(mIntent);
+
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+
+            }
+        });
+
+        promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Biometric login to Reveailit")
+                .setSubtitle("Log in using your biometric credential")
+                // .setNegativeButtonText("Use account password or Pin or Pattern")
+                .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK | BiometricManager.Authenticators.DEVICE_CREDENTIAL)
+                .setConfirmationRequired(false)
+                .build();
+
+        biometricPrompt.authenticate(promptInfo);
 
     }
     private void openLogoutDialogue() {

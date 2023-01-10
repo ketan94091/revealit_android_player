@@ -37,7 +37,7 @@
                     android:layout_centerInParent="true"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/imgBackArrow"
-                    android:fontFamily="@font/quasimoda_semibold"
+                    android:fontFamily="@font/dmsans_medium"
                     android:text="@string/strHelp"
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="600"

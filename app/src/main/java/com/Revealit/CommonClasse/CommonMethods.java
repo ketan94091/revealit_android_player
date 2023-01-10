@@ -1053,7 +1053,7 @@ public class CommonMethods {
 
                     if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mContext.getResources().getString(R.string.strBeta)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == 1 ) {
 
-                       if(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("role").equals(mContext.getResources().getString(R.string.strAdmin))) {
+                       if(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("role").equals(mContext.getResources().getString(R.string.strAdmin)) && jsonArray.getJSONObject(i).getInt("isAccountRemoved") == 0) {
 
                            isUserSuperAdmin = true;
 

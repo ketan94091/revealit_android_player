@@ -34,7 +34,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:fontFamily="@font/quasimoda_bold"
+                    android:fontFamily="@font/dmsans_bold"
                     android:gravity="center_vertical"
                     android:text="@string/strReveals"
                     android:textColor="@color/colorBlack"
@@ -115,7 +115,7 @@
                         android:layout_below="@+id/imgListen"
                         android:layout_centerInParent="true"
                         android:layout_marginTop="5dp"
-                        android:fontFamily="@font/quasimoda_semibold"
+                        android:fontFamily="@font/dmsans_medium"
                         android:text="@string/strTapToRevealit"
                         android:textColor="@color/colorRevealitGrey"
                         android:textFontWeight="600"
@@ -151,7 +151,7 @@
                         android:layout_weight="1"
                         android:text="@string/strMyReveals"
                         android:textAlignment="textStart"
-                        android:fontFamily="@font/quasimoda_bold"
+                        android:fontFamily="@font/dmsans_bold"
                         android:textFontWeight="700"
                         android:textColor="@color/colorRevealitGrey"
                         android:textSize="15dp" />
@@ -162,7 +162,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textAlignment="center"
-                        android:fontFamily="@font/quasimoda_bold"
+                        android:fontFamily="@font/dmsans_bold"
                         android:textFontWeight="700"
                         android:textColor="@color/colorRevealitGrey"
                         android:textSize="15dp"/>
@@ -173,7 +173,7 @@
                         android:layout_weight="1"
                         android:text="@string/strSelect"
                         android:textAlignment="textEnd"
-                        android:fontFamily="@font/quasimoda_bold"
+                        android:fontFamily="@font/dmsans_bold"
                         android:textFontWeight="700"
                         android:textColor="@color/colorRevealitGrey"
                         android:textSize="15dp" />
@@ -195,7 +195,7 @@
                         android:layout_weight="1"
                         android:text="@string/strSelectALl"
                         android:textAlignment="textStart"
-                        android:fontFamily="@font/quasimoda_bold"
+                        android:fontFamily="@font/dmsans_bold"
                         android:textFontWeight="700"
                         android:textColor="@color/colorRevealitGrey"
                         android:textSize="15dp" />
@@ -206,7 +206,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textAlignment="center"
-                        android:fontFamily="@font/quasimoda_bold"
+                        android:fontFamily="@font/dmsans_bold"
                         android:textFontWeight="700"
                         android:textColor="@color/colorRevealitGrey"
                         android:textSize="15dp"/>
@@ -217,7 +217,7 @@
                         android:layout_weight="1"
                         android:text="@string/strCancel"
                         android:textAlignment="textEnd"
-                        android:fontFamily="@font/quasimoda_bold"
+                        android:fontFamily="@font/dmsans_bold"
                         android:textFontWeight="700"
                         android:textColor="@color/colorRevealitGrey"
                         android:textSize="15dp" />

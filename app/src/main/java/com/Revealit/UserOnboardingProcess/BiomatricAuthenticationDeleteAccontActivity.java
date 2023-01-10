@@ -103,7 +103,7 @@ public class BiomatricAuthenticationDeleteAccontActivity extends AppCompatActivi
         //CHECK IF BIOMETRIC HARDWARE AVAILABLE OR NOT
         //ALSO USER ALLOW TO USE BIOMETRIC WHILE REGISTRAION OR FIRST LOGIN
         BiometricManager biometricManager = BiometricManager.from(mContext);
-        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK | BIOMETRIC_STRONG | DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS && mSessionManager.getPreferenceBoolean(Constants.IS_ALLOW_BIOMETRIC )) {
+        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK | BIOMETRIC_STRONG | DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS) {
 
             //OPEN BIOMETRIC PROMPT
             loadBiomatricPrompt();

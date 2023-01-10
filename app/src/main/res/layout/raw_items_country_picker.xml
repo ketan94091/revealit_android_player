@@ -61,7 +61,7 @@
                     android:textAlignment="textStart"
                     android:textColor="@color/colorRevealitGrey"
                     android:textSize="12dp"
-                    android:fontFamily="@font/quasimoda_semibold"
+                    android:fontFamily="@font/dmsans_medium"
                     android:textFontWeight="600"
                     android:layout_weight="1"
                     android:paddingBottom="2dp"/>
@@ -73,7 +73,7 @@
                     android:textAlignment="textStart"
                     android:textColor="@color/colorRevealitGrey"
                     android:textSize="12dp"
-                    android:fontFamily="@font/quasimoda_semibold"
+                    android:fontFamily="@font/dmsans_medium"
                     android:textFontWeight="600"
                     android:layout_weight="1"
                     android:paddingBottom="2dp"/>
