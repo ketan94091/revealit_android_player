@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -106,6 +107,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     private static ArrayList<Long> mLongRevealTime = new ArrayList<>();
     private static HomeScreenTabLayout mHomeScreenTabLayout;
     private static LinearLayout linearRevealTitle;
+    private static RelativeLayout relativeTapToReveal;
     private static LinearLayout linearRevealSelection;
     private LinearLayout linearWavingBackground;
     private static RevealItHistoryListAdapter mRevealItHistoryListAdapter;
@@ -198,6 +200,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         linearWavingBackground = (LinearLayout) mView.findViewById(R.id.linearWavingBackground);
         linearRevealSelection = (LinearLayout) mView.findViewById(R.id.linearRevealSelection);
         linearRevealTitle = (LinearLayout) mView.findViewById(R.id.linearRevealTitle);
+        relativeTapToReveal = (RelativeLayout) mView.findViewById(R.id.relativeTapToReveal);
 
         recycleRevealList = (RecyclerView) mView.findViewById(R.id.recycleRevealList);
         recylerViewLayoutManager = new LinearLayoutManager(mActivity);
@@ -263,6 +266,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         txtSelectionCancel.setOnClickListener(this);
         txtSelectDeselectAll.setOnClickListener(this);
         imgLogo.setOnClickListener(this);
+        relativeTapToReveal.setOnClickListener(this);
     }
 
 
@@ -364,58 +368,73 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                 }
                 break;
 
+            case R.id.relativeTapToReveal:
+
+                doRecording();
+
+                break;
             case R.id.imgListen:
 
-                //IF TRUE APP MODE IS LIVE
-                //ELSE APP MODE IS SIMULATION
-                if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+                doRecording();
 
-                    //START RECORDING
-                    startRecording();
-                } else {
+                break;
 
-                    //SET IMAGE CLICKBLE FALSE
-                    imgListen.setClickable(false);
 
-                    //CHECK IF TAPCOUNT IS MUST LESS THAN DATA
-                    if (tapCount < (mDatabaseHelper.getCategoryWisePlayList().size() + 1)) {
+        }
+
+    }
+
+    private void doRecording() {
+
+        //IF TRUE APP MODE IS LIVE
+        //ELSE APP MODE IS SIMULATION
+        if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+
+            //START RECORDING
+            startRecording();
+        } else {
+
+            //SET IMAGE CLICKBLE FALSE
+            relativeTapToReveal.setClickable(false);
+            imgListen.setClickable(false);
+
+            //CHECK IF TAPCOUNT IS MUST LESS THAN DATA
+            if (tapCount < (mDatabaseHelper.getCategoryWisePlayList().size() + 1)) {
+
+                //START ANIMATION
+                rippleBackground.startRippleAnimation();
+                linearWavingBackground.setVisibility(View.VISIBLE);
+                txtReveal.setVisibility(View.INVISIBLE);
+
+
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        //ADD CURRENT TIME IN ARRAYLIST
+                        mLongRevealTime.add(System.currentTimeMillis());
+
+                        //FETCH SUBLIST FROM DATABASE
+                        updateUI(0, tapCount);
+
+                        //INCREASE TAP COUNT
+                        tapCount++;
 
                         //START ANIMATION
-                        rippleBackground.startRippleAnimation();
-                        linearWavingBackground.setVisibility(View.VISIBLE);
-                        txtReveal.setVisibility(View.INVISIBLE);
+                        rippleBackground.stopRippleAnimation();
+                        linearWavingBackground.setVisibility(View.GONE);
+                        txtReveal.setVisibility(View.VISIBLE);
 
 
-                        new Handler().postDelayed(new Runnable() {
+                        //RESET BOTTOM BAR VIEW ON EACH NEW VIDEOS
+                        resetBottomBarAndMyRevealsView();
 
-                            @Override
-                            public void run() {
-
-                                //ADD CURRENT TIME IN ARRAYLIST
-                                mLongRevealTime.add(System.currentTimeMillis());
-
-                                //FETCH SUBLIST FROM DATABASE
-                                updateUI(0, tapCount);
-
-                                //INCREASE TAP COUNT
-                                tapCount++;
-
-                                //START ANIMATION
-                                rippleBackground.stopRippleAnimation();
-                                linearWavingBackground.setVisibility(View.GONE);
-                                txtReveal.setVisibility(View.VISIBLE);
-
-
-                                //RESET BOTTOM BAR VIEW ON EACH NEW VIDEOS
-                                resetBottomBarAndMyRevealsView();
-
-
-                            }
-                        }, 1000);
 
                     }
-                }
+                }, 1000);
 
+            }
         }
 
     }
@@ -512,6 +531,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         if (CheckPermissions()) {
 
             //IMAGE CLICK FALSE
+            relativeTapToReveal.setClickable(false);
             imgListen.setClickable(false);
 
             //START RIPPLE ANIMATION
@@ -581,6 +601,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                     txtReveal.setVisibility(View.VISIBLE);
 
                     //MAKE IMAGE CLICKBLE TRUE
+                    relativeTapToReveal.setClickable(true);
                     imgListen.setClickable(true);
 
 
@@ -1108,6 +1129,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
 
             //ENABLE BUTTON
+            relativeTapToReveal.setClickable(true);
             imgListen.setClickable(true);
 
 
@@ -1199,6 +1221,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
 
             //ENABLE BUTTON
+            relativeTapToReveal.setClickable(true);
             imgListen.setClickable(true);
 
 
@@ -1213,6 +1236,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         txtRevealCount.setText("" + mDatabaseHelper.getRevealitHistoryDataSimulation().size() + " reveals");
 
         //ENABLE BUTTON
+        relativeTapToReveal.setClickable(true);
         imgListen.setClickable(true);
 
 

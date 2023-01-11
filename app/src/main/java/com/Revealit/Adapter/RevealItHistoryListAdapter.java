@@ -3,6 +3,7 @@ package com.Revealit.Adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -20,6 +21,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Revealit.Activities.ExoPlayerActivity;
+import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.Interfaces.RemoveListenHistory;
 import com.Revealit.ModelClasses.RevealitHistoryModel;
@@ -177,12 +180,17 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
 
         holder.txtVideoName.setText(revealitHistoryData.get(position).getMedia_title());
 
-        holder.imgCoverArt.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.imgCoverArt.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public void onClick(View view) {
+                Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
+                mIntent.putExtra(Constants.MEDIA_URL, "" + revealitHistoryData.get(position).media_url);
+                mIntent.putExtra(Constants.MEDIA_ID, "" + revealitHistoryData.get(position).media_id);
+                mIntent.putExtra(Constants.VIDEO_NAME, "" + revealitHistoryData.get(position).media_title);
+                mIntent.putExtra(Constants.VIDEO_SEEK_TO, "0");
+                mIntent.putExtra(Constants.IS_VIDEO_SEEK, false);
+                mActivity.startActivity(mIntent);
 
-                //showBottomSheetDialog(revealitHistoryData.get(position).getMedia_id());
-                return true;
             }
         });
 

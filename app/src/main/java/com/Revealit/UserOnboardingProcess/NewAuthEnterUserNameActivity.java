@@ -56,7 +56,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
     private DatabaseHelper mDatabaseHelper;
     private ImageView imgUsernameStutusFalse,imgUsernameStutusTrue,imgBackArrow, imgCancel, imgLogo;
     private TextView txtContinueEnabled, txtUsernameInUse,txtContinueDisable, txtMobileNumber;
-    private LinearLayout linearUsernameHint,linearUsernameTrue, linearUsernameWarnings;
+    private LinearLayout linearUsernameHint,linearUsernameTrue, linearUsernameAlreadyInUse,linearUsernameWarnings;
     private EditText edtUsername;
     private String strCountryCode,strMobileNumber,strCampaignId,strRefferalId,strInvitename;
 
@@ -105,6 +105,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         txtUsernameInUse = (TextView) findViewById(R.id.txtUsernameInUse);
 
         linearUsernameWarnings = (LinearLayout) findViewById(R.id.linearUsernameWarnings);
+        linearUsernameAlreadyInUse = (LinearLayout) findViewById(R.id.linearUsernameAlreadyInUse);
         linearUsernameTrue = (LinearLayout) findViewById(R.id.linearUsernameTrue);
         linearUsernameHint = (LinearLayout) findViewById(R.id.linearUsernameHint);
 
@@ -141,6 +142,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
                                                        } else if(s.length() == 0){
                                                            linearUsernameWarnings.setVisibility(View.INVISIBLE);
                                                            linearUsernameTrue.setVisibility(View.INVISIBLE);
+                                                           linearUsernameAlreadyInUse.setVisibility(View.INVISIBLE);
                                                            imgUsernameStutusFalse.setVisibility(View.INVISIBLE);
                                                            imgUsernameStutusTrue.setVisibility(View.INVISIBLE);
                                                            linearUsernameHint.setVisibility(View.VISIBLE);
@@ -150,6 +152,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
                                                        }else{
                                                            linearUsernameWarnings.setVisibility(View.VISIBLE);
                                                            linearUsernameTrue.setVisibility(View.INVISIBLE);
+                                                           linearUsernameAlreadyInUse.setVisibility(View.INVISIBLE);
                                                            imgUsernameStutusFalse.setVisibility(View.VISIBLE);
                                                            imgUsernameStutusTrue.setVisibility(View.INVISIBLE);
                                                            linearUsernameHint.setVisibility(View.INVISIBLE);
@@ -513,6 +516,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
 
         if(isNotExist){
             linearUsernameWarnings.setVisibility(View.INVISIBLE);
+            linearUsernameAlreadyInUse.setVisibility(View.INVISIBLE);
             linearUsernameTrue.setVisibility(View.VISIBLE);
             linearUsernameHint.setVisibility(View.INVISIBLE);
             imgUsernameStutusFalse.setVisibility(View.INVISIBLE);
@@ -524,11 +528,12 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         }else{
             linearUsernameWarnings.setVisibility(View.INVISIBLE);
             linearUsernameTrue.setVisibility(View.INVISIBLE);
-            linearUsernameHint.setVisibility(View.VISIBLE);
+            linearUsernameAlreadyInUse.setVisibility(View.VISIBLE);
+            linearUsernameHint.setVisibility(View.INVISIBLE);
             imgUsernameStutusFalse.setVisibility(View.INVISIBLE);
             imgUsernameStutusTrue.setVisibility(View.INVISIBLE);
             txtContinueEnabled.setVisibility(View.INVISIBLE);
-            txtUsernameInUse.setVisibility(View.VISIBLE);
+            txtUsernameInUse.setVisibility(View.GONE);
             txtContinueDisable.setVisibility(View.VISIBLE);
         }
     }

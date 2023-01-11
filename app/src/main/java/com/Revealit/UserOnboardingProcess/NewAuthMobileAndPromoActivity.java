@@ -584,7 +584,14 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        CommonMethods.buildDialog(mContext,"Error : "+ jObjError.getString("message"));
+
+                        if(jObjError.getString("message").contains("400")){
+                            CommonMethods.buildDialog(mContext,getResources().getString(R.string.strEnterValidPhone));
+
+                        }else{
+                            CommonMethods.buildDialog(mContext,"Error : "+ jObjError.getString("message"));
+                        }
+
                     } catch (Exception e) {
                         CommonMethods.buildDialog(mContext,"Error : "+e.getMessage());
 

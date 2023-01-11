@@ -135,17 +135,31 @@
                                 android:textFontWeight="700"
                                 android:textSize="15dp" />
 
-                            <TextView
-                                android:id="@+id/txtAmount"
+                            <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/dmsans_medium"
-                                android:maxLength="40"
-                                android:singleLine="true"
-                                android:text="@string/strLoading"
-                                android:textColor="@color/colorNewAppGreen"
-                                android:textFontWeight="600"
-                                android:textSize="30dp" />
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:id="@+id/imgLoadingBalance"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:interpolator="@anim/linear_interpolator"
+                                    android:src="@mipmap/balance_updating" />
+
+                                <TextView
+                                    android:id="@+id/txtAmount"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/dmsans_medium"
+                                    android:maxLength="40"
+                                    android:singleLine="true"
+                                    android:textColor="@color/colorNewAppGreen"
+                                    android:textFontWeight="600"
+                                    android:visibility="gone"
+                                    android:textSize="30dp" />
+
+                            </RelativeLayout>
+
 
 
                         </LinearLayout>
@@ -197,126 +211,125 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/relativeAccountDetails">
 
-        <LinearLayout
-            android:id="@+id/linearRewardHistory"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:visibility="gone"
-            >
-
-            <TextView
-                android:id="@+id/titleSummery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtAmount"
-                android:fontFamily="@font/dmsans_bold"
-                android:text="@string/strRewardHistory"
-                android:textColor="@color/colorCuratorHighlightGrey"
-                android:textFontWeight="700"
-                android:textSize="15dp" />
-
             <LinearLayout
+                android:id="@+id/linearRewardHistory"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal"
-                android:weightSum="3">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/titleSummery"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtAmount"
-                    android:layout_weight="1"
                     android:fontFamily="@font/dmsans_bold"
-                    android:text="@string/strType"
-                    android:textAlignment="textStart"
+                    android:text="@string/strRewardHistory"
                     android:textColor="@color/colorCuratorHighlightGrey"
                     android:textFontWeight="700"
                     android:textSize="15dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/txtAmount"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/dmsans_bold"
-                    android:text="@string/strAmount"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/colorCuratorHighlightGrey"
-                    android:textFontWeight="700"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/txtAmount"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/dmsans_bold"
-                    android:text="@string/strWhen"
-                    android:textAlignment="textEnd"
-                    android:textColor="@color/colorCuratorHighlightGrey"
-                    android:textFontWeight="700"
-                    android:textSize="15dp" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycleRewardHistory"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_above="@+id/linearBottomView" />
-
 
                 <LinearLayout
-                    android:id="@+id/linearBottomView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:orientation="horizontal"
-                    android:visibility="gone"
-                    android:weightSum="2">
+                    android:weightSum="3">
 
-                    <RelativeLayout
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/txtVersionName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:textColor="@color/colorWalletText"
-                            android:textSize="12dp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtAmount"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:fontFamily="@font/dmsans_bold"
+                        android:text="@string/strType"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/colorCuratorHighlightGrey"
+                        android:textFontWeight="700"
+                        android:textSize="15dp" />
 
-                        <ImageView
-                            android:id="@+id/imgSponsor"
-                            android:layout_width="120dp"
-                            android:layout_height="50dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_gravity="center_horizontal"
-                            android:scaleType="fitXY" />
-                    </RelativeLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtAmount"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/dmsans_bold"
+                        android:text="@string/strAmount"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/colorCuratorHighlightGrey"
+                        android:textFontWeight="700"
+                        android:textSize="15dp" />
 
-
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtAmount"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/dmsans_bold"
+                        android:text="@string/strWhen"
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/colorCuratorHighlightGrey"
+                        android:textFontWeight="700"
+                        android:textSize="15dp" />
                 </LinearLayout>
-            </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycleRewardHistory"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_above="@+id/linearBottomView" />
 
 
-        </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/linearBottomView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        android:weightSum="2">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/txtVersionName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:textColor="@color/colorWalletText"
+                                android:textSize="12dp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/imgSponsor"
+                                android:layout_width="120dp"
+                                android:layout_height="50dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_gravity="center_horizontal"
+                                android:scaleType="fitXY" />
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/txtRefreshingHistory"
@@ -325,7 +338,9 @@
                 android:layout_centerInParent="true"
                 android:fontFamily="@font/dmsans_medium"
                 android:text="@string/strRefreshingRewardHistory"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                android:visibility="gone" />
+
 
         </RelativeLayout>
     </RelativeLayout>

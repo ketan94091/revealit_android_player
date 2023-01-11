@@ -142,6 +142,7 @@
     <string name="strClearVideo">Are you sure you want to clear this video?</string>
     <string name="strClear">Clear</string>
     <string name="strClearAll">Clear All</string>
+    <string name="strNoRewardDataAvailable">No reward data available</string>
     <string name="strUsernotfound">User not found! Please create new user</string>
     <string name="strUsernotfoundForThisName">User Not Found</string>
     <string name="strUsernotfoundPleaseCreateNewUser">The username mentioned cannot be found.\n Please create new user.</string>
@@ -201,6 +202,7 @@
     <string name="strErrorCountryCodeValid">Enter valid country code</string>
     <string name="strErrorMobileNumberEmpty">Enter mobile number</string>
     <string name="strErrorMobileNumberValid">Mobile number must be 10 digit</string>
+    <string name="strEnterValidPhone">Please enter valid phone number</string>
     <string name="strMobileVerification">Mobile Verification</string>
     <string name="strUsername">Username</string>
     <string name="strVersion">Version</string>

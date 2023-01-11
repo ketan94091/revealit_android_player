@@ -51,6 +51,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/relativeTapToReveal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="5"
@@ -67,10 +68,6 @@
                     app:rb_radius="30dp"
                     app:rb_rippleAmount="6"
                     app:rb_scale="5" />
-
-
-
-
 
                 <LinearLayout
                     android:id="@+id/linearWavingBackground"

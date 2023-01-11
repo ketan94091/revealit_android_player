@@ -10,9 +10,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -74,7 +76,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recycleRewardHistory;
     private LinearLayoutManager recylerViewLayoutManager;
     private RewardSummeryListAdapter2 mRewardSummeryListAdapter2;
-    private ImageView imgLogo,imgScanQRcode,imgSponsor, imgRefresh;
+    private ImageView imgLoadingBalance,imgLogo,imgScanQRcode,imgSponsor, imgRefresh;
     private TextView txtRefreshingHistory,txtVersionName, txtCurrencyType, txtAmount, txtAccountName;
     private RelativeLayout relativeAccountDetails;
     private LinearLayout linearCurrency, linearRewardHistory;
@@ -101,8 +103,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         ((AppCompatActivity) getActivity()).setTitle(getString(R.string.app_name));
         mView = inflater.inflate(R.layout.fragment_wallet, container, false);
 
-        setIds();
-        setOnClicks();
+//        setIds();
+//        setOnClicks();
 
         return mView;
 
@@ -129,6 +131,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         imgSponsor = (ImageView) mView.findViewById(R.id.imgSponsor);
         imgScanQRcode =(ImageView)mView.findViewById(R.id.imgScanQRcode);
         imgLogo =(ImageView)mView.findViewById(R.id.imgLogo);
+        imgLoadingBalance =(ImageView)mView.findViewById(R.id.imgLoadingBalance);
 
 
         txtAccountName = (TextView) mView.findViewById(R.id.txtAccountName);
@@ -152,15 +155,21 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         linearRewardHistory.setVisibility(View.GONE);
         txtRefreshingHistory.setVisibility(View.VISIBLE);
 
-        //CLEAR AMOUNT AND CURRENCY TYPE DATA
-        //txtAmount.setText("");
-        //txtCurrencyType.setText("");
 
         //SET APPLICATION INSTALLED VERSION NAME
         txtVersionName.setText(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME) +" Server : "+CommonMethods.installedAppVersion(mContext));
 
         //SET USERNAME
         txtAccountName.setText(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                imgLoadingBalance.animate().rotationBy(360).withEndAction(this).setDuration(3000).setInterpolator(new LinearInterpolator()).start();
+            }
+        };
+
+        imgLoadingBalance.animate().rotationBy(360).withEndAction(runnable).setDuration(3000).setInterpolator(new LinearInterpolator()).start();
 
         //CALL WALLET(ACCOUNTS) DETAILS
         callWalletDetails();
@@ -174,8 +183,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         if (menuVisible) {
 
             //SET IDS
-           // setIds();
-            //setOnClicks();
+            setIds();
+            setOnClicks();
 
 
 
@@ -655,6 +664,21 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         txtAmount.setText(mSessionManager.getPreference(Constants.ACCOUNT_BALANCE));
         txtCurrencyType.setText(mSessionManager.getPreference(Constants.ACCOUNT_CURRENCY_TYPE));
 
+        //HIDE ANIMATED IMAGE VIEW WHEN AMOUNT DISPLAY
+        imgLoadingBalance.animate().cancel();
+        imgLoadingBalance.setImageDrawable(getResources().getDrawable(R.mipmap.balance_updated));
+
+        //DISPLAY LOADER FOR 1 SECOND AND THAN DISPLAY BALANCE
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                imgLoadingBalance.setVisibility(View.GONE);
+                txtAmount.setVisibility(View.VISIBLE);
+            }
+        }, 1000);
+
+
         //VISIBLE UI
         linearRewardHistory.setVisibility(View.VISIBLE);
         txtRefreshingHistory.setVisibility(View.GONE);
@@ -673,6 +697,13 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         //SET ADAPTER
         mRewardSummeryListAdapter2 = new RewardSummeryListAdapter2(mContext, mActivity, mDatabaseHelper.gettRewardHistoryData());
         recycleRewardHistory.setAdapter(mRewardSummeryListAdapter2);
+
+        //CHECK IF THERE IS NO REWARD DATA AVAILABLE
+        if(mDatabaseHelper.gettRewardHistoryData().size() == 0){
+            txtRefreshingHistory.setVisibility(View.VISIBLE);
+            txtRefreshingHistory.setText(getResources().getString(R.string.strNoRewardDataAvailable));
+
+        }
 
 
     }
