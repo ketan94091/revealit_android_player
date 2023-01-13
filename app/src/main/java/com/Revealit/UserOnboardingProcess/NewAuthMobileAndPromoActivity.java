@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -102,7 +103,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
     };
     private RecyclerView recyclerViewRecipesList;
     private boolean isOtpRecieved;
-    private LinearLayout linearImgCancel,linearMain;
+    private LinearLayout linearRefferalSection,linearImgCancel,linearMain;
 
 
     @Override
@@ -144,6 +145,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         linearCountryPicker = (LinearLayout) findViewById(R.id.linearCountryPicker);
         linearMain = (LinearLayout) findViewById(R.id.linearMain);
         linearImgCancel = (LinearLayout) findViewById(R.id.linearImgCancel);
+        linearRefferalSection = (LinearLayout) findViewById(R.id.linearRefferalSection);
 
 
         txtMobileWarnings = (TextView) findViewById(R.id.txtMobileWarnings);
@@ -162,6 +164,11 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
 
         //SET UNDERLINE
         txtTermsOfService.setPaintFlags(txtTermsOfService.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        //HIDE REFERRAL SECTION IF USER IS FROM SHORT ONBOARDING
+        if(getIntent().getBooleanExtra(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY, false)){
+            linearRefferalSection.setVisibility(View.GONE);
+        }
 
 
         //GET ON TOUCH OF THE SCREEN TO HIDE COUNTRY PICKER
@@ -327,7 +334,7 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
             txtMobileWarnings.setText(getString(R.string.strErrorMobileNumberEmpty));
             return false;
 
-        } else if (edtMobilenumber.getText().toString().length() < intCountryPhoneLength) {
+        } else if (edtMobilenumber.getText().toString().length() < (intCountryPhoneLength -1) || edtMobilenumber.getText().toString().length() > intCountryPhoneLength) {
             linearMobileWarnings.setVisibility(View.VISIBLE);
             imgMobileStutusFalse.setVisibility(View.VISIBLE);
             edtMobilenumber.setTextColor(getResources().getColor(R.color.colorCuratorRedError));
@@ -893,6 +900,10 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         edtCountryCode.setText(countryCode);
 
         intCountryPhoneLength = Integer.parseInt(countryMobileLength);
+
+        //MAKE EDIT TEXT MAX LENGTH
+        edtMobilenumber.setFilters(new InputFilter[] { new InputFilter.LengthFilter(intCountryPhoneLength) });
+
 
         Glide.with(mContext)
                 .load(countryFlagUrl)

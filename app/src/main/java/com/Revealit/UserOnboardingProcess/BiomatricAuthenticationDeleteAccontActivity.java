@@ -45,7 +45,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class BiomatricAuthenticationDeleteAccontActivity extends AppCompatActivity {
+public class  BiomatricAuthenticationDeleteAccontActivity extends AppCompatActivity {
 
     private Activity mActivity;
     private Context mContext;

@@ -172,7 +172,6 @@
                     android:gravity="center_vertical"
                     android:hint="@string/strMobileNumber"
                     android:inputType="number"
-                    android:maxLength="10"
                     android:padding="15dp"
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="600"
@@ -273,10 +272,12 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearRefferalSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
                 android:orientation="vertical"
+
                 >
 
                 <TextView

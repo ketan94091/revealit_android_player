@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -208,6 +209,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
             UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
             JsonObject paramObject = new JsonObject();
             paramObject.addProperty("public_key", publicKeyPem);
+        Log.e("PEM",""+publicKeyPem);
 
 
             Call<GetProtonUsername> call = patchService1.getProtonAccountName(paramObject);

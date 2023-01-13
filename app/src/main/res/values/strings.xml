@@ -218,7 +218,7 @@
     <string name="strSetting">Settings</string>
     <string name="strProfile">Profile</string>
     <string name="strEnterPrivateKey">Please enter private key!</string>
-    <string name="strInvalidPrivateKey">Invalid Account. Please select valid wallet account</string>
+    <string name="strInvalidPrivateKey">Please enter a valid Revealit account private key</string>
     <string name="strEnterValidAccountKey">Please enter a valid Revealit account key</string>
     <string name="strMultifactorAuthentication">Multi-factor Authentication</string>
     <string name="strNotYourNumber">Not your number?</string>
