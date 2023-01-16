@@ -224,7 +224,8 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
                             .serializeNulls()
                             .create();
-                    CommonMethods.printLogE("Response @ fetchUsername: ", "" + gson.toJson(response.body().getAccount_names().get(0)));
+                    CommonMethods.printLogE("Response @ fetchUsername: ", "" + gson.toJson(response.body()));
+
 
                     //CLOSED DIALOGUE
                     CommonMethods.closeDialog();
@@ -232,7 +233,8 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                     if (response.isSuccessful() && response.code() == Constants.API_CODE_200  ) {
 
                         //CHECK IF PROTON ACCOUNT BELONGS TO REVEALIT
-                        if(response.body().getAccount_names().get(0).contains(".rtv")){
+                        if(response.body().getAccount_names().size() != 0  && response.body().getAccount_names().get(0).contains(".rtv")){
+
                             fetchUserDetailsFromPubkeyAndUsername(publicKey,gson.toJson(response.body().getAccount_names().get(0)));
                         }else{
                             //

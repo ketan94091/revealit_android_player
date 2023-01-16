@@ -135,6 +135,12 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             linearSettings.setVisibility(View.GONE);
         }
 
+        if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)  | CommonMethods.checkIfUserIsSuperAdmin(mSessionManager,mContext)){
+            linearAdmin.setVisibility(View.VISIBLE);
+        }else{
+            linearAdmin.setVisibility(View.INVISIBLE);
+        }
+
     }
 
 
