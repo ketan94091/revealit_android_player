@@ -6,6 +6,7 @@ import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTI
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Window;
@@ -345,7 +346,10 @@ public class  BiomatricAuthenticationDeleteAccontActivity extends AppCompatActiv
     private void deleteAccountFromAndroidKeyStore() throws ExecutionException, InterruptedException {
 
        if(new UpdateUserDataInAndroidKeyStoreTask(privateKey,strUsername).execute(mSessionManager).get()){
-           finish();
+          //RETURN TO LIST OF ACTIVE ACCOUNTS
+           Intent mIntent = new Intent(this, ListOfActiveAccountsActivity.class);
+           startActivity(mIntent);
+           finishAffinity();
        }
 
     }
