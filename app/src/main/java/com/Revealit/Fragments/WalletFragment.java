@@ -14,7 +14,9 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -85,6 +87,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private String strAccountName = "", strAmount = "";
     private HomeScreenTabLayout mHomeScreenTabLayout;
     private ProgressDialog pDialog;
+    private Animation  animation;
 
     public WalletFragment(HomeScreenTabLayout homeScreenTabLayout) {
 
@@ -162,17 +165,40 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         //SET USERNAME
         txtAccountName.setText(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
 
-        Runnable runnable = new Runnable() {
+
+        txtAmount.setVisibility(View.GONE);
+        imgLoadingBalance.setVisibility(View.VISIBLE);
+        imgLoadingBalance.setImageDrawable(getResources().getDrawable(R.mipmap.balance_updating));
+
+        animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_right);
+        animation.setDuration(1500);
+        imgLoadingBalance.startAnimation(animation);
+        animation.setInterpolator(new Interpolator() {
+            private final int frameCount = 8;
+
             @Override
-            public void run() {
-                imgLoadingBalance.animate().rotationBy(360).withEndAction(this).setDuration(3000).setInterpolator(new LinearInterpolator()).start();
+            public float getInterpolation(float input) {
+                return (float)Math.floor(input*frameCount)/frameCount;
             }
-        };
+        });
 
-        imgLoadingBalance.animate().rotationBy(360).withEndAction(runnable).setDuration(3000).setInterpolator(new LinearInterpolator()).start();
 
-        //CALL WALLET(ACCOUNTS) DETAILS
         callWalletDetails();
+
+//        Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.e("run","run");
+//                imgLoadingBalance.animate().rotationBy(360).withEndAction(this).setDuration(3000).setInterpolator(new LinearInterpolator()).start();
+//
+//                //CALL WALLET(ACCOUNTS) DETAILS
+//                callWalletDetails();
+//            }
+//        };
+//
+//        imgLoadingBalance.animate().rotationBy(360).withEndAction(runnable).setDuration(3000).setInterpolator(new LinearInterpolator()).start();
+
+
 
 
     }
@@ -665,7 +691,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         txtCurrencyType.setText(mSessionManager.getPreference(Constants.ACCOUNT_CURRENCY_TYPE));
 
         //HIDE ANIMATED IMAGE VIEW WHEN AMOUNT DISPLAY
-        imgLoadingBalance.animate().cancel();
+        animation.cancel();
         imgLoadingBalance.setImageDrawable(getResources().getDrawable(R.mipmap.balance_updated));
 
         //DISPLAY LOADER FOR 1 SECOND AND THAN DISPLAY BALANCE
@@ -677,6 +703,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 txtAmount.setVisibility(View.VISIBLE);
             }
         }, 1000);
+
 
 
         //VISIBLE UI

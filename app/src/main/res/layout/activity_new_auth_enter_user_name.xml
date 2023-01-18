@@ -108,6 +108,7 @@
                             android:textColor="@color/colorBlack"
                             android:textFontWeight="600"
                             android:imeOptions="actionDone"
+                            android:singleLine="true"
                             android:textSize="15dp" />
 
                         <RelativeLayout
