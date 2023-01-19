@@ -12,9 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
+import com.Revealit.ModelClasses.InviteModel;
 import com.Revealit.ModelClasses.KeyStoreServerInstancesModel;
 import com.Revealit.ModelClasses.SubmitProfileModel;
 import com.Revealit.R;
+import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.Revealit.Utils.Cryptography;
 import com.google.gson.Gson;
@@ -33,10 +35,19 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewAuthSplashScreen extends AppCompatActivity {
 
@@ -78,9 +89,6 @@ public class NewAuthSplashScreen extends AppCompatActivity {
             mSessionManager.updatePreferenceBoolean(Constants.KEY_QR_CODE_FROM_CAMERA, false);
             mSessionManager.updatePreferenceString(Constants.KEY_QR_CODE_FROM_CAMERA_VALUE,"");
         }
-
-
-
 
 
         //MERGER OLD KEYSTORE ARCHITECTURE IN TO NEW ARCHITECTURE
@@ -278,86 +286,170 @@ public class NewAuthSplashScreen extends AppCompatActivity {
         }
 
 
-        openNextActivity();
+
+        //FALSE == APP OPEN FIRST TIME
+        //TRUE  == APP NOT OPEN FIRST TIME
+        if (!mSessionManager.getPreferenceBoolean(Constants.IS_APP_OPEN_FIRST_TIME)) {
+            //SAVE TESTING END POINTS
+            //CHANGE API END POINT TO ALPHA T CURATOR
+            mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_B_CURATOR);
+            mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_B_CURATOR);
+            mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strBeta));
+
+
+            switch (Constants.API_END_POINTS_MOBILE_B_CURATOR) {
+
+                case Constants.API_END_POINTS_MOBILE_B_CURATOR:
+                    mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 1);
+                    break;
+                case Constants.API_END_POINTS_MOBILE_S_CURATOR:
+                    mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 2);
+                    break;
+                case Constants.API_END_POINTS_MOBILE_T1_CURATOR:
+                    mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 3);
+                    break;
+                case Constants.API_END_POINTS_MOBILE_T2_CURATOR:
+                    mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 4);
+                    break;
+                case Constants.API_END_POINTS_MOBILE_T3_CURATOR:
+                    mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 5);
+                    break;
+                case Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR:
+                    mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 6);
+                    break;
+                case Constants.API_END_POINTS_MOBILE_DEMO_CURATOR:
+                    mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 7);
+                    break;
+                case Constants.API_END_POINTS_MOBILE_ANDROID_M1_CURATOR:
+                    mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 8);
+                    break;
+            }
+
+            //CHANGE THE VALUE OF APP OPEN
+            mSessionManager.updatePreferenceBoolean(Constants.IS_APP_OPEN_FIRST_TIME, true);
+        }
+
+
+
+        //API SETTINGS DATA CALL
+        apiInviteSettings();
 
         }
 
-    private void openNextActivity() {
-        new Handler().postDelayed(new Runnable() {
+    private void openNextActivity(InviteModel mInviteModel) {
+
+
+        //UPDATE PREFERENCE FOR APP SETTINGS
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_MSG ,""+mInviteModel.getInvitation_message());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_COPY_CLIPBOARD ,""+mInviteModel.getInvitation_message_clipboard());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_BIOMETRIC_PERMISSION ,""+mInviteModel.getBiometrics_permission_message());
+        mSessionManager.updatePreferenceString(Constants.KEY_CALL_FOR_INVITE_MSG ,""+mInviteModel.getCall_for_action_message());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CYPTO_CURRNCY ,""+mInviteModel.getCrypto_currency());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CURRNCY ,""+mInviteModel.getCurrency());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CURRNCY_AMOUNT ,""+mInviteModel.getCurrency_amount());
+
+        //INTENT
+        //CHECK IF USER IS ALREADY LOGGED IN OR NOT
+        if (!mSessionManager.getPreferenceBoolean(Constants.USER_LOGGED_IN)) {
+            Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthGetStartedActivity.class);
+            startActivity(mIntent);
+            finish();
+        }
+        else if(mSessionManager.getPreferenceBoolean(Constants.KEY_ISFROM_LOGOUT)){
+
+            //CLEAR FLAG - IF USER CAME FROM LOGOUT AND THAN UPDATE FLAG
+            mSessionManager.updatePreferenceBoolean(Constants.KEY_ISFROM_LOGOUT, false);
+
+            Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthBiomatricAuthenticationActivity.class);
+            mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, true);
+            startActivity(mIntent);
+            finish();
+        } else {
+            Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthBiomatricAuthenticationActivity.class);
+            mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, false);
+            startActivity(mIntent);
+            finish();
+
+        }
+
+
+    }
+
+    private void apiInviteSettings(){
+
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+        String url="";
+
+
+        Call<InviteModel> call = patchService1.getCampaignDetails(Constants.API_NEW_AUTH_INVITE_SETTINGS+url);
+
+        call.enqueue(new Callback<InviteModel>() {
+            @Override
+            public void onResponse(Call<InviteModel> call, Response<InviteModel> response) {
+
+                CommonMethods.printLogE("Response @ apiSendInvites: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ apiSendInvites: ", "" + response.code());
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+
+                CommonMethods.printLogE("Response @ apiSendInvites: ", "" + gson.toJson(response.body()));
+
+
+                switch (response.code()){
+                    case Constants.API_CODE_200:
+
+                        //UPDATE INVITE UI
+                        openNextActivity(response.body());
+
+                        break;
+
+                    case Constants.API_CODE_404:
+
+                        CommonMethods.buildDialog(mContext, getResources().getString(R.string.strStatusCode404Error));
+
+                        break;
+                }
+
+            }
 
             @Override
-            public void run() {
+            public void onFailure(Call<InviteModel> call, Throwable t) {
 
-                //FALSE == APP OPEN FIRST TIME
-                //TRUE  == APP NOT OPEN FIRST TIME
-                if (!mSessionManager.getPreferenceBoolean(Constants.IS_APP_OPEN_FIRST_TIME)) {
-                    //SAVE TESTING END POINTS
-                    //CHANGE API END POINT TO ALPHA T CURATOR
-                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_B_CURATOR);
-                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_REGISTRATION_KEY, Constants.API_END_POINTS_REGISTRATION_B_CURATOR);
-                    mSessionManager.updatePreferenceString(Constants.API_END_POINTS_SERVER_NAME, mActivity.getResources().getString(R.string.strBeta));
-
-
-                    switch (Constants.API_END_POINTS_MOBILE_B_CURATOR) {
-
-                        case Constants.API_END_POINTS_MOBILE_B_CURATOR:
-                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 1);
-                            break;
-                        case Constants.API_END_POINTS_MOBILE_S_CURATOR:
-                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 2);
-                            break;
-                        case Constants.API_END_POINTS_MOBILE_T1_CURATOR:
-                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 3);
-                            break;
-                        case Constants.API_END_POINTS_MOBILE_T2_CURATOR:
-                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 4);
-                            break;
-                        case Constants.API_END_POINTS_MOBILE_T3_CURATOR:
-                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 5);
-                            break;
-                        case Constants.API_END_POINTS_MOBILE_INTEGRATION_CURATOR:
-                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 6);
-                            break;
-                        case Constants.API_END_POINTS_MOBILE_DEMO_CURATOR:
-                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 7);
-                            break;
-                        case Constants.API_END_POINTS_MOBILE_ANDROID_M1_CURATOR:
-                            mSessionManager.updatePreferenceInteger(Constants.TESTING_ENVIRONMENT_ID, 8);
-                            break;
-                    }
-
-                    //CHANGE THE VALUE OF APP OPEN
-                    mSessionManager.updatePreferenceBoolean(Constants.IS_APP_OPEN_FIRST_TIME, true);
-                }
-
-
-                //INTENT
-                //CHECK IF USER IS ALREADY LOGGED IN OR NOT
-                if (!mSessionManager.getPreferenceBoolean(Constants.USER_LOGGED_IN)) {
-                    Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthGetStartedActivity.class);
-                    startActivity(mIntent);
-                    finish();
-                }
-                else if(mSessionManager.getPreferenceBoolean(Constants.KEY_ISFROM_LOGOUT)){
-
-                    //CLEAR FLAG - IF USER CAME FROM LOGOUT AND THAN UPDATE FLAG
-                    mSessionManager.updatePreferenceBoolean(Constants.KEY_ISFROM_LOGOUT, false);
-
-                    Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthBiomatricAuthenticationActivity.class);
-                    mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, true);
-                    startActivity(mIntent);
-                    finish();
-                } else {
-                    Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthBiomatricAuthenticationActivity.class);
-                    mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, false);
-                    startActivity(mIntent);
-                    finish();
-
-                }
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strApiCallFailure));
 
 
             }
-        }, 1000);
+        });
+
 
     }
 

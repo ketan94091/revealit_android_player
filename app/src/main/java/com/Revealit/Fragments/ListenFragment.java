@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -500,6 +502,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
 
+        Log.e("IDSS",""+gson.toJson(selectedIdsList));
+
         Call<JsonElement> call = patchService1.removeMultipleSelectedVidios(selectedIdsList);
 
         call.enqueue(new Callback<JsonElement>() {
@@ -814,6 +818,14 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         call.enqueue(new Callback<RevealitHistoryModel>() {
             @Override
             public void onResponse(Call<RevealitHistoryModel> call, Response<RevealitHistoryModel> response) {
+
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+
+                CommonMethods.printLogE("Response @ callGetRevealitVideoHistory: ", "" + gson.toJson(response.body()));
+
 
                 CommonMethods.printLogE("Response @ callGetRevealitVideoHistory: ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ callGetRevealitVideoHistory: ", "" + response.body().getData());
