@@ -39,8 +39,6 @@ public class Appcontroller extends MultiDexApplication {
         TestFairy.enableFeedbackForm("shake");
 
 
-
-
     }
 
     public static synchronized Appcontroller getInstance() {

@@ -2,7 +2,7 @@ package com.Revealit.ModelClasses;
 
 public class NewAuthLoginCallbackModel {
 
-    private String auth_token;
+    private String token;
     private String token_type;
     private String status;
     private String is_activated;
@@ -10,11 +10,11 @@ public class NewAuthLoginCallbackModel {
     private PublicSetting public_settings;
 
     public String getToken() {
-        return auth_token;
+        return token;
     }
 
     public void setToken(String auth_token) {
-        this.auth_token = auth_token;
+        this.token = auth_token;
     }
 
     public String getToken_type() {

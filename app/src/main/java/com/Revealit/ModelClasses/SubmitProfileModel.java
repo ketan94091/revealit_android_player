@@ -5,7 +5,7 @@ public class SubmitProfileModel {
         private String status;
         private String revealit_private_key;
         private String role;
-        private String auth_token;
+        private String token;
         private String audience;
         private Proton proton;
         private String is_activated;
@@ -47,11 +47,11 @@ public class SubmitProfileModel {
         }
 
         public String getauth_token() {
-            return auth_token;
+            return token;
         }
 
         public void setauth_token(String auth_token) {
-            this.auth_token = auth_token;
+            this.token = auth_token;
         }
 
         public String getAudience() {

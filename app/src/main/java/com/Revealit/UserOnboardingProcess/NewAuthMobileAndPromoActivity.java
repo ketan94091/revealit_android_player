@@ -856,15 +856,14 @@ public class NewAuthMobileAndPromoActivity extends AppCompatActivity implements 
         strCampaignId = ""+mInviteModel.getCampaign_id();
         strRefferalId = ""+mInviteModel.getReferral_id();
 
-        //UPDATE PREFERENCE
+        //UPDATE PREFERENCE FOR APP SETTINGS
         mSessionManager.updatePreferenceString(Constants.KEY_INVITE_MSG ,""+mInviteModel.getInvitation_message());
         mSessionManager.updatePreferenceString(Constants.KEY_INVITE_COPY_CLIPBOARD ,""+mInviteModel.getInvitation_message_clipboard());
-        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_BIOMETRIC_PERMISSION ,""+mInviteModel.getBiometrics_permission_message());
-        mSessionManager.updatePreferenceString(Constants.KEY_CALL_FOR_INVITE_MSG ,""+mInviteModel.getCall_for_action_message());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_BIOMETRIC_PERMISSION ,""+getResources().getString(R.string.strBiomatricPermissionTwo));
+        mSessionManager.updatePreferenceString(Constants.KEY_CALL_FOR_INVITE_MSG ,""+mInviteModel.getInvitation_message());
         mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CYPTO_CURRNCY ,""+mInviteModel.getCrypto_currency());
         mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CURRNCY ,""+mInviteModel.getCurrency());
         mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CURRNCY_AMOUNT ,""+mInviteModel.getCurrency_amount());
-
 
         if(!isFromCampaignId){
             linearPromoWarnings.setVisibility(View.INVISIBLE);

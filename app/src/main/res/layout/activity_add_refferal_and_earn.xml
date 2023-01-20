@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:weightSum="5">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imgLogo"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/app_icon_round" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="top"
+            android:layout_marginTop="50dp"
+            android:orientation="vertical"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+               android:src="@mipmap/icn_sahake_hand"
+                />
+
+
+            <TextView
+                android:id="@+id/txtEarnWhileInstallingApp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/dmsans_bold"
+                android:text="@string/strHaveYouReffered"
+                android:textColor="@color/colorBlack"
+                android:textFontWeight="500"
+                android:textAlignment="center"
+                android:textSize="14dp"
+                android:layout_marginTop="10dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/dmsans_bold"
+                android:text="@string/strEarnInstantReward"
+                android:textColor="@color/colorBlack"
+                android:textFontWeight="500"
+                android:textAlignment="center"
+                android:textSize="14dp"
+                android:layout_marginTop="50dp"
+                />
+
+            <LinearLayout
+                android:id="@+id/linearRefferalSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:orientation="vertical"
+                android:layout_gravity="bottom"
+                >
+
+                <TextView
+                    android:id="@+id/txtInviteQuestion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/dmsans_bold"
+                    android:text="@string/strSomeoneInviteyou"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="700"
+                    android:textSize="15dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/new_auth_round_button"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edtPromo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:fontFamily="@font/dmsans_medium"
+                        android:gravity="center_vertical"
+                        android:hint="@string/strEnterInviteeName"
+                        android:inputType="text"
+                        android:maxLength="15"
+                        android:padding="15dp"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="600"
+                        android:textSize="15dp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="20dp">
+
+                        <ImageView
+                            android:id="@+id/imgPromoStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:src="@mipmap/icon_check"
+                            android:visibility="invisible" />
+
+                        <ImageView
+                            android:id="@+id/imgPromoStatusFalse"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:src="@mipmap/icon_cross_red"
+                            android:visibility="invisible" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtPromoAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/dmsans_medium"
+                        android:text="@string/strEarnupto"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="500"
+                        android:textSize="12dp" />
+
+                    <ImageView
+                        android:id="@+id/imgCurrencyIcon"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:foregroundGravity="center_vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearPromoWarnings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal"
+                    android:visibility="invisible">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="top"
+                        android:layout_margin="15dp"
+                        android:src="@mipmap/icon_cross_red" />
+
+
+                    <TextView
+                        android:id="@+id/txtPromoWarnings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/dmsans_medium"
+                        android:text="@string/strMobileAlreadyUsed"
+                        android:textColor="@color/colorCuratorRedError"
+                        android:textFontWeight="500"
+                        android:textSize="15dp" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/txtContinueEnabled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/new_auth_round_button_app_green"
+                android:fontFamily="@font/dmsans_bold"
+                android:gravity="center_horizontal"
+                android:padding="15dp"
+                android:text="@string/strContinue"
+                android:textColor="@color/colorWhite"
+                android:textFontWeight="700"
+                android:textSize="15dp" />
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

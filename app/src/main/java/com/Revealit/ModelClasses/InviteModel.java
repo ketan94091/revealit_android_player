@@ -10,14 +10,12 @@ public class InviteModel {
         private String crypto_currency;
         private String currency_amount;
         private String invitation_message;
-        private String call_for_action_amount;
-        private  String call_for_action_message;
+        private String invitation_message_clipboard;
         private Long campaign_id;
         private Long referral_id;
         private String error;
         private String currency_icon_url;
-        private String invitation_message_clipboard;
-        private String biometrics_permission_message;
+
 
     public String getCurrency_icon_url() {
         return currency_icon_url;
@@ -83,21 +81,6 @@ public class InviteModel {
         this.invitation_message = invitation_message;
     }
 
-    public String getCall_for_action_amount() {
-        return call_for_action_amount;
-    }
-
-    public void setCall_for_action_amount(String call_for_action_amount) {
-        this.call_for_action_amount = call_for_action_amount;
-    }
-
-    public String getCall_for_action_message() {
-        return call_for_action_message;
-    }
-
-    public void setCall_for_action_message(String call_for_action_message) {
-        this.call_for_action_message = call_for_action_message;
-    }
 
     public Long getCampaign_id() {
         return campaign_id;
@@ -131,11 +114,4 @@ public class InviteModel {
         this.invitation_message_clipboard = invitation_message_clipboard;
     }
 
-    public String getBiometrics_permission_message() {
-        return biometrics_permission_message;
-    }
-
-    public void setBiometrics_permission_message(String biometrics_permission_message) {
-        this.biometrics_permission_message = biometrics_permission_message;
-    }
 }

@@ -103,6 +103,10 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".UserOnboardingProcess.AddRefferalAndEarnActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".UserOnboardingProcess.NewAuthSplashScreen"
             android:exported="true"
             android:screenOrientation="portrait">

@@ -223,6 +223,10 @@ public interface UpdateAllAPI {
     @POST(Constants.API_DELETE_USER)
     Call<JsonElement> removeUser();
 
+    //VERIFY CODE
+    @POST(Constants.API_ADD_REFARAL)
+    Call<JsonElement> addReferral(@Body JsonObject body);
+
 }
 
 

@@ -21,7 +21,7 @@ public class Constants {
 //  public static final String API_END_POINTS_MOBILE_B_CURATOR = "https://beta.revealit.io";
 //  public static final String API_END_POINTS_REGISTRATION_B_CURATOR = "https://bcapi.revealit.io/";
 
-  public static final String API_END_POINTS_MOBILE_B_CURATOR = "https://beta.revealit.tv";
+  public static final String API_END_POINTS_MOBILE_B_CURATOR = "https://beta.revealit.tv/";
   public static final String API_END_POINTS_REGISTRATION_B_CURATOR = "https://bcapi.revealit.tv/";
 
   //STAGING CURATOR
@@ -106,6 +106,7 @@ public class Constants {
   public static final String API_REMOVE_SINGLE_TIMESTAMP = "api/video/matchhistory/match/remove";
   public static final String API_FETCH_ACCOUNT_NAME_FROM_PROTON = "get_key_accounts";
   public static final String API_DELETE_USER = "/api/user/remove";
+  public static final String API_ADD_REFARAL = "api/referral";
 
 
     public static final String AUTH_TOKEN = "access_token";
