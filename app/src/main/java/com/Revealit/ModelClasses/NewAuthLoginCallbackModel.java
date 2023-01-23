@@ -1,5 +1,7 @@
 package com.Revealit.ModelClasses;
 
+import java.util.List;
+
 public class NewAuthLoginCallbackModel {
 
     private String token;
@@ -7,14 +9,14 @@ public class NewAuthLoginCallbackModel {
     private String status;
     private String is_activated;
     private String role;
-    private PublicSetting public_settings;
+    private List<PublicSetting> public_settings;
 
     public String getToken() {
         return token;
     }
 
-    public void setToken(String auth_token) {
-        this.token = auth_token;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getToken_type() {
@@ -41,13 +43,7 @@ public class NewAuthLoginCallbackModel {
         this.is_activated = is_activated;
     }
 
-    public PublicSetting getPuplic_settings() {
-        return public_settings;
-    }
 
-    public void setPuplic_settings(PublicSetting public_settings) {
-        this.public_settings = public_settings;
-    }
 
     public String getRole() {
         return role;
@@ -57,22 +53,32 @@ public class NewAuthLoginCallbackModel {
         this.role = role;
     }
 
-    public PublicSetting getPublic_settings() {
+    public List<PublicSetting> getPublic_settings() {
         return public_settings;
     }
 
-    public void setPublic_settings(PublicSetting public_settings) {
+    public void setPublic_settings(List<PublicSetting> public_settings) {
         this.public_settings = public_settings;
     }
 
     public class PublicSetting {
 
-      private String api_version;
-      private String minimum_acceptable_version;
-      private String minimum_acceptable_api_version;
-      private int profile_update_reminder_period;
-      private int backup_update_reminder_period;
-      private String maintenance;
+        private String os;
+        private String api_version;
+        private String minimum_acceptable_version;
+        private String minimum_acceptable_api_version;
+        private String profile_update_reminder_period;
+        private String backup_update_reminder_period;
+        private String maintenance;
+        private AppSetting app_settings;
+
+        public String getOs() {
+            return os;
+        }
+
+        public void setOs(String os) {
+            this.os = os;
+        }
 
         public String getApi_version() {
             return api_version;
@@ -82,35 +88,35 @@ public class NewAuthLoginCallbackModel {
             this.api_version = api_version;
         }
 
-        public String getMinumum_acceptable_version() {
+        public String getMinimum_acceptable_version() {
             return minimum_acceptable_version;
         }
 
-        public void setMinumum_acceptable_version(String minimum_acceptable_version) {
+        public void setMinimum_acceptable_version(String minimum_acceptable_version) {
             this.minimum_acceptable_version = minimum_acceptable_version;
         }
 
-        public String getMinumum_acceptable_api_version() {
+        public String getMinimum_acceptable_api_version() {
             return minimum_acceptable_api_version;
         }
 
-        public void setMinumum_acceptable_api_version(String minimum_acceptable_api_version) {
+        public void setMinimum_acceptable_api_version(String minimum_acceptable_api_version) {
             this.minimum_acceptable_api_version = minimum_acceptable_api_version;
         }
 
-        public int getProfile_update_reminder_period() {
+        public String getProfile_update_reminder_period() {
             return profile_update_reminder_period;
         }
 
-        public void setProfile_update_reminder_period(int profile_update_reminder_period) {
+        public void setProfile_update_reminder_period(String profile_update_reminder_period) {
             this.profile_update_reminder_period = profile_update_reminder_period;
         }
 
-        public int getBackup_update_reminder_period() {
+        public String getBackup_update_reminder_period() {
             return backup_update_reminder_period;
         }
 
-        public void setBackup_update_reminder_period(int backup_update_reminder_period) {
+        public void setBackup_update_reminder_period(String backup_update_reminder_period) {
             this.backup_update_reminder_period = backup_update_reminder_period;
         }
 
@@ -120,6 +126,40 @@ public class NewAuthLoginCallbackModel {
 
         public void setMaintenance(String maintenance) {
             this.maintenance = maintenance;
+        }
+
+        public AppSetting getApp_settings() {
+            return app_settings;
+        }
+
+        public void setApp_settings(AppSetting app_settings) {
+            this.app_settings = app_settings;
+        }
+    }
+
+    private class AppSetting {
+
+        private List<BlockProducer> block_producers;
+
+        public List<BlockProducer> getBlock_producers() {
+            return block_producers;
+        }
+
+        public void setBlock_producers(List<BlockProducer> block_producers) {
+            this.block_producers = block_producers;
+        }
+    }
+
+    private class BlockProducer {
+
+        private String url;
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
         }
     }
 }

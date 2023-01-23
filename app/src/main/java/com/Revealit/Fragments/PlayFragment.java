@@ -30,6 +30,7 @@ import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.Revealit.UserOnboardingProcess.AddRefferalAndEarnActivity;
 import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -538,6 +539,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                 dialog.dismiss();
 
                 //EXIT FROM THE APP UNTIL USER TURN TO ACTIVE FROM THE BACKEND
+                Intent mIntent = new Intent(mActivity, AddRefferalAndEarnActivity.class);
+                startActivity(mIntent);
                 mActivity.finishAffinity();
 
 

@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -211,6 +212,8 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 okhttp3.Request original = chain.request();
 
+                Log.e("HEADER"," "+mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN));
+
                 okhttp3.Request request = original.newBuilder()
                         .header("Content-Type", "application/json")
                         .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
@@ -280,18 +283,31 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
                     }
 
-                    //SAVE PUBLIC SETTINGS
-                    if(response.body().getPuplic_settings() != null){
-                        mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_API_VERSION, response.body().getPuplic_settings().getApi_version());
-                        mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_VERSION, response.body().getPuplic_settings().getMinumum_acceptable_version());
-                        mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION, response.body().getPuplic_settings().getMinumum_acceptable_api_version());
-                        mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER, response.body().getPuplic_settings().getProfile_update_reminder_period());
-                        mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_BACKUP_REMINDER, response.body().getPuplic_settings().getBackup_update_reminder_period());
+
+                    //FOR MAINTANANCE
+                    boolean isAppInMaintainance = false;
+                    for(int i =0; i <response.body().getPublic_settings().size(); i++ ){
+
+                        //SAVE PUBLIC SETTINGS
+                        if(response.body().getPublic_settings().get(i).getOs().equals("Android")){
+                            mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_API_VERSION, response.body().getPublic_settings().get(i).getApi_version());
+                            mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_VERSION, response.body().getPublic_settings().get(i).getMinimum_acceptable_version());
+                            mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION, response.body().getPublic_settings().get(i).getMinimum_acceptable_api_version());
+                            mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER, Integer.valueOf(response.body().getPublic_settings().get(i).getProfile_update_reminder_period()));
+                            mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_BACKUP_REMINDER, Integer.valueOf(response.body().getPublic_settings().get(i).getBackup_update_reminder_period()));
+
+                           if(response.body().getPublic_settings().get(i).getMaintenance() == "1"){
+                               isAppInMaintainance = true;
+                           }
+
+                        }
                     }
 
 
+
+
                     //CHECK IF APPLICATION IS IN MAINTENANCE
-                    if(response.body().getPuplic_settings() != null && response.body().getPuplic_settings().getMaintenance().equals("1")){
+                    if(isAppInMaintainance){
                         //MOVE TO MAINTENANCE SCREEN
                         Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, MaintanaceActivity.class);
                         mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
@@ -473,17 +489,27 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
                     }
 
-                    //SAVE PUBLIC SETTINGS
-                    if(response.body().getPuplic_settings() != null){
-                        mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_API_VERSION, response.body().getPuplic_settings().getApi_version());
-                        mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_VERSION, response.body().getPuplic_settings().getMinumum_acceptable_version());
-                        mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION, response.body().getPuplic_settings().getMinumum_acceptable_api_version());
-                        mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER, response.body().getPuplic_settings().getProfile_update_reminder_period());
-                        mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_BACKUP_REMINDER, response.body().getPuplic_settings().getBackup_update_reminder_period());
+                    //FOR MAINTANANCE
+                    boolean isAppInMaintainance = false;
+                    for(int i =0; i <response.body().getPublic_settings().size(); i++ ){
+
+                        //SAVE PUBLIC SETTINGS
+                        if(response.body().getPublic_settings().get(i).getOs().equals("Android")){
+                            mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_API_VERSION, response.body().getPublic_settings().get(i).getApi_version());
+                            mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_VERSION, response.body().getPublic_settings().get(i).getMinimum_acceptable_version());
+                            mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION, response.body().getPublic_settings().get(i).getMinimum_acceptable_api_version());
+                            mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER, Integer.valueOf(response.body().getPublic_settings().get(i).getProfile_update_reminder_period()));
+                            mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_BACKUP_REMINDER, Integer.valueOf(response.body().getPublic_settings().get(i).getBackup_update_reminder_period()));
+
+                            if(response.body().getPublic_settings().get(i).getMaintenance() == "1"){
+                                isAppInMaintainance = true;
+                            }
+
+                        }
                     }
 
                     //CHECK IF APPLICATION IS IN MAINTENANCE
-                    if(response.body().getPuplic_settings() != null && response.body().getPuplic_settings().getMaintenance().equals("1")){
+                    if(isAppInMaintainance){
                         //MOVE TO MAINTENANCE SCREEN
                         Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, MaintanaceActivity.class);
                         mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);

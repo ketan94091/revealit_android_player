@@ -679,6 +679,12 @@ public class CommonMethods {
                 //FETCH USER DATA FROM KEYSTORE
                 String  userData = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_SILOS_DATA));
 
+                //CHANGE AUTH TOKEN TO TOKEN
+                if(userData.contains("auth_token")){
+                    userData.replace("auth_token","token");
+                }
+
+
                 if(!userData.isEmpty()){
                     return userData;
                 }else{
@@ -736,7 +742,7 @@ public class CommonMethods {
 
                           SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
                           mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
-                          mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("auth_token"));
+                          mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("token"));
                           mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
                           mSubmitProfileModel.setIs_activated(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
                           mSubmitProfileModel.setMessage(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("message"));
@@ -797,7 +803,7 @@ public class CommonMethods {
 
                         SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
                         mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
-                        mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("auth_token"));
+                        mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("token"));
                         mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
                         mSubmitProfileModel.setIs_activated(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
                         mSubmitProfileModel.setMessage(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("message"));
@@ -999,7 +1005,7 @@ public class CommonMethods {
 
                         SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
                         mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
-                        mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("auth_token"));
+                        mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("token"));
                         mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
                         mSubmitProfileModel.setIs_activated(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
                         mSubmitProfileModel.setMessage(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("message"));

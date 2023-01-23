@@ -4,7 +4,7 @@ public class UserDetailsFromPublicKeyModel {
 
     String status;
     String revealit_private_key;
-    String auth_token;
+    String token;
     String role;
     String is_activated;
     String audience;
@@ -26,11 +26,11 @@ public class UserDetailsFromPublicKeyModel {
     }
 
     public String getAuth_token() {
-        return auth_token;
+        return token;
     }
 
-    public void setAuth_token(String auth_token) {
-        this.auth_token = auth_token;
+    public void setAuth_token(String token) {
+        this.token = token;
     }
 
     public String getRole() {

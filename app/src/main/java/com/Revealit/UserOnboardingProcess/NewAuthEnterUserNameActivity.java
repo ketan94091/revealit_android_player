@@ -324,10 +324,10 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
             mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
         }
 
-        //UPDATE SESSION VALUES
-        mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
-        mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
-        mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
+//        //UPDATE SESSION VALUES
+//        mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
+//        mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
+//        mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
 
 
 
@@ -375,7 +375,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
 
                     SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
                     mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
-                    mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("auth_token"));
+                    mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("token"));
                     mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
                     mSubmitProfileModel.setIs_activated(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
                     mSubmitProfileModel.setMessage(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("message"));
@@ -412,7 +412,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
             }
 
         }else{
-            //STORE WHOLE JSON IN TO STRING
+            //STORE SINGLE JSON IN TO STRING
             CommonMethods.encryptKey(""+mGson.toJson(mInstancesModel),  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS, mSessionManager);
         }
 

@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -73,9 +72,15 @@ public class InviteAndEarnActivity extends AppCompatActivity implements View.OnC
         }else{
             txtMsgCopy.setText(strCopymsg.replace("XXXX",strUsername));
         }
+        //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
+        if(strCopymsg.contains("xxxx")){
+            txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
+        }else{
+            txtMsgCopy.setText(strCopymsg.replace("XXXX",strUsername));
+        }
 
          //SET INVITE CURRENCY MSG
-        txtEarnWhileInstallingApp.setText("Earn "+mSessionManager.getPreference(Constants.KEY_INVITE_CURRNCY)+mSessionManager.getPreference(Constants.KEY_INVITE_CURRNCY_AMOUNT) +" in "+mSessionManager.getPreference(Constants.KEY_INVITE_CYPTO_CURRNCY)+ " every time a friend installs the revealit TV app");
+        txtEarnWhileInstallingApp.setText("Earn "+mSessionManager.getPreference(Constants.KEY_INVITE_CURRNCY)+" "+mSessionManager.getPreference(Constants.KEY_INVITE_CURRNCY_AMOUNT) +" in "+mSessionManager.getPreference(Constants.KEY_INVITE_CYPTO_CURRNCY)+ " every time a friend installs the revealit TV app");
 
     }
     private void setOnClicks() {
@@ -108,8 +113,9 @@ public class InviteAndEarnActivity extends AppCompatActivity implements View.OnC
             case R.id.txtContinueEnabled:
 
 
-                Intent mIntent = new Intent(InviteAndEarnActivity.this, HomeScreenTabLayout.class);
+                Intent mIntent = new Intent(InviteAndEarnActivity.this, AddRefferalAndEarnActivity.class);
                 startActivity(mIntent);
+                finish();
 
                 break;
         }

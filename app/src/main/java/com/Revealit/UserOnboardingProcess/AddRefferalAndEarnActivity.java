@@ -2,6 +2,7 @@ package com.Revealit.UserOnboardingProcess;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -25,12 +27,15 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,7 +48,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
     private Context mContext;
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private TextView txtContinueEnabled,txtPromoWarnings,txtPromoAmount,txtInviteQuestion;
+    private TextView txtContinueDisable,txtContinueEnabled,txtPromoWarnings,txtPromoAmount,txtInviteQuestion;
     private EditText edtPromo;
     private ImageView imgPromoStatusFalse,imgPromoStatus;
     private LinearLayout linearPromoWarnings;
@@ -85,6 +90,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
         txtPromoAmount = (TextView) findViewById(R.id.txtPromoAmount);
         txtPromoWarnings = (TextView) findViewById(R.id.txtPromoWarnings);
         txtContinueEnabled = (TextView) findViewById(R.id.txtContinueEnabled);
+        txtContinueDisable = (TextView) findViewById(R.id.txtContinueDisable);
         edtPromo = (EditText)findViewById(R.id.edtPromo);
         imgPromoStatus =(ImageView)findViewById(R.id.imgPromoStatus);
         imgPromoStatusFalse=(ImageView)findViewById(R.id.imgPromoStatusFalse);
@@ -113,7 +119,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
                                                     last_text_edit = System.currentTimeMillis();
                                                     handler.postDelayed(input_promo, delay);
                                                 } else {
-                                                    updateUI(null);
+                                                    updateUI(null,0);
                                                 }
                                             }
                                         }
@@ -131,17 +137,26 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
     public void onClick(View mView) {
 
         switch (mView.getId()){
-            case R.id.imgLogo:
+            case R.id.txtContinueEnabled:
+
+                Intent mIntent = new Intent(AddRefferalAndEarnActivity.this, HomeScreenTabLayout.class);
+                startActivity(mIntent);
 
                 break;
 
         }
 
     }
+
     private void apiSendInvites(String strCampaignId){
 
 
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
         httpClient.addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -149,10 +164,9 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
 
                 okhttp3.Request request = original.newBuilder()
                         .header("Content-Type", "application/json")
-                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1dWlkIjoxMTc5NDEyMDA3OTQ4MTg5MTMsImlzcyI6Imh0dHA6Ly9yZXZlYWxpdC5pbyIsImF1ZCI6Imh0dHA6Ly9leGFtcGxlLmNvbSIsImlhdCI6IjE2NzQyMTIxNzMiLCJleHAiOiIxNjg5NzY0MTczIiwibm9uY2UiOiJ2YWx1ZSBwYXNzIGV4cGVjdCByZXR1cm4iLCJuYW1lIjoiYmV0YWRvbmUucnR2In0.NB3xvdXgIJt5jTU4kZ02FQVeOFP0r8BWDvVKuj3Uj3A")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
                         .method(original.method(), original.body())
                         .build();
-
 
                 return chain.proceed(request);
             }
@@ -189,21 +203,24 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
 
                 CommonMethods.printLogE("Response @ apiSendInvites: ", "" + gson.toJson(response.body()));
 
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200  ) {
 
-                switch (response.code()){
-                    case Constants.API_CODE_200:
+                    //UPDATE INVITE UI
+                    updateUI(response.body(),1);
 
-                        //UPDATE INVITE UI
-                        updateUI(response.body());
+                }else{
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        CommonMethods.buildDialog(mContext,"Error Code : "+jObjError.getString("error_code") +" "+ jObjError.getString("message"));
+                    } catch (Exception e) {
+                        CommonMethods.buildDialog(mContext,"Error Code : "+e.getMessage());
 
-                        break;
+                    }
 
-                    case Constants.API_CODE_404:
-
-                        CommonMethods.buildDialog(mContext, getResources().getString(R.string.strStatusCode404Error));
-
-                        break;
+                    //DISPLAY ERRORS
+                    updateUI(response.body(),2);
                 }
+
 
             }
 
@@ -219,7 +236,43 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
 
     }
 
-    private void updateUI(JsonElement body) {
+    private void updateUI(JsonElement body, int responseType) {
+
+        switch (responseType){
+            case 0:
+                txtContinueDisable.setVisibility(View.GONE);
+                txtContinueEnabled.setVisibility(View.VISIBLE);
+                imgPromoStatus.setVisibility(View.GONE);
+                imgPromoStatusFalse.setVisibility(View.GONE);
+                break;
+            case 1:
+                txtContinueDisable.setVisibility(View.GONE);
+                txtContinueEnabled.setVisibility(View.VISIBLE);
+                imgPromoStatus.setVisibility(View.VISIBLE);
+                imgPromoStatusFalse.setVisibility(View.GONE);
+
+                //UPDATE ACTIVE FLAG
+                if(body.getAsJsonObject().get("is_activated").equals("1")){
+                    mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
+                }else{
+                    mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
+                }
+
+                //UPDATE SESSION VALUES
+                mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
+                mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
+                mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
+
+
+                break;
+            case 2:
+                txtContinueDisable.setVisibility(View.VISIBLE);
+                txtContinueEnabled.setVisibility(View.GONE);
+                imgPromoStatus.setVisibility(View.GONE);
+                imgPromoStatusFalse.setVisibility(View.VISIBLE);
+                break;
+        }
+
 
 
 

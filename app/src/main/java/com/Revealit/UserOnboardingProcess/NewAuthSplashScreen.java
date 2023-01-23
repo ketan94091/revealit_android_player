@@ -133,7 +133,7 @@ public class NewAuthSplashScreen extends AppCompatActivity {
                         mOldSubmitProfileModel.setStatus(mJson.getString("status"));
                         mOldSubmitProfileModel.setrevealit_private_key(mJson.getString("revealit_private_key"));
                         mOldSubmitProfileModel.setRole(mJson.getString("role"));
-                        mOldSubmitProfileModel.setauth_token(mJson.getString("auth_token"));
+                        mOldSubmitProfileModel.setauth_token(mJson.getString("token"));
                         mOldSubmitProfileModel.setAudience(mJson.getString("audience"));
                         mOldSubmitProfileModel.setIs_activated(mJson.getString("is_activated"));
                         mOldSubmitProfileModel.setMessage(mJson.getString("message"));
@@ -205,7 +205,7 @@ public class NewAuthSplashScreen extends AppCompatActivity {
 
                                     SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
                                     mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
-                                    mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("auth_token"));
+                                    mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("token"));
                                     mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
                                     mSubmitProfileModel.setIs_activated(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
                                     mSubmitProfileModel.setMessage(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("message"));

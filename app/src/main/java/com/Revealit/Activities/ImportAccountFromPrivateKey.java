@@ -472,7 +472,12 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
 
                     SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
                     mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
-                    mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("auth_token"));
+
+                    if(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("token") != null){
+                        mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("token"));
+                    }else{
+                        mSubmitProfileModel.setauth_token("");
+                    }
                     mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
                     mSubmitProfileModel.setIs_activated(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
                     mSubmitProfileModel.setMessage(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("message"));

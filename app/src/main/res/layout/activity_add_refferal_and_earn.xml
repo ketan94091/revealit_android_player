@@ -214,12 +214,26 @@
 
 
             <TextView
+                android:id="@+id/txtContinueDisable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/new_auth_round_button_app_green_light"
+                android:fontFamily="@font/dmsans_bold"
+                android:gravity="center_horizontal"
+                android:padding="15dp"
+                android:text="@string/strContinue"
+                android:textColor="@color/colorWhite"
+                android:textFontWeight="700"
+                android:textSize="15dp"
+                android:visibility="gone" />
+
+
+            <TextView
                 android:id="@+id/txtContinueEnabled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
                 android:background="@drawable/new_auth_round_button_app_green"
                 android:fontFamily="@font/dmsans_bold"
                 android:gravity="center_horizontal"
@@ -227,7 +241,8 @@
                 android:text="@string/strContinue"
                 android:textColor="@color/colorWhite"
                 android:textFontWeight="700"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                android:visibility="visible"/>
 
 
         </RelativeLayout>

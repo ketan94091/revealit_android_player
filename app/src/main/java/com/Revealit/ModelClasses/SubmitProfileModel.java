@@ -50,8 +50,8 @@ public class SubmitProfileModel {
             return token;
         }
 
-        public void setauth_token(String auth_token) {
-            this.token = auth_token;
+        public void setauth_token(String token) {
+            this.token = token;
         }
 
         public String getAudience() {
