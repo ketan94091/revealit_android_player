@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +39,7 @@ import com.google.gson.JsonElement;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -133,7 +135,6 @@ public class GoogleCloudBackupActivity extends AppCompatActivity implements View
         // The result of the sign-in Intent is handled in onActivityResult.
         startActivityForResult(client.getSignInIntent(), REQUEST_CODE_SIGN_IN);
     }
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         switch (requestCode) {
@@ -155,7 +156,6 @@ public class GoogleCloudBackupActivity extends AppCompatActivity implements View
 
         super.onActivityResult(requestCode, resultCode, resultData);
     }
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void handleSignInResult(Intent result) {
 
 
@@ -320,13 +320,25 @@ public class GoogleCloudBackupActivity extends AppCompatActivity implements View
         if (mDriveServiceHelper != null && mOpenFileId != null) {
 
 
-            mDriveServiceHelper.saveFile(mOpenFileId, Constants.GOOGLE_DRIVE_FOLDER_NAME, mSessionManager.getPreference(Constants.KEY_USER_DATA))
-                    .addOnFailureListener(exception ->
-                          displayErrorDialogue(exception)).addOnSuccessListener(
-                                  success -> //DISPLAY SUCCESS MSG
-                          displaySuccessDialogue()
+            try {
+                String strKeystoreData = new FetchKeystoreData().execute(mSessionManager).get();
 
-            );
+                Log.e("backup",""+strKeystoreData);
+
+                mDriveServiceHelper.saveFile(mOpenFileId, Constants.GOOGLE_DRIVE_FOLDER_NAME, strKeystoreData)
+                        .addOnFailureListener(exception ->
+                                displayErrorDialogue(exception)).addOnSuccessListener(
+                                success -> //DISPLAY SUCCESS MSG
+                                        displaySuccessDialogue()
+
+                        );
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
 
         }
     }
@@ -379,4 +391,24 @@ public class GoogleCloudBackupActivity extends AppCompatActivity implements View
 
     }
 
+
+}
+class FetchKeystoreData extends AsyncTask<SessionManager, Integer, String> {
+
+
+    @Override
+    protected String doInBackground(SessionManager... mSessionManager) {
+        return CommonMethods.checkIfInstanceKeyStoreData(mSessionManager[0]);
+    }
+
+    @Override
+    protected void onPreExecute() {
+
+    }
+
+    @Override
+    protected void onPostExecute(String searchResults) {
+        super.onPostExecute(searchResults);
+
+    }
 }

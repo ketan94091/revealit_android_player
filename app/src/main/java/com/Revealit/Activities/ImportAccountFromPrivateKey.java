@@ -518,6 +518,9 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
             CommonMethods.encryptKey(""+mGson.toJson(mInstancesModel),  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS, mSessionManager);
         }
 
+        //UPDATE GOOGLE DRIVE BACKUP FLAG
+        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_GOOGLE_DRIVE_BACKUP_DONE, false);
+
         //GO TO NEXT ACTIVITY
         Intent mIntent = new Intent(ImportAccountFromPrivateKey.this, HomeScreenTabLayout.class);
         startActivity(mIntent);

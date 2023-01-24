@@ -346,6 +346,10 @@ public class  BiomatricAuthenticationDeleteAccontActivity extends AppCompatActiv
     private void deleteAccountFromAndroidKeyStore() throws ExecutionException, InterruptedException {
 
        if(new UpdateUserDataInAndroidKeyStoreTask(privateKey,strUsername).execute(mSessionManager).get()){
+
+           //UPDATE GOOGLE DRIVE BACKUP FLAG
+           mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_GOOGLE_DRIVE_BACKUP_DONE, false);
+
           //RETURN TO LIST OF ACTIVE ACCOUNTS
            Intent mIntent = new Intent(this, ListOfActiveAccountsActivity.class);
            startActivity(mIntent);

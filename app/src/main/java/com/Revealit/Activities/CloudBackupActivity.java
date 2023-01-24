@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,7 +28,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
 import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
@@ -41,6 +41,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -99,54 +100,6 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
             txtBackupNow.setVisibility(View.VISIBLE);
         }
 
-//        try{
-//            //OPEN KEYSTORE
-//            Cryptography mCryptography = new Cryptography(mSessionManager.getPreference(Constants.KEY_REVEALIT_PRIVATE_KEY));
-//
-//            //GET PRIVATE KEY
-//            String   mPrivateKey = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_PRIVATE_KEY));
-//
-//            //GET PUBLIC KEY
-//            String mPublicKey = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_PUBLIC_KEY));
-//
-//            //GET MNEMONICS
-//            String  mMnemonics = mCryptography.decrypt(mSessionManager.getPreference(Constants.KEY_MNEMONICS));
-//
-//
-//            UserProtonAccountDetails mDetail = new UserProtonAccountDetails();
-//            mDetail.setPrivatekey(mPrivateKey);
-//            mDetail.setPublickey(mPublicKey);
-//            mDetail.setMnemonic(mMnemonics);
-//
-//
-//            Gson gson = new GsonBuilder()
-//                    .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-//                    .serializeNulls()
-//                    .create();
-//
-//            userData = gson.toJson(mDetail);
-//
-//        }catch (NoSuchPaddingException e) {
-//            e.printStackTrace();
-//        } catch (IllegalBlockSizeException e) {
-//            e.printStackTrace();
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        } catch (BadPaddingException e) {
-//            e.printStackTrace();
-//        } catch (InvalidKeyException e) {
-//            e.printStackTrace();
-//        } catch (InvalidAlgorithmParameterException e) {
-//            e.printStackTrace();
-//        } catch (CertificateException e) {
-//            e.printStackTrace();
-//        } catch (KeyStoreException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (NoSuchProviderException e) {
-//            e.printStackTrace();
-//        }
 
 
 
@@ -178,7 +131,6 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
         }
 
     }
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestSignIn() {
 
          signInOptions =
@@ -191,7 +143,6 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
         // The result of the sign-in Intent is handled in onActivityResult.
         startActivityForResult(client.getSignInIntent(), REQUEST_CODE_SIGN_IN);
     }
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         switch (requestCode) {
@@ -213,7 +164,6 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
 
         super.onActivityResult(requestCode, resultCode, resultData);
     }
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void handleSignInResult(Intent result) {
 
 
@@ -301,7 +251,6 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
         Call<JsonElement> call = patchService1.checkFileOnGoogleDrive("files?q=name%3D%22Revealit.tv.io%22&key=[AIzaSyCMRiL96W6rLyXrUM49ysPr8soEEcIexdg] HTTP/1.1");
 
         call.enqueue(new Callback<JsonElement>() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
 
@@ -338,7 +287,6 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
             }
 
 
-            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
 
@@ -356,7 +304,6 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
         return  isFolderAvailable;
 
     }
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void createFile() {
 
         if (mDriveServiceHelper != null) {
@@ -374,7 +321,6 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
 
         CommonMethods.closeDialog();
     }
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void saveFile(String mOpenFileId) {
 
         this.mOpenFileId = mOpenFileId;
@@ -382,14 +328,23 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
         if (mDriveServiceHelper != null && mOpenFileId != null) {
 
 
-            mDriveServiceHelper.saveFile(mOpenFileId, Constants.GOOGLE_DRIVE_FOLDER_NAME, mSessionManager.getPreference(Constants.KEY_USER_DATA))
-                    .addOnFailureListener(exception ->
-                          displayErrorDialogue(exception)).addOnSuccessListener(
-                                  success -> //DISPLAY SUCCESS MSG
-                          displaySuccessDialogue()
+            try {
+                String strKeystoreData = new FetchKeystoreData().execute(mSessionManager).get();
 
-            );
+                Log.e("backup",""+strKeystoreData);
 
+                mDriveServiceHelper.saveFile(mOpenFileId, Constants.GOOGLE_DRIVE_FOLDER_NAME, strKeystoreData)
+                        .addOnFailureListener(exception ->
+                                displayErrorDialogue(exception)).addOnSuccessListener(
+                                success -> //DISPLAY SUCCESS MSG
+                                        displaySuccessDialogue()
+
+                        );
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -411,7 +366,6 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
         CommonMethods.showDialogWithCustomMessage(mContext ,getString(R.string.strErrorInBckup));
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void readFile(String fileId) {
 
 
@@ -436,4 +390,23 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
 
     }
 
+}
+class FetchKeystoreData extends AsyncTask<SessionManager, Integer, String> {
+
+
+    @Override
+    protected String doInBackground(SessionManager... mSessionManager) {
+        return CommonMethods.checkIfInstanceKeyStoreData(mSessionManager[0]);
+    }
+
+    @Override
+    protected void onPreExecute() {
+
+    }
+
+    @Override
+    protected void onPostExecute(String searchResults) {
+        super.onPostExecute(searchResults);
+
+    }
 }

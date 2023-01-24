@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,15 +23,44 @@ import com.Revealit.Activities.ImportAccountFromPrivateKey;
 import com.Revealit.Adapter.SilosAvailableAccountsListAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
+import com.Revealit.CommonClasse.DriveServiceHelper;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.CommonClasse.SwipeHelper;
 import com.Revealit.ModelClasses.KeyStoreServerInstancesModel;
 import com.Revealit.R;
+import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.Scope;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ListOfActiveAccountsActivity extends AppCompatActivity implements View.OnClickListener {
     private Activity mActivity;
@@ -43,6 +74,12 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
     ArrayList<KeyStoreServerInstancesModel.Data> selectedSilosAccountsList = new ArrayList<>();
     private RelativeLayout relativeRestoreFromCloud,relativeImportKey;
     private SilosAvailableAccountsListAdapter mSilosAvailableAccountsListAdapter;
+    private GoogleSignInOptions signInOptions;
+    private GoogleSignInClient client;
+    private static final int REQUEST_CODE_SIGN_IN = 1;
+    private static final int REQUEST_CODE_OPEN_DOCUMENT = 2;
+    private DriveServiceHelper mDriveServiceHelper;
+    private String strToken,mOpenFileId;
 
 
 
@@ -50,8 +87,6 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_active_accounts);
-
-
 
     }
 
@@ -89,6 +124,7 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
         if (!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)) {
             relativeRestoreFromCloud.setVisibility(View.GONE);
         }
+        relativeRestoreFromCloud.setVisibility(View.VISIBLE);
 
     }
 
@@ -217,11 +253,214 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
                 finish();
                 break;
             case R.id.relativeRestoreFromCloud:
+
+                requestSignIn();
+
                 break;
             case R.id.relativeImportKey:
                 Intent mIntent = new Intent(this, ImportAccountFromPrivateKey.class);
                 startActivity(mIntent);
                 break;
+        }
+
+    }
+    private void requestSignIn() {
+
+        signInOptions =
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
+                        .build();
+        client = GoogleSignIn.getClient(this, signInOptions);
+
+        // The result of the sign-in Intent is handled in onActivityResult.
+        startActivityForResult(client.getSignInIntent(), REQUEST_CODE_SIGN_IN);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        switch (requestCode) {
+            case REQUEST_CODE_SIGN_IN:
+                if (resultCode == Activity.RESULT_OK && resultData != null) {
+                    handleSignInResult(resultData);
+                }
+                break;
+
+            case REQUEST_CODE_OPEN_DOCUMENT:
+                if (resultCode == Activity.RESULT_OK && resultData != null) {
+                    Uri uri = resultData.getData();
+                    if (uri != null) {
+
+                    }
+                }
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, resultData);
+    }
+    private void handleSignInResult(Intent result) {
+
+
+        GoogleSignIn.getSignedInAccountFromIntent(result)
+                .addOnSuccessListener(googleAccount -> {
+
+                    // Use the authenticated account to sign in to the Drive service.
+                    GoogleAccountCredential credential =
+                            GoogleAccountCredential.usingOAuth2(
+                                    this, Collections.singleton(DriveScopes.DRIVE_FILE));
+                    credential.setSelectedAccount(googleAccount.getAccount());
+
+
+                    Drive googleDriveService =
+                            new Drive.Builder(
+                                    AndroidHttp.newCompatibleTransport(),
+                                    new GsonFactory(),
+                                    credential)
+                                    .setApplicationName("Drive API Migration")
+                                    .build();
+
+                    // The DriveServiceHelper encapsulates all REST API and SAF functionality.
+                    // Its instantiation is required before handling any onClick actions.
+                    mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
+
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+
+                                strToken = credential.getToken();
+
+
+
+                                //REFRESH DRIVE
+                                checkIfFileExists();
+
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (GoogleAuthException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
+
+                })
+                .addOnFailureListener(exception -> Log.e("ERROR", "Unable to sign in.", exception));
+    }
+    private void checkIfFileExists() {
+
+        //OPEN DIALOGUE
+        CommonMethods.showDialogWithCustomMessage(mContext , "Hold on! We are checking if you already registered user");
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Authorization","Bearer "+strToken)
+                        .header("Content-Type", "application/json")
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://www.googleapis.com/drive/v3/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+        Call<JsonElement> call = patchService1.checkFileOnGoogleDrive("files?q=name%3D%22Revealit.tv.io%22&key=[AIzaSyCMRiL96W6rLyXrUM49ysPr8soEEcIexdg] HTTP/1.1");
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+
+                Log.e("checkIfFileExists: ", "" + response.isSuccessful());
+                Log.e("checkIfFileExists: ", "" + response.code());
+
+                if (response.isSuccessful() && response.code() == 200) {
+
+                    Gson gson = new GsonBuilder()
+                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                            .serializeNulls()
+                            .create();
+
+                    Log.e("checkIfFileExists: ", "" + gson.toJson(response.body()));
+
+                    if(response.body().getAsJsonObject().getAsJsonArray("files").size() != 0){
+                        mOpenFileId = response.body().getAsJsonObject().getAsJsonArray("files").get(0).getAsJsonObject().get("id").toString();
+                        readFile(mOpenFileId);
+                    }
+
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        CommonMethods.buildDialog(mContext,"Error : "+ jObjError.getString("message"));
+                    } catch (Exception e) {
+                        CommonMethods.buildDialog(mContext,"Error : "+e.getMessage());
+
+                    }
+                }
+                //CLOSED DIALOGUE
+                CommonMethods.closeDialog();
+            }
+
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+                //CLOSED DIALOGUE
+                CommonMethods.closeDialog();
+
+            }
+        });
+
+        //CLOSED DIALOGUE
+        CommonMethods.closeDialog();
+
+
+    }
+    private void readFile(String fileId) {
+
+        if (mDriveServiceHelper != null) {
+
+            mDriveServiceHelper.readFile(fileId.substring( 1, fileId.length() - 1 ))
+                    .addOnSuccessListener(nameAndContent -> {
+                        String name = nameAndContent.first;
+                        String content = nameAndContent.second;
+
+                        //PRINT DATA CONTENT
+                        CommonMethods.printLogE(TAG,"" +content);
+
+                        //STORE DATA IN TO KEY STORE
+                        //STORE WHOLE ARRAY IN TO STRING FORMAT IN KEYSTORE
+                        CommonMethods.encryptKey(content,  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS, mSessionManager);
+
+
+                        //SIGN OUT GOOGLE ACCOUNT
+                        client.signOut();
+
+                        //RELOAD PAGE AND DISPLAY EXISTING DATA
+                        Intent mIntent = new Intent(this, ListOfActiveAccountsActivity.class);
+                        startActivity(mIntent);
+                        finishAffinity();
+
+
+                    })
+                    .addOnFailureListener(exception ->
+                            CommonMethods.displayToast(mContext, "Could not restore credentials! Please contact developer"));
         }
 
     }

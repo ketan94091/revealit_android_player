@@ -422,6 +422,9 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         //UPDATE EDUCATIONAL VIDEO FLAG
         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_EDUCATION_VIDEO_PLAYED, false);
 
+        //UPDATE GOOGLE DRIVE BACKUP FLAG
+        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_GOOGLE_DRIVE_BACKUP_DONE, false);
+
         //GO TO NEXT ACTIVITY
         Intent mIntent = new Intent(NewAuthEnterUserNameActivity.this,InviteAndEarnActivity.class);
         mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME ,body.getProton().getAccountName());

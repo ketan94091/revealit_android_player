@@ -133,6 +133,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         //CHECK IF USER IS ADMIN
         if(!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
             linearSettings.setVisibility(View.GONE);
+        }else{
+            linearSettings.setVisibility(View.VISIBLE);
         }
 
         if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
