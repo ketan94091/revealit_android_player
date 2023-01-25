@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.MaintanaceActivity"
+    android:layout_margin="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="3">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/dmsans_bold"
+                android:text="@string/strUpgradeToLatestVersion"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textFontWeight="700"
+                android:textSize="16dp" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/maintanance"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+
+           >
+
+            <ImageView
+                android:id="@+id/imgLogo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/app_upgrade" />
+
+
+        </RelativeLayout>
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/dmsans_bold"
+                android:text="@string/strUpgradeToExperienceBatterFeatures"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textFontWeight="700"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/txtUpgradeApp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/new_auth_round_button_app_green"
+                android:fontFamily="@font/dmsans_bold"
+                android:gravity="center_horizontal"
+                android:padding="15dp"
+                android:text="@string/strUpgradeApp"
+                android:textColor="@color/colorWhite"
+                android:textFontWeight="700"
+                android:layout_marginTop="50dp"
+                android:textSize="15dp" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

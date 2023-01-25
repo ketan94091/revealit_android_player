@@ -99,6 +99,10 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Activities.AppUpgradeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".Activities.GoogleDriveBackupActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

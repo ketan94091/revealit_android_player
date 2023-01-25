@@ -68,6 +68,8 @@
     <string name="strRegisterAccount">Register</string>
     <string name="strSelectAccount">Select Account</string>
     <string name="strAppIsInMaintenace">The App is Currently Under Maintenance</string>
+    <string name="strUpgradeToLatestVersion">Update to Latest Version</string>
+    <string name="strUpgradeToExperienceBatterFeatures">For more features and a better experience, please update the app to the latest version</string>
     <string name="strAppIsInMaintenaceMsg">We are undergoing some scheduled maintenance to make your experience better. This won’t take long.</string>
     <string name="strRevealitName">Revealit Name</string>
     <string name="strChooseaname">Choose a name you would like to use publicly</string>
@@ -192,6 +194,7 @@
     <string name="strEarnupto">Earn US$1.00 in Bitcoin</string>
     <string name="strContinue">Continue</string>
     <string name="strReload">Reload</string>
+    <string name="strUpgradeApp">Update App</string>
     <string name="strAuthorise">Authorise</string>
     <string name="strCopyTo">Copy to clipboard</string>
     <string name="strOffers">Hurry! This offer will end after 5,000 new users.</string>

@@ -7,10 +7,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +31,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.FileContent;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
@@ -38,6 +41,8 @@ import com.google.gson.JsonElement;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
@@ -68,6 +73,7 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
     private GoogleSignInClient client;
     private RelativeLayout relativeBack;
     private String userData;
+    private Drive googleDriveService;
 
 
     @Override
@@ -100,7 +106,7 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
             txtBackupNow.setVisibility(View.VISIBLE);
         }
 
-
+        txtBackupNow.setVisibility(View.VISIBLE);
 
 
     }
@@ -177,13 +183,15 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
                     credential.setSelectedAccount(googleAccount.getAccount());
 
 
-                    Drive googleDriveService =
+                    googleDriveService =
                             new Drive.Builder(
                                     AndroidHttp.newCompatibleTransport(),
                                     new GsonFactory(),
                                     credential)
                                     .setApplicationName("Drive API Migration")
                                     .build();
+
+
 
                     // The DriveServiceHelper encapsulates all REST API and SAF functionality.
                     // Its instantiation is required before handling any onClick actions.
@@ -264,11 +272,18 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
                             .serializeNulls()
                             .create();
 
-                    Log.e("checkIfFileExists: ", "" + gson.toJson(response.body()));
+                   // Log.e("checkIfFileExists: ", "" + gson.toJson(response.body()));
 
                     if(response.body().getAsJsonObject().getAsJsonArray("files").size() != 0){
-                        mOpenFileId = response.body().getAsJsonObject().getAsJsonArray("files").get(0).getAsJsonObject().get("id").toString();
+                        mOpenFileId = response.body().getAsJsonObject().getAsJsonArray("files").get(0).getAsJsonObject().get("id").toString().replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "");
                         readFile(mOpenFileId);
+
+                        //FILE EXISTS
+                        //FIRST DELETE THE FILE AND THAN CREATE NEW FILE
+                       // updateFile(mOpenFileId);
+
+                        //UPDATE FILE
+                        //createFile();
                     }else{
                         createFile();
                     }
@@ -304,7 +319,55 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
         return  isFolderAvailable;
 
     }
+
+    private void updateFile(String mOpenFileId) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    // First retrieve the file from the API.
+                    com.google.api.services.drive.model.File file = googleDriveService.files().get(mOpenFileId).execute();
+
+                    // File's new content.
+
+
+                    try {
+                        File root = new File(Environment.getExternalStorageDirectory(), "Notes");
+                        if (!root.exists()) {
+                            root.mkdirs();
+                        }
+                        File gpxfile = new File(root, "Revealit.tv.io");
+                        FileWriter writer = new FileWriter(gpxfile);
+                        writer.append("xyz");
+                        writer.flush();
+                        writer.close();
+                        Toast.makeText(mContext, "Saved", Toast.LENGTH_SHORT).show();
+
+                        java.io.File fileContent = new java.io.File(root+"/regime.txt");
+                        FileContent mediaContent = new FileContent("[*/*]", fileContent);
+
+                        // Send the request to the API.
+                        com.google.api.services.drive.model.File updatedFile = googleDriveService.files().update(mOpenFileId, file, mediaContent).execute();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                } catch (IOException e) {
+                    System.out.println("An error occurred: " + e);
+                }
+
+
+            }
+        }).start();
+
+    }
+
     private void createFile() {
+
 
         if (mDriveServiceHelper != null) {
 
@@ -323,15 +386,12 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
     }
     private void saveFile(String mOpenFileId) {
 
-        this.mOpenFileId = mOpenFileId;
-
         if (mDriveServiceHelper != null && mOpenFileId != null) {
 
 
             try {
                 String strKeystoreData = new FetchKeystoreData().execute(mSessionManager).get();
 
-                Log.e("backup",""+strKeystoreData);
 
                 mDriveServiceHelper.saveFile(mOpenFileId, Constants.GOOGLE_DRIVE_FOLDER_NAME, strKeystoreData)
                         .addOnFailureListener(exception ->

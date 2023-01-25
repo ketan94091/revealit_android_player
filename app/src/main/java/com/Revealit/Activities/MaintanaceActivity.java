@@ -184,6 +184,7 @@ public class MaintanaceActivity extends AppCompatActivity implements View.OnClic
 
                     //FOR MAINTANANCE
                     boolean isAppInMaintainance = false;
+                    boolean isAppVersionIsNotOk = false;
                     for(int i =0; i <response.body().getPublic_settings().size(); i++ ){
 
                         //SAVE PUBLIC SETTINGS
@@ -198,13 +199,27 @@ public class MaintanaceActivity extends AppCompatActivity implements View.OnClic
                                 isAppInMaintainance = true;
                             }
 
+                            if(CommonMethods.calculateAcceptableVersion(response.body().getPublic_settings().get(i).getMinimum_acceptable_version() )){
+                                isAppVersionIsNotOk = true;
+                            }
+
                         }
                     }
+
+
+
 
                     //CHECK IF APPLICATION IS IN MAINTENANCE
                     if(isAppInMaintainance){
                         //MOVE TO MAINTENANCE SCREEN
                         Intent mIntent = new Intent(MaintanaceActivity.this, MaintanaceActivity.class);
+                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
+                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mIntent);
+                        finish();
+                    }else if(isAppVersionIsNotOk){
+                        //MOVE TO MAINTENANCE SCREEN
+                        Intent mIntent = new Intent(MaintanaceActivity.this, AppUpgradeActivity.class);
                         mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(mIntent);
@@ -215,6 +230,7 @@ public class MaintanaceActivity extends AppCompatActivity implements View.OnClic
                         startActivity(mIntent);
                         finish();
                     }
+
 
 
 
@@ -327,6 +343,7 @@ public class MaintanaceActivity extends AppCompatActivity implements View.OnClic
 
                     //FOR MAINTANANCE
                     boolean isAppInMaintainance = false;
+                    boolean isAppVersionIsNotOk = false;
                     for(int i =0; i <response.body().getPublic_settings().size(); i++ ){
 
                         //SAVE PUBLIC SETTINGS
@@ -341,10 +358,17 @@ public class MaintanaceActivity extends AppCompatActivity implements View.OnClic
                                 isAppInMaintainance = true;
                             }
 
+                            if(CommonMethods.calculateAcceptableVersion(response.body().getPublic_settings().get(i).getMinimum_acceptable_version() )){
+                                isAppVersionIsNotOk = true;
+                            }
+
                         }
                     }
 
-//                  CHECK IF APPLICATION IS IN MAINTENANCE
+
+
+
+                    //CHECK IF APPLICATION IS IN MAINTENANCE
                     if(isAppInMaintainance){
                         //MOVE TO MAINTENANCE SCREEN
                         Intent mIntent = new Intent(MaintanaceActivity.this, MaintanaceActivity.class);
@@ -352,8 +376,14 @@ public class MaintanaceActivity extends AppCompatActivity implements View.OnClic
                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(mIntent);
                         finish();
+                    }else if(isAppVersionIsNotOk){
+                        //MOVE TO MAINTENANCE SCREEN
+                        Intent mIntent = new Intent(MaintanaceActivity.this, AppUpgradeActivity.class);
+                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
+                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mIntent);
+                        finish();
                     }else {
-                        //MOVE TO HOME SCREEN
                         Intent mIntent = new Intent(MaintanaceActivity.this, HomeScreenTabLayout.class);
                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(mIntent);

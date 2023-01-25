@@ -430,6 +430,24 @@ public class CommonMethods {
         return "" + versionName;
 
     }
+    public static boolean calculateAcceptableVersion(String minimum_acceptable_version) {
+
+        //CALCULATE INSTALLED VERSION
+        String[] installedVersion = BuildConfig.VERSION_NAME.split("\\.");
+        //Log.e("LAST",installedVersion[installedVersion.length]);
+
+        String[] acceptableVersion = minimum_acceptable_version.split("\\.");
+        // Log.e("MIN_LAST",acceptableVersion[acceptableVersion.length]);
+
+        //FIND NUMBER FOR INSTALLED VERSION
+        Double installedNumber = (Double.parseDouble(installedVersion[0]+"."+installedVersion[1]) * 10000 + Integer.parseInt(installedVersion[2])) ;
+        Double minimumNumber = (Double.parseDouble(acceptableVersion[0]+"."+acceptableVersion[1]) * 10000 + Integer.parseInt(acceptableVersion[2])) ;
+
+        if(installedNumber.intValue() < minimumNumber.intValue()){
+            return true;
+        }
+        return false;
+    }
 
     public static Uri getImageUri(Context inContext, Bitmap inImage) {
         if (inImage != null) {

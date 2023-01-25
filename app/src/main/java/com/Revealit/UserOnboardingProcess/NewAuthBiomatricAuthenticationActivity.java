@@ -23,6 +23,7 @@ import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
+import com.Revealit.Activities.AppUpgradeActivity;
 import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.Activities.MaintanaceActivity;
 import com.Revealit.Activities.QrCodeScannerActivity;
@@ -286,6 +287,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                     //FOR MAINTANANCE
                     boolean isAppInMaintainance = false;
+                    boolean isAppVersionIsNotOk = false;
                     for(int i =0; i <response.body().getPublic_settings().size(); i++ ){
 
                         //SAVE PUBLIC SETTINGS
@@ -300,6 +302,10 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                                isAppInMaintainance = true;
                            }
 
+                           if(CommonMethods.calculateAcceptableVersion(response.body().getPublic_settings().get(i).getMinimum_acceptable_version() )){
+                               isAppVersionIsNotOk = true;
+                           }
+
                         }
                     }
 
@@ -310,6 +316,13 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                     if(isAppInMaintainance){
                         //MOVE TO MAINTENANCE SCREEN
                         Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, MaintanaceActivity.class);
+                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
+                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mIntent);
+                        finish();
+                    }else if(isAppVersionIsNotOk){
+                        //MOVE TO MAINTENANCE SCREEN
+                        Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, AppUpgradeActivity.class);
                         mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(mIntent);
@@ -352,6 +365,8 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
         });
 
     }
+
+
 
     private void goToNextActivity() {
 
@@ -491,6 +506,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                     //FOR MAINTANANCE
                     boolean isAppInMaintainance = false;
+                    boolean isAppVersionIsNotOk = false;
                     for(int i =0; i <response.body().getPublic_settings().size(); i++ ){
 
                         //SAVE PUBLIC SETTINGS
@@ -505,13 +521,27 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                                 isAppInMaintainance = true;
                             }
 
+                            if(CommonMethods.calculateAcceptableVersion(response.body().getPublic_settings().get(i).getMinimum_acceptable_version() )){
+                                isAppVersionIsNotOk = true;
+                            }
+
                         }
                     }
+
+
+
 
                     //CHECK IF APPLICATION IS IN MAINTENANCE
                     if(isAppInMaintainance){
                         //MOVE TO MAINTENANCE SCREEN
                         Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, MaintanaceActivity.class);
+                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
+                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mIntent);
+                        finish();
+                    }else if(isAppVersionIsNotOk){
+                        //MOVE TO MAINTENANCE SCREEN
+                        Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, AppUpgradeActivity.class);
                         mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(mIntent);
