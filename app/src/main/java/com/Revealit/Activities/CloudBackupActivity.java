@@ -106,7 +106,7 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
             txtBackupNow.setVisibility(View.VISIBLE);
         }
 
-        txtBackupNow.setVisibility(View.VISIBLE);
+
 
 
     }
@@ -283,7 +283,7 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
                        // updateFile(mOpenFileId);
 
                         //UPDATE FILE
-                        //createFile();
+                        createFile();
                     }else{
                         createFile();
                     }

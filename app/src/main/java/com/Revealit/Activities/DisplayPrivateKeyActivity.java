@@ -42,8 +42,8 @@ public class DisplayPrivateKeyActivity extends AppCompatActivity implements View
     private DatabaseHelper mDatabaseHelper;
     private SessionManager mSessionManager;
     private RelativeLayout relativeBack;
-    private ImageView imgCopy,imgCopyPublicPem,imgCopyPrivatePem,imgCopyPhrase;
-    private TextView txtPrivateKeyPhrase1,txtPrivateKeyPhrase2,txtPrivateKeyPhrase3,txtPrivateKeyPhrase4,txtPrivateKeyPhrase5,txtPrivateKeyPhrase6,txtPrivateKeyPhrase7,txtPrivateKeyPhrase8,txtPrivateKeyPhrase9,txtPrivateKeyPhrase10,txtPrivateKeyPhrase11,txtPrivateKeyPhrase12,txtPublicKeyPem,txtPrivateKeyPem,txtPrivateKey;
+    private ImageView imgCopy,imgCopyRevealitPrivateKey,imgCopyPublicPem,imgCopyPrivatePem,imgCopyPhrase;
+    private TextView txtPrivateKeyPhrase1,txtPrivateKeyPhrase2,txtPrivateKeyPhrase3,txtPrivateKeyPhrase4,txtPrivateKeyPhrase5,txtPrivateKeyPhrase6,txtPrivateKeyPhrase7,txtPrivateKeyPhrase8,txtPrivateKeyPhrase9,txtPrivateKeyPhrase10,txtPrivateKeyPhrase11,txtPrivateKeyPhrase12,txtPublicKeyPem,txtPrivateKeyPem,txtRevealitPrivateKey,txtPrivateKey;
     private DeCryptor decryptor;
     private EnCryptor encryptor;
     private String mMnemonics,mPublicPem,mPrivatePem,mPrivateKey;
@@ -79,8 +79,10 @@ public class DisplayPrivateKeyActivity extends AppCompatActivity implements View
         imgCopyPhrase =(ImageView)findViewById(R.id.imgCopyPhrase);
         imgCopyPrivatePem =(ImageView)findViewById(R.id.imgCopyPrivatePem);
         imgCopyPublicPem =(ImageView)findViewById(R.id.imgCopyPublicPem);
+        imgCopyRevealitPrivateKey =(ImageView)findViewById(R.id.imgCopyRevealitPrivateKey);
 
         txtPrivateKey=(TextView)findViewById(R.id.txtPrivateKey);
+        txtRevealitPrivateKey=(TextView)findViewById(R.id.txtRevealitPrivateKey);
         txtPrivateKeyPem=(TextView)findViewById(R.id.txtPrivateKeyPem);
         txtPublicKeyPem=(TextView)findViewById(R.id.txtPublicKeyPem);
         txtPrivateKeyPhrase1=(TextView)findViewById(R.id.txtPrivateKeyPhrase1);
@@ -95,6 +97,9 @@ public class DisplayPrivateKeyActivity extends AppCompatActivity implements View
         txtPrivateKeyPhrase10=(TextView)findViewById(R.id.txtPrivateKeyPhrase10);
         txtPrivateKeyPhrase11=(TextView)findViewById(R.id.txtPrivateKeyPhrase11);
         txtPrivateKeyPhrase12=(TextView)findViewById(R.id.txtPrivateKeyPhrase12);
+
+        //DISPLAY REVEALIT PRIVATE KEY
+        txtRevealitPrivateKey.setText(mSessionManager.getPreference(Constants.KEY_REVEALIT_PRIVATE_KEY));
 
         try{
             //OPEN KEYSTORE
@@ -158,6 +163,7 @@ public class DisplayPrivateKeyActivity extends AppCompatActivity implements View
         imgCopyPhrase.setOnClickListener(this);
         imgCopyPrivatePem.setOnClickListener(this);
         imgCopyPublicPem.setOnClickListener(this);
+        imgCopyRevealitPrivateKey.setOnClickListener(this);
 
     }
 
@@ -201,6 +207,14 @@ public class DisplayPrivateKeyActivity extends AppCompatActivity implements View
                 ClipboardManager clipboardPublicPem = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clipPublicPem = ClipData.newPlainText(getString(R.string.strPublicPem),mPublicPem);
                 clipboardPublicPem.setPrimaryClip(clipPublicPem);
+
+                //TOAST MSG
+                CommonMethods.displayToast(mContext, getString(R.string.strUsernameCopied));
+                break;
+            case R.id.imgCopyRevealitPrivateKey:
+                ClipboardManager clipboardRevealitPrivateKey = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipRevealitPrivateKey = ClipData.newPlainText(getString(R.string.strRevealitPrivateKey),mSessionManager.getPreference(Constants.KEY_REVEALIT_PRIVATE_KEY));
+                clipboardRevealitPrivateKey.setPrimaryClip(clipRevealitPrivateKey);
 
                 //TOAST MSG
                 CommonMethods.displayToast(mContext, getString(R.string.strUsernameCopied));

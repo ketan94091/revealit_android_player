@@ -205,17 +205,29 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
         //UPDATE CHECKBOX CHECKED
         holder.chcekBoxSelection.setChecked(isCheckSelected);
 
+        //CLEAR ARRAY IS USER DE-SELECT ALL
+        if(!isCheckSelected){
+            mSelectedVideoIds.clear();
+        }
+
         holder.chcekBoxSelection.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean mChecked) {
 
-                if(!mChecked){
-                    if(mSelectedVideoIds.contains(String.valueOf(revealitHistoryData.get(position).getMedia_id()))){
-                        mSelectedVideoIds.remove(String.valueOf(revealitHistoryData.get(position).getMedia_id()));
+                if(mSelectedVideoIds.contains(revealitHistoryData.get(position).getMedia_id())){
+
+                    for(int i=0;i<mSelectedVideoIds.size();i++){
+
+                       if(mSelectedVideoIds.get(i) == revealitHistoryData.get(position).getMedia_id()){
+                           mSelectedVideoIds.remove(i);
+                       }
                     }
+
                 }else{
                     mSelectedVideoIds.add(revealitHistoryData.get(position).getMedia_id());
+
                 }
+
 
                 //UPDATE LIST THROUGH INTERFACE
                 mRemoveListenHistory.getSelectedIds(mSelectedVideoIds);

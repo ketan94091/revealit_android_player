@@ -179,6 +179,7 @@
 
                 </RelativeLayout>
 
+
                 <LinearLayout
                     android:id="@+id/linearHideForNonAdmin"
                     android:layout_width="match_parent"
@@ -187,10 +188,71 @@
                     android:orientation="vertical"
                     android:layout_marginTop="30dp">
 
+                    <RelativeLayout
+                        android:id="@+id/relativeRevealitPrivateKey"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <RelativeLayout
+                            android:id="@+id/relativeRevealitPrivateKeyImg"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/txtTitleRevealitPrivateKey"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerInParent="true"
+                                android:fontFamily="@font/dmsans_medium"
+                                android:text="@string/strRevealitPrivateKey"
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textFontWeight="600"
+                                android:textSize="15dp" />
+
+                            <ImageView
+                                android:id="@+id/imgCopyRevealitPrivateKey"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:src="@mipmap/icn_copy" />
+
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/relativeRevealitPrivateKeyImg"
+                            android:background="@drawable/new_auth_round_button"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txtRevealitPrivateKey"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_gravity="center|center_vertical"
+                                android:fontFamily="@font/dmsans_medium"
+                                android:padding="20dp"
+                                android:textAlignment="center"
+                                android:textColor="@color/colorBlack"
+                                android:textFontWeight="500"
+                                android:textSize="15dp" />
+
+                        </LinearLayout>
+
+
+                    </RelativeLayout>
+
 
                 <RelativeLayout
                     android:id="@+id/relativePrivatePem"
                     android:layout_width="match_parent"
+                    android:layout_marginTop="30dp"
                     android:layout_height="wrap_content"
                     >
 

@@ -448,6 +448,11 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     public static void clearListenHistory(boolean isAppModeIsLive) {
 
         if(isAppModeIsLive){
+
+            Gson gson = new GsonBuilder()
+                    .setLenient()
+                    .create();
+            //Log.e("IDSS",""+gson.toJson(selectedIdsList));
             removeSelectedVideos();
         }else{
             removeSelectedVideosSimulationMode();
@@ -491,6 +496,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
+        Log.e("IDSS",""+gson.toJson(selectedIdsList));
 
         final OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()

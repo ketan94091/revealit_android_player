@@ -242,7 +242,7 @@
                 android:textColor="@color/colorWhite"
                 android:textFontWeight="700"
                 android:textSize="15dp"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
 
         </RelativeLayout>
