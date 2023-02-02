@@ -203,7 +203,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
 
                 CommonMethods.printLogE("Response @ apiSendInvites: ", "" + gson.toJson(response.body()));
 
-                if (response.isSuccessful() && response.code() == Constants.API_CODE_200  ) {
+                if (!response.body().getAsJsonObject().get("status").toString().replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "").equals("error") ) {
 
                     //UPDATE INVITE UI
                     updateUI(response.body(),1);
@@ -211,9 +211,9 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
                 }else{
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        CommonMethods.buildDialog(mContext,"Error Code : "+jObjError.getString("error_code") +" "+ jObjError.getString("message"));
+                        CommonMethods.buildDialog(mContext,"Invalid Referral");
                     } catch (Exception e) {
-                        CommonMethods.buildDialog(mContext,"Error Code : "+e.getMessage());
+                        CommonMethods.buildDialog(mContext,"Invalid Referral");
 
                     }
 

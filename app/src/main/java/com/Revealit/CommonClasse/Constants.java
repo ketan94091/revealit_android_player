@@ -21,8 +21,8 @@ public class Constants {
 //  public static final String API_END_POINTS_MOBILE_B_CURATOR = "https://beta.revealit.io";
 //  public static final String API_END_POINTS_REGISTRATION_B_CURATOR = "https://bcapi.revealit.io/";
 
-  public static final String API_END_POINTS_MOBILE_B_CURATOR = "https://beta.revealit.tv/";
-  public static final String API_END_POINTS_REGISTRATION_B_CURATOR = "https://bcapi.revealit.tv/";
+  public static final String API_END_POINTS_MOBILE_B_CURATOR = "https://mapi.revealit.tv/";
+  public static final String API_END_POINTS_REGISTRATION_B_CURATOR = "https://api.revealit.tv/";
 
   //STAGING CURATOR
   public static final String API_END_POINTS_MOBILE_S_CURATOR = "https://staging.revealit.io/";

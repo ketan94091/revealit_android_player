@@ -268,7 +268,7 @@
 
 
     <string name="strBeta">Beta</string>
-    <string name="strBetaURL">https://beta.revealit.tv</string>
+    <string name="strBetaURL">https://mapi.revealit.tv</string>
 
     <string name="strStaging">Staging</string>
     <string name="strStagingURL">https://staging.revealit.io</string>

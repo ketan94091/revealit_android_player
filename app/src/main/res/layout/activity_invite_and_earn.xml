@@ -93,7 +93,10 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/new_auth_round_button"
                 android:orientation="vertical"
-                android:padding="30dp">
+                android:paddingTop="20dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingLeft="20dp">
 
 
                 <TextView
@@ -104,7 +107,7 @@
                     android:textAlignment="center"
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="700"
-                    android:textSize="14dp" />
+                    android:textSize="12dp" />
 
                 <TextView
                     android:id="@+id/txtCopyToClibBoard"

@@ -64,7 +64,7 @@ public class InviteAndEarnActivity extends AppCompatActivity implements View.OnC
          strCallForActionMsg = mSessionManager.getPreference(Constants.KEY_CALL_FOR_INVITE_MSG);
 
          //SET CALL FOR ACTION MSG
-         txtCallForActionIvites.setText(strCallForActionMsg);
+         //txtCallForActionIvites.setText(strCallForActionMsg);
 
          //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
         if(strCopymsg.contains("xxxx")){
@@ -74,9 +74,9 @@ public class InviteAndEarnActivity extends AppCompatActivity implements View.OnC
         }
         //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
         if(strCopymsg.contains("xxxx")){
-            txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
+            txtCallForActionIvites.setText(strCallForActionMsg.replace("xxxx",strUsername));
         }else{
-            txtMsgCopy.setText(strCopymsg.replace("XXXX",strUsername));
+            txtCallForActionIvites.setText(strCallForActionMsg.replace("XXXX",strUsername));
         }
 
          //SET INVITE CURRENCY MSG
