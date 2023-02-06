@@ -402,7 +402,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
 
             //STORE DATA IN TO KEYSTORE
             //FOR DISPLAY PURPOSE
-            CommonMethods.encryptKey(edtImportKey.getText().toString(), Constants.KEY_PRIVATE_KEY ,body.getRevealit_private_key(), mSessionManager);
+            CommonMethods.encryptKey(edtImportKey.getText().toString().trim(), Constants.KEY_PRIVATE_KEY ,body.getRevealit_private_key(), mSessionManager);
             CommonMethods.encryptKey(publicKey,Constants.KEY_PUBLIC_KEY,body.getRevealit_private_key(), mSessionManager);
             CommonMethods.encryptKey("xyz",Constants.KEY_MNEMONICS,body.getRevealit_private_key(), mSessionManager);
             CommonMethods.encryptKey(privateKeyPem,Constants.KEY_PRIVATE_KEY_PEM,body.getRevealit_private_key(), mSessionManager);
@@ -529,14 +529,14 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
     }
 
     private boolean checkPrivateKeyIsEmpty() {
-        if(edtImportKey.getText().toString().isEmpty()){
+        if(edtImportKey.getText().toString().trim().isEmpty()){
             CommonMethods.buildDialog(mContext,getResources().getString(R.string.strEnterPrivateKey));
             return false;
-        }else if(edtImportKey.getText().toString().length() < 10){
+        }else if(edtImportKey.getText().toString().trim().length() < 10){
             CommonMethods.buildDialog(mContext,getResources().getString(R.string.strInvalidPrivateKey));
            return false;
-        }else if(CommonMethods.checkEnterPrivateKeyIsFromOtherSilos(mSessionManager,edtImportKey.getText().toString())) {
-           if(CommonMethods.checkEnterPrivateKeyUserHasDeletedAccount(mSessionManager,edtImportKey.getText().toString())){
+        }else if(CommonMethods.checkEnterPrivateKeyIsFromOtherSilos(mSessionManager,edtImportKey.getText().toString().trim())) {
+           if(CommonMethods.checkEnterPrivateKeyUserHasDeletedAccount(mSessionManager,edtImportKey.getText().toString().trim())){
                openDeletedUserInfoNeededDialogue();
            }else{
                openUserAlreadyAvailableDialogue();

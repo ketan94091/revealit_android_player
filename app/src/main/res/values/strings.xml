@@ -265,6 +265,7 @@
     <string name="strIncorrectQRcodeData">In correct Qr code data! Please try again</string>
     <string name="strFetchingAppSettingData">Fetching app settings...</string>
     <string name="strUserAlreadyExists">User already exists!</string>
+    <string name="strSelectSharingPreference">Select sharing preference</string>
 
 
     <string name="strBeta">Beta</string>

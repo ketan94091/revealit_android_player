@@ -121,10 +121,14 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
 
 
         //CHECK IF USER IS ADMIN
+        //ELSE PART SHOULD REMOVE
         if (!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)) {
             relativeRestoreFromCloud.setVisibility(View.GONE);
+        }else{
+            relativeRestoreFromCloud.setVisibility(View.GONE);
         }
-        relativeRestoreFromCloud.setVisibility(View.VISIBLE);
+
+
 
     }
 

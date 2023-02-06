@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -452,7 +451,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
             Gson gson = new GsonBuilder()
                     .setLenient()
                     .create();
-            //Log.e("IDSS",""+gson.toJson(selectedIdsList));
             removeSelectedVideos();
         }else{
             removeSelectedVideosSimulationMode();
@@ -496,7 +494,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
-        Log.e("IDSS",""+gson.toJson(selectedIdsList));
 
         final OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
@@ -508,7 +505,6 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
 
-        Log.e("IDSS",""+gson.toJson(selectedIdsList));
 
         Call<JsonElement> call = patchService1.removeMultipleSelectedVidios(selectedIdsList);
 
@@ -1095,7 +1091,15 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                                     @Override
                                     public void onClick(int pos) {
 
-                                        CommonMethods.displayToast(mContext,"In Progress...");
+                                        try {
+                                            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                                            shareIntent.setType("text/plain");
+                                            shareIntent.putExtra(Intent.EXTRA_SUBJECT, mActivity.getResources().getString(R.string.app_name));
+                                            shareIntent.putExtra(Intent.EXTRA_TEXT, finalMHistoryListFromDatabase.get(pos).getMedia_url());
+                                            mActivity.startActivity(Intent.createChooser(shareIntent,mActivity.getResources().getString(R.string.strSelectSharingPreference) ));
+                                        } catch(Exception e) {
+                                            //e.toString();
+                                        }
                                     }
                                 }
                         ));
