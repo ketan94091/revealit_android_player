@@ -47,6 +47,7 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHistoryListAdapter.ViewHolder> {
 
@@ -62,6 +63,8 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
     private RemoveListenHistory mRemoveListenHistory;
     private boolean isCheckSelected,shouldCheckBoxVisible;
     private ArrayList<Integer> mSelectedVideoIds = new ArrayList<>();
+    private ArrayList<String> mListAllTimeStampOffset = new ArrayList<String>();
+
 
 
 
@@ -183,11 +186,22 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
         holder.imgCoverArt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //REPLACE STRING OFFSET PARENTHESIS [
+                String replaceOffset = revealitHistoryData.get(position).getAllTimeStampOffset().replace("[","");
+                //REPLACE STRING OFFSET PARENTHESIS ]
+                String replace1Offset = replaceOffset.replace("]","");
+                //SEPRATE STRING OFFSET BY COMMA
+                String[] timestampSplitOffset = replace1Offset.split(",");
+                //CONVERT STRING OFFSET TO ARRAYLIST
+                mListAllTimeStampOffset = new ArrayList<String>(Arrays.asList(timestampSplitOffset));
+
+
                 Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
                 mIntent.putExtra(Constants.MEDIA_URL, "" + revealitHistoryData.get(position).media_url);
                 mIntent.putExtra(Constants.MEDIA_ID, "" + revealitHistoryData.get(position).media_id);
                 mIntent.putExtra(Constants.VIDEO_NAME, "" + revealitHistoryData.get(position).media_title);
-                mIntent.putExtra(Constants.VIDEO_SEEK_TO, "0");
+                mIntent.putExtra(Constants.VIDEO_SEEK_TO, mListAllTimeStampOffset.get(mListAllTimeStampOffset.size() - 1));
                 mIntent.putExtra(Constants.IS_VIDEO_SEEK, false);
                 mActivity.startActivity(mIntent);
 

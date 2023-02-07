@@ -191,6 +191,8 @@
     <string name="strMobileAlreadyUsed">Mobile Number is already in use on the revealit TV platform. revealit TV only allows one account per mobile.</string>
     <string name="strInvalidMobileFormat">Invalid Mobile Number Format</string>
     <string name="strSomeoneInviteyou">Did someone invite you to revealit TV?</string>
+    <string name="strDoYouHaveRefferalCode">Do you have a referral code?</string>
+    <string name="strJoinOurCommunity">Move up the waiting list by joining our community</string>
     <string name="strEnterInviteeName">Enter a revealit username or a campaign ID</string>
     <string name="strEarnupto">Earn US$1.00 in Bitcoin</string>
     <string name="strContinue">Continue</string>
@@ -234,8 +236,8 @@
     <string name="strSuccessfullyVerified">Successfully Verified your Mobile Device</string>
     <string name="strWehaveRecieved">We have sent a text message to your phone number</string>
     <string name="strEnterTheCodeBelow">\n Enter the code below.</string>
-    <string name="strHaveYouReffered">Were you referred?</string>
-    <string name="strEarnInstantReward">Earn an Instant Reward into your revealit TV \n wallet by providing a Referral Code</string>
+    <string name="strThankYouForJoinRevealit">Thank You for joining revealit TV!</string>
+    <string name="strSurgeInDemand">Due to surge in demand, you are in the waiting list. We will notify as soon as your account has been enabled(no more than 20 days).</string>
     <string name="strEnterUsername">Enter a username for the revealit TV platform</string>
     <string name="strInviteFriend">Earn US$1.00 in Bitcoin everytime a friend installs the revealit TV app</string>
     <string name="strPendingVerificationMsg">Thank you for enrolling on our platform. You are already in the waiting list. We will notify you as soon as your account has been enabled (approximately in 20 days).</string>
@@ -296,5 +298,8 @@
     <string name="key_testfairy_android_pvt_key">5f8216034f7b9cb7327d84aa34f4c2301c794960</string>
     <string name="facebook_app_id">491514455263066</string>
 
+
+    <string name="strInstagramURL">https://www.instagram.com/revealit.tv/</string>
+    <string name="strTelegramURL">https://t.me/+HvO5pnwLzuYyMjVl</string>
 
 </resources>

@@ -368,6 +368,7 @@ public class AdminFragment extends Fragment implements View.OnClickListener {
             //UPDATE LOGIN FLAG
             mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN,false);
             mSessionManager.updatePreferenceBoolean(Constants.KEY_ISFROM_LOGOUT,true);
+            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN, false);
 
             //GO TO GET STARTED SCREEN FOR LOGIN OR SIGN UP
             // SEND USER TO LANDING SCREEN

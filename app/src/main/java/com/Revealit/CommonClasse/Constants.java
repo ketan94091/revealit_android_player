@@ -219,6 +219,8 @@ public class Constants {
   public  static  final  String KEY_INVITE_CYPTO_CURRNCY ="keyInviteCryptoCurrency";
   public  static  final  String KEY_INVITE_CURRNCY ="keyInviteCurrency";
   public  static  final  String KEY_INVITE_CURRNCY_AMOUNT ="keyInviteCurrencyAmounbt";
+  public  static  final  String KEY_INVITE_PLACEHOLDER ="keyInvitePlaceHolder";
+  public  static  final  String KEY_INVITE_CURRENCY_ICON ="keyInviteCurrencyIcon";
   public  static  final  String KEY_USER_DATA ="keyUserData";
   public  static  final  String GOOGLE_DRIVE_FOLDER_NAME="Revealit.tv.io";
   public  static  final  String GOOGLE_ACCESS_TOKEN="GoogleAccessToken";
