@@ -304,6 +304,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                 .build();
 
 
+
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
         Call<UserDetailsFromPublicKeyModel> call = patchService1.getUserDetailsFromPubKeyAndName("api/userdetail?user_name="+username.replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "")+"&public_key="+publicKey);
 

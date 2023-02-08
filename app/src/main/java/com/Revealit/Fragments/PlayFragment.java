@@ -473,18 +473,21 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         isForFirstTime = false;
 
         //UPDATE FIRST OPEN FLAG
-        mActivity.runOnUiThread(new Runnable() {
-            public void run() {
-                if(isUserIsActive){
-                    if(!mSessionManager.getPreferenceBoolean(Constants.IS_USER_OPEN_APP_FIRST_TIME)){
-                        showWelcomeDialogue(isUserIsActive);
-                    }
+        if(!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL)){
+            mActivity.runOnUiThread(new Runnable() {
+                public void run() {
+                    if(isUserIsActive){
+                        if(!mSessionManager.getPreferenceBoolean(Constants.IS_USER_OPEN_APP_FIRST_TIME)){
+                            showWelcomeDialogue(isUserIsActive);
+                        }
 
-                }else{
-                    showWelcomeDialogue(false);
+                    }else{
+                        showWelcomeDialogue(false);
+                    }
                 }
-            }
-        });
+            });
+        }
+
 
     }
     private void showWelcomeDialogue(boolean isUserIsActive) {
@@ -496,14 +499,17 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         //final AlertDialog mAlertDialog = dialogBuilder.create();
         TextView txtGetStarted = (TextView) dialog.findViewById(R.id.txtGetStarted);
         TextView txtWaitListed = (TextView) dialog.findViewById(R.id.txtWaitListed);
+        ImageView imgCancel = (ImageView) dialog.findViewById(R.id.imgCancel);
 
         //HIDE SHOW BUTTON BASED ON USER ACTIVATION STATUS
         if(isUserIsActive){
             txtWaitListed.setVisibility(View.GONE);
             txtGetStarted.setVisibility(View.VISIBLE);
+            imgCancel.setVisibility(View.GONE);
         }else{
             txtWaitListed.setVisibility(View.VISIBLE);
             txtGetStarted.setVisibility(View.GONE);
+            imgCancel.setVisibility(View.VISIBLE);
         }
 
 
@@ -540,6 +546,25 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
                 //EXIT FROM THE APP UNTIL USER TURN TO ACTIVE FROM THE BACKEND
                 Intent mIntent = new Intent(mActivity, AddRefferalAndEarnActivity.class);
+                startActivity(mIntent);
+                mActivity.finishAffinity();
+
+
+            }
+        });
+        imgCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //UPDATE APPLICATION BOTTOM BAR VISIBILITY FLAG
+                //IF FLAG = TRUE -> ALLOW USER TO ONLY VIEW USER PROFILE SCREEN
+                //IF FALSE -> ALLOW USER TO ACCESS ALL FOUR BOTTOM BAR PAGES
+                mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL, true);
+
+                dialog.dismiss();
+
+                //EXIT FROM THE APP UNTIL USER TURN TO ACTIVE FROM THE BACKEND
+                Intent mIntent = new Intent(mActivity, HomeScreenTabLayout.class);
                 startActivity(mIntent);
                 mActivity.finishAffinity();
 

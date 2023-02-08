@@ -340,16 +340,17 @@ public class NewAuthSplashScreen extends AppCompatActivity {
             startActivity(mIntent);
             finish();
         }
-        else if(mSessionManager.getPreferenceBoolean(Constants.KEY_ISFROM_LOGOUT)){
-
-            //CLEAR FLAG - IF USER CAME FROM LOGOUT AND THAN UPDATE FLAG
-            mSessionManager.updatePreferenceBoolean(Constants.KEY_ISFROM_LOGOUT, false);
-
-            Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthBiomatricAuthenticationActivity.class);
-            mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, true);
-            startActivity(mIntent);
-            finish();
-        } else {
+//        else if(mSessionManager.getPreferenceBoolean(Constants.KEY_ISFROM_LOGOUT)){
+//
+//            //CLEAR FLAG - IF USER CAME FROM LOGOUT AND THAN UPDATE FLAG
+//            mSessionManager.updatePreferenceBoolean(Constants.KEY_ISFROM_LOGOUT, false);
+//
+//            Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthBiomatricAuthenticationActivity.class);
+//            mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, true);
+//            startActivity(mIntent);
+//            finish();
+//        }
+        else {
             Intent mIntent = new Intent(NewAuthSplashScreen.this, HomeScreenTabLayout.class);
             mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, false);
             startActivity(mIntent);

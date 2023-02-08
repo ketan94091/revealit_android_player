@@ -249,7 +249,7 @@
     <string name="strOnlyLowerCase">Only lowercase a-z or numbers 1-5</string>
     <string name="strUsernameAvailable">Username available</string>
     <string name="strOTPwrong">Entered OTP is wrong!</string>
-    <string name="strEnterRightCampaignId">Enter the right campaign id or referral id</string>
+    <string name="strEnterRightCampaignId">revealit TV username or campaign ID does not exist.</string>
     <string name="strVerified">Verified</string>
     <string name="strGroup">Group</string>
     <string name="strThankYouForEnrolingPlatform">Thank you for enrolling on our platform.</string>

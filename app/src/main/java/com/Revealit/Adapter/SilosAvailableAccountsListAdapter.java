@@ -3,7 +3,6 @@ package com.Revealit.Adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<SilosAvailableAccountsListAdapter.ViewHolder> {
 
 
-
     private View view;
     private Context mContext;
     private ListOfActiveAccountsActivity mActivity;
@@ -35,12 +33,13 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
 
 
     public SilosAvailableAccountsListAdapter(Context mContext, ListOfActiveAccountsActivity mActivity, ArrayList<KeyStoreServerInstancesModel.Data> itemListData, SessionManager mSessionManager) {
-        this.mContext= mContext;
-        this.mActivity= mActivity;
-        this.itemListData =itemListData;
-        this.mSessionManager =mSessionManager;
+        this.mContext = mContext;
+        this.mActivity = mActivity;
+        this.itemListData = itemListData;
+        this.mSessionManager = mSessionManager;
 
     }
+
     public void updateListData(ArrayList<KeyStoreServerInstancesModel.Data> itemListData) {
 
         //CLEAR CURRENT LIST
@@ -53,7 +52,7 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView txtAccountUsername,txtAccountName;
+        private final TextView txtAccountUsername, txtAccountName;
         private final RelativeLayout relativeMain;
 
 
@@ -63,7 +62,7 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
 
             txtAccountUsername = (TextView) mView.findViewById(R.id.txtAccountUsername);
             txtAccountName = (TextView) mView.findViewById(R.id.txtAccountName);
-            relativeMain =(RelativeLayout)mView.findViewById(R.id.relativeMain);
+            relativeMain = (RelativeLayout) mView.findViewById(R.id.relativeMain);
 
 
         }
@@ -84,62 +83,65 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
     @Override
     public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
-           //SET ITEM TEXT
+        //SET ITEM TEXT
         holder.txtAccountUsername.setText(itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
-        holder.txtAccountName.setText("@"+itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
+        holder.txtAccountName.setText("@" + itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
 
 
         holder.relativeMain.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
 
-                    //CHECK IF USER DATA IS NOT NULL
-                    //IF TRUE -> CONTINUE FETCHING DATA
-                    //ELSE -> DISPLAY NOT FOUND MSG
-                    Log.e("OUT","OUT");
-                    if (itemListData.get(position) != null) {
-                        Log.e("IN","IN" +itemListData.get(position).getSubmitProfileModel().getauth_token() );
-                        mSessionManager.updatePreferenceString(Constants.KEY_USER_DATA, mSessionManager.getPreference("" + mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)));
-                        mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN, itemListData.get(position).getSubmitProfileModel().getauth_token());
-                        mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE, mContext.getResources().getString(R.string.strTokenBearer));
-                        mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME, itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
-                        //mSessionManager.updatePreferenceString(Constants.KEY_PROTON_WALLET_DETAILS,gson.toJson(body.getProton()));
-                        mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY, itemListData.get(position).getSubmitProfileModel().getrevealit_private_key());
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_REGISTRATION_DONE, true);
-                        mSessionManager.updatePreferenceString(Constants.KEY_MOBILE_NUMBER,itemListData.get(position).getMobileNumber());
+                //CHECK IF USER DATA IS NOT NULL
+                //IF TRUE -> CONTINUE FETCHING DATA
+                //ELSE -> DISPLAY NOT FOUND MSG
+                if (itemListData.get(position) != null) {
+                    mSessionManager.updatePreferenceString(Constants.KEY_USER_DATA, mSessionManager.getPreference("" + mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)));
+                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN, itemListData.get(position).getSubmitProfileModel().getauth_token());
+                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE, mContext.getResources().getString(R.string.strTokenBearer));
+                    mSessionManager.updatePreferenceString(Constants.PROTON_ACCOUNT_NAME, itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
+                    //mSessionManager.updatePreferenceString(Constants.KEY_PROTON_WALLET_DETAILS,gson.toJson(body.getProton()));
+                    mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY, itemListData.get(position).getSubmitProfileModel().getrevealit_private_key());
+                    mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_REGISTRATION_DONE, true);
+                    mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL, false);
+                    mSessionManager.updatePreferenceString(Constants.KEY_MOBILE_NUMBER, itemListData.get(position).getMobileNumber());
 
-                        //STORE DATA IN TO KEYSTORE
-                        CommonMethods.encryptKey(itemListData.get(position).getSubmitProfileModel().getProton().getPrivateKey(), Constants.KEY_PRIVATE_KEY,itemListData.get(position).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
-                        CommonMethods.encryptKey(itemListData.get(position).getSubmitProfileModel().getProton().getPublicKey(),Constants.KEY_PUBLIC_KEY, itemListData.get(position).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
-                        CommonMethods.encryptKey(itemListData.get(position).getSubmitProfileModel().getProton().getMnemonic(),Constants.KEY_MNEMONICS, itemListData.get(position).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
-                        CommonMethods.encryptKey(itemListData.get(position).getSubmitProfileModel().getProton().getPrivate_pem(),Constants.KEY_PRIVATE_KEY_PEM, itemListData.get(position).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
-                        CommonMethods.encryptKey(itemListData.get(position).getSubmitProfileModel().getProton().getPublic_pem(), Constants.KEY_PUBLIC_KEY_PEM,itemListData.get(position).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
+                    //STORE DATA IN TO KEYSTORE
+                    CommonMethods.encryptKey(itemListData.get(position).getSubmitProfileModel().getProton().getPrivateKey(), Constants.KEY_PRIVATE_KEY, itemListData.get(position).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
+                    CommonMethods.encryptKey(itemListData.get(position).getSubmitProfileModel().getProton().getPublicKey(), Constants.KEY_PUBLIC_KEY, itemListData.get(position).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
+                    CommonMethods.encryptKey(itemListData.get(position).getSubmitProfileModel().getProton().getMnemonic(), Constants.KEY_MNEMONICS, itemListData.get(position).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
+                    CommonMethods.encryptKey(itemListData.get(position).getSubmitProfileModel().getProton().getPrivate_pem(), Constants.KEY_PRIVATE_KEY_PEM, itemListData.get(position).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
+                    CommonMethods.encryptKey(itemListData.get(position).getSubmitProfileModel().getProton().getPublic_pem(), Constants.KEY_PUBLIC_KEY_PEM, itemListData.get(position).getSubmitProfileModel().getrevealit_private_key(), mSessionManager);
 
 
-                        //UPDATE FLAG IF USER IS ADMIN OR NOT
-                        if (itemListData.get(position).getSubmitProfileModel().getRole().equals(mContext.getResources().getString(R.string.strAdmin))) {
-                            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN, true);
-                        } else {
-                            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN, false);
-                        }
-
-                        //UPDATE ACTIVE FLAG
-                        if (itemListData.get(position).getSubmitProfileModel().getIs_activated().equals("1")) {
-                            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE, true);
-                        } else {
-                            mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE, false);
-                        }
-
-                        //UPDATE FLAG FOR APPLICATION MODE
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
-
-                        //GO TO BIOMETRIC CONFIRMATION ACTIVITY
-                        Intent mIntent = new Intent(mActivity, NewAuthBiomatricAuthenticationActivity.class);
-                        mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME, itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
-                        mActivity.startActivity(mIntent);
-                        mActivity.finishAffinity();
+                    //UPDATE FLAG IF USER IS ADMIN OR NOT
+                    if (itemListData.get(position).getSubmitProfileModel().getRole().equals(mContext.getResources().getString(R.string.strAdmin))) {
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN, true);
+                    } else {
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN, false);
                     }
+
+                    //UPDATE ACTIVE FLAG
+                    if (itemListData.get(position).getSubmitProfileModel().getIs_activated().equals("1")) {
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE, true);
+                    } else {
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE, false);
+                    }
+                    //UPDATE FLAG FOR APPLICATION MODE
+                    mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
+
+                    //GO TO BIOMETRIC CONFIRMATION ACTIVITY
+                    Intent mIntent = new Intent(mActivity, NewAuthBiomatricAuthenticationActivity.class);
+                    mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME, itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
+                    mIntent.putExtra(Constants.KEY_PRIVATE_KEY, itemListData.get(position).getSubmitProfileModel().getProton().getPrivateKey());
+                    mIntent.putExtra(Constants.KEY_PROTON_ACCOUNTNAME, itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
+                    mIntent.putExtra(Constants.KEY_USER_ROLE, itemListData.get(position).getSubmitProfileModel().getRole());
+                    mActivity.startActivity(mIntent);
+                    mActivity.finishAffinity();
+
+
                 }
+            }
         });
 
 

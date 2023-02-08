@@ -124,23 +124,31 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         }
 
 
-        //UPDATE UI BASED ON USER STATUS
-        updateUI(isUserIsActive);
 
-        //SET APPLICATION INSTALLED VERSION NAME AND SERVER NAME
-        txtAdmin.setText(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME) +" Server : "+  BuildConfig.VERSION_NAME);
-
-        //CHECK IF USER IS ADMIN
-        if(!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
+        if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL)){
+            linearAdmin.setVisibility(View.GONE);
             linearSettings.setVisibility(View.GONE);
+            linearAccount.setVisibility(View.VISIBLE);
+            linearHelp.setVisibility(View.VISIBLE);
         }else{
-            linearSettings.setVisibility(View.VISIBLE);
-        }
+            //UPDATE UI BASED ON USER STATUS
+            updateUI(isUserIsActive);
 
-        if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
-            linearAdmin.setVisibility(View.VISIBLE);
-        }else{
-            linearAdmin.setVisibility(View.INVISIBLE);
+            //SET APPLICATION INSTALLED VERSION NAME AND SERVER NAME
+            txtAdmin.setText(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME) +" Server : "+  BuildConfig.VERSION_NAME);
+
+            //CHECK IF USER IS ADMIN
+            if(!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN) ){
+                linearSettings.setVisibility(View.GONE);
+            }else{
+                linearSettings.setVisibility(View.VISIBLE);
+            }
+
+            if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){
+                linearAdmin.setVisibility(View.VISIBLE);
+            }else{
+                linearAdmin.setVisibility(View.INVISIBLE);
+            }
         }
 
     }
@@ -165,6 +173,9 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             linearAdmin.setOnClickListener(this);
             imgScanQRcode.setOnClickListener(this);
             imgLogo.setOnClickListener(this);
+        }else if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL)){
+            linearAccount.setOnClickListener(this);
+            linearHelp.setOnClickListener(this);
         }
 
     }

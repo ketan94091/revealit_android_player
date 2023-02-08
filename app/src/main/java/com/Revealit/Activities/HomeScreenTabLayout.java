@@ -134,8 +134,9 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
 
         viewBottomLine=(View)findViewById(R.id.viewBottomLine);
 
-        //GET INTENT DATA
-        isUserIsActive = mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_ACTIVE);
+        //IS USER IS ACTIVE = TRUE -> MEANS USER IS NOT ACTIVE -> ACCESS RESTRICTED TO ONLY USER PROFILE SCREEN
+        //FALS -> USER IS ACTIVE AND ALLOW THEM TO ACCESS THE APP
+        isUserIsActive = mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL);
 
         //INITIALISE FRAGMENTS FOR VIEW PAGER
         fragments = new ArrayList<>();
@@ -170,7 +171,7 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
         //DEFAULT SELECT PROFILE SCREEN IF USER IS FROM REGISTRATION PAGE
         //IF USER IS NOT ACTIVATED
         //IF USER ACTIVATED BUT HE IS FROM REGISTRATION SCREEN - FIRST SHOW THE PROFILE SCREEN THAN USUALL PLAY SCREEN
-        if (!isUserIsActive) {
+        if (isUserIsActive) {
             //SELECT USER PROFILE FRAGMENT
             selectPage(3);
             //DEFAULT ICON COLOR
@@ -213,7 +214,7 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
 
 
 
-        if (!isUserIsActive) {
+        if (isUserIsActive) {
 
             //MAKE VIEW PAGER SCROLLABLE FALSE
             viewPager.disableScroll(true);

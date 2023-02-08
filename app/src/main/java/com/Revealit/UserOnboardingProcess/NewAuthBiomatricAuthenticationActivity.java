@@ -8,8 +8,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -41,6 +41,7 @@ import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
@@ -213,7 +214,6 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 okhttp3.Request original = chain.request();
 
-                Log.e("HEADER"," "+mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN));
 
                 okhttp3.Request request = original.newBuilder()
                         .header("Content-Type", "application/json")
@@ -282,6 +282,21 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
                     }else{
                         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
+                    }
+
+                    //CHECK IF USERROLE IS CHANGED
+                    String privatekey = getIntent().getStringExtra(Constants.KEY_PRIVATE_KEY);
+                    String username = getIntent().getStringExtra(Constants.KEY_PROTON_ACCOUNTNAME);
+                    String userRole = getIntent().getStringExtra(Constants.KEY_USER_ROLE);
+                    if(privatekey != null && username != null && userRole != null &&  !userRole.equals(response.body().getRole())){
+                        try {
+                            if(new UpdateUserRoleInAndroidKeyStoreTask(privatekey,username,response.body().getRole()).execute(mSessionManager).get()){}
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
                     }
 
 
@@ -504,6 +519,22 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
                     }
 
+
+                    //CHECK IF USER ROLE IS CHANGED
+                    String privatekey = getIntent().getStringExtra(Constants.KEY_PRIVATE_KEY);
+                    String username = getIntent().getStringExtra(Constants.KEY_PROTON_ACCOUNTNAME);
+                    String userRole = getIntent().getStringExtra(Constants.KEY_USER_ROLE);
+                    if(privatekey != null && username != null && userRole != null &&  !userRole.equals(response.body().getRole())){
+                        try {
+                            if(new UpdateUserRoleInAndroidKeyStoreTask(privatekey,username,response.body().getRole()).execute(mSessionManager).get()){}
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
                     //FOR MAINTANANCE
                     boolean isAppInMaintainance = false;
                     boolean isAppVersionIsNotOk = false;
@@ -573,5 +604,33 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
     }
 
 
+}
+class UpdateUserRoleInAndroidKeyStoreTask extends AsyncTask<SessionManager, Integer, Boolean> {
+
+    String strPrivateKey ="";
+    String strUsername = "";
+    String strUserRole = "";
+
+    public UpdateUserRoleInAndroidKeyStoreTask(String privateKey, String strUsername,String role) {
+
+        this.strPrivateKey =privateKey;
+        this.strUsername = strUsername;
+        this.strUserRole = role;
+    }
+    @Override
+    protected Boolean doInBackground(SessionManager... mSessionManager) {
+        return CommonMethods.updateUserRoleToKeyChain(mSessionManager[0],strPrivateKey,strUsername,strUserRole);
+    }
+
+    @Override
+    protected void onPreExecute() {
+
+    }
+
+    @Override
+    protected void onPostExecute(Boolean searchResults) {
+        super.onPostExecute(searchResults);
+
+    }
 }
 

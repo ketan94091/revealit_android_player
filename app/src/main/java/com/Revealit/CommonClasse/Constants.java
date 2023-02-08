@@ -192,6 +192,7 @@ public class Constants {
   public  static  final  String KEY_QR_CODE_FROM_CAMERA ="keyQrCodeFromCamera";
   public  static  final  String KEY_QR_CODE_FROM_CAMERA_VALUE ="keyQrCodeFromCameraValue";
   public  static  final  String KEY_PROTON_ACCOUNTNAME ="keyProtonAccountName";
+  public  static  final  String KEY_USER_ROLE ="keyUserRole";
   public  static  final  String KEY_MNEMONICS ="keyMnemonics";
   public  static  final  String KEY_MOBILE_NUMBER ="keyMobileNumber";
   public  static  final  String KEY_USER_NOT_FOUND_IMPORT_KEY ="keyUserNotfoundImportKey";
@@ -233,6 +234,7 @@ public class Constants {
   public  static  final  String KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION="keyMinimumAcceptableApiVersion";
   public  static  final  String KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER="keyProfileReminder";
   public  static  final  String KEY_PUBLIC_SETTING_BACKUP_REMINDER="keyBackupReminder";
+  public  static  final  String KEY_IS_USER_CANCEL_REFERRAL="keyIsUserCancelReferral";
 
 
     public static String API_KEY = "AIzaSyC4elGdU9Oxi2DPIShG4pRW2gRBZOeE0pM";

@@ -59,7 +59,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
     private TextView txtUsername,txtContinueDisable,txtContinueEnabled,txtPromoWarnings,txtPromoAmount,txtInviteQuestion;
     private EditText edtPromo;
     private ImageView imgTelegram,imgInstagram,imgCurrencyIcon,imgPromoStatusFalse,imgPromoStatus;
-    private LinearLayout linearPromoWarnings;
+    private LinearLayout linearImgCancel,linearPromoWarnings;
     long delay = 2000; // 2 seconds after user stops typing
     long delayForMobile = 2000; // 2 seconds after user stops typing
     long last_text_edit = 0;
@@ -110,6 +110,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
         imgInstagram=(ImageView)findViewById(R.id.imgInstagram);
 
         linearPromoWarnings=(LinearLayout)findViewById(R.id.linearPromoWarnings);
+        linearImgCancel=(LinearLayout)findViewById(R.id.linearImgCancel);
 
         //DISPLAY USER NAME
         txtUsername.setText(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
@@ -176,6 +177,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
         txtContinueEnabled.setOnClickListener(this);
         imgTelegram.setOnClickListener(this);
         imgInstagram.setOnClickListener(this);
+        linearImgCancel.setOnClickListener(this);
 
     }
 
@@ -199,6 +201,14 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
 
                 Intent mInstagramBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.strInstagramURL)));
                 startActivity(mInstagramBrowser);
+
+                break;
+            case R.id.linearImgCancel:
+
+                    //GO TO NEXT ACTIVITY
+                    Intent mIntentCancel = new Intent(AddRefferalAndEarnActivity.this, HomeScreenTabLayout.class);
+                    startActivity(mIntentCancel);
+                    finishAffinity();
 
                 break;
 
@@ -267,11 +277,13 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
                     updateUI(response.body(),1);
 
                 }else{
+
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        CommonMethods.buildDialog(mContext,"Invalid Referral");
+                        //CommonMethods.buildDialog(mContext,"Invalid Referral");
+
                     } catch (Exception e) {
-                        CommonMethods.buildDialog(mContext,"Invalid Referral");
+
 
                     }
 
@@ -302,6 +314,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
                 txtContinueEnabled.setVisibility(View.VISIBLE);
                 imgPromoStatus.setVisibility(View.GONE);
                 imgPromoStatusFalse.setVisibility(View.GONE);
+                linearPromoWarnings.setVisibility(View.GONE);
                 break;
             case 1:
                 txtContinueDisable.setVisibility(View.GONE);
@@ -328,6 +341,8 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
                 txtContinueEnabled.setVisibility(View.GONE);
                 imgPromoStatus.setVisibility(View.GONE);
                 imgPromoStatusFalse.setVisibility(View.VISIBLE);
+                linearPromoWarnings.setVisibility(View.VISIBLE);
+                txtPromoWarnings.setText(getString(R.string.strEnterRightCampaignId));
                 break;
         }
 

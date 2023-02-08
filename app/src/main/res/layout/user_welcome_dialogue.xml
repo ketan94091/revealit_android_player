@@ -31,6 +31,13 @@
 
                 <ImageView
                     android:id="@+id/imgCancel"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right"
+                    android:src="@mipmap/icon_cross" />
+
+                <ImageView
+                    android:id="@+id/imgAppIcon"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center"
