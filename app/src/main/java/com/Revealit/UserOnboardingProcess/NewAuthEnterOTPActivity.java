@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -259,7 +258,6 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                 .setLenient()
                 .create();
 
-        Log.e("tst",""+mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY));
 
         final OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
