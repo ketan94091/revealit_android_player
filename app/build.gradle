@@ -6,12 +6,12 @@ android {
     sourceSets.main.jniLibs.srcDirs = ["libs"]
 
     defaultConfig {
-        applicationId "com.Revealit"
+        applicationId "com.Revealit"// com.revealit.tv
         minSdkVersion 23
         targetSdkVersion 31
         multiDexEnabled true
         versionCode 1
-        versionName "0.89.90"
+        versionName "0.89.91"//1.0.0
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
        //testInstrumentationRunner "com.android.support.test.runner.AndroidJUnitRunner"
 

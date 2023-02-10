@@ -81,6 +81,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
     private String privateKeyPem , publicKeyPem, publicKey, accountName;
     private Gson mGson;
     ArrayList<KeyStoreServerInstancesModel.Data> selectedSilosAccountsList = new ArrayList<>();
+    private String edtPrivateKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +127,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                 if(editable.length() != 0){
                     txtContinueEnabled.setVisibility(View.VISIBLE);
                     txtContinueDisable.setVisibility(View.GONE);
+
                 }else {
                     txtContinueEnabled.setVisibility(View.GONE);
                     txtContinueDisable.setVisibility(View.VISIBLE);
@@ -403,7 +405,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
 
             //STORE DATA IN TO KEYSTORE
             //FOR DISPLAY PURPOSE
-            CommonMethods.encryptKey(edtImportKey.getText().toString().trim(), Constants.KEY_PRIVATE_KEY ,body.getRevealit_private_key(), mSessionManager);
+            CommonMethods.encryptKey(edtPrivateKey, Constants.KEY_PRIVATE_KEY ,body.getRevealit_private_key(), mSessionManager);
             CommonMethods.encryptKey(publicKey,Constants.KEY_PUBLIC_KEY,body.getRevealit_private_key(), mSessionManager);
             CommonMethods.encryptKey("xyz",Constants.KEY_MNEMONICS,body.getRevealit_private_key(), mSessionManager);
             CommonMethods.encryptKey(privateKeyPem,Constants.KEY_PRIVATE_KEY_PEM,body.getRevealit_private_key(), mSessionManager);
@@ -530,14 +532,21 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
     }
 
     private boolean checkPrivateKeyIsEmpty() {
-        if(edtImportKey.getText().toString().trim().isEmpty()){
+
+        if(edtImportKey.getText().toString().contains(" ")){
+           CommonMethods.showDialogWithCustomMessage(mContext,"Entered key not valid, Please remove spaces from key");
+        }else{
+            edtPrivateKey  =edtImportKey.getText().toString().replaceAll("\n", "");
+        }
+
+        if(edtPrivateKey.isEmpty()){
             CommonMethods.buildDialog(mContext,getResources().getString(R.string.strEnterPrivateKey));
             return false;
-        }else if(edtImportKey.getText().toString().trim().length() < 10){
+        }else if(edtPrivateKey.length() < 10){
             CommonMethods.buildDialog(mContext,getResources().getString(R.string.strInvalidPrivateKey));
            return false;
-        }else if(CommonMethods.checkEnterPrivateKeyIsFromOtherSilos(mSessionManager,edtImportKey.getText().toString().trim())) {
-           if(CommonMethods.checkEnterPrivateKeyUserHasDeletedAccount(mSessionManager,edtImportKey.getText().toString().trim())){
+        }else if(CommonMethods.checkEnterPrivateKeyIsFromOtherSilos(mSessionManager,edtPrivateKey)) {
+           if(CommonMethods.checkEnterPrivateKeyUserHasDeletedAccount(mSessionManager,edtPrivateKey)){
                openDeletedUserInfoNeededDialogue();
            }else{
                openUserAlreadyAvailableDialogue();
@@ -547,7 +556,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
 
        }else{
             try {
-                EosPrivateKey mEosPrivateKeyPem = new EosPrivateKey(edtImportKey.getText().toString().trim());
+                EosPrivateKey mEosPrivateKeyPem = new EosPrivateKey(edtPrivateKey);
                 privateKeyPem = ""+mEosPrivateKeyPem;
                 publicKeyPem = ""+mEosPrivateKeyPem.getPublicKey().toString();
 
