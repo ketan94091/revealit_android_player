@@ -178,7 +178,7 @@ public class CommonMethods {
 
     public static void printLogE(String strTAG, String strMessage) {
 
-        if (true) {
+        if (false) {
             Log.e(strTAG, strMessage);
         }
 
