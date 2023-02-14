@@ -10,9 +10,9 @@ android {
         minSdkVersion 23
         targetSdkVersion 31
         multiDexEnabled true
-        versionCode 1
-        versionName "0.89.92"//1.0.0
-        //versionName "1.0.0"//1.0.0
+        versionCode 3
+        //versionName "0.89.92"//1.0.0
+        versionName "1.0.1"//1.0.0
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
        //testInstrumentationRunner "com.android.support.test.runner.AndroidJUnitRunner"
 
@@ -21,8 +21,20 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // Enables code shrinking, obfuscation, and optimization for only
+            // your project's release build type.
+            minifyEnabled true
+
+            // Enables resource shrinking, which is performed by the
+            // Android Gradle plugin.
+            shrinkResources true
+
+            // Includes the default ProGuard rules files that are packaged with
+            // the Android Gradle plugin. To learn more, go to the section about
+            // R8 configuration files.
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
         }
     }
 

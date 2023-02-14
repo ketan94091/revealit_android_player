@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -373,7 +374,6 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
 
         //REGISTER PUSHER DEVICE INTEREST
         PushNotifications.addDeviceInterest(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
-        //PushNotifications.addDeviceInterest("debug-lapyt3.rtv");
 
     }
 
@@ -417,12 +417,25 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
             @Override
             public void onMessageReceived(RemoteMessage remoteMessage) {
                 String messagePayload =gson.toJson(remoteMessage);
-               //Log.e("PAYLOAD",""+messagePayload);
+               Log.e("PAYLOAD",""+messagePayload);
                 if (remoteMessage.getData() != null) {
                     mActivity.runOnUiThread(new Runnable() {
                         public void run() {
                             try {
-                                openBottomBarForAuth(messagePayload);
+
+                                if(new JSONObject(messagePayload).getJSONObject("bundle").getJSONObject("mMap").get("gcm.notification.body").toString().contains("message_type")){
+
+                                    JSONObject obj = new JSONObject(new JSONObject(messagePayload).getJSONObject("bundle").getJSONObject("mMap").get("gcm.notification.body").toString());
+
+                                    if(obj.getString("message_type").replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "").equals("300")){
+                                        openBottomBarForReward(messagePayload);
+                                    }else{
+                                        openBottomBarForAuth(messagePayload);
+                                    }
+                                }else{
+                                    openBottomBarForAuth(messagePayload);
+                                }
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -435,6 +448,46 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
                 }
             }
         });
+    }
+
+    private void openBottomBarForReward(String messagePayload) throws JSONException {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext);
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_reward_push);
+        FrameLayout bottomSheet = bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        behavior.setPeekHeight(CommonMethods.getScreenHeight(mActivity));
+        behavior.setHideable(false);
+
+        ImageView imgBackArrow = bottomSheetDialog.findViewById(R.id.imgBackArrow);
+        TextView txtNotificationMsg = bottomSheetDialog.findViewById(R.id.txtNotificationMsg);
+        TextView txtReferMoreFriends = bottomSheetDialog.findViewById(R.id.txtReferMoreFriends);
+
+        //TEXT NOTIFICATION MSG
+        txtNotificationMsg.setText(""+new JSONObject(messagePayload).getJSONObject("bundle").getJSONObject("mMap").get("gcm.notification.title"));
+
+
+        //String pusherId =""+new JSONObject(new JSONObject(messagePayload).getJSONObject("bundle").getJSONObject("mMap").getString("pusher")).get("publishId");
+
+        imgBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+               bottomSheetDialog.cancel();
+
+            }
+        });
+
+        txtReferMoreFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                bottomSheetDialog.cancel();
+
+            }
+        });
+        bottomSheetDialog.show();
     }
 
     private void openBottomBarForAuth(String messagePayload) throws JSONException {
