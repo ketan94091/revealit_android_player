@@ -335,11 +335,15 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                     saveDataToTheAndroidKeyStore(response.body(),username.replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", ""));
 
                 }else if(response.code() == Constants.API_CODE_404){
-                      displayUserNotFoundDialogue();
+                      displayMoreInfoNeededDialogue();
                 } else {
+                    //displayAlertDialogue();
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         CommonMethods.buildDialog(mContext,"Error : "+ jObjError.getString("message"));
+                        if(jObjError.getInt("error_code") == 604){
+                            displayMoreInfoNeededDialogue();
+                        }
                     } catch (Exception e) {
                         CommonMethods.buildDialog(mContext,"Error : "+e.getMessage());
 
@@ -610,7 +614,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                 mSessionManager.updatePreferenceBoolean(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_IS_USER_DELETED, true);
 
                 //OPEN MORE INFO NEEDED DIALOGUE
-                displayUserNotFoundDialogue();
+                displayMoreInfoNeededDialogue();
             }
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -796,7 +800,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
         });
         mAlertDialog.show();
     }
-    private void displayUserNotFoundDialogue() {
+    private void displayMoreInfoNeededDialogue() {
 
         android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
         dialogBuilder.setCancelable(false);

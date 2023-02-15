@@ -136,6 +136,7 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
                     mIntent.putExtra(Constants.KEY_PRIVATE_KEY, itemListData.get(position).getSubmitProfileModel().getProton().getPrivateKey());
                     mIntent.putExtra(Constants.KEY_PROTON_ACCOUNTNAME, itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
                     mIntent.putExtra(Constants.KEY_USER_ROLE, itemListData.get(position).getSubmitProfileModel().getRole());
+                    mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, true);
                     mActivity.startActivity(mIntent);
                     mActivity.finishAffinity();
 

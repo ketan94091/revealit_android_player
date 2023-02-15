@@ -7,6 +7,7 @@ public class UserDetailsFromPublicKeyModel {
     String token;
     String role;
     String is_activated;
+    int remove;
     String audience;
 
     public String getStatus() {
@@ -43,6 +44,14 @@ public class UserDetailsFromPublicKeyModel {
 
     public String getIs_activated() {
         return is_activated;
+    }
+
+    public int getRemove() {
+        return remove;
+    }
+
+    public void setRemove(int remove) {
+        this.remove = remove;
     }
 
     public void setIs_activated(String is_activated) {

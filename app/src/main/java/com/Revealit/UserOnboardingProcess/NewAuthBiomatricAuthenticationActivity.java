@@ -8,12 +8,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -357,10 +359,11 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                     callAuthenticationAPI();
 
                 }else {
-
-                    displayAlertDialogue();
-
-
+                    if(response.body().getError_code() ==  604){
+                        displayUserNotFoundDialogue();
+                    }else{
+                        CommonMethods.buildDialog(mContext,"Error : "+response.body().getError_msg());
+                    }
                 }
 
 
@@ -560,8 +563,6 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                     }
 
 
-
-
                     //CHECK IF APPLICATION IS IN MAINTENANCE
                     if(isAppInMaintainance){
                         //MOVE TO MAINTENANCE SCREEN
@@ -584,8 +585,24 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                 }else {
 
-                    displayAlertDialogue();
-
+                    if(response.body().getError_code() ==  604){
+                        displayUserNotFoundDialogue();
+                    }else{
+                        CommonMethods.buildDialog(mContext,"Error : "+response.body().getError_msg());
+                    }
+//                    //displayAlertDialogue();
+//                    try {
+//                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+//
+//                        if(jObjError.getInt("error_code") ==  604){
+//                            displayUserNotFoundDialogue();
+//                        }else{
+//                            CommonMethods.buildDialog(mContext,"Error : "+ jObjError.getString("message"));
+//                        }
+//                    } catch (Exception e) {
+//                        CommonMethods.buildDialog(mContext,"Error : "+e.getMessage());
+//
+//                    }
                 }
             }
 
@@ -600,6 +617,48 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
             }
         });
+
+    }
+    private void displayUserNotFoundDialogue() {
+
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
+        dialogBuilder.setCancelable(false);
+        LayoutInflater inflater = mActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.import_key_user_notfound, null);
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialogBuilder.setView(dialogView);
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        TextView txtContinue = (TextView) dialogView.findViewById(R.id.txtContinue);
+        LinearLayout linearCancel = (LinearLayout) dialogView.findViewById(R.id.linearCancel);
+
+
+        linearCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+            }
+        });
+
+
+        txtContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //OPEN ENTER MOBILE NUMBER APP
+                Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this,NewAuthMobileAndPromoActivity.class);
+                mIntent.putExtra(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY, true);
+                startActivity(mIntent);
+
+
+                mAlertDialog.dismiss();
+
+            }
+        });
+
+        mAlertDialog.show();
 
     }
 

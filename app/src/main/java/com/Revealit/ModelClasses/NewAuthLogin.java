@@ -9,6 +9,8 @@ public class NewAuthLogin {
     private String status;
     private String is_activated;
     private String role;
+    private  int error_code;
+    private  String error_msg;
     private List<NewAuthLoginCallbackModel.PublicSetting> public_settings;
 
     public String getToken() {
@@ -59,6 +61,22 @@ public class NewAuthLogin {
 
     public void setPublic_settings(List<NewAuthLoginCallbackModel.PublicSetting> public_settings) {
         this.public_settings = public_settings;
+    }
+
+    public int getError_code() {
+        return error_code;
+    }
+
+    public void setError_code(int error_code) {
+        this.error_code = error_code;
+    }
+
+    public String getError_msg() {
+        return error_msg;
+    }
+
+    public void setError_msg(String error_msg) {
+        this.error_msg = error_msg;
     }
 
     public class PublicSetting {
@@ -148,6 +166,8 @@ public class NewAuthLogin {
         public void setBlock_producers(List<BlockProducer> block_producers) {
             this.block_producers = block_producers;
         }
+
+
     }
 
     private class BlockProducer {

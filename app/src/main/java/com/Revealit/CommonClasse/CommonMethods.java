@@ -178,7 +178,7 @@ public class CommonMethods {
 
     public static void printLogE(String strTAG, String strMessage) {
 
-        if (false) {
+        if (true) {
             Log.e(strTAG, strMessage);
         }
 
@@ -431,22 +431,23 @@ public class CommonMethods {
 
     }
     public static boolean calculateAcceptableVersion(String minimum_acceptable_version) {
+        return  false;
 
-        //CALCULATE INSTALLED VERSION
-        String[] installedVersion = BuildConfig.VERSION_NAME.split("\\.");
-        //Log.e("LAST",installedVersion[installedVersion.length]);
-
-        String[] acceptableVersion = minimum_acceptable_version.split("\\.");
-        // Log.e("MIN_LAST",acceptableVersion[acceptableVersion.length]);
-
-        //FIND NUMBER FOR INSTALLED VERSION
-        Double installedNumber = (Double.parseDouble(installedVersion[0]+"."+installedVersion[1]) * 10000 + Integer.parseInt(installedVersion[2])) ;
-        Double minimumNumber = (Double.parseDouble(acceptableVersion[0]+"."+acceptableVersion[1]) * 10000 + Integer.parseInt(acceptableVersion[2])) ;
-
-        if(installedNumber.intValue() < minimumNumber.intValue()){
-            return true;
-        }
-        return false;
+//        //CALCULATE INSTALLED VERSION
+//        String[] installedVersion = BuildConfig.VERSION_NAME.split("\\.");
+//        //Log.e("LAST",installedVersion[installedVersion.length]);
+//
+//        String[] acceptableVersion = minimum_acceptable_version.split("\\.");
+//        // Log.e("MIN_LAST",acceptableVersion[acceptableVersion.length]);
+//
+//        //FIND NUMBER FOR INSTALLED VERSION
+//        Double installedNumber = (Double.parseDouble(installedVersion[0]+"."+installedVersion[1]) * 10000 + Integer.parseInt(installedVersion[2])) ;
+//        Double minimumNumber = (Double.parseDouble(acceptableVersion[0]+"."+acceptableVersion[1]) * 10000 + Integer.parseInt(acceptableVersion[2])) ;
+//
+//        if(installedNumber.intValue() < minimumNumber.intValue()){
+//            return true;
+//        }
+//        return false;
     }
 
     public static Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -1104,6 +1105,94 @@ public class CommonMethods {
 
                     if( jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("account_name").equals(username) && jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)) {
                         mSubmitProfileModel.setRole(adminChangedRole);
+                    }
+
+                    mSubmitProfileModel.setServerInstance(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("serverInstance"));
+                    mSubmitProfileModel.setStatus(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("status"));
+
+                    SubmitProfileModel.Proton mProton = new SubmitProfileModel.Proton();
+                    mProton.setAccountName(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("account_name"));
+                    mProton.setMnemonic(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("mnemonic"));
+                    mProton.setPrivateKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key"));
+                    mProton.setPrivate_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_pem"));
+                    mProton.setPublicKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_key"));
+                    mProton.setPublic_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_pem"));
+                    mSubmitProfileModel.setProton(mProton);
+
+                    mModel.setSubmitProfileModel(mSubmitProfileModel);
+
+                    dataArrayList.add(mModel);
+
+
+
+                }
+
+                //STORE WHOLE ARRAY IN TO STRING FORMAT IN KEYSTORE
+                CommonMethods.encryptKey(""+mGson.toJson(dataArrayList),  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS, mSessionManager);
+
+
+                return true;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            return false;
+        }
+
+        return false;
+    }
+    public static boolean updateUserDetailsFromShortOnboardinToKeyChain(SessionManager mSessionManager,
+                                                                        String privateKey,
+                                                                        String username,
+                                                                        String adminChangedRole,
+                                                                        String revealitPrivateKey,
+                                                                        String token,
+                                                                        int isUserActivate,
+                                                                        int isUserRemoved,
+                                                                        String audience) {
+
+        Gson mGson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                .serializeNulls()
+                .create();
+
+        if(!checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
+
+            //CONVERT DATA TO JSON ARRAY
+            //CREATE NEW ARRAY FROM THE STRING ARRAY
+            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
+            try {
+                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData(mSessionManager));
+                ArrayList<KeyStoreServerInstancesModel.Data>  dataArrayList = new ArrayList<>();
+
+                for (int i=0 ;i < jsonArray.length();i++){
+
+                    KeyStoreServerInstancesModel.Data mModel = new KeyStoreServerInstancesModel.Data();
+                    mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
+                    mModel.setMobileNumber(jsonArray.getJSONObject(i).getString("mobileNumber"));
+                    mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
+                    mModel.setIsAccountRemoved(jsonArray.getJSONObject(i).getInt("isAccountRemoved"));
+
+
+
+                    SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
+                    mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
+                    mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("token"));
+                    mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
+                    mSubmitProfileModel.setIs_activated(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
+                    mSubmitProfileModel.setMessage(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("message"));
+                    mSubmitProfileModel.setrevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("revealit_private_key"));
+                    mSubmitProfileModel.setRole(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("role"));
+
+                    //CHECK FOR PERTICULAR USER AND THAN CHANGE THE VALUES IN KEYCHAIN
+                    if( jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("account_name").equals(username) && jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)) {
+                        mSubmitProfileModel.setRole(adminChangedRole);
+                        mSubmitProfileModel.setAudience(audience);
+                        mSubmitProfileModel.setauth_token(token);
+                        mSubmitProfileModel.setIs_activated(""+isUserActivate);
+                        mSubmitProfileModel.setrevealit_private_key(revealitPrivateKey);
                     }
 
                     mSubmitProfileModel.setServerInstance(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("serverInstance"));

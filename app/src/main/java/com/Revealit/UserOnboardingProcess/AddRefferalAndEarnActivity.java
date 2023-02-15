@@ -271,7 +271,9 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
 
                 CommonMethods.printLogE("Response @ apiSendInvites: ", "" + gson.toJson(response.body()));
 
-                if (!response.body().getAsJsonObject().get("status").toString().replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "").equals("error") ) {
+
+
+                if (response.code() == 200 && !response.body().getAsJsonObject().get("status").toString().replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "").equals("error") ) {
 
                     //UPDATE INVITE UI
                     updateUI(response.body(),1);

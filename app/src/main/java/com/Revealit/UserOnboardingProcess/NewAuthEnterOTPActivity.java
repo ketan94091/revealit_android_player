@@ -3,6 +3,7 @@ package com.Revealit.UserOnboardingProcess;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -39,6 +40,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -294,14 +296,33 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                     //UPDATE USER DELETED FLAG = 0
                     if(mSessionManager.getPreferenceBoolean(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_IS_USER_DELETED)){
                         if(CommonMethods.updateUserAccountActivationFlag(mSessionManager,mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY),mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME))){
-
                             //AFTER UPDATING FLAG
                             //GET USER DETAILS AND LOGGED IN BY SAVING REQUIRE PARAMETERS TO SESSION MANAGER
                             getEnteredPrivateKeyDetails(response.body());
                         }
                     }else{
-                        //SAVE DATA TO THE KEYSTORE IF USER IS DELETED FROM LOCAL/FROM SERVER
-                        saveDataToTheAndroidKeyStore(response.body(), mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME));
+
+                        if(CommonMethods.checkEnterPrivateKeyIsFromOtherSilos(mSessionManager,mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY))) {
+                            //UPDATE EXISTING DETAILS TO KEYSTORE
+                            try {
+                                if(new UpdateUserDetailsInAndroidKeyStoreTask(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY),mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME),response.body().getRole(), response.body().getRevealit_private_key(),response.body().getAuth_token(), Integer.parseInt(response.body().getIs_activated()), response.body().getRemove(),response.body().getAudience()).execute(mSessionManager).get()){
+                                    //GO TO NEXT ACTIVITY
+                                    Intent mIntent = new Intent(NewAuthEnterOTPActivity.this, HomeScreenTabLayout.class);
+                                    startActivity(mIntent);
+                                    finishAffinity();
+                                }
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }else{
+                            //SAVE DATA TO THE KEYSTORE IF USER IS DELETED FROM LOCAL/FROM SERVER
+                            saveDataToTheAndroidKeyStore(response.body(), mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME));
+
+                        }
+
+
 
                     }
 
@@ -367,6 +388,15 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
         //UPDATE FLAG FOR APPLICATION MODE
         mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
 
+        //UPDATE EXISTING DETAILS TO KEYSTORE
+        try {
+            if(new UpdateUserDetailsInAndroidKeyStoreTask(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY),mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME),body.getRole(), body.getRevealit_private_key(),body.getAuth_token(), Integer.parseInt(body.getIs_activated()), body.getRemove(),body.getAudience()).execute(mSessionManager).get()){}
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         //GO TO BIOMETRIC CONFIRMATION ACTIVITY
         Intent mIntent = new Intent(mActivity, NewAuthBiomatricAuthenticationActivity.class);
         mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME, mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME));
@@ -401,8 +431,6 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
             mSubmitModel.setMessage("");
             mSubmitModel.setError_code(0);
             mSubmitModel.setServerInstance("");
-
-
 
             mSessionManager.updatePreferenceString(Constants.KEY_USER_DATA, ""+mGson.toJson(mSubmitModel));
             mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN ,body.getAuth_token());
@@ -439,6 +467,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
 
             //UPDATE FLAG FOR APPLICATION MODE
             mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
+
 
             //SET KEY STORE INSTANCE DATA
             storeKeyStoreInstances(mSubmitModel);
@@ -806,4 +835,48 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
 
 
 
+
+}
+class UpdateUserDetailsInAndroidKeyStoreTask extends AsyncTask<SessionManager, Integer, Boolean> {
+
+    String strPrivateKey ="";
+    String strUsername = "";
+    String strUserRole = "";
+    String revealitPrivateKey = "";
+    String token = "";
+    int isUserActivate ;
+    int isUserRemoved ;
+    String audience = "";
+
+    public UpdateUserDetailsInAndroidKeyStoreTask(String privateKey, String strUsername,String role,String revealitPrivateKey,
+                                                  String token,
+                                                  int isUserActivate,
+                                                  int isUserRemoved,
+                                                  String audience) {
+
+        this.strPrivateKey =privateKey;
+        this.strUsername = strUsername;
+        this.strUserRole = role;
+        this.revealitPrivateKey = revealitPrivateKey;
+        this.token = token;
+        this.isUserActivate = isUserActivate;
+        this.isUserRemoved = isUserRemoved;
+        this.audience = audience;
+    }
+    @Override
+    protected Boolean doInBackground(SessionManager... mSessionManager) {
+        return CommonMethods.updateUserDetailsFromShortOnboardinToKeyChain(mSessionManager[0],strPrivateKey,strUsername,strUserRole,
+                revealitPrivateKey,token,isUserActivate, isUserRemoved,audience);
+    }
+
+    @Override
+    protected void onPreExecute() {
+
+    }
+
+    @Override
+    protected void onPostExecute(Boolean searchResults) {
+        super.onPostExecute(searchResults);
+
+    }
 }

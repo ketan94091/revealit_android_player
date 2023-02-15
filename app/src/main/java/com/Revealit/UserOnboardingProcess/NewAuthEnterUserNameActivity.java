@@ -324,10 +324,10 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
             mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
         }
 
-//        //UPDATE SESSION VALUES
-//        mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
-//        mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
-//        mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
+        //UPDATE SESSION VALUES
+        mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
+        mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
+        mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
 
 
 
@@ -426,7 +426,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_GOOGLE_DRIVE_BACKUP_DONE, false);
 
         //GO TO NEXT ACTIVITY
-        Intent mIntent = new Intent(NewAuthEnterUserNameActivity.this,InviteAndEarnActivity.class);
+        Intent mIntent = new Intent(NewAuthEnterUserNameActivity.this,AddRefferalAndEarnActivity.class);
         mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME ,body.getProton().getAccountName());
         startActivity(mIntent);
 
