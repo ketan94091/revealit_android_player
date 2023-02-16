@@ -585,7 +585,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                 }else {
 
-                    if(response.body().getError_code() ==  604){
+                    if(response.code() ==  404 ){
                         displayUserNotFoundDialogue();
                     }else{
                         CommonMethods.buildDialog(mContext,"Error : "+response.body().getError_msg());

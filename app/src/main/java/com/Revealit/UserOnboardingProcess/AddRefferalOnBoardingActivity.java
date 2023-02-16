@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -51,15 +49,15 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class AddRefferalAndEarnActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddRefferalOnBoardingActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "InviteAndEarnActivity";
     private Activity mActivity;
     private Context mContext;
     private SessionManager mSessionManager;
     private DatabaseHelper mDatabaseHelper;
-    private TextView txtUsername,txtContinueDisable,txtContinueEnabled,txtPromoWarnings,txtPromoAmount,txtInviteQuestion;
+    private TextView txtContinueDisable,txtContinueEnabled,txtPromoWarnings,txtPromoAmount,txtInviteQuestion;
     private EditText edtPromo;
-    private ImageView imgTelegram,imgInstagram,imgCurrencyIcon,imgClearId;
+    private ImageView imgCurrencyIcon,imgClearId;
     private LinearLayout linearImgCancel,linearPromoWarnings;
     long delay = 2000; // 2 seconds after user stops typing
     long delayForMobile = 2000; // 2 seconds after user stops typing
@@ -68,6 +66,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
     private Runnable input_promo = new Runnable() {
         public void run() {
             if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
+
                 //API SETTINGS DATA CALL
                 apiInviteSettings(edtPromo.getText().toString());
 
@@ -75,11 +74,10 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_refferal_and_earn);
+        setContentView(R.layout.activity_add_refferal_to_activate_account);
         setIds();
         setOnClicks();
     }
@@ -88,8 +86,8 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
 
     private void setIds() {
 
-        mActivity = AddRefferalAndEarnActivity.this;
-        mContext = AddRefferalAndEarnActivity.this;
+        mActivity = AddRefferalOnBoardingActivity.this;
+        mContext = AddRefferalOnBoardingActivity.this;
 
         mSessionManager = new SessionManager(mContext);
         mSessionManager.openSettings();
@@ -102,23 +100,22 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
         txtPromoWarnings = (TextView) findViewById(R.id.txtPromoWarnings);
         txtContinueEnabled = (TextView) findViewById(R.id.txtContinueEnabled);
         txtContinueDisable = (TextView) findViewById(R.id.txtContinueDisable);
-        txtUsername = (TextView) findViewById(R.id.txtUsername);
 
         edtPromo = (EditText)findViewById(R.id.edtPromo);
 
         imgClearId =(ImageView)findViewById(R.id.imgClearId);
         imgCurrencyIcon=(ImageView)findViewById(R.id.imgCurrencyIcon);
-        imgTelegram=(ImageView)findViewById(R.id.imgTelegram);
-        imgInstagram=(ImageView)findViewById(R.id.imgInstagram);
 
         linearPromoWarnings=(LinearLayout)findViewById(R.id.linearPromoWarnings);
         linearImgCancel=(LinearLayout)findViewById(R.id.linearImgCancel);
 
-        //DISPLAY USER NAME
-        txtUsername.setText(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+
+        //SET DYNAMIC QUESTION
+        txtInviteQuestion.setText(mSessionManager.getPreference(Constants.KEY_INVITE_QUESTION));
 
         //DISPLAY DYNAMIC PLACE HOLDER FROM SETTING API
         edtPromo.setHint(mSessionManager.getPreference(Constants.KEY_INVITE_PLACEHOLDER));
+
 
 
 
@@ -158,8 +155,6 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
 
     private void setOnClicks() {
         txtContinueEnabled.setOnClickListener(this);
-        imgTelegram.setOnClickListener(this);
-        imgInstagram.setOnClickListener(this);
         linearImgCancel.setOnClickListener(this);
         imgClearId.setOnClickListener(this);
 
@@ -171,34 +166,25 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
         switch (mView.getId()){
             case R.id.txtContinueEnabled:
 
-                Intent mIntent = new Intent(AddRefferalAndEarnActivity.this, HomeScreenTabLayout.class);
+                Intent mIntent = new Intent(AddRefferalOnBoardingActivity.this, GoogleCloudBackupActivity.class);
                 startActivity(mIntent);
-
-                break;
-            case R.id.imgTelegram:
-
-                Intent mTelegramBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.strTelegramURL)));
-                startActivity(mTelegramBrowser);
-
-                break;
-            case R.id.imgInstagram:
-
-                Intent mInstagramBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.strInstagramURL)));
-                startActivity(mInstagramBrowser);
-
-                break;
-            case R.id.linearImgCancel:
-
-                    //GO TO NEXT ACTIVITY
-                    Intent mIntentCancel = new Intent(AddRefferalAndEarnActivity.this, HomeScreenTabLayout.class);
-                    startActivity(mIntentCancel);
-                    finishAffinity();
 
                 break;
             case R.id.imgClearId:
 
                 //CLEAR EDIT TEXT
-                edtPromo.setText("");
+               edtPromo.setText("");
+
+                break;
+
+            case R.id.linearImgCancel:
+
+                    //GO TO NEXT ACTIVITY
+                    Intent mIntentCancel = new Intent(AddRefferalOnBoardingActivity.this, GoogleCloudBackupActivity.class);
+                    startActivity(mIntentCancel);
+
+
+                break;
 
         }
 
@@ -283,6 +269,62 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
 
 
     }
+
+    private void updateScreenUI(InviteModel body, int responseType) {
+
+        switch (responseType){
+            case 0:
+                txtContinueDisable.setVisibility(View.GONE);
+                txtContinueEnabled.setVisibility(View.VISIBLE);
+                imgClearId.setVisibility(View.GONE);
+                linearPromoWarnings.setVisibility(View.GONE);
+                txtPromoAmount.setText("");
+
+                updateUI(null,0);
+
+                break;
+            case 1:
+
+                imgClearId.setVisibility(View.VISIBLE);
+                linearPromoWarnings.setVisibility(View.GONE);
+
+                //DISPLAY EARNING IN CURRENCY
+                txtPromoAmount.setText("Earn "+body.getCurrency()+" "+body.getCurrency_amount()+" In "+body.getCrypto_currency());
+
+                //LOAD CURRENCY ICON
+                Glide.with(mActivity)
+                        .load((mSessionManager.getPreference(Constants.KEY_INVITE_CURRENCY_ICON)))
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+
+                                return false;
+                            }
+                        })
+                        .into(imgCurrencyIcon);
+
+                apiSendInvites(edtPromo.getText().toString());
+
+
+                break;
+            case 2:
+                txtContinueDisable.setVisibility(View.VISIBLE);
+                txtContinueEnabled.setVisibility(View.GONE);
+                imgClearId.setVisibility(View.VISIBLE);
+                linearPromoWarnings.setVisibility(View.VISIBLE);
+                txtPromoAmount.setText("");
+                txtPromoWarnings.setText(getString(R.string.strEnterRightCampaignId));
+                break;
+        }
+
+    }
+
     private void apiSendInvites(String strCampaignId){
 
 
@@ -375,65 +417,6 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
 
     }
 
-
-    private void updateScreenUI(InviteModel body, int responseType) {
-
-        switch (responseType){
-            case 0:
-                txtContinueDisable.setVisibility(View.GONE);
-                txtContinueEnabled.setVisibility(View.VISIBLE);
-                imgClearId.setVisibility(View.GONE);
-                linearPromoWarnings.setVisibility(View.GONE);
-                txtPromoAmount.setText("");
-                imgCurrencyIcon.setVisibility(View.GONE);
-
-                updateUI(null,0);
-
-                break;
-            case 1:
-
-                imgClearId.setVisibility(View.VISIBLE);
-                linearPromoWarnings.setVisibility(View.GONE);
-
-                //DISPLAY EARNING IN CURRENCY
-                txtPromoAmount.setText("Earn "+body.getCurrency()+" "+body.getCurrency_amount()+" In "+body.getCrypto_currency());
-
-                //LOAD CURRENCY ICON
-                Glide.with(mActivity)
-                        .load((mSessionManager.getPreference(Constants.KEY_INVITE_CURRENCY_ICON)))
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-
-                                return false;
-                            }
-                        })
-                        .into(imgCurrencyIcon);
-
-                apiSendInvites(edtPromo.getText().toString());
-
-
-                break;
-            case 2:
-                txtContinueDisable.setVisibility(View.VISIBLE);
-                txtContinueEnabled.setVisibility(View.GONE);
-                imgClearId.setVisibility(View.VISIBLE);
-                linearPromoWarnings.setVisibility(View.VISIBLE);
-                txtPromoAmount.setText("");
-                txtPromoWarnings.setText(getString(R.string.strEnterRightCampaignId));
-                break;
-        }
-
-    }
-
-
-
     private void updateUI(JsonElement body, int responseType) {
 
         switch (responseType){
@@ -442,8 +425,6 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
                 txtContinueEnabled.setVisibility(View.VISIBLE);
                 imgClearId.setVisibility(View.GONE);
                 linearPromoWarnings.setVisibility(View.GONE);
-                imgCurrencyIcon.setVisibility(View.GONE);
-
                 break;
             case 1:
                 txtContinueDisable.setVisibility(View.GONE);

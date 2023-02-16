@@ -85,6 +85,8 @@
     <string name="strType">Type</string>
     <string name="strAmount">Amount</string>
     <string name="strWhen">When</string>
+    <string name="strWhereYouReferred">Were you referred?</string>
+    <string name="strInstantReward">Earn an Instant Reward into your revealit TV wallet by providing a Referral Code</string>
     <string name="strLoadMore">Load More...</string>
     <string name="strLoading">Loading...</string>
     <string name="strXpr">XPR</string>

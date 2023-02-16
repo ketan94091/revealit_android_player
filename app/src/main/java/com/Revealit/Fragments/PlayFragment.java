@@ -32,6 +32,7 @@ import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.Revealit.UserOnboardingProcess.AddRefferalAndEarnActivity;
 import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
+import com.Revealit.UserOnboardingProcess.NewAuthSplashScreen;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -494,22 +495,26 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
 
         Dialog dialog = new Dialog(mActivity,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
         dialog.setContentView(R.layout.user_welcome_dialogue);
+
 
         //final AlertDialog mAlertDialog = dialogBuilder.create();
         TextView txtGetStarted = (TextView) dialog.findViewById(R.id.txtGetStarted);
         TextView txtWaitListed = (TextView) dialog.findViewById(R.id.txtWaitListed);
+        TextView txtLogout = (TextView) dialog.findViewById(R.id.txtLogout);
         ImageView imgCancel = (ImageView) dialog.findViewById(R.id.imgCancel);
 
         //HIDE SHOW BUTTON BASED ON USER ACTIVATION STATUS
         if(isUserIsActive){
             txtWaitListed.setVisibility(View.GONE);
             txtGetStarted.setVisibility(View.VISIBLE);
-            imgCancel.setVisibility(View.GONE);
+            txtLogout.setVisibility(View.GONE);
         }else{
             txtWaitListed.setVisibility(View.VISIBLE);
             txtGetStarted.setVisibility(View.GONE);
-            imgCancel.setVisibility(View.VISIBLE);
+            txtLogout.setVisibility(View.VISIBLE);
         }
 
 
@@ -548,6 +553,30 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                 Intent mIntent = new Intent(mActivity, AddRefferalAndEarnActivity.class);
                 startActivity(mIntent);
                 mActivity.finishAffinity();
+
+
+            }
+        });
+        txtLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+
+                //CLEAR PUSHER NOTIFICATION INTEREST
+                //PushNotifications.clearAllState();
+
+                //UPDATE LOGIN FLAG
+                mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN,false);
+                mSessionManager.updatePreferenceBoolean(Constants.KEY_ISFROM_LOGOUT,true);
+                mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN, false);
+                mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL, false);
+
+                // SEND USER TO LANDING SCREEN
+                Intent mIntent = new Intent(mActivity, NewAuthSplashScreen.class);
+                mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(mIntent);
+                mActivity.finish();
 
 
             }

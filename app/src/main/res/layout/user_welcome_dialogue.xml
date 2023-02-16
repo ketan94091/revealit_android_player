@@ -34,7 +34,8 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="right"
-                    android:src="@mipmap/icon_cross" />
+                    android:src="@mipmap/icon_cross"
+                    android:visibility="invisible" />
 
                 <ImageView
                     android:id="@+id/imgAppIcon"
@@ -70,6 +71,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
                     android:background="@drawable/new_auth_round_button_app_blue_small_corner"
                     android:fontFamily="@font/dmsans_bold"
                     android:gravity="center_horizontal"
@@ -80,8 +83,6 @@
                     android:text="@string/stWaitListed"
                     android:textColor="@color/colorWhite"
                     android:textFontWeight="700"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginLeft="30dp"
                     android:textSize="18dp"
                     android:visibility="gone" />
 
@@ -90,6 +91,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
                     android:background="@drawable/new_auth_round_button_app_green_small_corner"
                     android:capitalize="words"
                     android:fontFamily="@font/dmsans_bold"
@@ -97,14 +100,25 @@
                     android:paddingTop="15dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="15dp"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginLeft="30dp"
                     android:text="@string/strStarted"
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite"
                     android:textFontWeight="700"
                     android:textSize="18dp"
                     android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/txtLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/dmsans_bold"
+                    android:padding="15dp"
+                    android:text="@string/strLogout"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="700"
+                    android:textSize="15dp"
+                    android:visibility="gone"/>
 
 
             </LinearLayout>

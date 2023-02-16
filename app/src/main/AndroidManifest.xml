@@ -162,6 +162,9 @@
             android:name=".Activities.AssestsList"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".UserOnboardingProcess.AddRefferalOnBoardingActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".Activities.VideoViewActivity"
             android:screenOrientation="landscape" />
         <activity

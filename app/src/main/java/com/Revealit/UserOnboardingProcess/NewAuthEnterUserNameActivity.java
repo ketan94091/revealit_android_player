@@ -426,7 +426,7 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_GOOGLE_DRIVE_BACKUP_DONE, false);
 
         //GO TO NEXT ACTIVITY
-        Intent mIntent = new Intent(NewAuthEnterUserNameActivity.this,AddRefferalAndEarnActivity.class);
+        Intent mIntent = new Intent(NewAuthEnterUserNameActivity.this,AddRefferalOnBoardingActivity.class);
         mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME ,body.getProton().getAccountName());
         startActivity(mIntent);
 

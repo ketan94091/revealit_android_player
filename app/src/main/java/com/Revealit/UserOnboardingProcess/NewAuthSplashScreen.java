@@ -332,29 +332,20 @@ public class NewAuthSplashScreen extends AppCompatActivity {
         mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CURRNCY_AMOUNT ,""+mInviteModel.getCurrency_amount());
         mSessionManager.updatePreferenceString(Constants.KEY_INVITE_PLACEHOLDER ,""+mInviteModel.getPlace_holder());
         mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CURRENCY_ICON ,""+mInviteModel.getCurrency_icon_url());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_QUESTION ,""+mInviteModel.getQuestion());
 
         //INTENT
         //CHECK IF USER IS ALREADY LOGGED IN OR NOT
         if (!mSessionManager.getPreferenceBoolean(Constants.USER_LOGGED_IN)) {
             Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthGetStartedActivity.class);
             startActivity(mIntent);
-            finish();
-        }
-//        else if(mSessionManager.getPreferenceBoolean(Constants.KEY_ISFROM_LOGOUT)){
-//
-//            //CLEAR FLAG - IF USER CAME FROM LOGOUT AND THAN UPDATE FLAG
-//            mSessionManager.updatePreferenceBoolean(Constants.KEY_ISFROM_LOGOUT, false);
-//
-//            Intent mIntent = new Intent(NewAuthSplashScreen.this, NewAuthBiomatricAuthenticationActivity.class);
-//            mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, true);
-//            startActivity(mIntent);
-//            finish();
-//        }
-        else {
+            finishAffinity();
+        }else {
+            //CALL CALLBACK API
             Intent mIntent = new Intent(NewAuthSplashScreen.this, HomeScreenTabLayout.class);
             mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, false);
             startActivity(mIntent);
-            finish();
+            finishAffinity();
 
         }
 

@@ -113,6 +113,7 @@ public class GoogleCloudBackupActivity extends AppCompatActivity implements View
                 mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,true);
                 mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(mIntent);
+                finishAffinity();
 
                 break;
             case R.id.txtBackupNow:
@@ -263,6 +264,7 @@ public class GoogleCloudBackupActivity extends AppCompatActivity implements View
                     if(response.body().getAsJsonObject().getAsJsonArray("files").size() != 0){
                         mOpenFileId = response.body().getAsJsonObject().getAsJsonArray("files").get(0).getAsJsonObject().get("id").toString();
                         readFile(mOpenFileId);
+                        createFile();
                     }else{
                         createFile();
                     }
@@ -356,6 +358,7 @@ public class GoogleCloudBackupActivity extends AppCompatActivity implements View
         mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,true);
         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mIntent);
+        finishAffinity();
 
         //SIGN OUT GOOGLE ACCOUNT
         //client.signOut();
