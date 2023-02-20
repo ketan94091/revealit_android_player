@@ -130,6 +130,10 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
                     //UPDATE FLAG FOR APPLICATION MODE
                     mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
 
+                    //STORE NECESSARY DATA IN CASE USER NOT AVAILABLE TO DP
+                    mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME, itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
+                    mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY, itemListData.get(position).getSubmitProfileModel().getProton().getPublicKey());
+
                     //GO TO BIOMETRIC CONFIRMATION ACTIVITY
                     Intent mIntent = new Intent(mActivity, NewAuthBiomatricAuthenticationActivity.class);
                     mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME, itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());

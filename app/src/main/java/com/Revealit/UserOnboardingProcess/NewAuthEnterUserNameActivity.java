@@ -350,7 +350,13 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         mModelData.setMobileNumber(mSessionManager.getPreference(Constants.KEY_MOBILE_NUMBER));
         mModelData.setServerInstanceId(mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID));
         mModelData.setSubmitProfileModel(body);
+
+        //ADD USER PROFILE MODEL AS A NULL OBJECT
+        //WE WILL ADD DATA WHEN USER LOGGED IN WITH THE ACCOUNT
+        //mModelData.setUserProfile(null);
+
         mInstancesModel.add(mModelData);
+
 
         //CHECK IF DATA IS ALREADY STORED IN TO KEYSTORE
         //IF STORED -> FETCH FROM KEYSTORE, CONVERT TO LIST, CREATE NEW OBJECT AND ADD THAT OBJECT TO LIST.

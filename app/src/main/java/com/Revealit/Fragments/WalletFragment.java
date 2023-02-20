@@ -291,6 +291,14 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         dialog.setContentView(R.layout.dialog_currency_list);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         RecyclerView recycleCurrencyList = dialog.findViewById(R.id.recycleCurrencyList);
+        LinearLayout linearCancelDialogue = dialog.findViewById(R.id.linearCancelDialogue);
+
+        linearCancelDialogue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
 
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         recycleCurrencyList.setLayoutManager(manager);
