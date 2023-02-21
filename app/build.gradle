@@ -10,10 +10,10 @@ android {
         minSdkVersion 23
         targetSdkVersion 31
         multiDexEnabled true
-        versionCode 3
+        versionCode 4
         //versionName "0.89.92"//1.0.0
-        versionName "1.0.2-2"//TESTFAIRY
-        //versionName "1.0.0-1"//GOOGLE PLAY STORE
+        //versionName "1.0.2-2"//TESTFAIRY
+        versionName "1.0.0-2"//GOOGLE PLAY STORE
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
        //testInstrumentationRunner "com.android.support.test.runner.AndroidJUnitRunner"
 

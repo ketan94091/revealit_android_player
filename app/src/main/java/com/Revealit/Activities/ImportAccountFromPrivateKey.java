@@ -305,6 +305,8 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                 .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
                 .build();
 
+        CommonMethods.printLogE("PUB_KEY",""+publicKey);
+
 
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
@@ -316,7 +318,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
 
                 CommonMethods.printLogE("Response @ fetchUserDetailsFromPubkeyAndUsername: ", "" + response.isSuccessful());
                 CommonMethods.printLogE("Response @ fetchUserDetailsFromPubkeyAndUsername: ", "" + response.code());
-
+                CommonMethods.printLogE("Response @ fetchUserDetailsFromPubkeyAndUsername: ", "" + gson.toJson(response.body()));
 
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
@@ -331,7 +333,6 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
 
 
                 if (response.isSuccessful() && response.code() == Constants.API_CODE_200  ) {
-                    CommonMethods.printLogE("Response @ fetchUserDetailsFromPubkeyAndUsername: ", "" + gson.toJson(response.body()));
                     saveDataToTheAndroidKeyStore(response.body(),username.replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", ""));
 
                 }else if(response.code() == Constants.API_CODE_404){

@@ -128,12 +128,11 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
             relativeRestoreFromCloud.setVisibility(View.GONE);
         }
 
-        relativeRestoreFromCloud.setVisibility(View.VISIBLE);
+       // relativeRestoreFromCloud.setVisibility(View.VISIBLE);
 
     }
 
     private void bindRecyclerView() {
-
 
         ArrayList<KeyStoreServerInstancesModel.Data> selectedSilosAccountsList  = null;
         try {
