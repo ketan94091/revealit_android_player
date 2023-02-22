@@ -54,6 +54,9 @@
     <string name="strPlay">Play</string>
     <string name="strWallet">Wallet</string>
     <string name="strLogout">Logout</string>
+    <string name="strYourReward">Your Reward: US$ 2.00 per referral</string>
+    <string name="strCopyMsg">Here’s the link to install the revealit TV app.\n\nMake sure you use my exclusive referral code: ‘xxxx’, otherwise, you’ll be waitlisted.\n  https://apps.apple.com/us/app/reveaiit/id1243989590</string>
+    <string name="strReferFriend">Refer a friend and you both Get Rewarded!</string>
     <string name="strPrivateKey">Private Key</string>
     <string name="strYourRecoveryPhras">Your Recovery Phrase:</string>
     <string name="strPrivatePem">Private Pem:</string>

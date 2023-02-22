@@ -73,6 +73,7 @@ public class AddRefferalOnBoardingActivity extends AppCompatActivity implements 
             }
         }
     };
+    private boolean isReferralValid= false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,8 +167,22 @@ public class AddRefferalOnBoardingActivity extends AppCompatActivity implements 
         switch (mView.getId()){
             case R.id.txtContinueEnabled:
 
-                Intent mIntent = new Intent(AddRefferalOnBoardingActivity.this, GoogleCloudBackupActivity.class);
-                startActivity(mIntent);
+                if(edtPromo.getText().toString().isEmpty()){
+                    //REDIRECT TO HOME SCREEN
+                    Intent mIntent = new Intent(AddRefferalOnBoardingActivity.this, GoogleCloudBackupActivity.class);
+                    startActivity(mIntent);
+
+                }else if(isReferralValid){
+
+                    apiSendInvites(edtPromo.getText().toString());
+
+                }
+
+                else{
+                    CommonMethods.buildDialog(mContext,"Please add valid referral!");
+                }
+
+
 
                 break;
             case R.id.imgClearId:
@@ -279,14 +294,19 @@ public class AddRefferalOnBoardingActivity extends AppCompatActivity implements 
                 imgClearId.setVisibility(View.GONE);
                 linearPromoWarnings.setVisibility(View.GONE);
                 txtPromoAmount.setText("");
+                imgCurrencyIcon.setVisibility(View.GONE);
+
+                isReferralValid = false;
 
                 updateUI(null,0);
 
                 break;
             case 1:
-
+                txtContinueDisable.setVisibility(View.GONE);
+                txtContinueEnabled.setVisibility(View.VISIBLE);
                 imgClearId.setVisibility(View.VISIBLE);
                 linearPromoWarnings.setVisibility(View.GONE);
+                imgCurrencyIcon.setVisibility(View.VISIBLE);
 
                 //DISPLAY EARNING IN CURRENCY
                 txtPromoAmount.setText("Earn "+body.getCurrency()+" "+body.getCurrency_amount()+" In "+body.getCrypto_currency());
@@ -309,7 +329,7 @@ public class AddRefferalOnBoardingActivity extends AppCompatActivity implements 
                         })
                         .into(imgCurrencyIcon);
 
-                apiSendInvites(edtPromo.getText().toString());
+                isReferralValid = true;
 
 
                 break;
@@ -320,6 +340,9 @@ public class AddRefferalOnBoardingActivity extends AppCompatActivity implements 
                 linearPromoWarnings.setVisibility(View.VISIBLE);
                 txtPromoAmount.setText("");
                 txtPromoWarnings.setText(getString(R.string.strEnterRightCampaignId));
+                imgCurrencyIcon.setVisibility(View.VISIBLE);
+
+                isReferralValid = false;
                 break;
         }
 
@@ -425,6 +448,7 @@ public class AddRefferalOnBoardingActivity extends AppCompatActivity implements 
                 txtContinueEnabled.setVisibility(View.VISIBLE);
                 imgClearId.setVisibility(View.GONE);
                 linearPromoWarnings.setVisibility(View.GONE);
+
                 break;
             case 1:
                 txtContinueDisable.setVisibility(View.GONE);
@@ -433,16 +457,21 @@ public class AddRefferalOnBoardingActivity extends AppCompatActivity implements 
 
 
                 //UPDATE ACTIVE FLAG
-                if(body.getAsJsonObject().get("is_activated").equals("1")){
+                if(body.getAsJsonObject().get("is_activated").toString().replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "").equals("1")){
                     mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
                 }else{
-                    mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
+                    mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
                 }
 
                 //UPDATE SESSION VALUES
                 mSessionManager.updatePreferenceBoolean(Constants.KEY_APP_MODE, true);
                 mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
                 mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
+
+                //REDIRECT TO HOME SCREEN
+                Intent mIntent = new Intent(AddRefferalOnBoardingActivity.this, GoogleCloudBackupActivity.class);
+                startActivity(mIntent);
+
 
 
                 break;
@@ -452,6 +481,7 @@ public class AddRefferalOnBoardingActivity extends AppCompatActivity implements 
                 imgClearId.setVisibility(View.VISIBLE);
                 linearPromoWarnings.setVisibility(View.VISIBLE);
                 txtPromoWarnings.setText(getString(R.string.strEnterRightCampaignId));
+
                 break;
         }
 

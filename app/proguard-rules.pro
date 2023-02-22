@@ -179,6 +179,7 @@
 -keep public class com.testfairy.** {*;}
 -keep public class com.fasterxml.** {*;}
 -keep public class com.eclipsesource.** {*;}
+-keep public class android.util.** {*;}
 -keep public class one.block.**{*;}
 
 

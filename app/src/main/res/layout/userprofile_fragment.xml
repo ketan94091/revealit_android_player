@@ -134,6 +134,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/colorBlack"
                 android:textFontWeight="700"
+                android:visibility="gone"
                 android:textSize="15dp" />
 
             <LinearLayout
@@ -146,14 +147,14 @@
 
 
                 <TextView
-                    android:id="@+id/txtMsgCopy"
-                    android:text="Simply tell your friend to mention “garry.rtv” and we will even deposit US$1.00 in their wallet as well.\n or \n Copy the invite below:"
-                    android:layout_width="wrap_content"
+
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/quasimoda"
+                    android:fontFamily="@font/quasimoda_bold"
                     android:textAlignment="center"
+                    android:text="@string/strReferFriend"
                     android:textColor="@color/colorBlack"
-                    android:textFontWeight="500"
+                    android:textFontWeight="700"
                     android:textSize="15dp" />
 
                 <TextView
@@ -170,6 +171,18 @@
                     android:textFontWeight="600"
                     android:textSize="15dp"
                     android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/txtMsgCopy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/quasimoda_bold"
+                    android:textAlignment="center"
+                    android:text="@string/strYourReward"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="700"
+                    android:layout_marginTop="20dp"
+                    android:textSize="15dp" />
 
 
             </LinearLayout>
@@ -219,13 +232,13 @@
                             android:id="@+id/txtAccount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerInParent="true"
                             android:fontFamily="@font/dmsans_bold"
                             android:text="@string/strAccount"
-                            android:layout_centerInParent="true"
-                            android:layout_alignParentLeft="true"
                             android:textColor="@color/colorBlack"
-                            android:textFontWeight="700"
 
+                            android:textFontWeight="700"
                             android:textSize="15dp" />
 
                         <ImageView

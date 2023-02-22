@@ -61,8 +61,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
         setIds();
         setOnClicks();
-
-        return mView;
+   return mView;
 
     }
 
@@ -117,12 +116,11 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
         //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
 
-        if(strCopymsg.contains("xxxx")){
-            txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
-        }else{
-            txtMsgCopy.setText(strCopymsg.replace("XXXX",strUsername));
-        }
-
+//        if(strCopymsg.contains("xxxx")){
+//            txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
+//        }else{
+//            txtMsgCopy.setText(strCopymsg.replace("XXXX",strUsername));
+//        }
 
 
         if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL)){
@@ -198,7 +196,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             case R.id.txtCopyToClibBoard:
 
                 ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText(getString(R.string.strUsername), mSessionManager.getPreference(Constants.KEY_INVITE_COPY_CLIPBOARD).replace("xxxx",strUsername));
+                ClipData clip = ClipData.newPlainText(getString(R.string.strUsername), getResources().getString(R.string.strCopyMsg).replace("xxxx",strUsername));
                 clipboard.setPrimaryClip(clip);
 
                 //TOAST MSG

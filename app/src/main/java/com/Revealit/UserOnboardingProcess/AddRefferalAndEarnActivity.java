@@ -74,6 +74,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
             }
         }
     };
+    private boolean isReferralValid= false;
 
 
     @Override
@@ -171,8 +172,21 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
         switch (mView.getId()){
             case R.id.txtContinueEnabled:
 
-                Intent mIntent = new Intent(AddRefferalAndEarnActivity.this, HomeScreenTabLayout.class);
-                startActivity(mIntent);
+
+                if(edtPromo.getText().toString().isEmpty()){
+                    //REDIRECT TO HOME SCREEN
+                    Intent mIntent = new Intent(AddRefferalAndEarnActivity.this, HomeScreenTabLayout.class);
+                    startActivity(mIntent);
+
+                }else if(isReferralValid){
+
+                    apiSendInvites(edtPromo.getText().toString());
+
+                }
+
+                else{
+                    CommonMethods.buildDialog(mContext,"Please add valid referral!");
+                }
 
                 break;
             case R.id.imgTelegram:
@@ -387,10 +401,14 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
                 txtPromoAmount.setText("");
                 imgCurrencyIcon.setVisibility(View.GONE);
 
+                isReferralValid = false;
+
                 updateUI(null,0);
 
                 break;
             case 1:
+                txtContinueDisable.setVisibility(View.GONE);
+                txtContinueEnabled.setVisibility(View.VISIBLE);
 
                 imgClearId.setVisibility(View.VISIBLE);
                 linearPromoWarnings.setVisibility(View.GONE);
@@ -416,8 +434,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
                         })
                         .into(imgCurrencyIcon);
 
-                apiSendInvites(edtPromo.getText().toString());
-
+                isReferralValid = true;
 
                 break;
             case 2:
@@ -427,6 +444,8 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
                 linearPromoWarnings.setVisibility(View.VISIBLE);
                 txtPromoAmount.setText("");
                 txtPromoWarnings.setText(getString(R.string.strEnterRightCampaignId));
+
+                isReferralValid = false;
                 break;
         }
 
@@ -452,10 +471,10 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
 
 
                 //UPDATE ACTIVE FLAG
-                if(body.getAsJsonObject().get("is_activated").equals("1")){
+                if(body.getAsJsonObject().get("is_activated").toString().replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "").equals("1")){
                     mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
                 }else{
-                    mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
+                    mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
                 }
 
                 //UPDATE SESSION VALUES
@@ -463,6 +482,9 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
                 mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
                 mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
 
+                //REDIRECT TO HOME SCREEN
+                Intent mIntent = new Intent(AddRefferalAndEarnActivity.this, HomeScreenTabLayout.class);
+                startActivity(mIntent);
 
                 break;
             case 2:
@@ -471,6 +493,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
                 imgClearId.setVisibility(View.VISIBLE);
                 linearPromoWarnings.setVisibility(View.VISIBLE);
                 txtPromoWarnings.setText(getString(R.string.strEnterRightCampaignId));
+
                 break;
         }
 
