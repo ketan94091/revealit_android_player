@@ -168,7 +168,8 @@
 
 
 -keep public class com.Revealit.ModelClasses.** {*;}
--keep public class com.greymass.** {*;}
+-keep public class com.Revealit.Activities.** {*;}
+#-keep public class com.greymass.esr.** {*;}
 -keep public class com.acrcloud.** {*;}
 -keep public class com.bumptech.** {*;}
 -keep public class com.facebook.** {*;}
@@ -178,10 +179,46 @@
 -keep public class com.wdullaer.** {*;}
 -keep public class com.testfairy.** {*;}
 -keep public class com.fasterxml.** {*;}
--keep public class com.eclipsesource.** {*;}
--keep public class android.util.** {*;}
--keep public class one.block.**{*;}
-
+-keep public class android.util.Log {*;}
+-keep public class android.content.** {*;}
+-keep public class android.Manifest.** {*;}
+-keep public class one.block.**{ *; }
+-keep public class com.google.** { public protected private *;}
+-keep  class com.eclipsesource.** {*;}
+#-keep  class com.eclipsesource.v8.inspector.** {public protected private *;}
+#-keep public class com.greymass.esr.ESR{
+#                                          public protected private *;
+#                                        }
+#-keep public class com.greymass.esr.implementation.** {
+#                                                        public protected private *;
+#                                                      }
+#-keep public class com.greymass.esr.interfaces.**{
+#                                                   public protected private *;
+#                                                 }
+#-keep public class com.greymass.esr.models.** {
+#                                                public protected private *;
+#                                              }
+#-keep public class com.greymass.esr.util.** {
+#                                              public protected private *;
+#                                            }
+#-keep public class com.greymass.esr.ESRV8Runtime {
+#                                                      public protected private *;
+#                                                    }
+#-keep public class com.greymass.esr.ESRException {
+#                                                      public protected private *;
+#                                                    }
+#-keep public class com.greymass.esr.ResolvedSigningRequest {
+#                                                                public protected private *;
+#                                                              }
+#-keep public class com.greymass.esr.ResourceReader.*{
+#                                                       public protected private *;
+#                                                     }
+#-keep public class com.greymass.esr.SigningRequest{
+#                                                       public protected private *;
+#                                                     }
+#-keep public class com.greymass.esr.SigningRequestOptions{
+#                                                               public protected private *;
+#                                                             }
 
 ##################################
 
@@ -194,7 +231,7 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.

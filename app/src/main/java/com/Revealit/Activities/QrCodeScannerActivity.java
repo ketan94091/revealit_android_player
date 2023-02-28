@@ -324,6 +324,14 @@ public class QrCodeScannerActivity extends AppCompatActivity {
         if(cameraSource != null)
             cameraSource.release();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(cameraSource != null)
+            cameraSource.release();
+    }
+
     class RetrieveFeedTask extends AsyncTask<String, Void, Void> {
 
         String qrCodeData, strESRdata;
@@ -367,14 +375,17 @@ public class QrCodeScannerActivity extends AppCompatActivity {
 
             //CREATE IABI FOR THE QR CODE SIGNING REQUEST
             IAbiProvider abiProvider1 = new SimpleABIProvider(baseURl);
-            SigningRequest signingRequest = new SigningRequest(new ESR(QrCodeScannerActivity.this, abiProvider1));
 
 
+            SigningRequest signingRequest = null;
             try {
+                 signingRequest = new SigningRequest(new ESR(QrCodeScannerActivity.this, abiProvider1));
+
                 signingRequest.load(strESRdata);
 
             } catch (ESRException e) {
                 e.printStackTrace();
+                Log.e("CRASHED ",""+ e);
             }
 
             // get info pairs

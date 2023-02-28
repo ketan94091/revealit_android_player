@@ -1,5 +1,9 @@
 package com.greymass.esr;
 
+import static com.greymass.esr.models.Transaction.EXPIRATION;
+import static com.greymass.esr.models.Transaction.REF_BLOCK_NUM;
+import static com.greymass.esr.models.Transaction.REF_BLOCK_PREFIX;
+
 import android.util.Log;
 
 import com.eclipsesource.v8.JavaCallback;
@@ -27,10 +31,6 @@ import com.greymass.esr.util.JSONUtil;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
-
-import static com.greymass.esr.models.Transaction.EXPIRATION;
-import static com.greymass.esr.models.Transaction.REF_BLOCK_NUM;
-import static com.greymass.esr.models.Transaction.REF_BLOCK_PREFIX;
 
 public class ESRV8Runtime {
     private static final String V8_TAG = "ESR-V8";

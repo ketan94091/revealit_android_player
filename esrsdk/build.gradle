@@ -23,12 +23,13 @@ ext {
 }
 
 android {
-    compileSdkVersion 29
+
+    compileSdkVersion 31
     buildToolsVersion "29.0.3"
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -36,22 +37,19 @@ android {
         consumerProguardFiles 'consumer-rules.pro'
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
 
     task wrapper(type: Wrapper){
         gradleVersion = '7.2'
     }
 
+
 }
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.eclipsesource.j2v8:j2v8:6.1.0@aar'
+
+    implementation 'com.eclipsesource.j2v8:j2v8:6.1.0@aar'// the package you are searching belongs to dependency module //k
     implementation 'com.google.guava:guava:29.0-android'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.okhttp3:okhttp:4.5.0'

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -417,7 +416,6 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
             @Override
             public void onMessageReceived(RemoteMessage remoteMessage) {
                 String messagePayload =gson.toJson(remoteMessage);
-               Log.e("PAYLOAD",""+messagePayload);
                 if (remoteMessage.getData() != null) {
                     mActivity.runOnUiThread(new Runnable() {
                         public void run() {
