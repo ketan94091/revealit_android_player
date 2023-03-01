@@ -39,7 +39,6 @@ import com.google.gson.JsonElement;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -101,7 +100,7 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
             txtBackupNow.setVisibility(View.VISIBLE);
         }
 
-
+        //txtBackupNow.setVisibility(View.VISIBLE);
 
 
     }
@@ -262,19 +261,17 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
 
                 if (response.isSuccessful() && response.code() == 200) {
 
-                    Gson gson = new GsonBuilder()
-                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-                            .serializeNulls()
-                            .create();
-
-                   // Log.e("checkIfFileExists: ", "" + gson.toJson(response.body()));
-
                     if(response.body().getAsJsonObject().getAsJsonArray("files").size() != 0){
                         mOpenFileId = response.body().getAsJsonObject().getAsJsonArray("files").get(0).getAsJsonObject().get("id").toString().replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "");
                         readFile(mOpenFileId);
 
-                        //UPDATE FILE
-                        //createFile();
+                        //CHECK IF FILE IS THERE ON DRIVE
+                        //IF AVAILABLE THAN DELETE FIRST AND CREATE NEW FILE
+                        new DeleteDriveFileTask(mOpenFileId, googleDriveService).execute();
+
+                        //AFTER DELETING EXISTING FILE CREATE NEW FILE
+                        createFile();
+
                     }else{
                         createFile();
                     }
@@ -296,10 +293,12 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
 
-                createFile();
+                //createFile();
 
                 //CLOSED DIALOGUE
                 CommonMethods.closeDialog();
+
+                CommonMethods.showDialogWithCustomMessage(mContext, "Could not complete backup! please try after sometimes.");
 
             }
         });
@@ -414,5 +413,36 @@ class FetchKeystoreData extends AsyncTask<SessionManager, Integer, String> {
     protected void onPostExecute(String searchResults) {
         super.onPostExecute(searchResults);
 
+    }
+}
+
+class DeleteDriveFileTask extends AsyncTask<String, Void, Void> {
+
+    String strFileID;
+    Drive googleDriveService;
+
+
+    public DeleteDriveFileTask(String strFileID, Drive googleDriveService) {
+
+     this.strFileID = strFileID;
+     this.googleDriveService= googleDriveService;
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    protected Void doInBackground(String... urls) {
+
+        try {
+            //DELETE FILE FROM GOOGLE DRIVE
+            googleDriveService.files().delete(strFileID).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    protected void onPostExecute() {
+        Log.e("POST","POST");
     }
 }

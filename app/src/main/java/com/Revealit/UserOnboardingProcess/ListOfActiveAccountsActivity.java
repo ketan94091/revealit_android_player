@@ -122,14 +122,13 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
 
         //CHECK IF USER IS ADMIN
         //ELSE PART SHOULD REMOVE
-        if (!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)) {
-            relativeRestoreFromCloud.setVisibility(View.GONE);
-        }else{
-            relativeRestoreFromCloud.setVisibility(View.GONE);
-        }
+//        if (!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)) {
+//            relativeRestoreFromCloud.setVisibility(View.GONE);
+//        }else{
+//            relativeRestoreFromCloud.setVisibility(View.VISIBLE);
+//        }
 
-       // relativeRestoreFromCloud.setVisibility(View.VISIBLE);
-
+        relativeRestoreFromCloud.setVisibility(View.VISIBLE);
     }
 
     private void bindRecyclerView() {
@@ -445,7 +444,7 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
                         String content = nameAndContent.second;
 
                         //PRINT DATA CONTENT
-                        CommonMethods.printLogE(TAG,"" +content);
+                        //CommonMethods.printLogE(TAG,"" +content);
 
                         //STORE DATA IN TO KEY STORE
                         //STORE WHOLE ARRAY IN TO STRING FORMAT IN KEYSTORE
@@ -454,6 +453,9 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
 
                         //SIGN OUT GOOGLE ACCOUNT
                         client.signOut();
+
+                        //CHANGE GOOGLE BACKUP FLOW TO FALSE
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_GOOGLE_DRIVE_BACKUP_DONE, true);
 
                         //RELOAD PAGE AND DISPLAY EXISTING DATA
                         Intent mIntent = new Intent(this, ListOfActiveAccountsActivity.class);
