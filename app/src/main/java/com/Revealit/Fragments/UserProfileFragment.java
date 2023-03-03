@@ -135,11 +135,15 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             //SET APPLICATION INSTALLED VERSION NAME AND SERVER NAME
             txtAdmin.setText(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME) +" Server : "+  BuildConfig.VERSION_NAME);
 
-            //CHECK IF USER IS ADMIN
-            if(!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN) ){
-                linearSettings.setVisibility(View.GONE);
-            }else{
+
+            //HIDE SHOW ADMIN DETAILS
+            //CHECK USER IS ADMIN USER OR SUPER ADMIN USER
+            //ADMIN -> USER MUST BE ADMIN FROM BACKEND
+            //SUPER ADMIN -> IF ANY BETA USER IS ADMIN THAN CONSIDER USER AS ADMIN
+            if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)  | CommonMethods.checkIfUserIsSuperAdmin(mSessionManager,mContext)){
                 linearSettings.setVisibility(View.VISIBLE);
+            }else{
+                linearSettings.setVisibility(View.GONE);
             }
 
             if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)){

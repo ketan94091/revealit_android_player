@@ -100,7 +100,6 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
             txtBackupNow.setVisibility(View.VISIBLE);
         }
 
-        //txtBackupNow.setVisibility(View.VISIBLE);
 
 
     }
@@ -263,7 +262,6 @@ public class CloudBackupActivity extends AppCompatActivity implements View.OnCli
 
                     if(response.body().getAsJsonObject().getAsJsonArray("files").size() != 0){
                         mOpenFileId = response.body().getAsJsonObject().getAsJsonArray("files").get(0).getAsJsonObject().get("id").toString().replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "");
-                        readFile(mOpenFileId);
 
                         //CHECK IF FILE IS THERE ON DRIVE
                         //IF AVAILABLE THAN DELETE FIRST AND CREATE NEW FILE

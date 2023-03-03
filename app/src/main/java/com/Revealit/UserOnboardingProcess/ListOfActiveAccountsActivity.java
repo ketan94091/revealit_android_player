@@ -120,15 +120,16 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
         bindRecyclerView();
 
 
-        //CHECK IF USER IS ADMIN
-        //ELSE PART SHOULD REMOVE
-//        if (!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN)) {
-//            relativeRestoreFromCloud.setVisibility(View.GONE);
-//        }else{
-//            relativeRestoreFromCloud.setVisibility(View.VISIBLE);
-//        }
 
-        relativeRestoreFromCloud.setVisibility(View.VISIBLE);
+        //HIDE SHOW ADMIN DETAILS
+        //CHECK USER IS ADMIN USER OR SUPER ADMIN USER
+        //SUPER ADMIN -> IF ANY BETA USER IS ADMIN THAN CONSIDER USER AS ADMIN
+        if(CommonMethods.checkIfUserIsSuperAdmin(mSessionManager,mContext)){
+            relativeRestoreFromCloud.setVisibility(View.VISIBLE);
+        }else{
+            relativeRestoreFromCloud.setVisibility(View.GONE);
+        }
+
     }
 
     private void bindRecyclerView() {

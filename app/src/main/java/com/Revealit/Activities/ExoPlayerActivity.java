@@ -1399,11 +1399,11 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     isMiddleSwipe = false;
 
                 }else if(!isMiddleSwipe){
-                    displayCoordinates(locationData, 4, ((int) 0));
+                    displayCoordinates(locationData, 3, ((int) 0));
                     //CALL REWARD API
-                    callUploadRewardData(4 , Integer.parseInt(strMediaID));
+                    callUploadRewardData(3 , Integer.parseInt(strMediaID));
 
-                    Log.e("BLUE DOTS"," : BLUE DOTS");
+                    Log.e("AMBER DOTS"," : AMBER DOTS");
 
                     //UPDATE FLAG
                     isMiddleSwipe = true;
@@ -1427,11 +1427,13 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     isMiddleSwipe = false;
 
                 }else if(!isMiddleSwipe){
-                    displayCoordinates(locationData, 3, ((int) 0));
-                    //CALL REWARD API
-                    callUploadRewardData(3 , Integer.parseInt(strMediaID));
 
-                    Log.e("AMBER DOTS"," : AMBER DOTS");
+
+                    displayCoordinates(locationData, 4, ((int) 0));
+                    //CALL REWARD API
+                    callUploadRewardData(4 , Integer.parseInt(strMediaID));
+
+                    Log.e("BLUE DOTS"," : BLUE DOTS");
 
                     //UPDATE FLAG
                     isMiddleSwipe = true;

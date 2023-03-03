@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -169,8 +170,15 @@ public class AddRefferalOnBoardingActivity extends AppCompatActivity implements 
 
                 if(edtPromo.getText().toString().isEmpty()){
                     //REDIRECT TO HOME SCREEN
-                    Intent mIntent = new Intent(AddRefferalOnBoardingActivity.this, GoogleCloudBackupActivity.class);
+//                    Intent mIntent = new Intent(AddRefferalOnBoardingActivity.this, GoogleCloudBackupActivity.class);
+//                    startActivity(mIntent);
+
+
+                    Intent mIntent = new Intent(AddRefferalOnBoardingActivity.this, HomeScreenTabLayout.class);
+                    mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,true);
+                    mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(mIntent);
+                    finishAffinity();
 
                 }else if(isReferralValid){
 
@@ -468,10 +476,12 @@ public class AddRefferalOnBoardingActivity extends AppCompatActivity implements 
                 mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN ,true);
                 mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN ,true);
 
-                //REDIRECT TO HOME SCREEN
-                Intent mIntent = new Intent(AddRefferalOnBoardingActivity.this, GoogleCloudBackupActivity.class);
-                startActivity(mIntent);
 
+                Intent mIntent = new Intent(AddRefferalOnBoardingActivity.this, HomeScreenTabLayout.class);
+                mIntent.putExtra(Constants.KEY_IS_FROM_REGISTRATION_SCREEN,true);
+                mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(mIntent);
+                finishAffinity();
 
 
                 break;

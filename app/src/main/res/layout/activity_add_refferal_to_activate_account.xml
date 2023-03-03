@@ -122,11 +122,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/new_auth_round_button"
+                    android:layout_weight="5"
                     android:orientation="horizontal">
 
                     <EditText
                         android:id="@+id/edtPromo"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:fontFamily="@font/dmsans_medium"
@@ -136,20 +137,22 @@
                         android:padding="15dp"
                         android:textColor="@color/colorBlack"
                         android:textFontWeight="600"
+                        android:layout_weight="1"
                         android:textSize="15dp" />
 
                     <RelativeLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="20dp">
+                        android:layout_weight="4"
+                        >
 
 
                         <ImageView
                             android:id="@+id/imgClearId"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:layout_centerInParent="true"
                             android:src="@mipmap/close"
                             android:visibility="invisible" />
 

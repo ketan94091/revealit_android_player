@@ -44,6 +44,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.pusher.pushnotifications.PushNotificationReceivedListener;
 import com.pusher.pushnotifications.PushNotifications;
+import com.pusher.pushnotifications.PushNotificationsInstance;
 import com.pusher.pushnotifications.auth.BeamsTokenProvider;
 
 import org.json.JSONException;
@@ -366,13 +367,21 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
         //IF -> SELECTED SERVER INSTANCE IS INTEGRATION
         //ELSE -> OTHER THAN INTEGRATION
         if(mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 2){
-            PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_INTERGRATION);
+            //PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_INTERGRATION);
+            PushNotificationsInstance pushNotificationsIntegration =
+                    new PushNotificationsInstance(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_INTERGRATION);
+            pushNotificationsIntegration.start();
+            pushNotificationsIntegration.addDeviceInterest(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
         }else {
-            PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_PRODUCTION);
+            //PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_PRODUCTION);
+            PushNotificationsInstance pushNotificationsProduction =
+                    new PushNotificationsInstance(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_PRODUCTION);
+            pushNotificationsProduction.start();
+            pushNotificationsProduction.addDeviceInterest(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
         }
 
         //REGISTER PUSHER DEVICE INTEREST
-        PushNotifications.addDeviceInterest(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+        //pushNotificationsProduction.addDeviceInterest(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
 
     }
 

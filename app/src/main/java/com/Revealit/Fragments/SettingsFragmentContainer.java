@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.Revealit.Activities.CloudBackupActivity;
 import com.Revealit.Activities.HomeScreenTabLayout;
+import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.R;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
@@ -72,6 +73,15 @@ public class SettingsFragmentContainer extends Fragment implements View.OnClickL
 
         relativeBack =(RelativeLayout)mView.findViewById(R.id.relativeBack);
         linearCloudBackup =(LinearLayout)mView.findViewById(R.id.linearCloudBackup);
+
+        //HIDE SHOW ADMIN DETAILS
+        //CHECK USER IS ADMIN USER OR SUPER ADMIN USER
+        //SUPER ADMIN -> IF ANY BETA USER IS ADMIN THAN CONSIDER USER AS ADMIN
+        if(CommonMethods.checkIfUserIsSuperAdmin(mSessionManager,mContext)){
+            linearCloudBackup.setVisibility(View.VISIBLE);
+        }else{
+            linearCloudBackup.setVisibility(View.GONE);
+        }
 
 
 
