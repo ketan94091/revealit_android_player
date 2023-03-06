@@ -130,6 +130,7 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
             relativeRestoreFromCloud.setVisibility(View.GONE);
         }
 
+
     }
 
     private void bindRecyclerView() {

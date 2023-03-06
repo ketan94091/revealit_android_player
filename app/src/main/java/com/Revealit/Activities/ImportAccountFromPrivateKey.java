@@ -211,7 +211,6 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
             UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
             JsonObject paramObject = new JsonObject();
             paramObject.addProperty("public_key", publicKeyPem);
-        Log.e("PEM",""+publicKeyPem);
 
 
             Call<GetProtonUsername> call = patchService1.getProtonAccountName(paramObject);
@@ -304,8 +303,6 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
                 .build();
-
-        CommonMethods.printLogE("PUB_KEY",""+publicKey);
 
 
 
@@ -476,6 +473,9 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                     mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
                     mModel.setMobileNumber(jsonArray.getJSONObject(i).getString("mobileNumber"));
                     mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
+                    mModel.setIsAccountRemoved(jsonArray.getJSONObject(i).getInt("isAccountRemoved"));
+
+                    Log.e("ISSSS",""+jsonArray.getJSONObject(i).getInt("isAccountRemoved"));
 
 
                     SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
@@ -486,6 +486,9 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                     }else{
                         mSubmitProfileModel.setauth_token("");
                     }
+
+
+
                     mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
                     mSubmitProfileModel.setIs_activated(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
                     mSubmitProfileModel.setMessage(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("message"));
@@ -538,10 +541,11 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
 
     private boolean checkPrivateKeyIsEmpty() {
 
-        if(edtImportKey.getText().toString().contains(" ")){
-           CommonMethods.showDialogWithCustomMessage(mContext,"Entered key not valid, Please remove spaces from key");
-        }else{
-            edtPrivateKey  =edtImportKey.getText().toString().replaceAll("\n", "");
+        edtPrivateKey  = edtImportKey.getText().toString().replaceAll("\\s","");
+
+        if(edtPrivateKey.contains(" ")){
+           CommonMethods.buildDialog(mContext,getResources().getString(R.string.strInvalidPrivateKey));
+           return false;
         }
 
         if(edtPrivateKey.isEmpty()){
