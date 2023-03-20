@@ -129,6 +129,8 @@ public class ListOfActiveAccountsActivity extends AppCompatActivity implements V
         }else{
             relativeRestoreFromCloud.setVisibility(View.GONE);
         }
+        relativeRestoreFromCloud.setVisibility(View.VISIBLE);
+
 
 
     }

@@ -210,7 +210,9 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
 
             UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
             JsonObject paramObject = new JsonObject();
-            paramObject.addProperty("public_key", publicKeyPem);
+            paramObject.addProperty("public_key", publicKey);
+
+            Log.e("PEM",""+publicKey);
 
 
             Call<GetProtonUsername> call = patchService1.getProtonAccountName(paramObject);
@@ -260,7 +262,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                     //CLOSED DIALOGUE
                     CommonMethods.closeDialog();
 
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strApiCallFailure));
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strProtonNotResponding));
 
 
                 }

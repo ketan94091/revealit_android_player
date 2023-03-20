@@ -92,8 +92,8 @@
                         android:fontFamily="@font/dmsans_bold"
                         android:textColor="@color/colorNewAppGreen"
                         android:textFontWeight="500"
-                        android:textSize="25dp"
-                        android:textStyle="bold" />
+                        android:textSize="23dp"
+                        />
 
 
                 </RelativeLayout>
@@ -156,7 +156,7 @@
                                     android:textColor="@color/colorNewAppGreen"
                                     android:textFontWeight="500"
                                     android:visibility="gone"
-                                    android:textSize="25dp" />
+                                    android:textSize="23dp" />
 
                             </RelativeLayout>
 
@@ -194,7 +194,7 @@
                                 android:textAllCaps="true"
                                 android:textColor="@color/colorNewAppGreen"
                                 android:textFontWeight="500"
-                                android:textSize="25dp" />
+                                android:textSize="23dp" />
 
 
                         </LinearLayout>

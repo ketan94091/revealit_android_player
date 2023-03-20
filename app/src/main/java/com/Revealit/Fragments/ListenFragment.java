@@ -289,8 +289,13 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
                 break;
             case R.id.imgScanQRcode:
 
-                Intent mIntentQRCodeActivity = new Intent(mActivity, QrCodeScannerActivity.class);
-                mActivity.startActivity(mIntentQRCodeActivity);
+                if(CommonMethods.areNotificationsEnabled(mContext)){
+                    Intent mIntentQRCodeActivity = new Intent(mActivity, QrCodeScannerActivity.class);
+                    mActivity.startActivity(mIntentQRCodeActivity);
+                }else{
+                    CommonMethods.openNotificationSettings(mActivity);
+
+                }
 
                 break;
 

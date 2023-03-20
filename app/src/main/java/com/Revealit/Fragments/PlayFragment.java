@@ -195,8 +195,15 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.imgScanQRcode:
 
-                Intent mIntentQRCodeActivity = new Intent(mActivity, QrCodeScannerActivity.class);
-                mActivity.startActivity(mIntentQRCodeActivity);
+
+                if(CommonMethods.areNotificationsEnabled(mContext)){
+                    Intent mIntentQRCodeActivity = new Intent(mActivity, QrCodeScannerActivity.class);
+                    mActivity.startActivity(mIntentQRCodeActivity);
+                }else{
+                 CommonMethods.openNotificationSettings(mActivity);
+
+                }
+
 
 
                 break;
@@ -215,6 +222,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         }
 
     }
+
+
 
     private void getVideoPlayerRawData() {
 
@@ -602,6 +611,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         });
         dialog.show();
     }
+
 
 }
 

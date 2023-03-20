@@ -3,8 +3,11 @@ package com.Revealit.CommonClasse;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.KeyguardManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -25,6 +28,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationManagerCompat;
 
 import com.Revealit.BuildConfig;
 import com.Revealit.ModelClasses.KeyStoreServerInstancesModel;
@@ -54,6 +59,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -116,6 +122,23 @@ public class CommonMethods {
         });
 
 
+    }
+    public static boolean areNotificationsEnabled(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (!manager.areNotificationsEnabled()) {
+                return false;
+            }
+            List<NotificationChannel> channels = manager.getNotificationChannels();
+            for (NotificationChannel channel : channels) {
+                if (channel.getImportance() == NotificationManager.IMPORTANCE_NONE) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return NotificationManagerCompat.from(context).areNotificationsEnabled();
+        }
     }
 
     public static void buildRevealitCustomDialog(Activity mActivity,Context mContext,String strTitle, String strMessege) {
@@ -1288,6 +1311,46 @@ public class CommonMethods {
             ex.printStackTrace();
         }
 
+    }
+
+
+    public static void openNotificationSettings(Activity mActivity) {
+
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
+        dialogBuilder.setCancelable(false);
+        LayoutInflater inflater = mActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.open_notification_settings_dialogue, null);
+        //mActivity.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialogBuilder.setView(dialogView);
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        TextView txtOpenSettings = (TextView) dialogView.findViewById(R.id.txtOpenSettings);
+        ImageView imgCancel = (ImageView) dialogView.findViewById(R.id.imgCancel);
+
+        txtOpenSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+
+                Intent settingsIntent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .putExtra(Settings.EXTRA_APP_PACKAGE, mActivity.getPackageName());
+                mActivity.startActivity(settingsIntent);
+
+
+            }
+        });
+        imgCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                mAlertDialog.dismiss();
+
+            }
+        });
+        mAlertDialog.show();
     }
 
 

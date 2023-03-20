@@ -230,9 +230,13 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.imgScanQRcode:
 
-                Intent mIntentQRCodeActivity = new Intent(mActivity, QrCodeScannerActivity.class);
-                mActivity.startActivity(mIntentQRCodeActivity);
+                if(CommonMethods.areNotificationsEnabled(mContext)){
+                    Intent mIntentQRCodeActivity = new Intent(mActivity, QrCodeScannerActivity.class);
+                    mActivity.startActivity(mIntentQRCodeActivity);
+                }else{
+                    CommonMethods.openNotificationSettings(mActivity);
 
+                }
 
                 break;
             case R.id.imgLogo:

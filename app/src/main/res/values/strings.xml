@@ -55,7 +55,7 @@
     <string name="strWallet">Wallet</string>
     <string name="strLogout">Logout</string>
     <string name="strYourReward">Your Reward: US$ 2.00 per referral</string>
-    <string name="strCopyMsg">Here’s the link to install the revealit TV app.\n\nMake sure you use my exclusive referral code: ‘xxxx’, otherwise, you’ll be waitlisted.\n  https://apps.apple.com/us/app/reveaiit/id1243989590</string>
+    <string name="strCopyMsg">Hey!\nHere’s the link to install the revealit TV app.\n\nMake sure you use my exclusive referral code:‘xxxx’, otherwise you’ll be waitlisted.\n  https://apps.apple.com/us/app/reveaiit/id1243989590 \n https://play.google.com/store/apps/details?id=com.Revealit</string>
     <string name="strReferFriend">Refer a friend and you both Get Rewarded!</string>
     <string name="strPrivateKey">Private Key</string>
     <string name="strYourRecoveryPhras">Your Recovery Phrase:</string>
@@ -161,6 +161,7 @@
     <string name="strUsernamePasswordWrong">Your email or password is incorrect.</string>
     <string name="strSomethingWentWrong">Something went wrong please try again.</string>
     <string name="strApiCallFailure">Api call failure</string>
+    <string name="strProtonNotResponding">Proton server not responding.</string>
     <string name="strApproved">approved</string>
     <string name="strInternalServerError">Status code 500. Internal server error.</string>
     <string name="strPhoneIsAlreadyInUsed">This phone number is already registered</string>
@@ -191,6 +192,9 @@
     <string name="strCloudThree">You can do that simply by pressing the ‘Backup Now’ button below.</string>
     <string name="strCloudBackups">Cloud Backup</string>
     <string name="strWelcomeToRevealitTV">Welcome to revealit TV</string>
+    <string name="strTurnOnNotification">Turn on Notifications</string>
+    <string name="strTurnOnNotificationDescription">You will need to turn on your notifications to be able to log on to revealit TV Curator platform.</string>
+    <string name="strGoToSettings">Go to settings</string>
     <string name="strEnterMobilNumber">Enter your mobile number : </string>
     <string name="strUsedForUniqueAccountCreation">Your phone number will be used once for unique account creation and never again.</string>
     <string name="strMobileAlreadyUsed">Mobile Number is already in use on the revealit TV platform. revealit TV only allows one account per mobile.</string>
