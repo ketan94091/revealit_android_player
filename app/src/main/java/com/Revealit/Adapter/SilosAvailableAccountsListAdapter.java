@@ -133,6 +133,8 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
                     //STORE NECESSARY DATA IN CASE USER NOT AVAILABLE TO DP
                     mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME, itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
                     mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY, itemListData.get(position).getSubmitProfileModel().getProton().getPublicKey());
+                    mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY, itemListData.get(position).getSubmitProfileModel().getProton().getPrivateKey());
+
 
                     //GO TO BIOMETRIC CONFIRMATION ACTIVITY
                     Intent mIntent = new Intent(mActivity, NewAuthBiomatricAuthenticationActivity.class);

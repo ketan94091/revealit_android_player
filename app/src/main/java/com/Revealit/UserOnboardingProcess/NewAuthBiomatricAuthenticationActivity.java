@@ -479,6 +479,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
         paramObject.addProperty("name", mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
 
 
+
         Call<NewAuthLogin> call = patchService1.newAuthLogin(paramObject);
 
         call.enqueue(new Callback<NewAuthLogin>() {

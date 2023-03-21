@@ -593,6 +593,7 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                 //GET PUBLIC KEY FROM THE SESSION
                 publicKey= ""+session.getSignatureProvider().getAvailableKeys().get(0);
 
+
                 return true;
 
             } catch (IllegalArgumentException | SerializationProviderError | EosioJavaRpcProviderInitializerError | ImportKeyError | GetAvailableKeysError exception) {
