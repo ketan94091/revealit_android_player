@@ -50,6 +50,9 @@ import com.greymass.esr.models.PermissionLevel;
 import com.greymass.esr.models.ResolvedCallback;
 import com.greymass.esr.models.TransactionContext;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.security.InvalidAlgorithmParameterException;
@@ -109,7 +112,9 @@ public class QrCodeScannerActivity extends AppCompatActivity {
     private TextView txtBarcodeValue;
     private String intentData,mProtonAccountName,mPublicKey,mPrivateKey;
     private boolean isBarcodeScanned = false;
-
+    private int loadBalanceCount =0;
+    private Gson gson;
+    private JSONArray jsonArrayloadBalance;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -123,9 +128,7 @@ public class QrCodeScannerActivity extends AppCompatActivity {
     }
 
 
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setId() {
+    private void setId(){
 
         mActivity = QrCodeScannerActivity.this;
         mContext = QrCodeScannerActivity.this;
@@ -140,6 +143,20 @@ public class QrCodeScannerActivity extends AppCompatActivity {
 
         relativeSurface = (RelativeLayout) findViewById(R.id.relativeSurface);
         txtBarcodeValue = (TextView) findViewById(R.id.txtBarcodeValue);
+
+
+         gson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                .serializeNulls()
+                .create();
+
+        try {
+             jsonArrayloadBalance =new JSONArray(mSessionManager.getPreference(Constants.KEY_PUBLIC_SETTING_BLOCK_PRODUCERS));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
 
             try {
                 //OPEN KEYSTORE
@@ -334,18 +351,29 @@ public class QrCodeScannerActivity extends AppCompatActivity {
 
     class RetrieveFeedTask extends AsyncTask<String, Void, Void> {
 
+
+
+
         String qrCodeData, strESRdata;
-        String baseURl =Constants.PROTON_BASE_URL;
+        //String baseURl =Constants.PROTON_BASE_URL;
+        String baseURl;
+
+        {
+            try {
+                baseURl = jsonArrayloadBalance.getString(loadBalanceCount);
+                Log.e("BASE",""+baseURl);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         String permission=Constants.PROTON_PERMISSION;
         String strActionAccount =Constants.PROTON_ACTION_ACCOUNT;
         String strVoteProducer =Constants.PROTON_VOTE_PRODUCER;
         String strGreyMassVote =Constants.PROTON_GREYMASS_VOTE;
         private static final boolean ENABLE_NETWORK_LOG = true;
 
-        Gson gson = new GsonBuilder()
-                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-                .serializeNulls()
-                .create();
+
 
 
         public RetrieveFeedTask(String intentData) {
@@ -383,120 +411,127 @@ public class QrCodeScannerActivity extends AppCompatActivity {
 
                 signingRequest.load(strESRdata);
 
-            } catch (ESRException e) {
-                e.printStackTrace();
-                Log.e("CRASHED ",""+ e);
-            }
-
-            // get info pairs
-            Map<String, String> info = signingRequest.getInfo();
-            String strAccount = info.get("req_account");
+                // get info pairs
+                Map<String, String> info = signingRequest.getInfo();
+                String strAccount = info.get("req_account");
 //            try {
 //                //SET SIGNING REQUEST ACCOUNT
 //                //signingRequest.setInfoKey("req_account",mProtonAccountName);
 //            } catch (ESRException e) {
 //                e.printStackTrace();
 //            }
-            CommonMethods.printLogE("signin response",""+gson.toJson(signingRequest.toDataJSON()));
-            CommonMethods.printLogE("signin requestname",""+strAccount);
+                CommonMethods.printLogE("signin response",""+gson.toJson(signingRequest.toDataJSON()));
+                CommonMethods.printLogE("signin requestname",""+strAccount);
 
-            //RESOLVED THE IDENTITY REQUEST
-            if (signingRequest.isIdentity()) {
-
-
-                try {
-                    // Creating serialization provider
-                    ISerializationProvider serializationProvider;
-                    serializationProvider = new AbiEosSerializationProviderImpl();
-
-                    // Creating RPC Provider
-                    IRPCProvider rpcProvider;
-                    rpcProvider = new EosioJavaRpcProviderImpl(baseURl, ENABLE_NETWORK_LOG);
+                //RESOLVED THE IDENTITY REQUEST
+                if (signingRequest.isIdentity()) {
 
 
-                    // Creating ABI provider
-                    IABIProvider abiProvider = new ABIProviderImpl(rpcProvider, serializationProvider);
+                    try {
+                        // Creating serialization provider
+                        ISerializationProvider serializationProvider;
+                        serializationProvider = new AbiEosSerializationProviderImpl();
 
-                    // Creating Signature provider
-                    ISignatureProvider signatureProvider = new SoftKeySignatureProviderImpl();
-
-
-                    ((SoftKeySignatureProviderImpl) signatureProvider).importKey(mPrivateKey);
-
-                    // Creating TransactionProcess
-                    TransactionSession session = new TransactionSession(serializationProvider, rpcProvider, abiProvider, signatureProvider);
-                    TransactionProcessor processor = session.getTransactionProcessor();
+                        // Creating RPC Provider
+                        IRPCProvider rpcProvider;
+                        rpcProvider = new EosioJavaRpcProviderImpl(baseURl, ENABLE_NETWORK_LOG);
 
 
-                    // Now the TransactionConfig can be altered, if desired
-                    TransactionConfig transactionConfig = processor.getTransactionConfig();
+                        // Creating ABI provider
+                        IABIProvider abiProvider = new ABIProviderImpl(rpcProvider, serializationProvider);
 
-                    // Use blocksBehind (default 3) the current head block to calculate TAPOS
-                    transactionConfig.setUseLastIrreversible(false);
-                    // Set the expiration time of transactions 600 seconds later than the timestamp
-
-                    // of the block used to calculate TAPOS
-                    transactionConfig.setExpiresSeconds(6);
-
-                    // Update the TransactionProcessor with the config changes
-                    processor.setTransactionConfig(transactionConfig);
+                        // Creating Signature provider
+                        ISignatureProvider signatureProvider = new SoftKeySignatureProviderImpl();
 
 
-                    //CREATE EMPTY LIST FOR PRODUCER
-                    List<String> list = Collections.<String>emptyList();
+                        ((SoftKeySignatureProviderImpl) signatureProvider).importKey(mPrivateKey);
+
+                        // Creating TransactionProcess
+                        TransactionSession session = new TransactionSession(serializationProvider, rpcProvider, abiProvider, signatureProvider);
+                        TransactionProcessor processor = session.getTransactionProcessor();
 
 
-                    // Creating action with action's data, eosio contract and transfer action.
-                    //Action action = new Action(""+signingRequest.getChainId().getChainName(), account_name1, Collections.singletonList(new Authorization(account_name1, permission)), ""+gson.toJson( mJsonDataTransfer));
-                    Action action = new Action(strActionAccount, strVoteProducer, Collections.singletonList(new Authorization(mProtonAccountName, permission)),gson.toJson( new JsonDataTransfer(mProtonAccountName,strGreyMassVote,list)));
+                        // Now the TransactionConfig can be altered, if desired
+                        TransactionConfig transactionConfig = processor.getTransactionConfig();
 
-                    //PRINT CONTRACT
-                    //CommonMethods.printLogE("SIGNING_CONTRACT_ACTION", "" + gson.toJson(action));
+                        // Use blocksBehind (default 3) the current head block to calculate TAPOS
+                        transactionConfig.setUseLastIrreversible(false);
+                        // Set the expiration time of transactions 600 seconds later than the timestamp
 
-                    // Prepare transaction with above action. A transaction can be executed with multiple action.
-                    processor.prepare(Collections.singletonList(action));
+                        // of the block used to calculate TAPOS
+                        transactionConfig.setExpiresSeconds(6);
 
-                    //Sign transaction.
-                    processor.sign();
-
-                    //RESOLVED SIGNING REQUEST
-                    ResolvedSigningRequest resolved = signingRequest.resolve(new PermissionLevel(mProtonAccountName, permission), new TransactionContext());
+                        // Update the TransactionProcessor with the config changes
+                        processor.setTransactionConfig(transactionConfig);
 
 
-                    //GET CALLBACK FROM SIGNING REQUEST
-                    //ResolvedCallback callback = resolved.getCallback( processor.getSignatures(),signingRequest.getChainId().getChainId(), CommonMethods.returnDateString(),qrCodeData, "PUB_K1_7KxbJA9qrEu9RrhrEsErkBE8T5orDNuLfy5sjA2vyXHrPvwXHS");
-                    ResolvedCallback callback = resolved.getCallback( processor.getSignatures(),signingRequest.getChainId().getChainId(), CommonMethods.returnDateString(),qrCodeData, mPublicKey);
+                        //CREATE EMPTY LIST FOR PRODUCER
+                        List<String> list = Collections.<String>emptyList();
 
 
-                    //CALL CALL BACK URL IF SIGNATURE AND RESOLVED REQUEST NOT NULL
-                    Log.e("CALLBACK_response", gson.toJson(callback));
+                        // Creating action with action's data, eosio contract and transfer action.
+                        //Action action = new Action(""+signingRequest.getChainId().getChainName(), account_name1, Collections.singletonList(new Authorization(account_name1, permission)), ""+gson.toJson( mJsonDataTransfer));
+                        Action action = new Action(strActionAccount, strVoteProducer, Collections.singletonList(new Authorization(mProtonAccountName, permission)), gson.toJson(new JsonDataTransfer(mProtonAccountName, strGreyMassVote, list)));
+
+                        //PRINT CONTRACT
+                        //CommonMethods.printLogE("SIGNING_CONTRACT_ACTION", "" + gson.toJson(action));
+
+                        // Prepare transaction with above action. A transaction can be executed with multiple action.
+                        processor.prepare(Collections.singletonList(action));
+
+                        //Sign transaction.
+                        processor.sign();
+
+                        //RESOLVED SIGNING REQUEST
+                        ResolvedSigningRequest resolved = signingRequest.resolve(new PermissionLevel(mProtonAccountName, permission), new TransactionContext());
 
 
-                    callSignInCallBack(callback);
+                        //GET CALLBACK FROM SIGNING REQUEST
+                        //ResolvedCallback callback = resolved.getCallback( processor.getSignatures(),signingRequest.getChainId().getChainId(), CommonMethods.returnDateString(),qrCodeData, "PUB_K1_7KxbJA9qrEu9RrhrEsErkBE8T5orDNuLfy5sjA2vyXHrPvwXHS");
+                        ResolvedCallback callback = resolved.getCallback(processor.getSignatures(), signingRequest.getChainId().getChainId(), CommonMethods.returnDateString(), qrCodeData, mPublicKey);
 
 
+                        //CALL CALL BACK URL IF SIGNATURE AND RESOLVED REQUEST NOT NULL
+                        Log.e("CALLBACK_response", gson.toJson(callback));
 
 
-                } catch (TransactionPrepareError | TransactionSignError | ESRException | SerializationProviderError | EosioJavaRpcProviderInitializerError | ImportKeyError transactionPrepareError) {
+                        callSignInCallBack(callback);
 
 
-                    //CALL CALL BACK URL IF SIGNATURE AND RESOLVED REQUEST NOT NULL
-                    Log.e("CALLBACK_response", transactionPrepareError.getMessage());
-
-                    transactionPrepareError.printStackTrace();
-
-                    mActivity.runOnUiThread(new Runnable() {
-                        public void run() {
-                            //CREATE DIALOGUE
-                            createErrorDialogue(transactionPrepareError.getMessage());
-                        }
-                    });
+                    } catch (TransactionPrepareError | TransactionSignError | ESRException | SerializationProviderError | EosioJavaRpcProviderInitializerError | ImportKeyError transactionPrepareError) {
 
 
-                    //OPEN DIALOGUE
-                    CommonMethods.closeDialog();
+                        //CALL CALL BACK URL IF SIGNATURE AND RESOLVED REQUEST NOT NULL
+                        Log.e("CALLBACK_response", transactionPrepareError.getMessage());
+
+                        transactionPrepareError.printStackTrace();
+
+                        mActivity.runOnUiThread(new Runnable() {
+                            public void run() {
+                                //CREATE DIALOGUE
+                                createErrorDialogue(transactionPrepareError.getMessage());
+                            }
+                        });
 
 
+                        //OPEN DIALOGUE
+                        CommonMethods.closeDialog();
+
+
+                    }
+
+                }
+
+            } catch (ESRException e) {
+                e.printStackTrace();
+                //INCREASE COUNT AND CHANGE THE URL
+                loadBalanceCount++;
+
+                //CALL THIS METHOD AGAIN ID LOAD BALANCE THROW ERROR
+                if(loadBalanceCount !=  jsonArrayloadBalance.length() -1){
+                    callProtonStuff(intentData);
+                }else{
+                    CommonMethods.showDialogWithCustomMessage(mContext,"ERROR IN PRODUCERS");
                 }
 
             }

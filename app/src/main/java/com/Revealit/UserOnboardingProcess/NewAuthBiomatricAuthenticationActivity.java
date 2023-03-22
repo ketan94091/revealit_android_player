@@ -43,6 +43,7 @@ import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
@@ -71,6 +72,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
     private RelativeLayout relativeMain;
     private boolean isFromLoginScreen;
     private AlertDialog mAlertDialog;
+    private Gson mGson;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -123,6 +125,12 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
             CommonMethods.openBiometricActivatioDailogue(mActivity);
 
         }
+
+        mGson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                .serializeNulls()
+                .create();
+
 
 
     }
@@ -551,6 +559,17 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                             mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION, response.body().getPublic_settings().get(i).getMinimum_acceptable_api_version());
                             mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER, Integer.valueOf(response.body().getPublic_settings().get(i).getProfile_update_reminder_period()));
                             mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_BACKUP_REMINDER, Integer.valueOf(response.body().getPublic_settings().get(i).getBackup_update_reminder_period()));
+
+                            //CREATE ARRAY LIST FOR LOAD PRODUCERS
+                            ArrayList<String> mBlockProducerArray = new ArrayList<>();
+                            for (int j=0;j< response.body().getPublic_settings().get(i).getApp_settings().getBlock_producers().size();j++){
+                                mBlockProducerArray.add(response.body().getPublic_settings().get(i).getApp_settings().getBlock_producers().get(j).getUrl());
+                            }
+
+                            //SAVE THIS TO SESSION MANAGER
+                            mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_BLOCK_PRODUCERS, mGson.toJson(mBlockProducerArray));
+
+
 
                             if(response.body().getPublic_settings().get(i).getMaintenance() == "1"){
                                 isAppInMaintainance = true;

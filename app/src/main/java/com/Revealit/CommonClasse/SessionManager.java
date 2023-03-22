@@ -53,7 +53,6 @@ public class SessionManager {
 
     }
 
-
     //--------(Update Long preferences)--------//
     public boolean updatePreferenceLong(String key, Long value) {
         editor = settings.edit();

@@ -155,7 +155,7 @@ public class NewAuthLoginCallbackModel {
         }
     }
 
-    private class AppSetting {
+    public static class AppSetting {
 
         private List<BlockProducer> block_producers;
 
@@ -168,11 +168,11 @@ public class NewAuthLoginCallbackModel {
         }
     }
 
-    private class BlockProducer {
+    public static class BlockProducer {
 
-        private String url;
+        public  String url;
 
-        public String getUrl() {
+        public  String getUrl() {
             return url;
         }
 

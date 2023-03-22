@@ -235,6 +235,7 @@ public class Constants {
   public  static  final  String KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION="keyMinimumAcceptableApiVersion";
   public  static  final  String KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER="keyProfileReminder";
   public  static  final  String KEY_PUBLIC_SETTING_BACKUP_REMINDER="keyBackupReminder";
+  public  static  final  String KEY_PUBLIC_SETTING_BLOCK_PRODUCERS="keyBlockProducers";
   public  static  final  String KEY_IS_USER_CANCEL_REFERRAL="keyIsUserCancelReferral";
 
 
