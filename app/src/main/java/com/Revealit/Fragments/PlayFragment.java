@@ -520,10 +520,12 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
             txtWaitListed.setVisibility(View.GONE);
             txtGetStarted.setVisibility(View.VISIBLE);
             txtLogout.setVisibility(View.GONE);
+            imgCancel.setVisibility(View.GONE);
         }else{
             txtWaitListed.setVisibility(View.VISIBLE);
             txtGetStarted.setVisibility(View.GONE);
-            txtLogout.setVisibility(View.VISIBLE);
+            txtLogout.setVisibility(View.GONE);
+            imgCancel.setVisibility(View.VISIBLE);
         }
 
 

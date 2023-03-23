@@ -357,21 +357,22 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
                 if (response.code() == 200 && !response.body().getAsJsonObject().get("status").toString().replaceAll("^\"|\"$", "").replaceAll("u0027", "'").replaceAll("\\\\", "").equals("error") ) {
 
                     //UPDATE INVITE UI
-                    updateUI(response.body(),1);
+                    updateUI(response.body(),1,"");
 
                 }else{
 
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        //CommonMethods.buildDialog(mContext,"Invalid Referral");
+                        CommonMethods.buildDialog(mContext,""+jObjError.getString("message"));
 
+                        //DISPLAY ERRORS
+                        updateUI(response.body(),2,""+jObjError.getString("message"));
                     } catch (Exception e) {
 
 
                     }
 
-                    //DISPLAY ERRORS
-                    updateUI(response.body(),2);
+
                 }
 
 
@@ -403,7 +404,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
 
                 isReferralValid = false;
 
-                updateUI(null,0);
+                updateUI(null,0,"");
 
                 break;
             case 1:
@@ -453,7 +454,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
 
 
 
-    private void updateUI(JsonElement body, int responseType) {
+    private void updateUI(JsonElement body, int responseType, String error) {
 
         switch (responseType){
             case 0:
@@ -492,7 +493,7 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
                 txtContinueEnabled.setVisibility(View.GONE);
                 imgClearId.setVisibility(View.VISIBLE);
                 linearPromoWarnings.setVisibility(View.VISIBLE);
-                txtPromoWarnings.setText(getString(R.string.strEnterRightCampaignId));
+                txtPromoWarnings.setText(error);
 
                 break;
         }

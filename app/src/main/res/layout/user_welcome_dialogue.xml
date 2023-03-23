@@ -35,7 +35,7 @@
                     android:layout_height="20dp"
                     android:layout_gravity="right"
                     android:src="@mipmap/icon_cross"
-                    android:visibility="invisible" />
+                    />
 
                 <ImageView
                     android:id="@+id/imgAppIcon"

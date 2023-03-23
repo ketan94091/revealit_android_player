@@ -182,6 +182,7 @@
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="700"
                     android:layout_marginTop="20dp"
+                    android:visibility="gone"
                     android:textSize="15dp" />
 
 
