@@ -112,7 +112,8 @@ public class QrCodeScannerActivity extends AppCompatActivity {
     private TextView txtBarcodeValue;
     private String intentData,mProtonAccountName,mPublicKey,mPrivateKey;
     private boolean isBarcodeScanned = false;
-    private int loadBalanceCount =0;
+    private  int blockProducerCount=0;
+    private int blockProducerTryCount = 1;
     private Gson gson;
     private JSONArray jsonArrayloadBalance;
 
@@ -360,8 +361,8 @@ public class QrCodeScannerActivity extends AppCompatActivity {
 
         {
             try {
-                baseURl = jsonArrayloadBalance.getString(loadBalanceCount);
-                Log.e("BASE",""+baseURl);
+                baseURl = jsonArrayloadBalance.getString(blockProducerCount);
+                Log.e("URL",""+baseURl);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -502,7 +503,7 @@ public class QrCodeScannerActivity extends AppCompatActivity {
 
 
                         //CALL CALL BACK URL IF SIGNATURE AND RESOLVED REQUEST NOT NULL
-                        Log.e("CALLBACK_response", transactionPrepareError.getMessage());
+                        //Log.e("CALLBACK_response", transactionPrepareError.getMessage());
 
                         transactionPrepareError.printStackTrace();
 
@@ -523,16 +524,13 @@ public class QrCodeScannerActivity extends AppCompatActivity {
                 }
 
             } catch (ESRException e) {
-                e.printStackTrace();
-                //INCREASE COUNT AND CHANGE THE URL
-                loadBalanceCount++;
 
-                //CALL THIS METHOD AGAIN ID LOAD BALANCE THROW ERROR
-                if(loadBalanceCount !=  jsonArrayloadBalance.length() -1){
-                    callProtonStuff(intentData);
-                }else{
-                    CommonMethods.showDialogWithCustomMessage(mContext,"ERROR IN PRODUCERS");
-                }
+                //OPEN DIALOGUE
+                CommonMethods.closeDialog();
+
+                e.printStackTrace();
+
+                callBlockProducers(e.getMessage());
 
             }
             return null;
@@ -542,6 +540,29 @@ public class QrCodeScannerActivity extends AppCompatActivity {
             // TODO: check this.exception
             // TODO: do something with the feed
         }
+    }
+    private void callBlockProducers(String errorBody) {
+
+        //INCREASE TRY COUNT WHEN ERROR OCCURED
+        blockProducerTryCount++;
+        if(blockProducerTryCount > 3){
+            blockProducerTryCount = 1;
+            blockProducerCount++;
+
+            if(blockProducerCount == jsonArrayloadBalance.length()){
+                CommonMethods.buildDialog(mContext,"Error : "+errorBody);
+            }else{
+                callProtonStuff(intentData);
+            }
+
+        }else{
+            Log.e("TRY_COUNT",""+blockProducerTryCount);
+            Log.e("BLOCK_COUNT",""+blockProducerCount);
+
+            callProtonStuff(intentData);
+        }
+
+
     }
 
     private void createErrorDialogue(String strMessege) {

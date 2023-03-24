@@ -22,6 +22,7 @@ import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -72,6 +73,11 @@ public class NewAuthSplashScreen extends AppCompatActivity {
             mSessionManager.updatePreferenceBoolean(Constants.KEY_QR_CODE_FROM_CAMERA, false);
             mSessionManager.updatePreferenceString(Constants.KEY_QR_CODE_FROM_CAMERA_VALUE,"");
         }
+
+        mGson = new GsonBuilder()
+                    .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                    .serializeNulls()
+                    .create();
 
 
         //MERGER OLD KEYSTORE ARCHITECTURE IN TO NEW ARCHITECTURE
@@ -273,6 +279,17 @@ public class NewAuthSplashScreen extends AppCompatActivity {
         //FALSE == APP OPEN FIRST TIME
         //TRUE  == APP NOT OPEN FIRST TIME
         if (!mSessionManager.getPreferenceBoolean(Constants.IS_APP_OPEN_FIRST_TIME)) {
+
+            //UPDATE DEFAULT BLOCK PRODUCERS
+            //CREATE ARRAY LIST FOR LOAD PRODUCERS
+            ArrayList<String> mBlockProducerArray = new ArrayList<>();
+            mBlockProducerArray.add(Constants.GET_PROTON_ACCOUNT_NAME_BASE_URL);
+
+            //SAVE THIS TO SESSION MANAGER
+            mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_BLOCK_PRODUCERS, mGson.toJson(mBlockProducerArray));
+
+
+
             //SAVE TESTING END POINTS
             //CHANGE API END POINT TO ALPHA T CURATOR
             mSessionManager.updatePreferenceString(Constants.API_END_POINTS_MOBILE_KEY, Constants.API_END_POINTS_MOBILE_B_CURATOR);

@@ -59,7 +59,9 @@ public class Constants {
   public static final  String API_PROTON_TEST_NET ="https://api-dev.protonchain.com";
   //PROTON EOSIO
   public static final  String PROTON_BASE_URL ="https://proton.greymass.com";
-  public static final  String GET_PROTON_ACCOUNT_NAME_BASE_URL ="https://proton.cryptolions.io/v1/history/";
+  //public static final  String GET_PROTON_ACCOUNT_NAME_BASE_URL ="https://proton.cryptolions.io/v1/history/";
+  public static final  String GET_PROTON_ACCOUNT_NAME_BASE_URL ="https://proton.cryptolions.io";
+  public static final  String GET_PROTON_ACCOUNT_NAME_BASE_URL_APPEND ="/v1/history/";
   //public static final  String GET_PROTON_ACCOUNT_NAME_BASE_URL ="https://proton.eosphere.io/v1/history/";
   public static final  String PROTON_PERMISSION ="active";
   public static final  String PROTON_ACTION_ACCOUNT ="eosio";

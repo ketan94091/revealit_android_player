@@ -82,6 +82,9 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
     private Gson mGson;
     ArrayList<KeyStoreServerInstancesModel.Data> selectedSilosAccountsList = new ArrayList<>();
     private String edtPrivateKey;
+    private  int blockProducerCount=0;
+    private int blockProducerTryCount = 1;
+    private JSONArray jsonArrayloadBalance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +143,14 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                 .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
                 .serializeNulls()
                 .create();
+
+
+        try {
+            jsonArrayloadBalance =new JSONArray(mSessionManager.getPreference(Constants.KEY_PUBLIC_SETTING_BLOCK_PRODUCERS));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -201,18 +212,25 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                     .create();
 
             final OkHttpClient client = httpClient.build();
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.GET_PROTON_ACCOUNT_NAME_BASE_URL)
+        Retrofit retrofit = null;
+        try {
+            retrofit = new Retrofit.Builder()
+                    //.baseUrl(Constants.GET_PROTON_ACCOUNT_NAME_BASE_URL)
+                    .baseUrl(jsonArrayloadBalance.getString(blockProducerCount)+Constants.GET_PROTON_ACCOUNT_NAME_BASE_URL_APPEND)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
                     .build();
 
 
-            UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
             JsonObject paramObject = new JsonObject();
             paramObject.addProperty("public_key", publicKey);
 
-            Log.e("PEM",""+publicKey);
 
 
             Call<GetProtonUsername> call = patchService1.getProtonAccountName(paramObject);
@@ -245,12 +263,11 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                         }
 
                     } else {
-                        try {
-                            JSONObject jObjError = new JSONObject(response.errorBody().string());
-                            CommonMethods.buildDialog(mContext,"Error : "+ jObjError.getString("message"));
-                        } catch (Exception e) {
-                            CommonMethods.buildDialog(mContext,"Error : "+e.getMessage());
 
+                        try {
+                            callBlockProducers(response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
 
@@ -262,13 +279,44 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                     //CLOSED DIALOGUE
                     CommonMethods.closeDialog();
 
-                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strProtonNotResponding));
-
+                    //CommonMethods.buildDialog(mContext, getResources().getString(R.string.strProtonNotResponding));
+                    callBlockProducers(getResources().getString(R.string.strProtonNotResponding));
 
                 }
             });
 
     }
+
+    private void callBlockProducers(String errorBody) {
+
+        //INCREASE TRY COUNT WHEN ERROR OCCURED
+        blockProducerTryCount++;
+        if(blockProducerTryCount > 3){
+            blockProducerTryCount = 1;
+            blockProducerCount++;
+
+            if(blockProducerCount == jsonArrayloadBalance.length()){
+                try {
+                    JSONObject jObjError = new JSONObject(errorBody);
+                    CommonMethods.buildDialog(mContext,"Error : "+ jObjError.getString("message"));
+                } catch (Exception e) {
+                    CommonMethods.buildDialog(mContext,"Error : "+e.getMessage());
+
+                }
+            }else{
+                fetchUsername();
+            }
+
+        }else{
+            Log.e("TRY_COUNT",""+blockProducerTryCount);
+            Log.e("BLOCK_COUNT",""+blockProducerCount);
+
+            fetchUsername();
+        }
+
+
+    }
+
     private void fetchUserDetailsFromPubkeyAndUsername(String publicKey, String username) {
 
         //OPEN DIALOGUE
