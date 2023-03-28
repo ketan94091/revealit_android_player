@@ -354,6 +354,8 @@ public class  BiomatricAuthenticationDeleteAccontActivity extends AppCompatActiv
            Intent mIntent = new Intent(this, ListOfActiveAccountsActivity.class);
            startActivity(mIntent);
            finishAffinity();
+
+
        }
 
     }
