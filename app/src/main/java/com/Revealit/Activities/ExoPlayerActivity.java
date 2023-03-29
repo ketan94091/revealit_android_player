@@ -1026,24 +1026,36 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                                 //IF DEVICE SUPPORT AR VIEW
                                 //IF APP ENVIRONMENT IS T-CURATOR(WHICH SUPPORT MULTIPLE GLB)
-                                if (CommonMethods.isDeviceSupportAR(mActivity) && mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 2) {
-                                    //OPEN AR VIEW
-                                    Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ArModelViewerWeb.class);
+//                                if (CommonMethods.isDeviceSupportAR(mActivity) && mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 2) {
+//                                    //OPEN AR VIEW
+//                                    Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ArModelViewerWeb.class);
+//                                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
+//                                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.get(finalI).getVendorUrl());
+//                                    mARviewIntent.putExtra(Constants.AR_MODEL_ID, data.get(finalI).getItemId());
+//                                    startActivity(mARviewIntent);
+//                                }else{
+//                                    //IF OTHER ENVIRONMENT OTHER THAN T CURATOR SHOULD OPEN DIRECTLY IN TO AR VIEW
+//                                    if(CommonMethods.isDeviceSupportAR(mActivity)) {
+//                                        Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
+//                                        mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.get(finalI).getGlb_model_url());
+//                                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
+//                                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL,  data.get(finalI).getVendorUrl());
+//                                        startActivity(mARviewIntent);
+//                                    }else{
+//                                        CommonMethods.displayToast(mContext ,"Device not support AR camera");
+//                                    }
+//                                }
+
+
+                                //IF OTHER ENVIRONMENT OTHER THAN T CURATOR SHOULD OPEN DIRECTLY IN TO AR VIEW
+                                if(CommonMethods.isDeviceSupportAR(mActivity)) {
+                                    Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
+                                    mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.get(finalI).getGlb_model_url());
                                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
-                                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.get(finalI).getVendorUrl());
-                                    mARviewIntent.putExtra(Constants.AR_MODEL_ID, data.get(finalI).getItemId());
+                                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL,  data.get(finalI).getVendorUrl());
                                     startActivity(mARviewIntent);
                                 }else{
-                                    //IF OTHER ENVIRONMENT OTHER THAN T CURATOR SHOULD OPEN DIRECTLY IN TO AR VIEW
-                                    if(CommonMethods.isDeviceSupportAR(mActivity)) {
-                                        Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
-                                        mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.get(finalI).getGlb_model_url());
-                                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
-                                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL,  data.get(finalI).getVendorUrl());
-                                        startActivity(mARviewIntent);
-                                    }else{
-                                        CommonMethods.displayToast(mContext ,"Device not support AR camera");
-                                    }
+                                    CommonMethods.displayToast(mContext ,"Device not support AR camera");
                                 }
 
                             }

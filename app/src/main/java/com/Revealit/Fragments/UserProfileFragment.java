@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Revealit.Activities.HomeScreenTabLayout;
+import com.Revealit.Activities.ImportAccountFromPrivateKey;
 import com.Revealit.Activities.QrCodeScannerActivity;
 import com.Revealit.Adapter.SilosAvailableAccountsListAdapterPopup;
 import com.Revealit.BuildConfig;
@@ -81,7 +82,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private boolean isUserIsActive =false;
     private LinearLayout linearAccount,linearSettings,linearSavedItems,linearUserStatus,linearAdmin,linearHelp;
     private ImageView imgLogo,imgScanQRcode;
-    private SilosAvailableAccountsListAdapterPopup mSilosAvailableAccountsListAdapter;
     private RecyclerView recycleAccountList;
     private Executor executor;
     private BiometricPrompt biometricPrompt;
@@ -389,13 +389,24 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         recycleAccountList = (RecyclerView) bottomSheetDialog.findViewById(R.id.recycleAccountList);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mActivity);
         recycleAccountList.setLayoutManager(mLinearLayoutManager);
+        recycleAccountList.setAdapter(null);
 
         RelativeLayout relativeImportKey = (RelativeLayout) bottomSheetDialog.findViewById(R.id.relativeImportKey);
 
         //FETCH USER'S SELECTED SILOS DATA
-        bindRecyclerView();
+        bindRecyclerView(bottomSheetDialog);
 
+        relativeImportKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                bottomSheetDialog.cancel();
+
+                Intent mIntent = new Intent(mHomeScreenTabLayout, ImportAccountFromPrivateKey.class);
+                startActivity(mIntent);
+
+            }
+        });
         imgCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -437,7 +448,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         mActivity.finish();
     }
 
-    private void bindRecyclerView() {
+    private void bindRecyclerView(BottomSheetDialog bottomSheetDialog) {
 
         ArrayList<KeyStoreServerInstancesModel.Data> selectedSilosAccountsList  = null;
         try {
@@ -445,10 +456,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             //CHECK IF THERE IS DATA AVAILABLE FOR SELECTED SILOS
             if(selectedSilosAccountsList != null && selectedSilosAccountsList.size() != 0){
 
-
-
-
-                    mSilosAvailableAccountsListAdapter = new SilosAvailableAccountsListAdapterPopup(mContext, mHomeScreenTabLayout, selectedSilosAccountsList, mSessionManager);
+                    SilosAvailableAccountsListAdapterPopup  mSilosAvailableAccountsListAdapter = new SilosAvailableAccountsListAdapterPopup(mContext, mHomeScreenTabLayout, selectedSilosAccountsList, mSessionManager);
                     recycleAccountList.setAdapter(mSilosAvailableAccountsListAdapter);
 
 
@@ -465,7 +473,10 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                                     new SwipeHelper.UnderlayButtonClickListener() {
                                         @Override
                                         public void onClick(int pos) {
-                                            displayWarningDialogue(mSelectedSilosAccountsList.get(pos).getSubmitProfileModel().getrevealit_private_key(),mSelectedSilosAccountsList.get(pos).getSubmitProfileModel().getProton().getPrivateKey(),mSelectedSilosAccountsList.get(pos).getSubmitProfileModel().getProton().getAccountName());
+
+                                            bottomSheetDialog.cancel();
+
+                                            displayWarningDialogue(mSelectedSilosAccountsList.get(pos).getSubmitProfileModel().getrevealit_private_key(), mSelectedSilosAccountsList.get(pos).getSubmitProfileModel().getProton().getPrivateKey(), mSelectedSilosAccountsList.get(pos).getSubmitProfileModel().getProton().getAccountName());
 
                                         }
                                     }
@@ -473,7 +484,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
                         }
                     };
-
 
 
 
@@ -758,21 +768,13 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
     private void deleteAccountFromAndroidKeyStore() throws ExecutionException, InterruptedException {
 
-        if(new UpdateUserDataInAndroidKeyStoreTaskPopup(strPrivateKey,strUsername).execute(mSessionManager).get()){
-
-
-
+        if(new UpdateUserDataInAndroidKeyStoreTaskPopup(strPrivateKey,strAccountName).execute(mSessionManager).get()){
 
             if(strUsername.equals(strAccountName)){
                 logoutUserAndMoveToStartScreen();
-            }else{
-                //UPDATE GOOGLE DRIVE BACKUP FLAG
-                mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_GOOGLE_DRIVE_BACKUP_DONE, false);
-
-                //RELOAD BOTTOMBAR
+            }else {
                 openBottomBarForReward();
             }
-
         }
 
     }
