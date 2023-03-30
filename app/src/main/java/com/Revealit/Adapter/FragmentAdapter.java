@@ -17,6 +17,7 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         super(fm);
         this.context = context;
         this.fragments = fragments;
+
     }
 
 

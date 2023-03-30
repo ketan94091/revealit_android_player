@@ -288,6 +288,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.imgLogo:
 
+                mHomeScreenTabLayout.openBottomBarForSwitchAccount();
+
 //                Intent mIntent = new Intent(mActivity, ExoPlayerActivity.class);
 //                mIntent.putExtra(Constants.MEDIA_URL, Constants.EDUCATION_VIDEO_URL);
 //                mIntent.putExtra(Constants.MEDIA_ID, "0");
@@ -296,7 +298,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 //                mIntent.putExtra(Constants.IS_VIDEO_SEEK, false);
 //                mActivity.startActivity(mIntent);
 
-                openBottomBarForReward();
+                //openBottomBarForReward();
 
                 break;
         }
