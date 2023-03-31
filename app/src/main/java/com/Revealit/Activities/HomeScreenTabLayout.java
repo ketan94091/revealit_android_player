@@ -454,7 +454,7 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
             //CHECK IF THERE IS DATA AVAILABLE FOR SELECTED SILOS
             if(selectedSilosAccountsList != null && selectedSilosAccountsList.size() != 0){
 
-                SilosAvailableAccountsListAdapterPopup mSilosAvailableAccountsListAdapter = new SilosAvailableAccountsListAdapterPopup(mContext, this, selectedSilosAccountsList, mSessionManager);
+                SilosAvailableAccountsListAdapterPopup mSilosAvailableAccountsListAdapter = new SilosAvailableAccountsListAdapterPopup(mContext, this, selectedSilosAccountsList, mSessionManager,mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
                 recycleAccountList.setAdapter(mSilosAvailableAccountsListAdapter);
 
 

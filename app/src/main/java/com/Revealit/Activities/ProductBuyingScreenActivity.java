@@ -8,12 +8,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,10 +56,12 @@ import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -88,6 +91,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
     private Bitmap savedBitMap;
     private GetProductDetailsModel.Data mProductData;
     private ImageView imgHeaderViewDialogView;
+    private RelativeLayout relatvieHeaderImage;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +118,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
         mDatabaseHelper.open();
         
          imgHeaderViewDialogView = (ImageView)findViewById(R.id.imgHeaderView);
+        relatvieHeaderImage = (RelativeLayout)findViewById(R.id.relatvieHeaderImage);
 
         openProductPurchaseDialog(getIntent().getStringExtra("ITEM_ID"));
 
@@ -385,10 +390,14 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
                 if (mSessionManager.getPreferenceBoolean(Constants.READ_WRITE_PERMISSION)) {
 
-                    //SAVE IT IN LOCAL STORAGE AND THEN SHARE
-                    imgHeaderViewDialogView.invalidate();
-                    BitmapDrawable drawable = (BitmapDrawable) imgHeaderViewDialogView.getDrawable();
-                    savedBitMap = drawable.getBitmap();
+//                    //SAVE IT IN LOCAL STORAGE AND THEN SHARE
+//                    imgHeaderViewDialogView.invalidate();
+//                    BitmapDrawable drawable = (BitmapDrawable) imgHeaderViewDialogView.getDrawable();
+//                    savedBitMap = drawable.getBitmap();
+
+                    savedBitMap = Bitmap.createBitmap(relatvieHeaderImage.getWidth(), relatvieHeaderImage.getHeight(), Bitmap.Config.ARGB_8888);
+                    Canvas canvas = new Canvas(savedBitMap);
+                    relatvieHeaderImage.draw(canvas);
 
                     //SAVE IMAGE
                     storeImage(savedBitMap);
@@ -597,19 +606,21 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
     private void storeImage(Bitmap savedBitMap) {
 
-        //DELET OLF FILES
-        String root = Environment.getExternalStorageDirectory().toString();
+        //DELETE OLD FILES
+        //String root = Environment.getExternalStorageDirectory().toString();
+        String root = mActivity.getApplicationContext().getFilesDir().getPath();
         File deletOldFiles = new File(root, mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
         if (deletOldFiles.exists()) deletOldFiles.delete();
 
         //SHARE IMAGE FILE NAME IN SESSION MANAGER SO WE CAN USE IT FURTHER FOR SOCIAL MEDIA SHARING
-        mSessionManager.updatePreferenceString(Constants.SAVED_IMAGE_FILE_NAME , ""+System.currentTimeMillis()+".jpg");
+        mSessionManager.updatePreferenceString(Constants.SAVED_IMAGE_FILE_NAME, "" + System.currentTimeMillis() + ".png");
+
 
         File file = new File(root, mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
         if (file.exists()) file.delete();
         try {
             FileOutputStream out = new FileOutputStream(file);
-            savedBitMap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            savedBitMap.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
         } catch (Exception e) {
@@ -662,19 +673,23 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
         txtTwitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (CommonMethods.isAppInstalled(mContext, "com.twitter.android")) {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_SEND);
-                    intent.setType("image/*");
 
-                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                    StrictMode.setVmPolicy(builder.build());
-                    File media = new File(Environment.getExternalStorageDirectory() + "/" + mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
+                    try {
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_SEND);
+                        intent.setType("image/*");
+                        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                        StrictMode.setVmPolicy(builder.build());
+                        //File media = new File(mActivity.getApplicationContext().getFilesDir().getPath() + "/" + mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
+                        intent.putExtra(Intent.EXTRA_STREAM, getImageUri(getApplicationContext(),savedBitMap));
+                        intent.setPackage("com.twitter.android");
+                        startActivity(intent);
+                    }catch (Exception e) {
+                        CommonMethods.printLogE("TAG" ,"exeception : "+ e);
+                    }
 
-                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(media));
-                    intent.setPackage("com.twitter.android");
-                    startActivity(intent);
+
                 } else {
                     CommonMethods.buildDialog(mContext, getResources().getString(R.string.strTwitterNotInstalled));
                 }
@@ -688,16 +703,21 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (CommonMethods.isAppInstalled(mContext, "com.instagram.android")) {
-                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                    shareIntent.setType("image/*");
 
-                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                    StrictMode.setVmPolicy(builder.build());
-                    File media = new File(Environment.getExternalStorageDirectory() + "/" + mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
+                    try {
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_SEND);
+                        intent.setType("image/*");
+                        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                        StrictMode.setVmPolicy(builder.build());
+                        //File media = new File(mActivity.getApplicationContext().getFilesDir().getPath() + "/" + mSessionManager.getPreference(Constants.SAVED_IMAGE_FILE_NAME));
+                        intent.putExtra(Intent.EXTRA_STREAM, getImageUri(getApplicationContext(),savedBitMap));
+                        intent.setPackage("com.instagram.android");
+                        startActivity(intent);
+                    }catch (Exception e) {
+                        CommonMethods.printLogE("TAG" ,"exeception : "+ e);
+                    }
 
-                    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(media));
-                    shareIntent.setPackage("com.instagram.android");
-                    startActivity(shareIntent);
                 } else {
                     CommonMethods.buildDialog(mContext, getResources().getString(R.string.strInstagramNotInstalled));
                 }
@@ -706,6 +726,12 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
                 popupShareSocialMedia.dismiss();
             }
         });
+    }
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), inImage, UUID.randomUUID().toString() + ".png", "drawing");
+        return Uri.parse(path);
     }
 
 

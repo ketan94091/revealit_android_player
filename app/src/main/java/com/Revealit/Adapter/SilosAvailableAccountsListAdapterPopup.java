@@ -30,13 +30,15 @@ public class SilosAvailableAccountsListAdapterPopup extends RecyclerView.Adapter
     private ViewHolder viewHolder;
     private ArrayList<KeyStoreServerInstancesModel.Data> itemListData;
     private SessionManager mSessionManager;
+    private String strLoggedInUserName;
 
 
-    public SilosAvailableAccountsListAdapterPopup(Context mContext, HomeScreenTabLayout mActivity, ArrayList<KeyStoreServerInstancesModel.Data> itemListData, SessionManager mSessionManager) {
+    public SilosAvailableAccountsListAdapterPopup(Context mContext, HomeScreenTabLayout mActivity, ArrayList<KeyStoreServerInstancesModel.Data> itemListData, SessionManager mSessionManager, String strLoggedInUserName) {
         this.mContext = mContext;
         this.mActivity = mActivity;
         this.itemListData = itemListData;
         this.mSessionManager = mSessionManager;
+        this.strLoggedInUserName =strLoggedInUserName;
 
     }
 
@@ -87,6 +89,9 @@ public class SilosAvailableAccountsListAdapterPopup extends RecyclerView.Adapter
         holder.txtAccountUsername.setText(itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
         holder.txtAccountName.setText("@" + itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
 
+        if(strLoggedInUserName.equals(itemListData.get(position).getSubmitProfileModel().getProton().getAccountName())){
+            holder.relativeMain.setBackground(mActivity.getResources().getDrawable(R.drawable.round_corner_selected_currency_screen));
+        }
 
         holder.relativeMain.setOnClickListener(new View.OnClickListener() {
             @Override

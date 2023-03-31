@@ -458,7 +458,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             //CHECK IF THERE IS DATA AVAILABLE FOR SELECTED SILOS
             if(selectedSilosAccountsList != null && selectedSilosAccountsList.size() != 0){
 
-                    SilosAvailableAccountsListAdapterPopup  mSilosAvailableAccountsListAdapter = new SilosAvailableAccountsListAdapterPopup(mContext, mHomeScreenTabLayout, selectedSilosAccountsList, mSessionManager);
+                    SilosAvailableAccountsListAdapterPopup  mSilosAvailableAccountsListAdapter = new SilosAvailableAccountsListAdapterPopup(mContext, mHomeScreenTabLayout, selectedSilosAccountsList, mSessionManager,strAccountName);
                     recycleAccountList.setAdapter(mSilosAvailableAccountsListAdapter);
 
 

@@ -10,14 +10,13 @@
         android:id="@+id/relativeMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_centerInParent="true"
-        android:padding="5dp"
         android:layout_marginLeft="7dp"
-        android:layout_marginRight="7dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/round_corner_selected_currency_screen"
-        >
+        android:layout_marginRight="7dp"
+        android:background="@drawable/round_corner_selected_grey"
+        android:orientation="vertical"
+        android:padding="5dp">
 
         <LinearLayout
             android:id="@+id/linearContent"
