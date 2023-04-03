@@ -303,7 +303,7 @@ public class QrCodeScannerActivity extends AppCompatActivity {
                                     isBarcodeScanned= true;
 
                                     //CALL PROTON SIGNING REQUEST
-                                    if(intentData.contains("proton") || intentData.contains("revealit")){
+                                    if(intentData.contains("revealit")){
                                         callProtonStuff(intentData);
                                     }else{
                                         createErrorDialogue(getResources().getString(R.string.strIncorrectQRcodeData));

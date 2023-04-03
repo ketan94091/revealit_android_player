@@ -2,7 +2,6 @@ package com.Revealit.Activities;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -12,29 +11,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.Revealit.CommonClasse.Constants;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.droidnet.DroidListener;
-import com.droidnet.DroidNet;
-import com.google.android.material.navigation.NavigationView;
-import com.Revealit.CommonClasse.CommonMethods;
-import com.Revealit.CommonClasse.SessionManager;
-import com.Revealit.R;
-import com.Revealit.SqliteDatabase.DatabaseHelper;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import com.Revealit.CommonClasse.CommonMethods;
+import com.Revealit.CommonClasse.Constants;
+import com.Revealit.CommonClasse.SessionManager;
+import com.Revealit.R;
+import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.bumptech.glide.Glide;
+import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DroidListener {
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private Activity mActivity;
     private Context mContext;
@@ -47,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SessionManager mSessionManager;
     boolean doubleBackToExitPressedOnce = false;
     private DatabaseHelper mDatabaseHelper;
-    private DroidNet mDroidNet;
     private TextView txtMobileNumber,txtUsername,txtinternetNotWorking;
     private LinearLayout linearInternetNotWorking;
     private ImageView imgUser;
@@ -177,34 +171,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }, 20000);
     }
 
-    @Override
-    public void onInternetConnectivityChanged(boolean isConnected) {
 
-        if (isConnected) {
-            txtinternetNotWorking.setText(getResources().getString(R.string.strInternetAvailable));
-            linearInternetNotWorking.setBackgroundColor(getResources().getColor(R.color.colorGreenDark));
-        } else {
-            txtinternetNotWorking.setText(getResources().getString(R.string.strNoInternetAvailable));
-            linearInternetNotWorking.setBackgroundColor(getResources().getColor(R.color.colorRedDark));
-        }
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        //Internet connection code
-        mDroidNet = DroidNet.getInstance();
-        mDroidNet.addInternetConnectivityListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        //Remove Internet listner
-        mDroidNet.removeInternetConnectivityChangeListener(this);
-    }
 
 }

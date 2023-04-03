@@ -71,6 +71,7 @@
     <string name="strCreateAccountTitleTwo">your revealit account</string>
     <string name="strRegisterAccount">Register</string>
     <string name="strSelectAccount">Select Account</string>
+    <string name="strNoInternetConnection">Ooops...Looks like you internet is broken.\n Please check your connection and try again.</string>
     <string name="strAppIsInMaintenace">The App is Currently Under Maintenance</string>
     <string name="strUpgradeToLatestVersion">Update to Latest Version</string>
     <string name="strUpgradeToExperienceBatterFeatures">For more features and a better experience, please update the app to the latest version</string>
@@ -206,6 +207,7 @@
     <string name="strEarnupto">Earn US$1.00 in Bitcoin</string>
     <string name="strContinue">Continue</string>
     <string name="strReload">Reload</string>
+    <string name="strRefresh">Refresh</string>
     <string name="strUpgradeApp">Update App</string>
     <string name="strAuthorise">Authorise</string>
     <string name="strRefereMoreFriends">Refer more friends</string>

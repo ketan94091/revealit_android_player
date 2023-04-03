@@ -33,6 +33,7 @@
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/drawable/samir_test_white.xml" value="0.1875" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/drawable/selecteditem_dot.xml" value="0.1275" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/drawable/tab_color_selector.xml" value="0.1525" />
+        <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/drawable/tab_square_background.xml" value="0.1665" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/drawable/thumb_selector.xml" value="0.1565" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/drawable/track_selector.xml" value="0.1565" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/drawable/transfer_bottombar.xml" value="0.1125" />
@@ -56,6 +57,7 @@
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/activity_google_drive_backup.xml" value="0.11621621621621622" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/activity_home_tab_layout.xml" value="0.11621621621621622" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/activity_import_account_from_private_key.xml" value="0.11" />
+        <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/activity_internet_broken.xml" value="0.11621621621621622" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/activity_invite_and_earn.xml" value="0.165" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/activity_list_of_active_accounts.xml" value="0.11621621621621622" />
         <entry key="..\:/Users/Dell/Desktop/TaashaTechProjects'/KETAN/REVEALIT_IO/revealit_android_player/app/src/main/res/layout/activity_list_of_active_accounts_shortcut.xml" value="0.11621621621621622" />

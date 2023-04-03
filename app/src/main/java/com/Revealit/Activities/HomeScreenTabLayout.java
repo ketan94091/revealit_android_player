@@ -4,11 +4,14 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -53,6 +56,7 @@ import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.Revealit.UserOnboardingProcess.AddRefferalAndEarnActivity;
 import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
 import com.Revealit.UserOnboardingProcess.NewAuthSplashScreen;
+import com.Revealit.services.NetworkChangeReceiver;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.tabs.TabLayout;
@@ -86,7 +90,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVideoRevealsInterface, IsSimulationModeIsActiveInterface, View.OnClickListener {
+public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVideoRevealsInterface, IsSimulationModeIsActiveInterface, View.OnClickListener{
 
     private static final String TAG ="HomeScreenTabLayout" ;
     private CustomViewPager viewPager;
@@ -112,6 +116,7 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
     private Executor executor;
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
+    private BroadcastReceiver mNetworkReceiver;
 
 
     @Override
@@ -141,6 +146,10 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
 
         mDatabaseHelper = new DatabaseHelper(mContext);
         mDatabaseHelper.open();
+
+        mNetworkReceiver = new NetworkChangeReceiver(this);
+        registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -278,7 +287,6 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
                 }
             });
         }
-
 
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -1302,6 +1310,9 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
 
     }
 
+
+
+
 }
 class UpdateUserDataInAndroidKeyStoreTaskTabPopup extends AsyncTask<SessionManager, Integer, Boolean> {
 
@@ -1328,6 +1339,8 @@ class UpdateUserDataInAndroidKeyStoreTaskTabPopup extends AsyncTask<SessionManag
         super.onPostExecute(searchResults);
 
     }
+
+
 }
 class FetchDataFromAndroidKeyStoreTaskTabPopup extends AsyncTask<SessionManager, Integer, ArrayList<KeyStoreServerInstancesModel.Data>> {
 

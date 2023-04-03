@@ -21,9 +21,6 @@ public class Appcontroller extends MultiDexApplication {
 
 
 
-
-
-
     }
 
     @Override

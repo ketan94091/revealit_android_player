@@ -11,7 +11,7 @@ android {
         targetSdkVersion 31
         multiDexEnabled true
         versionCode 15
-        versionName "1.0.5-2"//GOOGLE PLAY STORE
+        versionName "1.0.6-1"//GOOGLE PLAY STORE
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
 
@@ -125,9 +125,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:design:31.0.0'
 
-
-    //to check internet connectivity
-    implementation 'com.job:droidnet:2.0.0'
 
     //AppCompate support design lib
     implementation 'com.android.support:design:31.0.0'
