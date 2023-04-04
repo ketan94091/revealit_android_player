@@ -1356,5 +1356,39 @@ public class CommonMethods {
         mAlertDialog.show();
     }
 
+    public static int countNumberOfActiveAccountsPerSilos(SessionManager mSessionManager) {
+       int totalNumberOfActiveAccountInSilo = 0;
+
+        if(!checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
+
+            //CONVERT DATA TO JSON ARRAY
+            //CREATE NEW ARRAY FROM THE STRING ARRAY
+            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
+            try {
+                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData(mSessionManager));
+
+                for (int i=0 ;i < jsonArray.length();i++){
+
+                    if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated").equals("1")) {
+                        Log.e("INSTANCE",""+jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)));
+                        Log.e("INSTANCE",""+jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
+                        totalNumberOfActiveAccountInSilo++;
+
+                    }
+                }
+
+                return totalNumberOfActiveAccountInSilo;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            return totalNumberOfActiveAccountInSilo;
+        }
+
+        return totalNumberOfActiveAccountInSilo;
+    }
+
 
 }

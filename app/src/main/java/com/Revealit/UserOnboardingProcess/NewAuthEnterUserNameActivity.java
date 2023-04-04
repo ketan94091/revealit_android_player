@@ -300,6 +300,8 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY ,body.getrevealit_private_key());
         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_REGISTRATION_DONE ,true);
         mSessionManager.updatePreferenceString(Constants.KEY_MOBILE_NUMBER,strCountryCode+strMobileNumber);
+        mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_TIME_ACCOUNT_SYNC, false);
+
 
         //STORE DATA IN TO KEYSTORE
         //FOR DISPLAY PURPOSE

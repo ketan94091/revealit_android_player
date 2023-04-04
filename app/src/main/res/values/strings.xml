@@ -93,7 +93,7 @@
     <string name="strInstantReward">Earn an Instant Reward into your revealit TV wallet by providing a Referral Code</string>
     <string name="strLoadMore">Load More...</string>
     <string name="strLoading">Loading...</string>
-    <string name="strXpr">XPR</string>
+    <string name="strDafaultToken">BTC</string>
     <string name="strCurrencySelection">Select Currency</string>
 
     <string name="strWarningTitleOne">Minimum password length 6</string>
@@ -239,6 +239,7 @@
     <string name="strProfile">Profile</string>
     <string name="strEnterPrivateKey">Please enter private key!</string>
     <string name="strInvalidPrivateKey">Please enter a valid Revealit account private key</string>
+    <string name="strReachedMaximumAccount">You have reached the maximum number of accounts added to this device. Kindly remove an account to add another</string>
     <string name="strEnterValidAccountKey">Please enter a valid Revealit account key</string>
     <string name="strMultifactorAuthentication">Multi-factor Authentication</string>
     <string name="strNotYourNumber">Not your number?</string>

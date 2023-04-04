@@ -79,7 +79,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private LinearLayoutManager recylerViewLayoutManager;
     private RewardSummeryListAdapter2 mRewardSummeryListAdapter2;
     private ImageView imgLoadingBalance,imgLogo,imgScanQRcode,imgSponsor, imgRefresh;
-    private TextView txtRefreshingHistory,txtVersionName, txtCurrencyType, txtAmount, txtAccountName;
+    private TextView txtUSDamount,txtRefreshingHistory,txtVersionName, txtCurrencyType, txtAmount, txtAccountName;
     private RelativeLayout relativeAccountDetails;
     private LinearLayout linearCurrency, linearRewardHistory;
     private int intPageCount = 1;
@@ -142,6 +142,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         txtCurrencyType = (TextView) mView.findViewById(R.id.txtCurrencyType);
         txtVersionName = (TextView) mView.findViewById(R.id.txtVersionName);
         txtRefreshingHistory = (TextView) mView.findViewById(R.id.txtRefreshingHistory);
+        txtUSDamount = (TextView) mView.findViewById(R.id.txtUSDamount);
 
         relativeAccountDetails = (RelativeLayout) mView.findViewById(R.id.relativeAccountDetails);
 
@@ -387,14 +388,16 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                             //SET ACCOUNT DETAILS
                             strAccountName = "" + response.body().getData().getAccountName();
 
+
                             if (!mSessionManager.getPreferenceBoolean(Constants.IS_FIRST_TIME_ACCOUNT_SYNC)) {
 
                                 //UPDATE FLAG
                                 mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_TIME_ACCOUNT_SYNC, true);
 
                                 //GET INITIAL VALUES IN DOLLAR
-                                mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE,String.valueOf(response.body().getData().getTokens().get(0).getAmount()));
-                                mSessionManager.updatePreferenceString(Constants.ACCOUNT_CURRENCY_TYPE, "" + response.body().getData().getTokens().get(0).getSymbol());
+                                mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE,String.valueOf(response.body().getData().getTokens().get(0).getInBtc()));
+                                mSessionManager.updatePreferenceString(Constants.ACCOUNT_CURRENCY_TYPE, getResources().getString(R.string.strDafaultToken));
+                                mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE_IN_USD, String.valueOf(response.body().getData().getTokens().get(0).getInUsd()));
 
                             }
 
@@ -403,7 +406,9 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                             //GET INITIAL VALUES IN DOLLAR
                             mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE, "0.0");
-                            mSessionManager.updatePreferenceString(Constants.ACCOUNT_CURRENCY_TYPE, "USD");
+                            mSessionManager.updatePreferenceString(Constants.ACCOUNT_CURRENCY_TYPE, getResources().getString(R.string.strDafaultToken));
+                            mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE_IN_USD, "0.0");
+
 
 
                         }
@@ -421,9 +426,15 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                                         response.body().getData().getTokens().get(0).getValues().get(i).getIcon(),
                                         response.body().getData().getTokens().get(0).getValues().get(i).getName());
 
-                                //REFRESH LATEST ACCOUNT DETAILS
+                                //REFRESH LATEST ACCOUNT DETAILS IN SELECTED CURRENCY
                                 if (mSessionManager.getPreference(Constants.ACCOUNT_CURRENCY_TYPE).equals(response.body().getData().getTokens().get(0).getValues().get(i).getSymbol())) {
                                     mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE, response.body().getData().getTokens().get(0).getValues().get(i).getValue());
+                                }
+
+
+                                //REFRESH LATEST USD ACCOUNT DETAILS
+                                if (response.body().getData().getTokens().get(0).getValues().get(i).getSymbol().equals("USD")) {
+                                    mSessionManager.updatePreferenceString(Constants.ACCOUNT_BALANCE_IN_USD, response.body().getData().getTokens().get(0).getValues().get(i).getValue());
                                 }
                             }
                         }
@@ -701,6 +712,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         relativeAccountDetails.setVisibility(View.VISIBLE);
         txtAmount.setText(mSessionManager.getPreference(Constants.ACCOUNT_BALANCE));
         txtCurrencyType.setText(mSessionManager.getPreference(Constants.ACCOUNT_CURRENCY_TYPE));
+        txtUSDamount.setText("($"+mSessionManager.getPreference(Constants.ACCOUNT_BALANCE_IN_USD)+" USD)");
 
         //HIDE ANIMATED IMAGE VIEW WHEN AMOUNT DISPLAY
         animation.cancel();
@@ -713,6 +725,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                 imgLoadingBalance.setVisibility(View.GONE);
                 txtAmount.setVisibility(View.VISIBLE);
+                txtUSDamount.setVisibility(View.VISIBLE);
             }
         }, 1000);
 

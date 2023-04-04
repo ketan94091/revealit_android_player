@@ -115,7 +115,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:weightSum="2">
+                        android:weightSum="5">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -136,19 +136,19 @@
                                 android:textSize="15dp" />
 
                             <RelativeLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
 
                                 <ImageView
                                     android:id="@+id/imgLoadingBalance"
-                                    android:layout_width="35dp"
-                                    android:layout_height="35dp"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
                                     android:interpolator="@anim/linear_interpolator"
                                     android:src="@mipmap/balance_updating" />
 
                                 <TextView
                                     android:id="@+id/txtAmount"
-                                    android:layout_width="match_parent"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/dmsans_medium"
                                     android:maxLength="40"
@@ -156,7 +156,23 @@
                                     android:textColor="@color/colorNewAppGreen"
                                     android:textFontWeight="500"
                                     android:visibility="gone"
-                                    android:textSize="23dp" />
+                                    android:textSize="20dp" />
+
+                                <TextView
+                                    android:id="@+id/txtUSDamount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toRightOf="@+id/txtAmount"
+                                    android:fontFamily="@font/dmsans_medium"
+                                    android:maxLength="40"
+                                    android:singleLine="true"
+                                    android:layout_centerInParent="true"
+                                    android:layout_alignParentRight="true"
+                                    android:textColor="@color/colorNewAppGreen"
+                                    android:textFontWeight="500"
+                                    android:layout_marginLeft="20dp"
+                                    android:visibility="gone"
+                                    android:textSize="15dp" />
 
                             </RelativeLayout>
 
@@ -169,7 +185,7 @@
                             android:id="@+id/linearCurrency"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="4"
                             android:gravity="end"
                             android:orientation="vertical">
 
@@ -190,11 +206,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/dmsans_bold"
-                                android:text="@string/strXpr"
+                                android:text="@string/strDafaultToken"
                                 android:textAllCaps="true"
                                 android:textColor="@color/colorNewAppGreen"
                                 android:textFontWeight="500"
-                                android:textSize="23dp" />
+                                android:textSize="20dp" />
 
 
                         </LinearLayout>

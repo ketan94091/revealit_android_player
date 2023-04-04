@@ -362,6 +362,8 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
         mSessionManager.updatePreferenceString(Constants.KEY_REVEALIT_PRIVATE_KEY, body.getRevealit_private_key());
         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_REGISTRATION_DONE, true);
         mSessionManager.updatePreferenceString(Constants.KEY_MOBILE_NUMBER,strMobileNumber);
+        mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_TIME_ACCOUNT_SYNC, false);
+
 
         //STORE DATA IN TO KEYSTORE
         CommonMethods.encryptKey(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY), Constants.KEY_PRIVATE_KEY,body.getRevealit_private_key(), mSessionManager);

@@ -142,6 +142,7 @@ public class Constants {
     public  static  final String KEY_IS_USER_REGISTRATION_DONE ="keyIsUserRegistrationDone";
     public static final String IS_FIRST_TIME_ACCOUNT_SYNC = "isFirstTimeAccountSync";
     public static final String ACCOUNT_BALANCE = "accountBalance";
+    public static final String ACCOUNT_BALANCE_IN_USD = "accountBalanceInUsd";
     public static final String ACCOUNT_CURRENCY_TYPE = "CurrencyType";
     public static final String RESEARCH_URL = "researchURL";
     public static final String RESEARCH_URL_SPONSER = "researchURLSponser";

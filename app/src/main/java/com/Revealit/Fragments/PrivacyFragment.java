@@ -223,6 +223,7 @@ public class PrivacyFragment extends Fragment implements View.OnClickListener {
                         mSessionManager.updatePreferenceBoolean(Constants.KEY_ISFROM_LOGOUT,true);
                         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN, false);
                         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL, false);
+                        mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_TIME_ACCOUNT_SYNC, false);
 
                         // SEND USER TO LANDING SCREEN
                         Intent mIntent = new Intent(mActivity, NewAuthSplashScreen.class);

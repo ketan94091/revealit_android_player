@@ -601,6 +601,9 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
         if(edtPrivateKey.isEmpty()){
             CommonMethods.buildDialog(mContext,getResources().getString(R.string.strEnterPrivateKey));
             return false;
+//        }else if(CommonMethods.countNumberOfActiveAccountsPerSilos(mSessionManager) >= 5){
+//            CommonMethods.buildDialog(mContext,getResources().getString(R.string.strReachedMaximumAccount));
+//            return false;
         }else if(edtPrivateKey.length() < 10){
             CommonMethods.buildDialog(mContext,getResources().getString(R.string.strInvalidPrivateKey));
            return false;
