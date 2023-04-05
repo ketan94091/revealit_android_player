@@ -1369,7 +1369,7 @@ public class CommonMethods {
 
                 for (int i=0 ;i < jsonArray.length();i++){
 
-                    if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated").equals("1")) {
+                    if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("isAccountRemoved") != 1) {
                         Log.e("INSTANCE",""+jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)));
                         Log.e("INSTANCE",""+jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
                         totalNumberOfActiveAccountInSilo++;

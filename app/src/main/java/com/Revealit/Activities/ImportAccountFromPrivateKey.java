@@ -597,13 +597,12 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
            CommonMethods.buildDialog(mContext,getResources().getString(R.string.strInvalidPrivateKey));
            return false;
         }
-
         if(edtPrivateKey.isEmpty()){
             CommonMethods.buildDialog(mContext,getResources().getString(R.string.strEnterPrivateKey));
             return false;
-//        }else if(CommonMethods.countNumberOfActiveAccountsPerSilos(mSessionManager) >= 5){
-//            CommonMethods.buildDialog(mContext,getResources().getString(R.string.strReachedMaximumAccount));
-//            return false;
+        }else if(CommonMethods.countNumberOfActiveAccountsPerSilos(mSessionManager) == 5){
+            displayMaxAccountLimitDialogue();
+            return false;
         }else if(edtPrivateKey.length() < 10){
             CommonMethods.buildDialog(mContext,getResources().getString(R.string.strInvalidPrivateKey));
            return false;
@@ -894,6 +893,45 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
 
 
                 mAlertDialog.dismiss();
+
+            }
+        });
+
+        mAlertDialog.show();
+
+    }
+
+    private void displayMaxAccountLimitDialogue() {
+
+        android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
+        dialogBuilder.setCancelable(false);
+        LayoutInflater inflater = mActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.user_exceed_max_account_limit, null);
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialogBuilder.setView(dialogView);
+
+        final AlertDialog mAlertDialog = dialogBuilder.create();
+        TextView txtContinue = (TextView) dialogView.findViewById(R.id.txtContinue);
+        LinearLayout linearCancel = (LinearLayout) dialogView.findViewById(R.id.linearCancel);
+
+
+        linearCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+                finish();
+
+            }
+        });
+
+
+        txtContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAlertDialog.dismiss();
+                finish();
 
             }
         });
