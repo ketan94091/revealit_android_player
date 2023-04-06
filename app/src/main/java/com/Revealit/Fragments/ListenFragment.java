@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -648,6 +649,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         //UPDATE SELECTED IDS COUNTS AND TOTAL COUNTS
         txtRevealSelectedCount.setText(selectedIdsList.size()+"/"+mRevealItHistoryListAdapter.getItemCount()+ " "+getResources().getString(R.string.strRevealSelected) );
+
+        Log.e("de_Select","LLLLLL");
     }
 
     @Override
@@ -1072,6 +1075,8 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
     }
     public static void updateRevealitHistoryList(boolean isCheckBoxSelected, boolean shouldCheckBoxVisible) {
 
+
+
         ArrayList<RevealitHistoryModel.Data> mHistoryListFromDatabase = null;
         try {
             mHistoryListFromDatabase =  new FatchDataFromDatabaseTask().execute(mDatabaseHelper).get();
@@ -1162,10 +1167,11 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         //SET TOTAL SELECTED REVEALS
         txtRevealSelectedCount.setText("0/"+mRevealItHistoryListAdapter.getItemCount()+ " "+mActivity.getResources().getString(R.string.strRevealSelected) );
-
+        Log.e("de_Select","KKKKKK");
 
         //ENABLE BUTTON
         relativeTapToReveal.setClickable(true);
+
         imgListen.setClickable(true);
 
 
@@ -1255,7 +1261,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
             //SET TOTAL SELECTED REVEALS
             txtRevealSelectedCount.setText("0/" + mRevealItHistoryListAdapter.getItemCount() + " " +mActivity.getResources().getString(R.string.strRevealSelected));
-
+            Log.e("de_Select","MMMMMM");
 
             //ENABLE BUTTON
             relativeTapToReveal.setClickable(true);

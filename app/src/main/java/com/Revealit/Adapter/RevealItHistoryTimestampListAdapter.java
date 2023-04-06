@@ -382,7 +382,7 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
             dialogBuilder.setCancelable(false);
             LayoutInflater inflater = mActivity.getLayoutInflater();
             final View dialogView = inflater.inflate(R.layout.delete_timestamp_confirmation_dailoague, null);
-            mActivity.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+           // mActivity.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             dialogBuilder.setView(dialogView);
 
 

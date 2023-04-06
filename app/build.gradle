@@ -10,8 +10,8 @@ android {
         minSdkVersion 23
         targetSdkVersion 31
         multiDexEnabled true
-        versionCode 16
-        versionName "1.0.7-1"//GOOGLE PLAY STORE
+        versionCode 17
+        versionName "1.0.7-2"//GOOGLE PLAY STORE
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
 
