@@ -1158,7 +1158,9 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
         } else {
 
             //ELSE -> NOTIFY LIST WITH LATEST LIST DATA
+
             mRevealItHistoryListAdapter.updateListData(mHistoryListFromDatabase, isCheckBoxSelected, shouldCheckBoxVisible);
+            //recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
         }
 
 
@@ -1167,7 +1169,7 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         //SET TOTAL SELECTED REVEALS
         txtRevealSelectedCount.setText("0/"+mRevealItHistoryListAdapter.getItemCount()+ " "+mActivity.getResources().getString(R.string.strRevealSelected) );
-        Log.e("de_Select","KKKKKK");
+
 
         //ENABLE BUTTON
         relativeTapToReveal.setClickable(true);

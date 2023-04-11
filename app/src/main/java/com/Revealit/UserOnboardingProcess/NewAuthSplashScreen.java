@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.Activities.InternetBrokenActivity;
+import com.Revealit.Activities.MaintanaceActivity;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -210,11 +211,11 @@ public class NewAuthSplashScreen extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .client(client.newBuilder().connectTimeout(3000, TimeUnit.SECONDS).readTimeout(3000, TimeUnit.SECONDS).writeTimeout(3000, TimeUnit.SECONDS).build())
                 .build();
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
-        String url="";
+        String url=" ";
 
 
         Call<InviteModel> call = patchService1.getCampaignDetails(Constants.API_NEW_AUTH_INVITE_SETTINGS+url);
@@ -243,7 +244,7 @@ public class NewAuthSplashScreen extends AppCompatActivity {
 
                     case Constants.API_CODE_404:
 
-                        CommonMethods.buildDialog(mContext, getResources().getString(R.string.strStatusCode404Error));
+                        openMaintenanceActivity();
 
                         break;
                 }
@@ -253,13 +254,19 @@ public class NewAuthSplashScreen extends AppCompatActivity {
             @Override
             public void onFailure(Call<InviteModel> call, Throwable t) {
 
-                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strApiCallFailure));
+                openMaintenanceActivity();
 
 
             }
         });
 
 
+    }
+
+    private void openMaintenanceActivity() {
+        Intent mIntent = new Intent(NewAuthSplashScreen.this, MaintanaceActivity.class);
+        startActivity(mIntent);
+        finishAffinity();
     }
 
 

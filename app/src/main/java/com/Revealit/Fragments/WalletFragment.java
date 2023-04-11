@@ -30,6 +30,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.HomeScreenTabLayout;
@@ -88,6 +89,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private HomeScreenTabLayout mHomeScreenTabLayout;
     private ProgressDialog pDialog;
     private Animation  animation;
+    private SwipeRefreshLayout swipeToRefresh;
 
     public WalletFragment(HomeScreenTabLayout homeScreenTabLayout) {
 
@@ -145,6 +147,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         txtUSDamount = (TextView) mView.findViewById(R.id.txtUSDamount);
 
         relativeAccountDetails = (RelativeLayout) mView.findViewById(R.id.relativeAccountDetails);
+        swipeToRefresh=(SwipeRefreshLayout)mView.findViewById(R.id.swipeToRefresh);
 
         linearRewardHistory = (LinearLayout) mView.findViewById(R.id.linearRewardHistory);
         linearCurrency = (LinearLayout) mView.findViewById(R.id.linearCurrency);
@@ -167,21 +170,10 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         txtAccountName.setText(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
 
 
-        txtAmount.setVisibility(View.GONE);
-        imgLoadingBalance.setVisibility(View.VISIBLE);
-        imgLoadingBalance.setImageDrawable(getResources().getDrawable(R.mipmap.balance_updating));
 
-        animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_right);
-        animation.setDuration(1500);
-        imgLoadingBalance.startAnimation(animation);
-        animation.setInterpolator(new Interpolator() {
-            private final int frameCount = 8;
 
-            @Override
-            public float getInterpolation(float input) {
-                return (float)Math.floor(input*frameCount)/frameCount;
-            }
-        });
+        //START ANIMATION
+        startLoadinAnimation();
 
 
         callWalletDetails();
@@ -200,8 +192,33 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 //        imgLoadingBalance.animate().rotationBy(360).withEndAction(runnable).setDuration(3000).setInterpolator(new LinearInterpolator()).start();
 
 
+        swipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                startLoadinAnimation();
+                callWalletDetails();
+            }
+        });
 
+    }
 
+    private void startLoadinAnimation() {
+
+        txtAmount.setVisibility(View.GONE);
+        imgLoadingBalance.setVisibility(View.VISIBLE);
+        imgLoadingBalance.setImageDrawable(getResources().getDrawable(R.mipmap.balance_updating));
+
+        animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_right);
+        animation.setDuration(1500);
+        imgLoadingBalance.startAnimation(animation);
+        animation.setInterpolator(new Interpolator() {
+            private final int frameCount = 8;
+
+            @Override
+            public float getInterpolation(float input) {
+                return (float)Math.floor(input*frameCount)/frameCount;
+            }
+        });
     }
 
 
@@ -380,7 +397,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                     CommonMethods.printLogE("Response @ callWalletDetails : ", "" + gson.toJson(response.body()));
 
-                    if (response.body().getMessage() != null  || response.body().getData() != null) {
+                    if (response.body().getData() != null) {
 
                         //CHECK IF ACCOUNT DATA IS NOT NULL
                         if (response.body().getData().getTokens() != null) {
@@ -749,6 +766,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         //SET ADAPTER
         mRewardSummeryListAdapter2 = new RewardSummeryListAdapter2(mContext, mActivity, mDatabaseHelper.gettRewardHistoryData());
         recycleRewardHistory.setAdapter(mRewardSummeryListAdapter2);
+
+        swipeToRefresh.setRefreshing(false);
 
         //CHECK IF THERE IS NO REWARD DATA AVAILABLE
         if(mDatabaseHelper.gettRewardHistoryData().size() == 0){
