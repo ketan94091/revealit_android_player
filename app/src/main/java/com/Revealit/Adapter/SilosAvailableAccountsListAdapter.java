@@ -3,12 +3,15 @@ package com.Revealit.Adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Revealit.CommonClasse.CommonMethods;
@@ -18,6 +21,11 @@ import com.Revealit.ModelClasses.KeyStoreServerInstancesModel;
 import com.Revealit.R;
 import com.Revealit.UserOnboardingProcess.ListOfActiveAccountsActivity;
 import com.Revealit.UserOnboardingProcess.NewAuthBiomatricAuthenticationActivity;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 
@@ -54,6 +62,7 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
 
         private final TextView txtAccountUsername, txtAccountName;
         private final RelativeLayout relativeMain;
+        private final ImageView imgProfile;
 
 
         public ViewHolder(View mView) {
@@ -63,6 +72,7 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
             txtAccountUsername = (TextView) mView.findViewById(R.id.txtAccountUsername);
             txtAccountName = (TextView) mView.findViewById(R.id.txtAccountName);
             relativeMain = (RelativeLayout) mView.findViewById(R.id.relativeMain);
+            imgProfile=(ImageView)mView.findViewById(R.id.imgProfile);
 
 
         }
@@ -84,7 +94,35 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
     public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
         //SET ITEM TEXT
-        holder.txtAccountUsername.setText(itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
+
+        if(itemListData.get(position).getUserProfile() != null){
+
+            //SET USERNAME
+            holder.txtAccountUsername.setText(itemListData.get(position).getUserProfile().getName());
+
+
+            //SET USER PROFILE
+            Glide.with(mContext)
+                    .load("" + itemListData.get(position).getUserProfile().getProfile_image())
+                    .apply(RequestOptions.circleCropTransform())
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    }).into(holder.imgProfile);
+
+
+        }else{
+            holder.txtAccountUsername.setText(itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
+        }
+
         holder.txtAccountName.setText("@" + itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
 
 
@@ -134,6 +172,9 @@ public class SilosAvailableAccountsListAdapter extends RecyclerView.Adapter<Silo
                     mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME, itemListData.get(position).getSubmitProfileModel().getProton().getAccountName());
                     mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PUBLICKEY, itemListData.get(position).getSubmitProfileModel().getProton().getPublicKey());
                     mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY, itemListData.get(position).getSubmitProfileModel().getProton().getPrivateKey());
+
+                    //SAVE USER PROFILE PICS TO SESSION MANAGER
+                    mSessionManager.updatePreferenceString(Constants.KEY_USERPROFILE_PIC, itemListData.get(position).getUserProfile().getProfile_image());
 
 
                     //GO TO BIOMETRIC CONFIRMATION ACTIVITY

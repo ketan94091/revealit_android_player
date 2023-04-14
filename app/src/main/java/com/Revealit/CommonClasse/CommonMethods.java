@@ -46,6 +46,7 @@ import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -806,8 +807,29 @@ public class CommonMethods {
                           mProton.setPublicKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_key"));
                           mProton.setPublic_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_pem"));
                           mSubmitProfileModel.setProton(mProton);
-
                           mModel.setSubmitProfileModel(mSubmitProfileModel);
+
+
+                          //SET USER DETAILS
+                          KeyStoreServerInstancesModel.UserProfile mUserProfile = new KeyStoreServerInstancesModel.UserProfile();
+                          if(jsonArray.getJSONObject(i).get("userProfile").toString() != "null"){
+                              mUserProfile.setId(jsonArray.getJSONObject(i).getJSONObject("userProfile").getInt("id"));
+                              mUserProfile.setUser_id(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("user_id"));
+                              mUserProfile.setName(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("name"));
+                              mUserProfile.setFirst_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("first_name"));
+                              mUserProfile.setLast_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("last_name"));
+                              mUserProfile.setEmail(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("email"));
+                              mUserProfile.setDate_of_birth(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("date_of_birth"));
+                              mUserProfile.setGender(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("gender"));
+                              mUserProfile.setProfile_image(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("profile_image"));
+                              mUserProfile.setAccount_type(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("account_type"));
+                              mUserProfile.setClassification(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("classification"));
+                              mUserProfile.setAudience(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("audience"));
+                              mUserProfile.setRevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("revealit_private_key"));
+                              mModel.setUserProfile(mUserProfile);
+                          }else{
+                              mModel.setUserProfile(null);
+                          }
 
                           dataArrayList.add(mModel);
                       }
@@ -868,6 +890,27 @@ public class CommonMethods {
                         mProton.setPublic_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_pem"));
                         mSubmitProfileModel.setProton(mProton);
 
+                        //SET USER DETAILS
+                        KeyStoreServerInstancesModel.UserProfile mUserProfile = new KeyStoreServerInstancesModel.UserProfile();
+                        if(jsonArray.getJSONObject(i).get("userProfile").toString() != "null"){
+                            mUserProfile.setId(jsonArray.getJSONObject(i).getJSONObject("userProfile").getInt("id"));
+                            mUserProfile.setUser_id(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("user_id"));
+                            mUserProfile.setName(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("name"));
+                            mUserProfile.setFirst_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("first_name"));
+                            mUserProfile.setLast_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("last_name"));
+                            mUserProfile.setEmail(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("email"));
+                            mUserProfile.setDate_of_birth(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("date_of_birth"));
+                            mUserProfile.setGender(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("gender"));
+                            mUserProfile.setProfile_image(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("profile_image"));
+                            mUserProfile.setAccount_type(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("account_type"));
+                            mUserProfile.setClassification(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("classification"));
+                            mUserProfile.setAudience(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("audience"));
+                            mUserProfile.setRevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("revealit_private_key"));
+                            mModel.setUserProfile(mUserProfile);
+                        }else{
+                            mModel.setUserProfile(null);
+                        }
+
                         mModel.setSubmitProfileModel(mSubmitProfileModel);
 
                         dataArrayList.add(mModel);
@@ -888,70 +931,8 @@ public class CommonMethods {
 
         return null;
     }
-    public static String fetchUserNameFromPrivateKey(SessionManager mSessionManager, String privateKey) {
-       String strUsername = "";
-
-        if(!checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
-
-            //CONVERT DATA TO JSON ARRAY
-            //CREATE NEW ARRAY FROM THE STRING ARRAY
-            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
-            try {
-                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData(mSessionManager));
-
-                for (int i=0 ;i < jsonArray.length();i++){
-
-                   if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey)) {
-                        strUsername =jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("account_name");
-                        return strUsername;
-                    }
-                }
-
-                return strUsername;
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }else{
-            return null;
-        }
 
 
-        return null;
-    }
-    public static int fetchInstanceNameFromPrivateKey(SessionManager mSessionManager, String privateKey) {
-        int intServerInstanceId = 0;
-
-        if(!checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
-
-            //CONVERT DATA TO JSON ARRAY
-            //CREATE NEW ARRAY FROM THE STRING ARRAY
-            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
-            try {
-                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData(mSessionManager));
-
-                for (int i=0 ;i < jsonArray.length();i++){
-
-                    if( jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").equals(privateKey)) {
-                        intServerInstanceId =jsonArray.getJSONObject(i).getInt("serverInstanceId");
-                        return intServerInstanceId;
-                    }
-                }
-
-                return intServerInstanceId;
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }else{
-            return intServerInstanceId;
-        }
-
-
-        return intServerInstanceId;
-    }
     public static boolean checkEnterPrivateKeyIsFromOtherSilos(SessionManager mSessionManager, String privateKey) {
         boolean isUserFromSelectedSilos = false;
 
@@ -1070,8 +1051,30 @@ public class CommonMethods {
                         mProton.setPublicKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_key"));
                         mProton.setPublic_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_pem"));
                         mSubmitProfileModel.setProton(mProton);
-
                         mModel.setSubmitProfileModel(mSubmitProfileModel);
+
+
+                    //SET USER DETAILS
+                    KeyStoreServerInstancesModel.UserProfile mUserProfile = new KeyStoreServerInstancesModel.UserProfile();
+                    if(jsonArray.getJSONObject(i).get("userProfile").toString() != "null"){
+                        mUserProfile.setId(jsonArray.getJSONObject(i).getJSONObject("userProfile").getInt("id"));
+                        mUserProfile.setUser_id(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("user_id"));
+                        mUserProfile.setName(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("name"));
+                        mUserProfile.setFirst_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("first_name"));
+                        mUserProfile.setLast_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("last_name"));
+                        mUserProfile.setEmail(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("email"));
+                        mUserProfile.setDate_of_birth(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("date_of_birth"));
+                        mUserProfile.setGender(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("gender"));
+                        mUserProfile.setProfile_image(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("profile_image"));
+                        mUserProfile.setAccount_type(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("account_type"));
+                        mUserProfile.setClassification(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("classification"));
+                        mUserProfile.setAudience(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("audience"));
+                        mUserProfile.setRevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("revealit_private_key"));
+                        mModel.setUserProfile(mUserProfile);
+                    }else{
+                        mModel.setUserProfile(null);
+                    }
+
 
                         dataArrayList.add(mModel);
 
@@ -1144,8 +1147,28 @@ public class CommonMethods {
                     mProton.setPublicKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_key"));
                     mProton.setPublic_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_pem"));
                     mSubmitProfileModel.setProton(mProton);
-
                     mModel.setSubmitProfileModel(mSubmitProfileModel);
+
+                    //SET USER DETAILS
+                    KeyStoreServerInstancesModel.UserProfile mUserProfile = new KeyStoreServerInstancesModel.UserProfile();
+                    if(jsonArray.getJSONObject(i).get("userProfile").toString() != "null"){
+                        mUserProfile.setId(jsonArray.getJSONObject(i).getJSONObject("userProfile").getInt("id"));
+                        mUserProfile.setUser_id(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("user_id"));
+                        mUserProfile.setName(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("name"));
+                        mUserProfile.setFirst_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("first_name"));
+                        mUserProfile.setLast_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("last_name"));
+                        mUserProfile.setEmail(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("email"));
+                        mUserProfile.setDate_of_birth(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("date_of_birth"));
+                        mUserProfile.setGender(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("gender"));
+                        mUserProfile.setProfile_image(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("profile_image"));
+                        mUserProfile.setAccount_type(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("account_type"));
+                        mUserProfile.setClassification(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("classification"));
+                        mUserProfile.setAudience(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("audience"));
+                        mUserProfile.setRevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("revealit_private_key"));
+                        mModel.setUserProfile(mUserProfile);
+                    }else{
+                        mModel.setUserProfile(null);
+                    }
 
                     dataArrayList.add(mModel);
 
@@ -1169,6 +1192,124 @@ public class CommonMethods {
 
         return false;
     }
+    public static boolean updateUserDetailsToKeyChain(SessionManager mSessionManager, String privateKey, String username,String userDetails) {
+        Gson mGson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                .serializeNulls()
+                .create();
+
+        if(!checkIfInstanceKeyStoreData(mSessionManager).isEmpty()){
+
+            //CONVERT DATA TO JSON ARRAY
+            //CREATE NEW ARRAY FROM THE STRING ARRAY
+            //AFTER ADDING ALL SAVED DATA ADD NEWLY CREATED USER DATA
+            try {
+                JSONArray jsonArray =new JSONArray(checkIfInstanceKeyStoreData(mSessionManager));
+                ArrayList<KeyStoreServerInstancesModel.Data>  dataArrayList = new ArrayList<>();
+
+                for (int i=0 ;i < jsonArray.length();i++){
+
+                    KeyStoreServerInstancesModel.Data mModel = new KeyStoreServerInstancesModel.Data();
+                    mModel.setServerInstanceName(jsonArray.getJSONObject(i).getString("serverInstanceName"));
+                    mModel.setMobileNumber(jsonArray.getJSONObject(i).getString("mobileNumber"));
+                    mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
+                    mModel.setIsAccountRemoved(jsonArray.getJSONObject(i).getInt("isAccountRemoved"));
+
+                    SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
+                    mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
+                    mSubmitProfileModel.setauth_token(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("token"));
+                    mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
+                    mSubmitProfileModel.setIs_activated(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
+                    mSubmitProfileModel.setMessage(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("message"));
+                    mSubmitProfileModel.setrevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("revealit_private_key"));
+                    mSubmitProfileModel.setRole(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("role"));
+                    mSubmitProfileModel.setServerInstance(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("serverInstance"));
+                    mSubmitProfileModel.setStatus(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("status"));
+
+                    SubmitProfileModel.Proton mProton = new SubmitProfileModel.Proton();
+                    mProton.setAccountName(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("account_name"));
+                    mProton.setMnemonic(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("mnemonic"));
+                    mProton.setPrivateKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key"));
+                    mProton.setPrivate_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_pem"));
+                    mProton.setPublicKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_key"));
+                    mProton.setPublic_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_pem"));
+                    mSubmitProfileModel.setProton(mProton);
+                    mModel.setSubmitProfileModel(mSubmitProfileModel);
+
+                    //SET USER DETAILS
+                    KeyStoreServerInstancesModel.UserProfile mUserProfile = new KeyStoreServerInstancesModel.UserProfile();
+                    if( jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("private_key").contains(privateKey) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("account_name").equals(username) && jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID)) {
+
+
+                        //CONVERT JSON STRING TO JSON OBJECT
+                        JSONObject jsonObject = new JSONObject(userDetails);
+
+                        //SAVE USER PROFILE PICS TO SESSION MANAGER
+                        mSessionManager.updatePreferenceString(Constants.KEY_USERPROFILE_PIC, jsonObject.getString("profile_image"));
+
+
+                        mUserProfile.setId(jsonObject.getInt("id"));
+                        mUserProfile.setUser_id(jsonObject.getString("user_id"));
+                        mUserProfile.setName(jsonObject.getString("name"));
+                        mUserProfile.setFirst_name(jsonObject.getString("first_name"));
+                        mUserProfile.setLast_name(jsonObject.getString("last_name"));
+                        mUserProfile.setEmail(jsonObject.getString("email"));
+                        mUserProfile.setDate_of_birth(jsonObject.getString("date_of_birth"));
+                        mUserProfile.setGender(jsonObject.getString("gender"));
+                        mUserProfile.setProfile_image(jsonObject.getString("profile_image"));
+                        mUserProfile.setAccount_type(jsonObject.getString("account_type"));
+                        mUserProfile.setClassification(jsonObject.getString("classification"));
+                        mUserProfile.setAudience(jsonObject.getString("audience"));
+                        mUserProfile.setRevealit_private_key(jsonObject.getString("revealit_private_key"));
+                        mModel.setUserProfile(mUserProfile);
+                    }else{
+                        //SET USER DETAILS
+                        if(jsonArray.getJSONObject(i).get("userProfile").toString() != "null"){
+                            mUserProfile.setId(jsonArray.getJSONObject(i).getJSONObject("userProfile").getInt("id"));
+                            mUserProfile.setUser_id(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("user_id"));
+                            mUserProfile.setName(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("name"));
+                            mUserProfile.setFirst_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("first_name"));
+                            mUserProfile.setLast_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("last_name"));
+                            mUserProfile.setEmail(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("email"));
+                            mUserProfile.setDate_of_birth(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("date_of_birth"));
+                            mUserProfile.setGender(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("gender"));
+                            mUserProfile.setProfile_image(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("profile_image"));
+                            mUserProfile.setAccount_type(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("account_type"));
+                            mUserProfile.setClassification(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("classification"));
+                            mUserProfile.setAudience(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("audience"));
+                            mUserProfile.setRevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("revealit_private_key"));
+                            mModel.setUserProfile(mUserProfile);
+                        }else{
+                            mModel.setUserProfile(null);
+                        }
+                    }
+
+                    dataArrayList.add(mModel);
+
+                }
+
+                //STORE WHOLE ARRAY IN TO STRING FORMAT IN KEYSTORE
+                CommonMethods.encryptKey(""+mGson.toJson(dataArrayList),  Constants.KEY_SILOS_DATA,Constants.KEY_SILOS_ALIAS, mSessionManager);
+
+
+                return true;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            return false;
+        }
+
+        return false;
+    }
+
+
+
+
+
+
     public static boolean updateUserDetailsFromShortOnboardinToKeyChain(SessionManager mSessionManager,
                                                                         String privateKey,
                                                                         String username,
@@ -1232,8 +1373,28 @@ public class CommonMethods {
                     mProton.setPublicKey(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_key"));
                     mProton.setPublic_pem(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getJSONObject("proton").getString("public_pem"));
                     mSubmitProfileModel.setProton(mProton);
-
                     mModel.setSubmitProfileModel(mSubmitProfileModel);
+
+                    //SET USER DETAILS
+                    KeyStoreServerInstancesModel.UserProfile mUserProfile = new KeyStoreServerInstancesModel.UserProfile();
+                    if(jsonArray.getJSONObject(i).get("userProfile").toString() != "null"){
+                        mUserProfile.setId(jsonArray.getJSONObject(i).getJSONObject("userProfile").getInt("id"));
+                        mUserProfile.setUser_id(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("user_id"));
+                        mUserProfile.setName(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("name"));
+                        mUserProfile.setFirst_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("first_name"));
+                        mUserProfile.setLast_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("last_name"));
+                        mUserProfile.setEmail(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("email"));
+                        mUserProfile.setDate_of_birth(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("date_of_birth"));
+                        mUserProfile.setGender(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("gender"));
+                        mUserProfile.setProfile_image(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("profile_image"));
+                        mUserProfile.setAccount_type(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("account_type"));
+                        mUserProfile.setClassification(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("classification"));
+                        mUserProfile.setAudience(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("audience"));
+                        mUserProfile.setRevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("revealit_private_key"));
+                        mModel.setUserProfile(mUserProfile);
+                    }else{
+                        mModel.setUserProfile(null);
+                    }
 
                     dataArrayList.add(mModel);
 
@@ -1370,8 +1531,6 @@ public class CommonMethods {
                 for (int i=0 ;i < jsonArray.length();i++){
 
                     if(jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)) && jsonArray.getJSONObject(i).getInt("serverInstanceId") == mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) && jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("isAccountRemoved") != 1) {
-                        Log.e("INSTANCE",""+jsonArray.getJSONObject(i).getString("serverInstanceName").equals(mSessionManager.getPreference(Constants.API_END_POINTS_SERVER_NAME)));
-                        Log.e("INSTANCE",""+jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("is_activated"));
                         totalNumberOfActiveAccountInSilo++;
 
                     }

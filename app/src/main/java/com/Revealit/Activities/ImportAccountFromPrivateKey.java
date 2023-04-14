@@ -34,6 +34,7 @@ import com.Revealit.UserOnboardingProcess.NewAuthBiomatricAuthenticationActivity
 import com.Revealit.UserOnboardingProcess.NewAuthMobileAndPromoActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
@@ -491,10 +492,6 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
 
     private void storeKeyStoreInstances(SubmitProfileModel body) {
 
-        //STORE DATA FOR SWAPPING SILOS
-        //THIS IS TEMPORARY FOR ADMIN USERS
-        //OVERRIDE EXISTING SILOS IF ADMIN CREATE NEW WITH FOR EXISTING SAVED SILOS
-        //encryptKey(""+mGson.toJson(body),  Constants.KEY_SILOS_DATA+""+mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID),Constants.KEY_SILOS_ALIAS);
 
         //CREATE LIST WHICH COULD ENCRYPT AND THAN STORE IN THE KEY STORE AS A STRING
         ArrayList<KeyStoreServerInstancesModel.Data> mInstancesModel = new ArrayList<>();
@@ -525,8 +522,6 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                     mModel.setServerInstanceId(jsonArray.getJSONObject(i).getInt("serverInstanceId"));
                     mModel.setIsAccountRemoved(jsonArray.getJSONObject(i).getInt("isAccountRemoved"));
 
-                    Log.e("ISSSS",""+jsonArray.getJSONObject(i).getInt("isAccountRemoved"));
-
 
                     SubmitProfileModel mSubmitProfileModel = new SubmitProfileModel();
                     mSubmitProfileModel.setAudience(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getString("audience"));
@@ -536,7 +531,6 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                     }else{
                         mSubmitProfileModel.setauth_token("");
                     }
-
 
 
                     mSubmitProfileModel.setError_code(jsonArray.getJSONObject(i).getJSONObject("submitProfileModel").getInt("error_code"));
@@ -557,6 +551,27 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
                     mSubmitProfileModel.setProton(mProton);
 
                     mModel.setSubmitProfileModel(mSubmitProfileModel);
+
+                    //SET USER DETAILS
+                    KeyStoreServerInstancesModel.UserProfile mUserProfile = new KeyStoreServerInstancesModel.UserProfile();
+                    if(jsonArray.getJSONObject(i).get("userProfile").toString() != "null"){
+                        mUserProfile.setId(jsonArray.getJSONObject(i).getJSONObject("userProfile").getInt("id"));
+                        mUserProfile.setUser_id(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("user_id"));
+                        mUserProfile.setName(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("name"));
+                        mUserProfile.setFirst_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("first_name"));
+                        mUserProfile.setLast_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("last_name"));
+                        mUserProfile.setEmail(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("email"));
+                        mUserProfile.setDate_of_birth(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("date_of_birth"));
+                        mUserProfile.setGender(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("gender"));
+                        mUserProfile.setProfile_image(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("profile_image"));
+                        mUserProfile.setAccount_type(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("account_type"));
+                        mUserProfile.setClassification(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("classification"));
+                        mUserProfile.setAudience(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("audience"));
+                        mUserProfile.setRevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("revealit_private_key"));
+                        mModel.setUserProfile(mUserProfile);
+                    }else{
+                        mModel.setUserProfile(null);
+                    }
 
                     dataArrayList.add(mModel);
                 }
@@ -582,10 +597,98 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
         //UPDATE GOOGLE DRIVE BACKUP FLAG
         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_GOOGLE_DRIVE_BACKUP_DONE, false);
 
-        //GO TO NEXT ACTIVITY
-        Intent mIntent = new Intent(ImportAccountFromPrivateKey.this, HomeScreenTabLayout.class);
-        startActivity(mIntent);
-        finishAffinity();
+        //CALL USER DETAILS API
+        getUserDetails(body.getProton().getPrivateKey(),  body.getProton().getAccountName());
+
+
+
+
+    }
+    private void getUserDetails(String privateKey, String userName) {
+
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+
+        Call<JsonElement> call = patchService1.getUser(Constants.API_GET_USER);
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+
+                CommonMethods.printLogE("Response @ getUserDetails: ", "" + response.isSuccessful());
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+
+                CommonMethods.printLogE("Response @ getUserDetails: ", "" + gson.toJson(response.body().getAsJsonObject().get("data")));
+
+
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
+
+
+                    if(privateKey != null && userName != null){
+
+                        try {
+                            if(new UpdateUserUserDetailsToKeyStoreTask(ImportAccountFromPrivateKey.this,privateKey,userName,response.body().getAsJsonObject().get("data").toString()).execute(mSessionManager).get()){
+                                //GO TO NEXT ACTIVITY
+                                Intent mIntent = new Intent(mActivity, HomeScreenTabLayout.class);
+                                mActivity.startActivity(mIntent);
+                                mActivity.finishAffinity();
+                            }
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+
+            }
+        });
+
 
     }
 
@@ -963,6 +1066,38 @@ class FetchDataFromAndroidKeyStoreTask extends AsyncTask<SessionManager, Integer
     @Override
     protected void onPostExecute(ArrayList<KeyStoreServerInstancesModel.Data> searchResults) {
         super.onPostExecute(searchResults);
+
+    }
+}
+class UpdateUserUserDetailsToKeyStoreTask extends AsyncTask<SessionManager, Integer, Boolean> {
+
+    String strPrivateKey ="";
+    String strUsername = "";
+    String strUserDetails = "";
+    ImportAccountFromPrivateKey mActivity;
+
+    public UpdateUserUserDetailsToKeyStoreTask(ImportAccountFromPrivateKey mActivity,String privateKey, String strUsername,String role) {
+
+        this.strPrivateKey =privateKey;
+        this.strUsername = strUsername;
+        this.strUserDetails = role;
+        this.mActivity = mActivity;
+    }
+    @Override
+    protected Boolean doInBackground(SessionManager... mSessionManager) {
+        return CommonMethods.updateUserDetailsToKeyChain(mSessionManager[0],strPrivateKey,strUsername,strUserDetails);
+    }
+
+    @Override
+    protected void onPreExecute() {
+
+    }
+
+    @Override
+    protected void onPostExecute(Boolean searchResults) {
+        super.onPostExecute(searchResults);
+
+
 
     }
 }

@@ -20,7 +20,7 @@ public class KeyStoreServerInstancesModel {
         int serverInstanceId;
         int isAccountRemoved ;
         SubmitProfileModel submitProfileModel;
-        private UserProfile userProfile;
+        UserProfile userProfile;
 
         public String getServerInstanceName() {
             return serverInstanceName;
@@ -63,14 +63,16 @@ public class KeyStoreServerInstancesModel {
         }
 
         public UserProfile getUserProfile() {
+            
             return userProfile;
         }
 
         public void setUserProfile(UserProfile userProfile) {
+            
             this.userProfile = userProfile;
         }
     }
-    private class UserProfile {
+    public static class UserProfile {
         private int id;
         private String user_id;
         private String name;
@@ -83,6 +85,7 @@ public class KeyStoreServerInstancesModel {
         private String account_type;
         private String classification;
         private String audience;
+        private String revealit_private_key;
 
         public int getId() {
             return id;
@@ -178,6 +181,14 @@ public class KeyStoreServerInstancesModel {
 
         public void setAudience(String audience) {
             this.audience = audience;
+        }
+
+        public String getRevealit_private_key() {
+            return revealit_private_key;
+        }
+
+        public void setRevealit_private_key(String revealit_private_key) {
+            this.revealit_private_key = revealit_private_key;
         }
     }
 }

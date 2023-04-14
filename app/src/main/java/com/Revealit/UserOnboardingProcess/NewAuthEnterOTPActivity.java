@@ -534,6 +534,27 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
 
                     mModel.setSubmitProfileModel(mSubmitProfileModel);
 
+                    //SET USER DETAILS
+                    KeyStoreServerInstancesModel.UserProfile mUserProfile = new KeyStoreServerInstancesModel.UserProfile();
+                    if(jsonArray.getJSONObject(i).get("userProfile").toString() != "null"){
+                        mUserProfile.setId(jsonArray.getJSONObject(i).getJSONObject("userProfile").getInt("id"));
+                        mUserProfile.setUser_id(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("user_id"));
+                        mUserProfile.setName(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("name"));
+                        mUserProfile.setFirst_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("first_name"));
+                        mUserProfile.setLast_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("last_name"));
+                        mUserProfile.setEmail(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("email"));
+                        mUserProfile.setDate_of_birth(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("date_of_birth"));
+                        mUserProfile.setGender(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("gender"));
+                        mUserProfile.setProfile_image(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("profile_image"));
+                        mUserProfile.setAccount_type(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("account_type"));
+                        mUserProfile.setClassification(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("classification"));
+                        mUserProfile.setAudience(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("audience"));
+                        mUserProfile.setRevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("revealit_private_key"));
+                        mModel.setUserProfile(mUserProfile);
+                    }else{
+                        mModel.setUserProfile(null);
+                    }
+
                     dataArrayList.add(mModel);
                 }
 
@@ -764,26 +785,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void updateUIforWrongOTP(String strErrorMsg) {
 
-        txtContinueEnabled.setVisibility(View.INVISIBLE);
-        txtContinueDisable.setVisibility(View.VISIBLE);
-        txtInvalidOTP.setVisibility(View.VISIBLE);
-        txtVerifiedSuccessully.setVisibility(View.GONE);
-        linearResendCode.setVisibility(View.VISIBLE);
-
-        CommonMethods.buildDialog(mContext, strErrorMsg);
-
-        isOtpVarified = false;
-
-        edtOne.setTextColor(getColor(R.color.colorCuratorRedError));
-        edtTwo.setTextColor(getColor(R.color.colorCuratorRedError));
-        edtThree.setTextColor(getColor(R.color.colorCuratorRedError));
-        edtFour.setTextColor(getColor(R.color.colorCuratorRedError));
-        edtFive.setTextColor(getColor(R.color.colorCuratorRedError));
-        edtSix.setTextColor(getColor(R.color.colorCuratorRedError));
-    }
 
     class GenericTextWatcher implements TextWatcher {
         private EditText edtCurrent;

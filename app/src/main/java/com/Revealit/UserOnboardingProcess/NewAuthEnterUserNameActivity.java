@@ -28,6 +28,7 @@ import com.Revealit.Utils.DeCryptor;
 import com.Revealit.Utils.EnCryptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
@@ -37,10 +38,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -340,10 +343,6 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
 
     private void storeKeyStoreInstances(SubmitProfileModel body) {
 
-        //STORE DATA FOR SWAPPING SILOS
-        //THIS IS TEMPORARY FOR ADMIN USERS
-        //OVERRIDE EXISTING SILOS IF ADMIN CREATE NEW WITH FOR EXISTING SAVED SILOS
-       //encryptKey(""+mGson.toJson(body),  Constants.KEY_SILOS_DATA+""+mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID),Constants.KEY_SILOS_ALIAS);
 
         //CREATE LIST WHICH COULD ENCRYPT AND THAN STORE IN THE KEY STORE AS A STRING
         ArrayList<KeyStoreServerInstancesModel.Data> mInstancesModel = new ArrayList<>();
@@ -403,6 +402,27 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
 
                     mModel.setSubmitProfileModel(mSubmitProfileModel);
 
+                    //SET USER DETAILS
+                    KeyStoreServerInstancesModel.UserProfile mUserProfile = new KeyStoreServerInstancesModel.UserProfile();
+                    if(jsonArray.getJSONObject(i).get("userProfile").toString() != "null"){
+                        mUserProfile.setId(jsonArray.getJSONObject(i).getJSONObject("userProfile").getInt("id"));
+                        mUserProfile.setUser_id(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("user_id"));
+                        mUserProfile.setName(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("name"));
+                        mUserProfile.setFirst_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("first_name"));
+                        mUserProfile.setLast_name(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("last_name"));
+                        mUserProfile.setEmail(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("email"));
+                        mUserProfile.setDate_of_birth(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("date_of_birth"));
+                        mUserProfile.setGender(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("gender"));
+                        mUserProfile.setProfile_image(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("profile_image"));
+                        mUserProfile.setAccount_type(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("account_type"));
+                        mUserProfile.setClassification(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("classification"));
+                        mUserProfile.setAudience(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("audience"));
+                        mUserProfile.setRevealit_private_key(jsonArray.getJSONObject(i).getJSONObject("userProfile").getString("revealit_private_key"));
+                        mModel.setUserProfile(mUserProfile);
+                    }else{
+                        mModel.setUserProfile(null);
+                    }
+
                     dataArrayList.add(mModel);
                 }
 
@@ -433,14 +453,97 @@ public class NewAuthEnterUserNameActivity extends AppCompatActivity implements V
         //UPDATE GOOGLE DRIVE BACKUP FLAG
         mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_GOOGLE_DRIVE_BACKUP_DONE, false);
 
-        //GO TO NEXT ACTIVITY
-        Intent mIntent = new Intent(NewAuthEnterUserNameActivity.this,AddRefferalOnBoardingActivity.class);
-        mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME ,body.getProton().getAccountName());
-        startActivity(mIntent);
+        //GET USER DETAILS FROM API
+        getUserDetails(body.getProton().getPrivateKey(), body.getProton().getAccountName());
+
+
 
     }
 
+    private void getUserDetails(String privatekey, String username) {
 
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+
+        Call<JsonElement> call = patchService1.getUser(Constants.API_GET_USER);
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+
+                CommonMethods.printLogE("Response @ getUserDetails: ", "" + response.isSuccessful());
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+
+                CommonMethods.printLogE("Response @ getUserDetails: ", "" + gson.toJson(response.body().getAsJsonObject().get("data")));
+
+
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
+
+                    if(privatekey != null && username != null){
+                        try {
+                            if(new UpdateUserUserDetailsToKeyStoreTask(privatekey,username,response.body().getAsJsonObject().get("data").toString()).execute(mSessionManager).get()){
+
+                                //GO TO NEXT ACTIVITY
+                                Intent mIntent = new Intent(NewAuthEnterUserNameActivity.this,AddRefferalOnBoardingActivity.class);
+                                mIntent.putExtra(Constants.KEY_NEW_AUTH_USERNAME ,username);
+                                startActivity(mIntent);
+                            }
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+
+            }
+        });
+
+
+    }
 
 
     private void apiCheckIfUsernameExist(){

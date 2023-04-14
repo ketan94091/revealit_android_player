@@ -90,6 +90,7 @@ public class Constants {
   public  static  final  String API_GET_ITEMS_FROM_ITEM_ID ="api/video/matchhistory/items";
   public  static  final  String API_REMOVE_LISTEN_HISTORY ="api/video/matchhistory/remove";
   public  static  final  String API_GET_USER_DETAILS ="user";
+  public  static  final  String API_GET_USER ="api/user";
   public static final String API_NEW_AUTH_PHONE_VERIFY = "/api/challenge";
   public static final String API_NEW_AUTH_OTP_VERIFY = "api/otpcode";
   public static final String API_NEW_AUTH_CREATE_PROTON = "api/proton/create_account";
@@ -240,6 +241,7 @@ public class Constants {
   public  static  final  String KEY_PUBLIC_SETTING_BACKUP_REMINDER="keyBackupReminder";
   public  static  final  String KEY_PUBLIC_SETTING_BLOCK_PRODUCERS="keyBlockProducers";
   public  static  final  String KEY_IS_USER_CANCEL_REFERRAL="keyIsUserCancelReferral";
+  public  static  final  String KEY_USERPROFILE_PIC="keyUserProfilePic";
 
 
     public static String API_KEY = "AIzaSyC4elGdU9Oxi2DPIShG4pRW2gRBZOeE0pM";
@@ -247,8 +249,7 @@ public class Constants {
     public static String PUSHER_INSTANCE_ID_INTERGRATION = "b8896e62-3c00-43b7-adfd-59960ee48a1d";// FOR INTEGRATION
     public static String PUSHER_INSTANCE_ID_PRODUCTION = "3d9abdc3-c6f6-4221-94a5-4004dcf833c4";//STAGING + TESTING1 + TESTING2
 
-
-    public static String EDUCATION_VIDEO_URL = "https://framecluster.b-cdn.net/video_media/_dhtem%C2%80trtape.mp4";
+   public static String EDUCATION_VIDEO_URL = "https://revassets.b-cdn.net/video_media/DD19RYjynVEQ1U1Egf2trJ0T0kV766rQ1YTEGZjS.mp4";
     public static String EDUCATION_VIDEO_TITLE = "Welcome to revealit TV";
 
 

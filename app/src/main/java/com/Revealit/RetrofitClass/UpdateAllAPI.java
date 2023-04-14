@@ -227,6 +227,10 @@ public interface UpdateAllAPI {
     @POST(Constants.API_ADD_REFARAL)
     Call<JsonElement> addReferral(@Body JsonObject body);
 
+    //GET USER DETAILS
+    @GET()
+    Call<JsonElement> getUser(@Url String url);
+
 }
 
 

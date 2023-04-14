@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -39,6 +40,7 @@ import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -73,6 +75,10 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
     private boolean isFromLoginScreen;
     private AlertDialog mAlertDialog;
     private Gson mGson;
+    //FOR MAINTANANCE
+    boolean isAppInMaintainance = false;
+    boolean isAppVersionIsNotOk = false;
+    private String userRole,username,privatekey;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -486,8 +492,6 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
         paramObject.addProperty("revealit_private_key",mSessionManager.getPreference(Constants.KEY_REVEALIT_PRIVATE_KEY));
         paramObject.addProperty("name", mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
 
-
-
         Call<NewAuthLogin> call = patchService1.newAuthLogin(paramObject);
 
         call.enqueue(new Callback<NewAuthLogin>() {
@@ -533,9 +537,9 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
 
                     //CHECK IF USER ROLE IS CHANGED
-                    String privatekey = getIntent().getStringExtra(Constants.KEY_PRIVATE_KEY);
-                    String username = getIntent().getStringExtra(Constants.KEY_PROTON_ACCOUNTNAME);
-                    String userRole = getIntent().getStringExtra(Constants.KEY_USER_ROLE);
+                     privatekey = getIntent().getStringExtra(Constants.KEY_PRIVATE_KEY);
+                     username = getIntent().getStringExtra(Constants.KEY_PROTON_ACCOUNTNAME);
+                     userRole = getIntent().getStringExtra(Constants.KEY_USER_ROLE);
                     if(privatekey != null && username != null && userRole != null &&  !userRole.equals(response.body().getRole())){
                         try {
                             if(new UpdateUserRoleInAndroidKeyStoreTask(privatekey,username,response.body().getRole()).execute(mSessionManager).get()){}
@@ -547,9 +551,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                     }
 
-                    //FOR MAINTANANCE
-                    boolean isAppInMaintainance = false;
-                    boolean isAppVersionIsNotOk = false;
+
                     for(int i =0; i <response.body().getPublic_settings().size(); i++ ){
 
                         //SAVE PUBLIC SETTINGS
@@ -582,25 +584,8 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                         }
                     }
 
-
-                    //CHECK IF APPLICATION IS IN MAINTENANCE
-                    if(isAppInMaintainance){
-                        //MOVE TO MAINTENANCE SCREEN
-                        Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, MaintanaceActivity.class);
-                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
-                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(mIntent);
-                        finish();
-                    }else if(isAppVersionIsNotOk){
-                        //MOVE TO MAINTENANCE SCREEN
-                        Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, AppUpgradeActivity.class);
-                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
-                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(mIntent);
-                        finish();
-                    }else {
-                        goToNextActivity();
-                    }
+                    //GET USER DETAILS API
+                    getUserDetails();
 
 
                 }else {
@@ -639,6 +624,110 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
         });
 
     }
+
+    private void getUserDetails() {
+
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+
+        Call<JsonElement> call = patchService1.getUser(Constants.API_GET_USER);
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+
+                CommonMethods.printLogE("Response @ getUserDetails: ", "" + response.isSuccessful());
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+
+                CommonMethods.printLogE("Response @ getUserDetails: ", "" + gson.toJson(response.body().getAsJsonObject().get("data")));
+
+
+                if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
+
+
+                    if(privatekey != null && username != null){
+                        try {
+                            if(new UpdateUserUserDetailsToKeyStoreTask(privatekey,username,response.body().getAsJsonObject().get("data").toString()).execute(mSessionManager).get()){}
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+
+                    //CHECK IF APPLICATION IS IN MAINTENANCE
+                    if(isAppInMaintainance){
+                        //MOVE TO MAINTENANCE SCREEN
+                        Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, MaintanaceActivity.class);
+                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
+                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mIntent);
+                        finish();
+                    }else if(isAppVersionIsNotOk){
+                        //MOVE TO MAINTENANCE SCREEN
+                        Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, AppUpgradeActivity.class);
+                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
+                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mIntent);
+                        finish();
+                    }else {
+                        goToNextActivity();
+                    }
+
+                }else{
+
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+
+            }
+        });
+
+
+    }
+
     private void displayUserNotFoundDialogue() {
 
         android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
@@ -699,6 +788,35 @@ class UpdateUserRoleInAndroidKeyStoreTask extends AsyncTask<SessionManager, Inte
     @Override
     protected Boolean doInBackground(SessionManager... mSessionManager) {
         return CommonMethods.updateUserRoleToKeyChain(mSessionManager[0],strPrivateKey,strUsername,strUserRole);
+    }
+
+    @Override
+    protected void onPreExecute() {
+
+    }
+
+    @Override
+    protected void onPostExecute(Boolean searchResults) {
+        super.onPostExecute(searchResults);
+
+    }
+}
+
+class UpdateUserUserDetailsToKeyStoreTask extends AsyncTask<SessionManager, Integer, Boolean> {
+
+    String strPrivateKey ="";
+    String strUsername = "";
+    String strUserDetails = "";
+
+    public UpdateUserUserDetailsToKeyStoreTask(String privateKey, String strUsername,String role) {
+
+        this.strPrivateKey =privateKey;
+        this.strUsername = strUsername;
+        this.strUserDetails = role;
+    }
+    @Override
+    protected Boolean doInBackground(SessionManager... mSessionManager) {
+        return CommonMethods.updateUserDetailsToKeyChain(mSessionManager[0],strPrivateKey,strUsername,strUserDetails);
     }
 
     @Override
