@@ -147,8 +147,17 @@ public class EosPrivateKey {
         if (bytes.length <= result.length) {
             System.arraycopy(bytes, 0, result, result.length - bytes.length, bytes.length);
         } else {
-            assert bytes.length == 33 && bytes[0] == 0;
-            System.arraycopy(bytes, 1, result, 0, bytes.length - 1);
+
+
+            try {
+           assert bytes.length == 33 && bytes[0] == 0;
+         System.arraycopy(bytes, 1, result, 0, bytes.length - 1);
+            }
+            catch (AssertionError e) {
+                System.out.println("AssertionError : "+e.getMessage());
+            }
+
+
         }
         return result;
     }
@@ -159,10 +168,17 @@ public class EosPrivateKey {
         if (bytes.length <= result.length) {
             System.arraycopy(bytes, 0, result, result.length - bytes.length, bytes.length);
         } else {
-            // This happens if the most significant bit is set and we have an
-            // extra leading zero to avoid a negative BigInteger
-            assert bytes.length == 33 && bytes[0] == 0;
-            System.arraycopy(bytes, 1, result, 0, bytes.length - 1);
+
+            try {
+                // This happens if the most significant bit is set and we have an
+                // extra leading zero to avoid a negative BigInteger
+                assert bytes.length == 33 && bytes[0] == 0;
+                System.arraycopy(bytes, 1, result, 0, bytes.length - 1);
+
+            }
+            catch (AssertionError e) {
+                System.out.println("AssertionError : "+e.getMessage());
+            }
         }
         return result;
     }

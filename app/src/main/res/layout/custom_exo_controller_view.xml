@@ -23,7 +23,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:src="@drawable/left_arrow" />
+            android:src="@mipmap/cancel_video_view" />
 
 
         <TextView
@@ -41,32 +41,120 @@
             android:visibility="gone" />
 
 
+        <RelativeLayout
+            android:id="@+id/relativeIndicators"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/linearBlueSelection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/round_blue_dot" />
+
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/round_green_ovel_dot" />
+
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/round_amber_ovel_dot" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearGreenSelection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/round_blue_ovel_dot" />
+
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/round_green_dot" />
+
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/round_amber_ovel_dot" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearAmberSelection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/round_blue_ovel_dot" />
+
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/round_green_ovel_dot" />
+
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/round_amber_dot" />
+
+
+            </LinearLayout>
+        </RelativeLayout>
+
         <LinearLayout
             android:id="@+id/linearRecipeShareInfluencer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
+            android:layout_toLeftOf="@+id/imgVoulume"
             android:orientation="horizontal"
-            android:visibility="gone"
-
-            >
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/imgInfluencer"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/bc_gray_light"
-                android:src="@mipmap/influencer" />
+                android:src="@mipmap/influencer_video_view" />
 
             <ImageView
                 android:id="@+id/imgRecipe"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/bc_gray_light"
-                android:src="@mipmap/infolcone"
+                android:src="@mipmap/receipe_video_view"
 
                 />
 
@@ -75,9 +163,53 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/bc_gray_light"
-                android:src="@drawable/share" />
+                android:src="@mipmap/share_video_view" />
+
         </LinearLayout>
+
+        <ToggleButton
+            android:id="@+id/imgVoulume"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/toggle_selector"
+            android:checked="false"
+            android:textOff=""
+            android:textOn="" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeFastForward"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_centerInParent="true"
+        android:padding="10dp"
+       >
+
+
+        <ImageView
+            android:id="@+id/imgBackForward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="5dp"
+            android:src="@mipmap/left_arrow" />
+
+
+        <ImageView
+            android:id="@+id/imgForward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="5dp"
+            android:src="@mipmap/right_arrow" />
+
 
 
     </RelativeLayout>
@@ -92,7 +224,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_toLeftOf="@+id/imgVoulume"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingTop="10dp"
@@ -111,15 +242,13 @@
                 <ImageButton
                     android:id="@id/exo_pause"
                     style="@style/ExoMediaButton.Pause"
-                    android:tint="@color/colorWhite"
-                    android:tintMode="src_in"
+                    android:src="@mipmap/pause_video_view"
                     android:visibility="gone" />
 
                 <ImageButton
                     android:id="@id/exo_play"
                     style="@style/ExoMediaButton.Play"
-                    android:tint="@color/colorWhite"
-                    android:tintMode="src_in" />
+                    android:src="@mipmap/play_video_view" />
 
                 <TextView
                     android:id="@id/exo_position"
@@ -163,16 +292,6 @@
                 android:layout_weight="1" />
 
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/imgVoulume"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@null"
-            android:padding="5dp"
-            android:src="@drawable/volume" />
 
     </RelativeLayout>
 

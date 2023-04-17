@@ -16,6 +16,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
@@ -31,6 +32,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -40,6 +42,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -128,7 +131,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
     private SimpleExoPlayerView exoPlayer;
     private SimpleExoPlayer player;
     private ProgressBar progress;
-    private ImageView imgShareImage, imgVoulume, imgBackArrow, imgRecipe, imgInfluencer, imgShare;
+    private ImageView imgForward,imgBackForward,imgShareImage,imgBackArrow, imgRecipe, imgInfluencer, imgShare;
+    private ToggleButton imgVoulume;
     private LinearLayout linearRecipeShareInfluencer, linearMainBottomController;
     private SeekBar seekFontSize, ckVolumeBar;
     private AudioManager audioManager;
@@ -154,6 +158,7 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             Manifest.permission.READ_EXTERNAL_STORAGE};
     private ProgressBar progressLoadData;
     private AlertDialog mAlertDialogRecipe;
+    private LinearLayout linearAmberSelection,linearGreenSelection,linearBlueSelection;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,8 +200,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         imgRecipe = (ImageView) findViewById(R.id.imgRecipe);
         imgInfluencer = (ImageView) findViewById(R.id.imgInfluencer);
         imgBackArrow = (ImageView) findViewById(R.id.imgBackArrow);
-        imgVoulume = (ImageView) findViewById(R.id.imgVoulume);
+        imgVoulume = (ToggleButton) findViewById(R.id.imgVoulume);
         imgShareImage = (ImageView) findViewById(R.id.imgShareImage);
+        imgBackForward = (ImageView) findViewById(R.id.imgBackForward);
+        imgForward = (ImageView) findViewById(R.id.imgForward);
 
 
         ckVolumeBar = (SeekBar) findViewById(R.id.ckVolumeBar);
@@ -209,6 +216,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
         relativeShareView = (RelativeLayout) findViewById(R.id.relativeShareView);
         relativeCaptureImageWithText = (RelativeLayout) findViewById(R.id.relativeCaptureImageWithText);
+
+        linearBlueSelection =(LinearLayout)findViewById(R.id.linearBlueSelection);
+        linearGreenSelection =(LinearLayout)findViewById(R.id.linearGreenSelection);
+        linearAmberSelection =(LinearLayout)findViewById(R.id.linearAmberSelection);
 
         edtTextOnCaptureImage = (EditText) findViewById(R.id.edtTextOnCaptureImage);
 
@@ -278,6 +289,19 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
+imgVoulume.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+        if(isChecked){
+
+            MuteAudio();
+        }else{
+
+            UnMuteAudio();
+        }
+
+    }
+});
         //SET VIDEO TITLE
         txtTitle.setText(strMediaTitle);
 
@@ -301,17 +325,39 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
         imgInfluencer.setOnClickListener(this);
         imgRecipe.setOnClickListener(this);
         imgBackArrow.setOnClickListener(this);
-        imgVoulume.setOnClickListener(this);
         txtCancel.setOnClickListener(this);
         txtShare.setOnClickListener(this);
+        imgBackForward.setOnClickListener(this);
+        imgForward.setOnClickListener(this);
 
     }
+
 
 
     @Override
     public void onClick(View v) {
 
         switch (v.getId()) {
+
+            case R.id.imgBackForward:
+
+               videoSeekTo =  ((int) player.getCurrentPosition() / 1000 -  5);
+
+                //INITIALIZE EXO PLAYER
+                initializePlayer();
+
+
+                break;
+            case R.id.imgForward:
+
+                videoSeekTo =  ((int) player.getCurrentPosition() / 1000 +  5);
+
+                //INITIALIZE EXO PLAYER
+                initializePlayer();
+
+
+
+                break;
 
 
             case R.id.imgInfluencer:
@@ -358,21 +404,21 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                 break;
 
-            case R.id.imgVoulume:
-
-                //VOLUME CONTROLLER BASED ON CLICK OF VOLUME ICON
-                if (linearMainBottomController.getVisibility() == View.VISIBLE) {
-
-                    linearMainBottomController.setVisibility(View.GONE);
-                    ckVolumeBar.setVisibility(View.VISIBLE);
-
-                } else {
-
-                    linearMainBottomController.setVisibility(View.VISIBLE);
-                    ckVolumeBar.setVisibility(View.GONE);
-                }
-
-                break;
+//            case R.id.imgVoulume:
+//
+//                //VOLUME CONTROLLER BASED ON CLICK OF VOLUME ICON
+//                if (linearMainBottomController.getVisibility() == View.VISIBLE) {
+//
+//                    linearMainBottomController.setVisibility(View.GONE);
+//                    ckVolumeBar.setVisibility(View.VISIBLE);
+//
+//                } else {
+//
+//                    linearMainBottomController.setVisibility(View.VISIBLE);
+//                    ckVolumeBar.setVisibility(View.GONE);
+//                }
+//
+//                break;
 
             case R.id.txtCancel:
 
@@ -546,12 +592,24 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     //HIDE OVERLAY
                     frameOverlay.setVisibility(View.GONE);
 
+                    //DISPLAY INDICATORS
+                    //DEFAULT GREEN
+                    linearGreenSelection.setVisibility(View.GONE);
+                    linearBlueSelection.setVisibility(View.GONE);
+                    linearAmberSelection.setVisibility(View.GONE);
+
 
 
                 } else if (playbackState == Player.STATE_ENDED) {
 
                     //HIDE WHEN PLAYER IS ENDED VIDEO
                     progress.setVisibility(View.GONE);
+
+                    //DISPLAY INDICATORS
+                    //DEFAULT GREEN
+                    linearGreenSelection.setVisibility(View.GONE);
+                    linearBlueSelection.setVisibility(View.GONE);
+                    linearAmberSelection.setVisibility(View.GONE);
 
 
                 } else if (playWhenReady) {
@@ -564,7 +622,20 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     //HIDE OVERLAY
                     frameOverlay.setVisibility(View.GONE);
 
+                    //DISPLAY INDICATORS
+                    //DEFAULT GREEN
+                    linearGreenSelection.setVisibility(View.GONE);
+                    linearBlueSelection.setVisibility(View.GONE);
+                    linearAmberSelection.setVisibility(View.GONE);
+
                 } else {
+
+                    //DISPLAY INDICATORS
+                    //DEFAULT GREEN
+                    linearGreenSelection.setVisibility(View.VISIBLE);
+                    linearBlueSelection.setVisibility(View.GONE);
+                    linearAmberSelection.setVisibility(View.GONE);
+
 
                     //HIDE AND VISIBLE WHEN PLAYER IS PAUSE
                     progress.setVisibility(View.GONE);
@@ -639,8 +710,8 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                 //SET OVERLAY LAYOUT SAME AS VIDEO VIEW
                 //SET DYNAMIC HEIGHT WIDTH BASED ON LOADED VIDEO
-                frameOverlay.getLayoutParams().height = height;
-                frameOverlay.getLayoutParams().width = width;
+                frameOverlay.getLayoutParams().height = height ;
+                frameOverlay.getLayoutParams().width = width ;
                 frameOverlay.requestLayout();
 
                 //SET DYNAMIC GRAVITY CENTRE FOR FRAME LAYOUT ABOVE EXACTLY VIDEO SURFACE VIEW
@@ -1407,6 +1478,11 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                     Log.e("GREEN DOTS"," : GREEN DOTS");
 
+                    linearGreenSelection.setVisibility(View.VISIBLE);
+                    linearBlueSelection.setVisibility(View.GONE);
+                    linearAmberSelection.setVisibility(View.GONE);
+
+
                     //UPDATE FLAG
                     isMiddleSwipe = false;
 
@@ -1416,6 +1492,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     callUploadRewardData(3 , Integer.parseInt(strMediaID));
 
                     Log.e("AMBER DOTS"," : AMBER DOTS");
+
+                    linearGreenSelection.setVisibility(View.GONE);
+                    linearBlueSelection.setVisibility(View.GONE);
+                    linearAmberSelection.setVisibility(View.VISIBLE);
 
                     //UPDATE FLAG
                     isMiddleSwipe = true;
@@ -1435,6 +1515,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
 
                     Log.e("GREEN DOTS"," : GREEN DOTS");
 
+                    linearGreenSelection.setVisibility(View.VISIBLE);
+                    linearBlueSelection.setVisibility(View.GONE);
+                    linearAmberSelection.setVisibility(View.GONE);
+
                     //UPDATE FLAG
                     isMiddleSwipe = false;
 
@@ -1446,6 +1530,10 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
                     callUploadRewardData(4 , Integer.parseInt(strMediaID));
 
                     Log.e("BLUE DOTS"," : BLUE DOTS");
+
+                    linearGreenSelection.setVisibility(View.GONE);
+                    linearBlueSelection.setVisibility(View.VISIBLE);
+                    linearAmberSelection.setVisibility(View.GONE);
 
                     //UPDATE FLAG
                     isMiddleSwipe = true;
@@ -2271,6 +2359,40 @@ public class ExoPlayerActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
+    }
+
+    public void MuteAudio(){
+        AudioManager mAlramMAnager = (AudioManager) mActivity.getSystemService(mContext.AUDIO_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_MUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_MUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_MUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_MUTE, 0);
+        } else {
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_NOTIFICATION, true);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_ALARM, true);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_RING, true);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_SYSTEM, true);
+        }
+    }
+
+    public void UnMuteAudio(){
+        AudioManager mAlramMAnager = (AudioManager) mActivity.getSystemService(mContext.AUDIO_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_UNMUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_UNMUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_UNMUTE,0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_UNMUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_UNMUTE, 0);
+        } else {
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_NOTIFICATION, false);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_ALARM, false);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_RING, false);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_SYSTEM, false);
+        }
     }
 
 

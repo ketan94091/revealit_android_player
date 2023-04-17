@@ -34,7 +34,7 @@
         android:id="@+id/frameOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorTransperent"
+        android:background="@drawable/video_frame_layout"
         android:visibility="gone"
         />
 
