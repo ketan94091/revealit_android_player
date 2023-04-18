@@ -1,9 +1,7 @@
 package com.Revealit.Activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,14 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
-import com.Revealit.ModelClasses.NewAuthLogin;
-import com.Revealit.ModelClasses.NewAuthLoginCallbackModel;
+import com.Revealit.ModelClasses.InviteModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
@@ -29,7 +26,6 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -66,7 +62,6 @@ public class MaintanaceActivity extends AppCompatActivity implements View.OnClic
 
         txtReload=(TextView)findViewById(R.id.txtReload);
 
-        isFromCallBackApi =getIntent().getBooleanExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
 
 
     }
@@ -85,29 +80,19 @@ public class MaintanaceActivity extends AppCompatActivity implements View.OnClic
 
             case R.id.txtReload:
 
-                if(isFromCallBackApi){
-                    callCallBackAPI();
-                }else{
-                    callAuthenticationAPI();
-                }
+                apiInviteSettings();
 
                 break;
         }
 
     }
 
-    private void callAuthenticationAPI() {
+    private void apiInviteSettings(){
 
-        //DISPLAY DIALOG
+        //OPEN PROGRESS BAR
         CommonMethods.showDialog(mContext);
 
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(logging);
         httpClient.addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -130,307 +115,92 @@ public class MaintanaceActivity extends AppCompatActivity implements View.OnClic
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .client(client.newBuilder().connectTimeout(3000, TimeUnit.SECONDS).readTimeout(3000, TimeUnit.SECONDS).writeTimeout(3000, TimeUnit.SECONDS).build())
                 .build();
 
         UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
-        JsonObject paramObject = new JsonObject();
-        paramObject.addProperty("revealit_private_key",mSessionManager.getPreference(Constants.KEY_REVEALIT_PRIVATE_KEY));
-        paramObject.addProperty("name", mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+        String url=" ";
 
 
-        Call<NewAuthLogin> call = patchService1.newAuthLogin(paramObject);
+        Call<InviteModel> call = patchService1.getCampaignDetails(Constants.API_NEW_AUTH_INVITE_SETTINGS+url);
 
-        call.enqueue(new Callback<NewAuthLogin>() {
+        call.enqueue(new Callback<InviteModel>() {
             @Override
-            public void onResponse(Call<NewAuthLogin> call, Response<NewAuthLogin> response) {
+            public void onResponse(Call<InviteModel> call, Response<InviteModel> response) {
 
-                CommonMethods.printLogE("Response @ callAuthenticationAPI: ", "" + response.isSuccessful());
-                CommonMethods.printLogE("Response @ callAuthenticationAPI: ", "" + response.code());
-
+                CommonMethods.printLogE("Response @ apiSendInvites: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ apiSendInvites: ", "" + response.code());
                 Gson gson = new GsonBuilder()
                         .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
                         .serializeNulls()
                         .create();
 
-                CommonMethods.printLogE("Response @ callAuthenticationAPI: ", "" + gson.toJson(response.body()));
+                CommonMethods.printLogE("Response @ apiSendInvites: ", "" + gson.toJson(response.body()));
 
-                //CLOSE DIALOG
+                //CLOSE DIALOGUE
                 CommonMethods.closeDialog();
 
-
-                if (response.isSuccessful() && response.code() == Constants.API_CODE_200 && response.body().getToken() != null) {
-
-
-                    //SAVE AUTHENTICATION DATA
-                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN, response.body().getToken());
-                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE, response.body().getToken_type());
-                    mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, true);
-                    mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN, true);
-
-                    //UPDATE FLAG IF USER IS ADMIN OR NOT
-                    if(response.body().getRole().equals(getResources().getString(R.string.strAdmin))){
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,true);
-                    }else{
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,false);
-                    }
-
-                    //UPDATE ACTIVE FLAG
-                    if(response.body().getIs_activated().equals("1")){
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
-                    }else{
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
-                    }
-
-                    //FOR MAINTANANCE
-                    boolean isAppInMaintainance = false;
-                    boolean isAppVersionIsNotOk = false;
-                    for(int i =0; i <response.body().getPublic_settings().size(); i++ ){
-
-                        //SAVE PUBLIC SETTINGS
-                        if(response.body().getPublic_settings().get(i).getOs().equals("Android")){
-                            mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_API_VERSION, response.body().getPublic_settings().get(i).getApi_version());
-                            mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_VERSION, response.body().getPublic_settings().get(i).getMinimum_acceptable_version());
-                            mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION, response.body().getPublic_settings().get(i).getMinimum_acceptable_api_version());
-                            mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER, Integer.valueOf(response.body().getPublic_settings().get(i).getProfile_update_reminder_period()));
-                            mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_BACKUP_REMINDER, Integer.valueOf(response.body().getPublic_settings().get(i).getBackup_update_reminder_period()));
-
-                            if(response.body().getPublic_settings().get(i).getMaintenance() == "1"){
-                                isAppInMaintainance = true;
-                            }
-
-                            if(CommonMethods.calculateAcceptableVersion(response.body().getPublic_settings().get(i).getMinimum_acceptable_version() )){
-                                isAppVersionIsNotOk = true;
-                            }
-
-                        }
-                    }
-
-
-
-
-                    //CHECK IF APPLICATION IS IN MAINTENANCE
-                    if(isAppInMaintainance){
-                        //MOVE TO MAINTENANCE SCREEN
-                        Intent mIntent = new Intent(MaintanaceActivity.this, MaintanaceActivity.class);
-                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
-                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(mIntent);
-                        finish();
-                    }else if(isAppVersionIsNotOk){
-                        //MOVE TO MAINTENANCE SCREEN
-                        Intent mIntent = new Intent(MaintanaceActivity.this, AppUpgradeActivity.class);
-                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
-                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(mIntent);
-                        finish();
-                    }else {
-                        Intent mIntent = new Intent(MaintanaceActivity.this, HomeScreenTabLayout.class);
-                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(mIntent);
-                        finish();
-                    }
-
-
-
-
-                } else {
-
-                    displayAlertDialogue(getResources().getString(R.string.strUsernotfound));
-
+                if(response.code() == 200){
+                    //UPDATE INVITE UI
+                    openNextActivity(response.body());
+                }else
+                {
+                    openMaintenanceActivity();
                 }
+
             }
 
             @Override
-            public void onFailure(Call<NewAuthLogin> call, Throwable t) {
+            public void onFailure(Call<InviteModel> call, Throwable t) {
 
-
-                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
-
-
+                //CLOSE DIALOGUE
                 CommonMethods.closeDialog();
+
+                openMaintenanceActivity();
+
 
             }
         });
 
 
-
-    }
-    private void callCallBackAPI() {
-
-        //DISPLAY DIALOG
-        CommonMethods.showDialog(mContext);
-
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(logging);
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                okhttp3.Request original = chain.request();
-
-                okhttp3.Request request = original.newBuilder()
-                        .header("Content-Type", "application/json")
-                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
-                        .method(original.method(), original.body())
-                        .build();
-
-                return chain.proceed(request);
-            }
-        });
-
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-
-        final OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
-                .build();
-
-        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
-        JsonObject paramObject = new JsonObject();
-        paramObject.addProperty("name", mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
-
-
-        Call<NewAuthLoginCallbackModel> call = patchService1.newAuthCallback(paramObject);
-
-        call.enqueue(new Callback<NewAuthLoginCallbackModel>() {
-            @Override
-            public void onResponse(Call<NewAuthLoginCallbackModel> call, Response<NewAuthLoginCallbackModel> response) {
-
-                CommonMethods.printLogE("Response @ callCallBackAPI: ", "" + response.isSuccessful());
-                CommonMethods.printLogE("Response @ callCallBackAPI: ", "" + response.code());
-
-                Gson gson = new GsonBuilder()
-                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-                        .serializeNulls()
-                        .create();
-
-                CommonMethods.printLogE("Response @ callCallBackAPI: ", "" + gson.toJson(response.body()));
-
-                //CLOSE DIALOG
-                CommonMethods.closeDialog();
-
-                if (response.isSuccessful() && response.code() == Constants.API_CODE_200 && response.body().getToken() != null) {
-
-
-                    //SAVE AUTHENTICATION DATA
-                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN, response.body().getToken());
-                    mSessionManager.updatePreferenceString(Constants.AUTH_TOKEN_TYPE, response.body().getToken_type());
-                    mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN, true);
-                    mSessionManager.updatePreferenceBoolean(Constants.IS_FIRST_LOGIN, true);
-
-                    //UPDATE FLAG IF USER IS ADMIN OR NOT
-                    if(response.body().getRole().equals(getResources().getString(R.string.strAdmin))){
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,true);
-                    }else{
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_IS_ADMIN ,false);
-                    }
-
-                    //UPDATE ACTIVE FLAG
-                    if(response.body().getIs_activated().equals("1")){
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,true);
-                    }else{
-                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_USER_ACTIVE ,false);
-                    }
-
-                    //FOR MAINTANANCE
-                    boolean isAppInMaintainance = false;
-                    boolean isAppVersionIsNotOk = false;
-                    for(int i =0; i <response.body().getPublic_settings().size(); i++ ){
-
-                        //SAVE PUBLIC SETTINGS
-                        if(response.body().getPublic_settings().get(i).getOs().equals("Android")){
-                            mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_API_VERSION, response.body().getPublic_settings().get(i).getApi_version());
-                            mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_VERSION, response.body().getPublic_settings().get(i).getMinimum_acceptable_version());
-                            mSessionManager.updatePreferenceString(Constants.KEY_PUBLIC_SETTING_MINIMUM_ACCEPTABLE_API_VERSION, response.body().getPublic_settings().get(i).getMinimum_acceptable_api_version());
-                            mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_MINIMUM_PROFILE_REMINDER, Integer.valueOf(response.body().getPublic_settings().get(i).getProfile_update_reminder_period()));
-                            mSessionManager.updatePreferenceInteger(Constants.KEY_PUBLIC_SETTING_BACKUP_REMINDER, Integer.valueOf(response.body().getPublic_settings().get(i).getBackup_update_reminder_period()));
-
-                            if(response.body().getPublic_settings().get(i).getMaintenance() == "1"){
-                                isAppInMaintainance = true;
-                            }
-
-                            if(CommonMethods.calculateAcceptableVersion(response.body().getPublic_settings().get(i).getMinimum_acceptable_version() )){
-                                isAppVersionIsNotOk = true;
-                            }
-
-                        }
-                    }
-
-
-
-
-                    //CHECK IF APPLICATION IS IN MAINTENANCE
-                    if(isAppInMaintainance){
-                        //MOVE TO MAINTENANCE SCREEN
-                        Intent mIntent = new Intent(MaintanaceActivity.this, MaintanaceActivity.class);
-                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
-                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(mIntent);
-                        finish();
-                    }else if(isAppVersionIsNotOk){
-                        //MOVE TO MAINTENANCE SCREEN
-                        Intent mIntent = new Intent(MaintanaceActivity.this, AppUpgradeActivity.class);
-                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
-                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(mIntent);
-                        finish();
-                    }else {
-                        Intent mIntent = new Intent(MaintanaceActivity.this, HomeScreenTabLayout.class);
-                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(mIntent);
-                        finish();
-                    }
-
-
-                }else {
-
-                    displayAlertDialogue(getResources().getString(R.string.strUsernotfound));
-
-
-                }
-
-
-
-
-            }
-
-            @Override
-            public void onFailure(Call<NewAuthLoginCallbackModel> call, Throwable t) {
-
-
-                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
-
-
-                CommonMethods.closeDialog();
-
-            }
-        });
-
     }
 
-    private void displayAlertDialogue(String strMessege) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setTitle(mContext.getResources().getString(R.string.app_name));
-            builder.setMessage(strMessege);
-            builder.setNegativeButton(mContext.getResources().getString(R.string.strOk), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    finish();
-                }
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
+    private void openMaintenanceActivity() {
+        Intent mIntent = new Intent(MaintanaceActivity.this, MaintanaceActivity.class);
+        startActivity(mIntent);
+        finishAffinity();
     }
 
+    private void openNextActivity(InviteModel mInviteModel) {
+
+
+        //UPDATE PREFERENCE FOR APP SETTINGS
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_MSG ,""+mInviteModel.getInvitation_message());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_COPY_CLIPBOARD ,""+mInviteModel.getInvitation_message_clipboard());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_BIOMETRIC_PERMISSION ,""+getResources().getString(R.string.strBiomatricPermissionTwo));
+        mSessionManager.updatePreferenceString(Constants.KEY_CALL_FOR_INVITE_MSG ,""+mInviteModel.getInvitation_message());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CYPTO_CURRNCY ,""+mInviteModel.getCrypto_currency());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CURRNCY ,""+mInviteModel.getCurrency());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CURRNCY_AMOUNT ,""+mInviteModel.getCurrency_amount());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_PLACEHOLDER ,""+mInviteModel.getPlace_holder());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_CURRENCY_ICON ,""+mInviteModel.getCurrency_icon_url());
+        mSessionManager.updatePreferenceString(Constants.KEY_INVITE_QUESTION ,""+mInviteModel.getQuestion());
+
+        //INTENT
+        //CHECK IF USER IS ALREADY LOGGED IN OR NOT
+        if (!mSessionManager.getPreferenceBoolean(Constants.USER_LOGGED_IN)) {
+            Intent mIntent = new Intent(MaintanaceActivity.this, NewAuthGetStartedActivity.class);
+            startActivity(mIntent);
+            finishAffinity();
+        }else {
+            //CALL CALLBACK API
+            Intent mIntent = new Intent(MaintanaceActivity.this, HomeScreenTabLayout.class);
+            mIntent.putExtra(Constants.KEY_ISFROM_LOGIN, false);
+            startActivity(mIntent);
+            finishAffinity();
+
+        }
+
+
+    }
 }

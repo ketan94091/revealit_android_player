@@ -275,7 +275,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
         //SET PRODUCT NAME
         TextView txtProductNameDialogView = (TextView) dialogView.findViewById(R.id.txtProductName);
-        txtProductNameDialogView.setText(data.getProductName());
+        txtProductNameDialogView.setText(data.getProduct_name());
 
 
         //SET DISCOUNT
@@ -431,17 +431,17 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
                 if (CommonMethods.isDeviceSupportAR(mActivity) && mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 2) {
                     //OPEN AR VIEW
                     Intent mARviewIntent = new Intent(ProductBuyingScreenActivity.this, ArModelViewerWeb.class);
-                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProductName());
-                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.getVendorUrl());
-                    mARviewIntent.putExtra(Constants.AR_MODEL_ID, ""+data.getItemId());
+                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProduct_name());
+                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.getVendor_url());
+                    mARviewIntent.putExtra(Constants.AR_MODEL_ID, ""+data.getItem_id());
                     startActivity(mARviewIntent);
                 }else{
                     //IF OTHER ENVIRONMENT OTHER THAN T CURATOR SHOULD OPEN DIRECTLY IN TO AR VIEW
                     if(CommonMethods.isDeviceSupportAR(mActivity)) {
                         Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
                         mARviewIntent.putExtra(Constants.AR_VIEW_URL,data.getGlb_model_url());
-                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProductName());
-                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL,  data.getVendorUrl());
+                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProduct_name());
+                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL,  data.getVendor_url());
                         startActivity(mARviewIntent);
                     }else{
                         CommonMethods.displayToast(mContext ,"Device not support AR camera");
@@ -475,9 +475,9 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
         TextView txtProductFeaturesTitle = (TextView)dialogView.findViewById(R.id.txtProductFeaturesTitle);
         TextView txtProductTechnicalTitle = (TextView)dialogView.findViewById(R.id.txtProductTechnicalTitle);
 
-        txtProductDescript.setText(data.getLongDesc());
+        txtProductDescript.setText(data.getLong_desc());
         txtProductFeatures.setText(data.getFeatures());
-        txtProductTechnical.setText(data.getManufacturerProductId());
+        txtProductTechnical.setText(data.getManufacturer_product_id());
 
         //LINEAR DESCRIPTION
         LinearLayout linearDescription = (LinearLayout) dialogView.findViewById(R.id.linearProductDescription);

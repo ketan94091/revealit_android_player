@@ -15,7 +15,7 @@ public class GetProductDetailsModel {
 
     public class Data {
 
-        private Integer item_id;
+        private Long item_id;
         private String item_in_stack;
         private String assembly_instructions;
         private String brochure;
@@ -26,7 +26,7 @@ public class GetProductDetailsModel {
         private String episode;
         private String episode_title;
         private String features;
-        private String item_type;
+        private Integer item_type;
         private String long_desc;
         private String manufacturer_product_id;
         private Integer manufacturer_id;
@@ -47,8 +47,8 @@ public class GetProductDetailsModel {
         private Integer vendor_id;
         private String vendor;
         private String vendor_url;
-        private Object catagory;
-        private Object type;
+        private Integer catagory;
+        private Integer type;
         private String armodel;
         private String armodel_url;
         private String glb_model_url;
@@ -60,36 +60,36 @@ public class GetProductDetailsModel {
         private String header_color;
         private Offers offers;
         private Images images;
+        private Object specifications;
+        private String package_weight;
+        private String package_height;
+        private String package_width;
+        private String package_depth;
+        private String glb_filename;
+        private String ar_model_id;
 
-        public String getGlb_model_url() {
-            return glb_model_url;
-        }
 
-        public void setGlb_model_url(String glb_model_url) {
-            this.glb_model_url = glb_model_url;
-        }
-
-        public Integer getItemId() {
+        public Long getItem_id() {
             return item_id;
         }
 
-        public void setItemId(Integer item_id) {
+        public void setItem_id(Long item_id) {
             this.item_id = item_id;
         }
 
-        public String getItemInStack() {
+        public String getItem_in_stack() {
             return item_in_stack;
         }
 
-        public void setItemInStack(String item_in_stack) {
+        public void setItem_in_stack(String item_in_stack) {
             this.item_in_stack = item_in_stack;
         }
 
-        public String getAssemblyInstructions() {
+        public String getAssembly_instructions() {
             return assembly_instructions;
         }
 
-        public void setAssemblyInstructions(String assembly_instructions) {
+        public void setAssembly_instructions(String assembly_instructions) {
             this.assembly_instructions = assembly_instructions;
         }
 
@@ -109,19 +109,19 @@ public class GetProductDetailsModel {
             this.color = color;
         }
 
-        public Object getCreatedBy() {
+        public Object getCreated_by() {
             return created_by;
         }
 
-        public void setCreatedBy(Object created_by) {
+        public void setCreated_by(Object created_by) {
             this.created_by = created_by;
         }
 
-        public String getCreatedAt() {
+        public String getCreated_at() {
             return created_at;
         }
 
-        public void setCreatedAt(String created_at) {
+        public void setCreated_at(String created_at) {
             this.created_at = created_at;
         }
 
@@ -141,11 +141,11 @@ public class GetProductDetailsModel {
             this.episode = episode;
         }
 
-        public String getEpisodeTitle() {
+        public String getEpisode_title() {
             return episode_title;
         }
 
-        public void setEpisodeTitle(String episode_title) {
+        public void setEpisode_title(String episode_title) {
             this.episode_title = episode_title;
         }
 
@@ -157,35 +157,35 @@ public class GetProductDetailsModel {
             this.features = features;
         }
 
-        public String getItemType() {
+        public Integer getItem_type() {
             return item_type;
         }
 
-        public void setItemType(String item_type) {
+        public void setItem_type(Integer item_type) {
             this.item_type = item_type;
         }
 
-        public String getLongDesc() {
+        public String getLong_desc() {
             return long_desc;
         }
 
-        public void setLongDesc(String long_desc) {
+        public void setLong_desc(String long_desc) {
             this.long_desc = long_desc;
         }
 
-        public String getManufacturerProductId() {
+        public String getManufacturer_product_id() {
             return manufacturer_product_id;
         }
 
-        public void setManufacturerProductId(String manufacturer_product_id) {
+        public void setManufacturer_product_id(String manufacturer_product_id) {
             this.manufacturer_product_id = manufacturer_product_id;
         }
 
-        public Integer getManufacturerId() {
+        public Integer getManufacturer_id() {
             return manufacturer_id;
         }
 
-        public void setManufacturerId(Integer manufacturer_id) {
+        public void setManufacturer_id(Integer manufacturer_id) {
             this.manufacturer_id = manufacturer_id;
         }
 
@@ -205,11 +205,11 @@ public class GetProductDetailsModel {
             this.name = name;
         }
 
-        public String getOtherColors() {
+        public String getOther_colors() {
             return other_colors;
         }
 
-        public void setOtherColors(String other_colors) {
+        public void setOther_colors(String other_colors) {
             this.other_colors = other_colors;
         }
 
@@ -221,19 +221,19 @@ public class GetProductDetailsModel {
             this.price = price;
         }
 
-        public String getProductName() {
+        public String getProduct_name() {
             return product_name;
         }
 
-        public void setProductName(String product_name) {
+        public void setProduct_name(String product_name) {
             this.product_name = product_name;
         }
 
-        public String getProductNo() {
+        public String getProduct_no() {
             return product_no;
         }
 
-        public void setProductNo(String product_no) {
+        public void setProduct_no(String product_no) {
             this.product_no = product_no;
         }
 
@@ -253,19 +253,19 @@ public class GetProductDetailsModel {
             this.season = season;
         }
 
-        public String getSerialNo() {
+        public String getSerial_no() {
             return serial_no;
         }
 
-        public void setSerialNo(String serial_no) {
+        public void setSerial_no(String serial_no) {
             this.serial_no = serial_no;
         }
 
-        public String getShortDesc() {
+        public String getShort_desc() {
             return short_desc;
         }
 
-        public void setShortDesc(String short_desc) {
+        public void setShort_desc(String short_desc) {
             this.short_desc = short_desc;
         }
 
@@ -285,11 +285,11 @@ public class GetProductDetailsModel {
             this.source = source;
         }
 
-        public String getSpecSheet() {
+        public String getSpec_sheet() {
             return spec_sheet;
         }
 
-        public void setSpecSheet(String spec_sheet) {
+        public void setSpec_sheet(String spec_sheet) {
             this.spec_sheet = spec_sheet;
         }
 
@@ -301,11 +301,11 @@ public class GetProductDetailsModel {
             this.url = url;
         }
 
-        public Integer getVendorId() {
+        public Integer getVendor_id() {
             return vendor_id;
         }
 
-        public void setVendorId(Integer vendor_id) {
+        public void setVendor_id(Integer vendor_id) {
             this.vendor_id = vendor_id;
         }
 
@@ -317,27 +317,27 @@ public class GetProductDetailsModel {
             this.vendor = vendor;
         }
 
-        public String getVendorUrl() {
+        public String getVendor_url() {
             return vendor_url;
         }
 
-        public void setVendorUrl(String vendor_url) {
+        public void setVendor_url(String vendor_url) {
             this.vendor_url = vendor_url;
         }
 
-        public Object getCatagory() {
+        public Integer getCatagory() {
             return catagory;
         }
 
-        public void setCatagory(Object catagory) {
+        public void setCatagory(Integer catagory) {
             this.catagory = catagory;
         }
 
-        public Object getType() {
+        public Integer getType() {
             return type;
         }
 
-        public void setType(Object type) {
+        public void setType(Integer type) {
             this.type = type;
         }
 
@@ -349,43 +349,51 @@ public class GetProductDetailsModel {
             this.armodel = armodel;
         }
 
-        public String getArmodelUrl() {
+        public String getArmodel_url() {
             return armodel_url;
         }
 
-        public void setArmodelUrl(String armodel_url) {
+        public void setArmodel_url(String armodel_url) {
             this.armodel_url = armodel_url;
         }
 
-        public Integer getArmodelId() {
+        public String getGlb_model_url() {
+            return glb_model_url;
+        }
+
+        public void setGlb_model_url(String glb_model_url) {
+            this.glb_model_url = glb_model_url;
+        }
+
+        public Integer getArmodel_id() {
             return armodel_id;
         }
 
-        public void setArmodelId(Integer armodel_id) {
+        public void setArmodel_id(Integer armodel_id) {
             this.armodel_id = armodel_id;
         }
 
-        public Object getArmodelName() {
+        public Object getArmodel_name() {
             return armodel_name;
         }
 
-        public void setArmodelName(Object armodel_name) {
+        public void setArmodel_name(Object armodel_name) {
             this.armodel_name = armodel_name;
         }
 
-        public String getArmodelSponsor() {
+        public String getArmodel_sponsor() {
             return armodel_sponsor;
         }
 
-        public void setArmodelSponsor(String armodel_sponsor) {
+        public void setArmodel_sponsor(String armodel_sponsor) {
             this.armodel_sponsor = armodel_sponsor;
         }
 
-        public String getArmodelSponsorImgUrl() {
+        public String getArmodel_sponsor_img_url() {
             return armodel_sponsor_img_url;
         }
 
-        public void setArmodelSponsorImgUrl(String armodel_sponsor_img_url) {
+        public void setArmodel_sponsor_img_url(String armodel_sponsor_img_url) {
             this.armodel_sponsor_img_url = armodel_sponsor_img_url;
         }
 
@@ -397,11 +405,11 @@ public class GetProductDetailsModel {
             this.header = header;
         }
 
-        public String getHeaderColor() {
+        public String getHeader_color() {
             return header_color;
         }
 
-        public void setHeaderColor(String header_color) {
+        public void setHeader_color(String header_color) {
             this.header_color = header_color;
         }
 
@@ -421,6 +429,61 @@ public class GetProductDetailsModel {
             this.images = images;
         }
 
+        public Object getSpecifications() {
+            return specifications;
+        }
+
+        public void setSpecifications(Object specifications) {
+            this.specifications = specifications;
+        }
+
+        public String getPackage_weight() {
+            return package_weight;
+        }
+
+        public void setPackage_weight(String package_weight) {
+            this.package_weight = package_weight;
+        }
+
+        public String getPackage_height() {
+            return package_height;
+        }
+
+        public void setPackage_height(String package_height) {
+            this.package_height = package_height;
+        }
+
+        public String getPackage_width() {
+            return package_width;
+        }
+
+        public void setPackage_width(String package_width) {
+            this.package_width = package_width;
+        }
+
+        public String getPackage_depth() {
+            return package_depth;
+        }
+
+        public void setPackage_depth(String package_depth) {
+            this.package_depth = package_depth;
+        }
+
+        public String getGlb_filename() {
+            return glb_filename;
+        }
+
+        public void setGlb_filename(String glb_filename) {
+            this.glb_filename = glb_filename;
+        }
+
+        public String getAr_model_id() {
+            return ar_model_id;
+        }
+
+        public void setAr_model_id(String ar_model_id) {
+            this.ar_model_id = ar_model_id;
+        }
     }
 
     public class Offers {

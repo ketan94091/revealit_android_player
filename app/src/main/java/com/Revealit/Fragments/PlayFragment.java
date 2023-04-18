@@ -513,6 +513,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
         TextView txtGetStarted = (TextView) dialog.findViewById(R.id.txtGetStarted);
         TextView txtWaitListed = (TextView) dialog.findViewById(R.id.txtWaitListed);
         TextView txtLogout = (TextView) dialog.findViewById(R.id.txtLogout);
+        TextView txtHaveBeenWaitlisted = (TextView) dialog.findViewById(R.id.txtHaveBeenWaitlisted);
         ImageView imgCancel = (ImageView) dialog.findViewById(R.id.imgCancel);
 
         //HIDE SHOW BUTTON BASED ON USER ACTIVATION STATUS
@@ -521,11 +522,13 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
             txtGetStarted.setVisibility(View.VISIBLE);
             txtLogout.setVisibility(View.GONE);
             imgCancel.setVisibility(View.GONE);
+            txtHaveBeenWaitlisted.setVisibility(View.GONE);
         }else{
             txtWaitListed.setVisibility(View.VISIBLE);
             txtGetStarted.setVisibility(View.GONE);
             txtLogout.setVisibility(View.GONE);
             imgCancel.setVisibility(View.VISIBLE);
+            txtHaveBeenWaitlisted.setVisibility(View.VISIBLE);
         }
 
 

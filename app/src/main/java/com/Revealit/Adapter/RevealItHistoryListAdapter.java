@@ -202,7 +202,7 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
                 mIntent.putExtra(Constants.MEDIA_URL, "" + revealitHistoryData.get(position).media_url);
                 mIntent.putExtra(Constants.MEDIA_ID, "" + revealitHistoryData.get(position).media_id);
                 mIntent.putExtra(Constants.VIDEO_NAME, "" + revealitHistoryData.get(position).media_title);
-                mIntent.putExtra(Constants.VIDEO_SEEK_TO, mListAllTimeStampOffset.get(mListAllTimeStampOffset.size() - 1));
+                mIntent.putExtra(Constants.VIDEO_SEEK_TO, mListAllTimeStampOffset.get(mListAllTimeStampOffset.size() - 1).replaceAll(" ",""));
                 mIntent.putExtra(Constants.IS_VIDEO_SEEK, false);
                 mActivity.startActivity(mIntent);
 

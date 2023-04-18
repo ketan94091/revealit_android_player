@@ -267,7 +267,7 @@ public class RecipesScreenActivity extends AppCompatActivity {
 
         //SET PRODUCT NAME
         TextView txtProductNameDialogView = (TextView) dialogView.findViewById(R.id.txtProductName);
-        txtProductNameDialogView.setText(data.getProductName());
+        txtProductNameDialogView.setText(data.getProduct_name());
 
 
         //SET DISCOUNT
@@ -406,8 +406,8 @@ public class RecipesScreenActivity extends AppCompatActivity {
                         // .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/7a.Blue%20Bowl_Small_fb30838353a3ff1c5de00aebcc8c1e54.glb")
                         .appendQueryParameter("file", "https://apac.sgp1.cdn.digitaloceanspaces.com/ar_models/1/KitcheAid_Blender_cfd009624c77d60978e93715776a6d5b.glb")
                         .appendQueryParameter("mode", "ar_only")
-                        .appendQueryParameter("link ", "" + data.getVendorUrl())
-                        .appendQueryParameter("title ", "" + data.getProductName())
+                        .appendQueryParameter("link ", "" + data.getVendor_url())
+                        .appendQueryParameter("title ", "" + data.getProduct_name())
                         .build();
                 sceneViewerIntent.setData(intentUri);
                 sceneViewerIntent.setPackage("com.google.ar.core");

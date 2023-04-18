@@ -33,10 +33,9 @@
                     android:id="@+id/txtUsername"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
                     android:fontFamily="@font/bilo_bold"
                     android:gravity="center_vertical"
-                    android:text="@string/strWelcomeToTV"
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="700"
                     android:textSize="18dp" />

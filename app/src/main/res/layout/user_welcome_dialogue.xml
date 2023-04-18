@@ -55,6 +55,18 @@
                     android:textFontWeight="700"
                     android:textSize="18dp" />
 
+                <TextView
+                    android:id="@+id/txtHaveBeenWaitlisted"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/dmsans_bold"
+                    android:padding="5dp"
+                    android:text="@string/strHaveBeenWaitlisted"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="500"
+                    android:textSize="15dp" />
+
             </LinearLayout>
 
 

@@ -157,13 +157,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         strUsername = mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME);
         strCopymsg = mSessionManager.getPreference(Constants.KEY_INVITE_MSG);
 
-        //SET INVITE MSG WHICH CAME FROM INVITE SETTING API
-
-//        if(strCopymsg.contains("xxxx")){
-//            txtMsgCopy.setText(strCopymsg.replace("xxxx",strUsername));
-//        }else{
-//            txtMsgCopy.setText(strCopymsg.replace("XXXX",strUsername));
-//        }
+        //SET USERNAME
+        txtUsername.setText(""+strUsername);
 
 
         if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL)){
@@ -211,6 +206,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private void setOnClicks() {
 
         txtCopyToClibBoard.setOnClickListener(this);
+        imgLogo.setOnClickListener(this);
 
         //IF USER IS ACTIVE ONLY
         if(isUserIsActive){
@@ -220,11 +216,13 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             linearHelp.setOnClickListener(this);
             linearAdmin.setOnClickListener(this);
             imgScanQRcode.setOnClickListener(this);
-            imgLogo.setOnClickListener(this);
+
         }else if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL)){
             linearAccount.setOnClickListener(this);
             linearHelp.setOnClickListener(this);
+
         }
+
 
     }
 
@@ -335,6 +333,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             viewAdmin.setBackgroundColor(getResources().getColor(R.color.colorInActiveGrey));
 
 
+
+
         } else if (isUserIsActive) {
             //SET VERIFIED MSG IF ACTIVE USER
             txtStatus.setText(getResources().getString(R.string.strVerified));
@@ -344,8 +344,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             //HIDE USER STATUS AS STATUS IS ALREADY VERIFIED
             linearUserStatus.setVisibility(View.GONE);
 
-            //SET USERNAME IF USER IS ACTIVE
-            txtUsername.setText(getResources().getString(R.string.strUser) + " : "+strUsername);
+
 
 
             txtAccount.setTextColor(getResources().getColor(R.color.colorBlack));

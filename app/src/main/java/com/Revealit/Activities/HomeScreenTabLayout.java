@@ -212,11 +212,13 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
 
 
         ImageView imgView= new ImageView(this);
-        imgView.setPadding(15,15,15,15);
+        imgView.setPadding(5,5,5,5);
+
 
         //SET USER PROFILE
         Glide.with(mContext)
                 .load("" + mSessionManager.getPreference(Constants.KEY_USERPROFILE_PIC))
+                .placeholder(getResources().getDrawable(R.mipmap.icon_profile_home))
                 .apply(RequestOptions.circleCropTransform())
                 .listener(new RequestListener<Drawable>() {
                     @Override

@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -593,7 +592,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                     if(response.code() ==  404 ){
                         displayUserNotFoundDialogue();
                     }else{
-                        CommonMethods.buildDialog(mContext,"Error : "+response.body().getError_msg());
+                        openAppMaintenanceScreen();
                     }
 //                    //displayAlertDialogue();
 //                    try {
@@ -627,6 +626,9 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
     private void getUserDetails() {
 
+
+        //DISPLAY PROGRESSBAR
+        CommonMethods.showDialog(mContext);
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -668,6 +670,9 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
 
+
+
+
                 CommonMethods.printLogE("Response @ getUserDetails: ", "" + response.isSuccessful());
                 Gson gson = new GsonBuilder()
                         .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
@@ -676,6 +681,9 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                 CommonMethods.printLogE("Response @ getUserDetails: ", "" + gson.toJson(response.body().getAsJsonObject().get("data")));
 
+
+                //CLOSE DIALGOUE
+                CommonMethods.closeDialog();
 
                 if (response.isSuccessful() && response.code() == Constants.API_CODE_200) {
 
@@ -694,12 +702,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                     //CHECK IF APPLICATION IS IN MAINTENANCE
                     if(isAppInMaintainance){
-                        //MOVE TO MAINTENANCE SCREEN
-                        Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, MaintanaceActivity.class);
-                        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
-                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(mIntent);
-                        finish();
+                       openAppMaintenanceScreen();
                     }else if(isAppVersionIsNotOk){
                         //MOVE TO MAINTENANCE SCREEN
                         Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, AppUpgradeActivity.class);
@@ -713,7 +716,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
 
                 }else{
 
-
+                    openAppMaintenanceScreen();
                 }
 
             }
@@ -721,11 +724,24 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
 
+                //CLOSE DIALGOUE
+                CommonMethods.closeDialog();
 
+                openAppMaintenanceScreen();
             }
         });
 
 
+    }
+
+    private void openAppMaintenanceScreen() {
+
+        //MOVE TO MAINTENANCE SCREEN
+        Intent mIntent = new Intent(NewAuthBiomatricAuthenticationActivity.this, MaintanaceActivity.class);
+        mIntent.putExtra(Constants.KEY_IS_FROM_CALLBACKAPI,false);
+        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mIntent);
+        finish();
     }
 
     private void displayUserNotFoundDialogue() {

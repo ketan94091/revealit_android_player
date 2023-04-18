@@ -193,6 +193,7 @@
     <string name="strCloudThree">You can do that simply by pressing the ‘Backup Now’ button below.</string>
     <string name="strCloudBackups">Cloud Backup</string>
     <string name="strWelcomeToRevealitTV">Welcome to revealit TV</string>
+    <string name="strHaveBeenWaitlisted">You have been waitlisted</string>
     <string name="strTurnOnNotification">Turn on Notifications</string>
     <string name="strTurnOnNotificationDescription">You will need to turn on your notifications to be able to log on to revealit TV Curator platform.</string>
     <string name="strGoToSettings">Go to settings</string>

@@ -234,19 +234,12 @@ public class NewAuthSplashScreen extends AppCompatActivity {
                 CommonMethods.printLogE("Response @ apiSendInvites: ", "" + gson.toJson(response.body()));
 
 
-                switch (response.code()){
-                    case Constants.API_CODE_200:
-
-                        //UPDATE INVITE UI
-                        openNextActivity(response.body());
-
-                        break;
-
-                    case Constants.API_CODE_404:
-
-                        openMaintenanceActivity();
-
-                        break;
+                if(response.code() == 200){
+                    //UPDATE INVITE UI
+                    openNextActivity(response.body());
+                }else
+                {
+                    openMaintenanceActivity();
                 }
 
             }
