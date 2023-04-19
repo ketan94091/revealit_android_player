@@ -345,7 +345,7 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
                 mActivity.runOnUiThread(new Runnable() {
                     public void run() {
                         //CREATE DIALOGUE
-                       createDeleteDialogue(mDialogeForItems);
+                       createDeleteDialogue(mDialogeForItems,strTimeStamp);
                     }
                 });
             }
@@ -376,7 +376,7 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
 
     }
 
-    private void createDeleteDialogue(AlertDialog mDialogeForItems) {
+    private void createDeleteDialogue(AlertDialog mDialogeForItems, String strTimeStamp) {
 
             android.app.AlertDialog.Builder dialogBuilder = new android.app.AlertDialog.Builder(mActivity);
             dialogBuilder.setCancelable(false);
@@ -388,7 +388,11 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
 
             final AlertDialog mAlertDialog = dialogBuilder.create();
             TextView txtYes = (TextView) dialogView.findViewById(R.id.txtYes);
+            TextView txtProductAt = (TextView) dialogView.findViewById(R.id.txtProductAt);
             TextView txtNo = (TextView) dialogView.findViewById(R.id.txtNo);
+
+            //SET PRODUCT TIME STAMP
+        txtProductAt.setText("Products at : "+strTimeStamp);
 
 
         txtNo.setOnClickListener(new View.OnClickListener() {

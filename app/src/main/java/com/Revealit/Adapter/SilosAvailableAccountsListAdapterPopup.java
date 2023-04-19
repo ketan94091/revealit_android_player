@@ -176,6 +176,7 @@ public class SilosAvailableAccountsListAdapterPopup extends RecyclerView.Adapter
                     mSessionManager.updatePreferenceString(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY, itemListData.get(position).getSubmitProfileModel().getProton().getPrivateKey());
 
                     //SAVE USER PROFILE PICS TO SESSION MANAGER
+                    if(itemListData.get(position).getUserProfile() != null)
                     mSessionManager.updatePreferenceString(Constants.KEY_USERPROFILE_PIC, itemListData.get(position).getUserProfile().getProfile_image());
 
 

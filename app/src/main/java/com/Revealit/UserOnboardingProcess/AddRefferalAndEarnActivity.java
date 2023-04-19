@@ -122,7 +122,6 @@ public class AddRefferalAndEarnActivity extends AppCompatActivity implements Vie
         edtPromo.setHint(mSessionManager.getPreference(Constants.KEY_INVITE_PLACEHOLDER));
 
 
-
         edtPromo.addTextChangedListener(new TextWatcher() {
                                             @Override
                                             public void beforeTextChanged(CharSequence s, int start, int count,

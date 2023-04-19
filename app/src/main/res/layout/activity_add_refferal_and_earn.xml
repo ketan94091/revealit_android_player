@@ -118,35 +118,32 @@
                     android:textFontWeight="700"
                     android:textSize="15dp" />
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:weightSum="5"
                     android:background="@drawable/new_auth_round_button"
-                    android:orientation="horizontal">
+                   >
 
                     <EditText
                         android:id="@+id/edtPromo"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:fontFamily="@font/dmsans_medium"
                         android:gravity="center_vertical"
                         android:inputType="text"
-                        android:maxLength="15"
-                        android:layout_weight="1"
                         android:padding="15dp"
                         android:textColor="@color/colorBlack"
                         android:textFontWeight="600"
-                        android:textSize="15dp" />
+                        android:textSize="13dp" />
 
                     <RelativeLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="4"
-                       >
+                        android:layout_centerInParent="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_weight="4">
 
 
                         <ImageView
@@ -154,11 +151,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
+                            android:layout_marginRight="15dp"
                             android:src="@mipmap/close"
                             android:visibility="invisible" />
 
                     </RelativeLayout>
-                </LinearLayout>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
