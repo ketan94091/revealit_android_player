@@ -1088,80 +1088,147 @@ public class ListenFragment extends Fragment implements View.OnClickListener, Re
 
         //SET REVEAL IT HISTORY FOR LIVE MODE
         //IF LIST ATTACH FOR THE FIRST TIME ELSE JUST NOTIFY LISTENER WITH FRESH LIST
-        if (mRevealItHistoryListAdapter == null) {
 
-            mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mHomeScreenTabLayout, mHistoryListFromDatabase, mRemoveListenHistory, isCheckBoxSelected, shouldCheckBoxVisible);
-            recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
 
-            //SWIPE HELPER SHOULD ATTACH FIRST TIME
-            ArrayList<RevealitHistoryModel.Data> finalMHistoryListFromDatabase = mHistoryListFromDatabase;
+//        if (mRevealItHistoryListAdapter == null) {
+//
+//            mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mHomeScreenTabLayout, mHistoryListFromDatabase, mRemoveListenHistory, isCheckBoxSelected, shouldCheckBoxVisible);
+//            recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
+//
+//            //SWIPE HELPER SHOULD ATTACH FIRST TIME
+//            ArrayList<RevealitHistoryModel.Data> finalMHistoryListFromDatabase = mHistoryListFromDatabase;
+//
+//            new SwipeHelper(mActivity, recycleRevealList) {
+//                @Override
+//                public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+//
+//                    underlayButtons.add(new UnderlayButton(
+//                            R.mipmap.icn_share_with_text,
+//                            mActivity,
+//                            new UnderlayButtonClickListener() {
+//                                @Override
+//                                public void onClick(int pos) {
+//
+//                                    try {
+//                                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+//                                        shareIntent.setType("text/plain");
+//                                        shareIntent.putExtra(Intent.EXTRA_SUBJECT, mActivity.getResources().getString(R.string.app_name));
+//                                        shareIntent.putExtra(Intent.EXTRA_TEXT, finalMHistoryListFromDatabase.get(pos).getMedia_url());
+//                                        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+//                                        mContext.startActivity(Intent.createChooser(shareIntent,mActivity.getResources().getString(R.string.strSelectSharingPreference) ));
+//
+//                                        isFromShareIntent = true;
+//                                    } catch(Exception e) {
+//                                        //e.toString();
+//                                    }
+//                                }
+//                            }
+//                    ));
+//
+//                    underlayButtons.add(new UnderlayButton(
+//                            R.mipmap.icn_delete_with_text,
+//                            mActivity,
+//                            new UnderlayButtonClickListener() {
+//                                @Override
+//                                public void onClick(int pos) {
+//                                    // TODO: onDelete
+//                                    //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API
+//                                    //ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
+//                                    if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+//
+//                                        //CALL API REMOVE SINGLE VIDEO
+//                                        callRemoveVideo(false, finalMHistoryListFromDatabase.get(pos).getMedia_id());
+//
+//                                    } else {
+//
+//                                        //REMOVE SINGLE VIDEO FROM DATABASE
+//                                        mDatabaseHelper.clearSimulationHistoryItem(finalMHistoryListFromDatabase.get(pos).getMedia_id());
+//
+//                                        //UPDATE LIST THROUGH INTERFACE
+//                                        mRemoveListenHistory.removeListenHistory(false);
+//
+//                                    }
+//
+//                                }
+//                            }
+//                    ));
+//
+//                }
+//            };
+//
+//
+//        } else {
+//
+//            //ELSE -> NOTIFY LIST WITH LATEST LIST DATA
+//            mRevealItHistoryListAdapter.updateListData(mHistoryListFromDatabase, isCheckBoxSelected, shouldCheckBoxVisible);
+//
+//        }
 
-            new SwipeHelper(mActivity, recycleRevealList) {
-                @Override
-                public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+        mRevealItHistoryListAdapter = new RevealItHistoryListAdapter(mContext, mHomeScreenTabLayout, mHistoryListFromDatabase, mRemoveListenHistory, isCheckBoxSelected, shouldCheckBoxVisible);
+        recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
 
-                    underlayButtons.add(new UnderlayButton(
-                            R.mipmap.icn_share_with_text,
-                            mActivity,
-                            new UnderlayButtonClickListener() {
-                                @Override
-                                public void onClick(int pos) {
+        //SWIPE HELPER SHOULD ATTACH FIRST TIME
+        ArrayList<RevealitHistoryModel.Data> finalMHistoryListFromDatabase = mHistoryListFromDatabase;
 
-                                    try {
-                                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                                        shareIntent.setType("text/plain");
-                                        shareIntent.putExtra(Intent.EXTRA_SUBJECT, mActivity.getResources().getString(R.string.app_name));
-                                        shareIntent.putExtra(Intent.EXTRA_TEXT, finalMHistoryListFromDatabase.get(pos).getMedia_url());
-                                        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-                                        mContext.startActivity(Intent.createChooser(shareIntent,mActivity.getResources().getString(R.string.strSelectSharingPreference) ));
 
-                                        isFromShareIntent = true;
-                                    } catch(Exception e) {
-                                        //e.toString();
-                                    }
+
+        new SwipeHelper(mActivity, recycleRevealList) {
+            @Override
+            public void instantiateUnderlayButton(RecyclerView.ViewHolder viewHolder, List<UnderlayButton> underlayButtons) {
+
+                underlayButtons.add(new UnderlayButton(
+                        R.mipmap.icn_share_with_text,
+                        mActivity,
+                        new UnderlayButtonClickListener() {
+                            @Override
+                            public void onClick(int pos) {
+
+                                try {
+                                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                                    shareIntent.setType("text/plain");
+                                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, mActivity.getResources().getString(R.string.app_name));
+                                    shareIntent.putExtra(Intent.EXTRA_TEXT, finalMHistoryListFromDatabase.get(pos).getMedia_url());
+                                    shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+                                    mContext.startActivity(Intent.createChooser(shareIntent,mActivity.getResources().getString(R.string.strSelectSharingPreference) ));
+
+                                    isFromShareIntent = true;
+                                } catch(Exception e) {
+                                    //e.toString();
                                 }
                             }
-                    ));
+                        }
+                ));
 
-                    underlayButtons.add(new UnderlayButton(
-                            R.mipmap.icn_delete_with_text,
-                            mActivity,
-                            new UnderlayButtonClickListener() {
-                                @Override
-                                public void onClick(int pos) {
-                                    // TODO: onDelete
-                                    //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API
-                                    //ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
-                                    if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
+                underlayButtons.add(new UnderlayButton(
+                        R.mipmap.icn_delete_with_text,
+                        mActivity,
+                        new UnderlayButtonClickListener() {
+                            @Override
+                            public void onClick(int pos) {
+                                // TODO: onDelete
+                                //IF TRUE -> APP IS IN LIVE MODE - MEANS CALL API
+                                //ELSE -> APP IS IN SIMULATION MODE - MEANS SAVE AND DELETE DATA FROM LOCAL
+                                if (mSessionManager.getPreferenceBoolean(Constants.KEY_APP_MODE)) {
 
-                                        //CALL API REMOVE SINGLE VIDEO
-                                        callRemoveVideo(false, finalMHistoryListFromDatabase.get(pos).getMedia_id());
+                                    //CALL API REMOVE SINGLE VIDEO
+                                    callRemoveVideo(false, finalMHistoryListFromDatabase.get(pos).getMedia_id());
 
-                                    } else {
+                                } else {
 
-                                        //REMOVE SINGLE VIDEO FROM DATABASE
-                                        mDatabaseHelper.clearSimulationHistoryItem(finalMHistoryListFromDatabase.get(pos).getMedia_id());
+                                    //REMOVE SINGLE VIDEO FROM DATABASE
+                                    mDatabaseHelper.clearSimulationHistoryItem(finalMHistoryListFromDatabase.get(pos).getMedia_id());
 
-                                        //UPDATE LIST THROUGH INTERFACE
-                                        mRemoveListenHistory.removeListenHistory(false);
-
-                                    }
+                                    //UPDATE LIST THROUGH INTERFACE
+                                    mRemoveListenHistory.removeListenHistory(false);
 
                                 }
+
                             }
-                    ));
+                        }
+                ));
 
-                }
-            };
-
-
-        } else {
-
-            //ELSE -> NOTIFY LIST WITH LATEST LIST DATA
-
-            mRevealItHistoryListAdapter.updateListData(mHistoryListFromDatabase, isCheckBoxSelected, shouldCheckBoxVisible);
-            //recycleRevealList.setAdapter(mRevealItHistoryListAdapter);
-        }
+            }
+        };
 
 
         //SET SIZE TO REVEAL IT

@@ -400,8 +400,16 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                     CommonMethods.closeDialog();
 
 
-                    //BIND UI
-                    updateUI(response.body().getAsJsonObject().get("data").getAsJsonArray());
+
+
+                    mActivity.runOnUiThread(new Runnable() {
+                        public void run() {
+
+                            //BIND UI
+                            updateUI(response.body().getAsJsonObject().get("data").getAsJsonArray());
+
+                        }
+                    });
 
                 } else if (response.code() == Constants.API_CODE_401) {
 
@@ -447,7 +455,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
 
             //SET BITE IMAGE
-            Glide.with(mActivity)
+            Glide.with(getContext().getApplicationContext())
                     .load(strFeaturedMediaCoverImage)
                     .transform(new CenterCrop(),new RoundedCorners(30))
 
@@ -457,7 +465,7 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                     .into(imgBiteBanner);
 
             //SET BITE IMAGE
-            Glide.with(mActivity)
+            Glide.with(getContext().getApplicationContext())
                     // .load(strFeaturedMediaCoverImage)
                     .load("https://beta.sgp1.digitaloceanspaces.com/featured/sponsorship_@3x.png")
                     .placeholder(getResources().getDrawable(R.drawable.bite_templet))
@@ -491,8 +499,6 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
                             showWelcomeDialogue(isUserIsActive);
                         }
 
-                    }else{
-                        showWelcomeDialogue(false);
                     }
                 }
             });

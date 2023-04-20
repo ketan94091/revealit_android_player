@@ -242,6 +242,7 @@ public class Constants {
   public  static  final  String KEY_PUBLIC_SETTING_BLOCK_PRODUCERS="keyBlockProducers";
   public  static  final  String KEY_IS_USER_CANCEL_REFERRAL="keyIsUserCancelReferral";
   public  static  final  String KEY_USERPROFILE_PIC="keyUserProfilePic";
+  public  static  final  String KEY_IS_FROM_PLAY_SCREEN="keyIsFromPlayScreen";
 
 
     public static String API_KEY = "AIzaSyC4elGdU9Oxi2DPIShG4pRW2gRBZOeE0pM";

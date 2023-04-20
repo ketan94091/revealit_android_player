@@ -104,9 +104,10 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
         mSelectedVideoIds.clear();
 
         //NOTIFY LISTENER
-        this.notifyDataSetChanged();
-        //notifyDataSetChanged();
+       notifyDataSetChanged();
+
     }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 

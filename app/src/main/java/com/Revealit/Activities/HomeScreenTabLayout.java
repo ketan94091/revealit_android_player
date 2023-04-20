@@ -180,8 +180,8 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
         viewBottomLine=(View)findViewById(R.id.viewBottomLine);
 
         //IS USER IS ACTIVE = TRUE -> MEANS USER IS NOT ACTIVE -> ACCESS RESTRICTED TO ONLY USER PROFILE SCREEN
-        //FALS -> USER IS ACTIVE AND ALLOW THEM TO ACCESS THE APP
-        isUserIsActive = mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL);
+        //FALSE -> USER IS ACTIVE AND ALLOW THEM TO ACCESS THE APP
+        isUserIsActive = mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_ACTIVE);
 
         //INITIALISE FRAGMENTS FOR VIEW PAGER
         fragments = new ArrayList<>();
@@ -242,7 +242,7 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
         //DEFAULT SELECT PROFILE SCREEN IF USER IS FROM REGISTRATION PAGE
         //IF USER IS NOT ACTIVATED
         //IF USER ACTIVATED BUT HE IS FROM REGISTRATION SCREEN - FIRST SHOW THE PROFILE SCREEN THAN USUALL PLAY SCREEN
-        if (isUserIsActive) {
+        if (!isUserIsActive) {
             //SELECT USER PROFILE FRAGMENT
             selectPage(3);
             //DEFAULT ICON COLOR
@@ -287,7 +287,7 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
 
 
 
-        if (isUserIsActive) {
+        if (!isUserIsActive) {
 
             //MAKE VIEW PAGER SCROLLABLE FALSE
             viewPager.disableScroll(true);
@@ -895,7 +895,7 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
                 //EXIT FROM THE APP UNTIL USER TURN TO ACTIVE FROM THE BACKEND
                 Intent mIntent = new Intent(mActivity, AddRefferalAndEarnActivity.class);
                 startActivity(mIntent);
-                mActivity.finishAffinity();
+                finish();
 
 
             }
@@ -928,7 +928,17 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
             @Override
             public void onClick(View v) {
 
+                //UPDATE APPLICATION BOTTOM BAR VISIBILITY FLAG
+                //IF FLAG = TRUE -> ALLOW USER TO ONLY VIEW USER PROFILE SCREEN
+                //IF FALSE -> ALLOW USER TO ACCESS ALL FOUR BOTTOM BAR PAGES
+                mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_FROM_PLAY_SCREEN, true);
+
                 dialog.dismiss();
+
+                //EXIT FROM THE APP UNTIL USER TURN TO ACTIVE FROM THE BACKEND
+                Intent mIntent = new Intent(mActivity, HomeScreenTabLayout.class);
+                startActivity(mIntent);
+                mActivity.finishAffinity();
 
 
             }
@@ -1030,6 +1040,8 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
                         public void run() {
                             try {
 
+                                //Log.e("PAYLOAD",messagePayload);
+
                                 if(new JSONObject(messagePayload).getJSONObject("bundle").getJSONObject("mMap").get("gcm.notification.body").toString().contains("message_type")){
 
                                     JSONObject obj = new JSONObject(new JSONObject(messagePayload).getJSONObject("bundle").getJSONObject("mMap").get("gcm.notification.body").toString());
@@ -1057,12 +1069,17 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
         });
 
         //UPDATE FIRST OPEN FLAG
-        if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL)){
+        if(!isUserIsActive){
             mActivity.runOnUiThread(new Runnable() {
                 public void run() {
-                    if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL)){
+
+                    if(!mSessionManager.getPreferenceBoolean(Constants.KEY_IS_FROM_PLAY_SCREEN)){
                         showWelcomeDialogue(false);
+                    }else{
+                        mSessionManager.updatePreferenceBoolean(Constants.KEY_IS_FROM_PLAY_SCREEN, false);
                     }
+
+
                 }
             });
         }
@@ -1081,6 +1098,8 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
         ImageView imgBackArrow = bottomSheetDialog.findViewById(R.id.imgBackArrow);
         TextView txtNotificationMsg = bottomSheetDialog.findViewById(R.id.txtNotificationMsg);
         TextView txtReferMoreFriends = bottomSheetDialog.findViewById(R.id.txtReferMoreFriends);
+
+
 
         //TEXT NOTIFICATION MSG
         txtNotificationMsg.setText(""+new JSONObject(messagePayload).getJSONObject("bundle").getJSONObject("mMap").get("gcm.notification.title"));

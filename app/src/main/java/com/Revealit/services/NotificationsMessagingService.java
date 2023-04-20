@@ -8,6 +8,7 @@ import com.pusher.pushnotifications.fcm.MessagingService;
 public class NotificationsMessagingService extends MessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
         Log.e("NotificationsService", "Got a remote message 🎉");
 
 
