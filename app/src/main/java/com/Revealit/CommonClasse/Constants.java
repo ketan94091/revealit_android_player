@@ -110,6 +110,8 @@ public class Constants {
   public static final String API_FETCH_ACCOUNT_NAME_FROM_PROTON = "get_key_accounts";
   public static final String API_DELETE_USER = "/api/user/remove";
   public static final String API_ADD_REFARAL = "api/referral";
+  public static final String API_GET_USER_SAVED_LISTS = "api/mylists";
+  public static final String API_CREATE_NEW_PRODUCT_LIST = "api/mylist";
 
 
     public static final String AUTH_TOKEN = "access_token";

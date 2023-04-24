@@ -20,6 +20,7 @@ import com.Revealit.ModelClasses.NewAuthLoginCallbackModel;
 import com.Revealit.ModelClasses.NewAuthStatusModel;
 import com.Revealit.ModelClasses.RevealitHistoryModel;
 import com.Revealit.ModelClasses.RewardHistoryModel;
+import com.Revealit.ModelClasses.SavedProductListModel;
 import com.Revealit.ModelClasses.SubmitProfileModel;
 import com.Revealit.ModelClasses.UserDetailsFromPublicKeyModel;
 import com.Revealit.ModelClasses.UserDetailsModel;
@@ -230,6 +231,14 @@ public interface UpdateAllAPI {
     //GET USER DETAILS
     @GET()
     Call<JsonElement> getUser(@Url String url);
+
+    //GET USER SAVED PRODUCT LIST
+    @GET()
+    Call<SavedProductListModel> getUserSavedList(@Url String url);
+
+    //CREATE NEW LIST
+    @POST(Constants.API_CREATE_NEW_PRODUCT_LIST)
+    Call<JsonElement> createProductList(@Body JsonObject body);
 
 }
 

@@ -15,11 +15,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -36,11 +40,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.Revealit.Adapter.ProductPurchaseVendorListAdapter;
+import com.Revealit.Adapter.SavedListNameAdapter;
 import com.Revealit.Adapter.ViewPagerProductImagesAdapter;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
 import com.Revealit.ModelClasses.GetProductDetailsModel;
+import com.Revealit.ModelClasses.SavedProductListModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
@@ -53,8 +59,13 @@ import com.bumptech.glide.request.target.Target;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -69,6 +80,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -155,7 +167,6 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
     private void callGetProductData(View dialogView, String itemId, AlertDialog mAlertDialog) {
 
-        CommonMethods.printLogE("Response @ callGetProductData ITEM ID : ", "" + itemId);
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -452,15 +463,6 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
         });
 
 
-        LinearLayout linarFavoriteDialogView = (LinearLayout) dialogView.findViewById(R.id.linarFavorite);
-        linarFavoriteDialogView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                CommonMethods.displayToast(mContext ,"Favourite clicked!!");
-            }
-        });
-
 
 
         RelativeLayout relativeContentDialogView = (RelativeLayout) dialogView.findViewById(R.id.relativeContent);
@@ -525,11 +527,25 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
             }
         });
 
+        //LINEAR TECHNICAL SPECIFICATIONS
+        LinearLayout linearFavorite = (LinearLayout) dialogView.findViewById(R.id.linearFavorite);
+        linearFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                openBottomBarForSavedList();
+            }
+        });
+
+
+
         //HIDE PROGRESS AFTER SETTING ALL DATA
         progressLoadData.setVisibility(View.GONE);
 
 
     }
+
+
 
     private void setUiPageViewController(LinearLayout viewPagerCountDots) {
 
@@ -734,5 +750,287 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
         return Uri.parse(path);
     }
 
+    private void openBottomBarForSavedList() {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext);
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_user_saved_product_list);
+
+
+        LinearLayout imgBackArrow =(LinearLayout) bottomSheetDialog.findViewById(R.id.imgBackArrow);
+
+        //OPEN USER DEFAULT LIST
+       openUserProductList(bottomSheetDialog);
+
+
+        imgBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                bottomSheetDialog.cancel();
+
+
+            }
+        });
+        bottomSheetDialog.show();
+    }
+
+
+
+    private void openUserProductList(BottomSheetDialog bottomSheetDialog) {
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+
+                okhttp3.Request requestOriginal = chain.request();
+
+                okhttp3.Request request = requestOriginal.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(requestOriginal.method(), requestOriginal.body())
+                        .build();
+
+
+                return chain.proceed(request);
+            }
+        });
+        final OkHttpClient httpClient1 = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .client(httpClient1.newBuilder().connectTimeout(10, TimeUnit.MINUTES).readTimeout(10, TimeUnit.MINUTES).writeTimeout(10, TimeUnit.MINUTES).build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient1)
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+
+        Call<SavedProductListModel> call = patchService1.getUserSavedList(Constants.API_GET_USER_SAVED_LISTS);
+
+        call.enqueue(new Callback<SavedProductListModel>() {
+            @Override
+            public void onResponse(Call<SavedProductListModel> call, retrofit2.Response<SavedProductListModel> response) {
+
+
+                CommonMethods.printLogE("Response @ openUserProductList : ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ openUserProductList : ", "" + response.code());
+
+                if (response.code() == Constants.API_CODE_200) {
+
+                    Gson gson = new GsonBuilder()
+                            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                            .serializeNulls()
+                            .create();
+
+                    CommonMethods.printLogE("Response @ openUserProductList : ", "" + gson.toJson(response.body()));
+
+                    //UPDATE UI
+                    displaySavedProductList(response.body(), bottomSheetDialog);
+
+
+
+                } else {
+                    progressLoadData.setVisibility(View.GONE);
+
+                    CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SavedProductListModel> call, Throwable t) {
+
+                progressLoadData.setVisibility(View.GONE);
+
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strSomethingWentWrong));
+
+            }
+        });
+    }
+
+    private void displaySavedProductList(SavedProductListModel body, BottomSheetDialog bottomSheetDialog) {
+
+        RecyclerView recycleAccountList = (RecyclerView) bottomSheetDialog.findViewById(R.id.recycleSavedProductList);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(mActivity);
+        recycleAccountList.setLayoutManager(mLinearLayoutManager);
+
+        ImageView imgCreateList = (ImageView) bottomSheetDialog.findViewById(R.id.imgCreateList);
+        TextView txtCreateNewList = (TextView) bottomSheetDialog.findViewById(R.id.txtCreateNewList);
+
+        if(body.getData().size() == 0){
+            txtCreateNewList.setVisibility(View.VISIBLE);
+            recycleAccountList.setVisibility(View.GONE);
+        }else{
+
+            //BIND RECYCLER VIEW
+            SavedListNameAdapter mSavedListNameAdapter = new SavedListNameAdapter(mContext,ProductBuyingScreenActivity.this, body.getData());
+            recycleAccountList.setAdapter(mSavedListNameAdapter);
+
+
+        }
+
+        imgCreateList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //CLOSE BOTTOM CREATED LIST BOTTOM BAR
+                bottomSheetDialog.cancel();
+
+                //OPEN ANOTHER DIALOGUE FROM BOTTOM BAR FOR CREATE NEW LIST
+                openCreateListName();
+            }
+        });
+    }
+
+    private void openCreateListName() {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext);
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_create_new_list);
+        FrameLayout bottomSheet = bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+
+
+        EditText edtCreateNewList =(EditText) bottomSheetDialog.findViewById(R.id.edtCreateNewList);
+        TextView txtCreateListEnabled =(TextView) bottomSheetDialog.findViewById(R.id.txtCreateListEnabled);
+        TextView txtCreateListDisabled =(TextView) bottomSheetDialog.findViewById(R.id.txtCreateListDisabled);
+        LinearLayout imgBackArrow = (LinearLayout) bottomSheetDialog.findViewById(R.id.imgBackArrow);
+
+        edtCreateNewList.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                if(charSequence.length() != 0){
+                    txtCreateListDisabled.setVisibility(View.GONE);
+                    txtCreateListEnabled.setVisibility(View.VISIBLE);
+                }else{
+                    txtCreateListDisabled.setVisibility(View.VISIBLE);
+                    txtCreateListEnabled.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+        txtCreateListEnabled.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+               callApiCreateNewlist(edtCreateNewList.getText().toString(),bottomSheetDialog);
+
+
+            }
+        });
+        imgBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+              bottomSheetDialog.cancel();
+
+
+            }
+        });
+        bottomSheetDialog.show();
+    }
+
+    private void callApiCreateNewlist(String strListName, BottomSheetDialog bottomSheetDialog) {
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request original = chain.request();
+
+                okhttp3.Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", mSessionManager.getPreference(Constants.AUTH_TOKEN_TYPE) + " " + mSessionManager.getPreference(Constants.AUTH_TOKEN))
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        final OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mSessionManager.getPreference(Constants.API_END_POINTS_MOBILE_KEY))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.newBuilder().connectTimeout(30000, TimeUnit.SECONDS).readTimeout(30000, TimeUnit.SECONDS).writeTimeout(30000, TimeUnit.SECONDS).build())
+                .build();
+
+        UpdateAllAPI patchService1 = retrofit.create(UpdateAllAPI.class);
+        JsonObject paramObject = new JsonObject();
+        paramObject.addProperty("name", strListName);
+
+
+        Call<JsonElement> call = patchService1.createProductList(paramObject);
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+
+                CommonMethods.printLogE("Response @ callApiCreateNewlist: ", "" + response.isSuccessful());
+                CommonMethods.printLogE("Response @ callApiCreateNewlist: ", "" + response.code());
+                Gson gson = new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .serializeNulls()
+                        .create();
+
+                CommonMethods.printLogE("Response @ callApiCreateNewlist: ", "" + gson.toJson(response.body()));
+
+                if (response.code() == 200  ) {
+
+                    bottomSheetDialog.cancel();
+
+                }else{
+
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        CommonMethods.buildDialog(mContext,""+jObjError.getString("message"));
+
+                    } catch (Exception e) {
+
+
+                    }
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+                CommonMethods.buildDialog(mContext, getResources().getString(R.string.strApiCallFailure));
+
+
+            }
+        });
+
+    }
 
 }

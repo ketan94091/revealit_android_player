@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:padding="20dp"
+
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearHeaderView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/relativeBack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+               >
+
+                <LinearLayout
+                    android:id="@+id/imgBackArrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/icon_cross" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/dmsans_bold"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/strListName"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="15dp" />
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/linearHeaderView">
+
+            <TextView
+                android:id="@+id/txtEditTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/dmsans_bold"
+                android:paddingLeft="0dp"
+                android:paddingTop="0dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="5dp"
+                android:text="@string/strListName"
+                android:textColor="@color/colorBlack"
+                android:textFontWeight="700"
+                android:textSize="12dp" />
+
+            <EditText
+                android:id="@+id/edtCreateNewList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtEditTitle"
+                android:background="@drawable/round_corner_border"
+                android:maxLength="50"
+                android:padding="12dp" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edtCreateNewList">
+
+                <TextView
+                    android:id="@+id/txtCreateListDisabled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/new_auth_round_button_app_green_light"
+                    android:fontFamily="@font/dmsans_bold"
+                    android:paddingLeft="25dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="25dp"
+                    android:paddingBottom="10dp"
+                    android:text="Create List"
+                    android:textColor="@color/colorWhite"
+                    android:textFontWeight="700"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/txtCreateListEnabled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/new_auth_round_button_app_green"
+                    android:fontFamily="@font/dmsans_bold"
+                    android:paddingLeft="25dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="25dp"
+                    android:paddingBottom="10dp"
+                    android:text="Create List"
+                    android:textColor="@color/colorWhite"
+                    android:textFontWeight="700"
+                    android:textSize="12dp"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>
+
+
+
+
+
+
+
+

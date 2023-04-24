@@ -229,7 +229,7 @@ public class PrivacyFragment extends Fragment implements View.OnClickListener {
                         Intent mIntent = new Intent(mActivity, NewAuthSplashScreen.class);
                         mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(mIntent);
-                        mActivity.finish();
+                        mActivity.finishAffinity();
 
                     }
                 })

@@ -89,10 +89,10 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
     public void updateListData(ArrayList<RevealitHistoryModel.Data> mRevealitHistoryList, boolean isCheckBoxSelected,boolean shouldCheckBoxVisible) {
 
         //CLEAR CURRENT LIST
-        revealitHistoryData.clear();
+        this.revealitHistoryData.clear();
 
         //ADD FRESH LIST
-        revealitHistoryData.addAll(mRevealitHistoryList);
+        this.revealitHistoryData.addAll(mRevealitHistoryList);
 
         //UPDATE CHECK BOX DATA
         this.isCheckSelected = isCheckBoxSelected;
@@ -102,6 +102,7 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
 
         //CLEAR SELECTED IDS
         mSelectedVideoIds.clear();
+
 
         //NOTIFY LISTENER
        notifyDataSetChanged();
@@ -165,7 +166,7 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
         preloadVideos( revealitHistoryData.get(position).getMedia_url());
 
         //LOAD COVER IMAGE WITH GLIDE
-        Glide.with(mActivity)
+        Glide.with(mContext.getApplicationContext())
                 .load("" + revealitHistoryData.get(position).getMedia_cover_art())
                 .placeholder(R.drawable.placeholder)
                 .listener(new RequestListener<Drawable>() {
