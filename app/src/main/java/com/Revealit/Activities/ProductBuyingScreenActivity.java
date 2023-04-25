@@ -104,6 +104,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
     private GetProductDetailsModel.Data mProductData;
     private ImageView imgHeaderViewDialogView;
     private RelativeLayout relatvieHeaderImage;
+    private String strItemId;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +133,10 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
          imgHeaderViewDialogView = (ImageView)findViewById(R.id.imgHeaderView);
         relatvieHeaderImage = (RelativeLayout)findViewById(R.id.relatvieHeaderImage);
 
-        openProductPurchaseDialog(getIntent().getStringExtra("ITEM_ID"));
+
+        strItemId =getIntent().getStringExtra("ITEM_ID");
+
+        openProductPurchaseDialog(strItemId);
 
     }
 
@@ -759,7 +763,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
         LinearLayout imgBackArrow =(LinearLayout) bottomSheetDialog.findViewById(R.id.imgBackArrow);
 
         //OPEN USER DEFAULT LIST
-       openUserProductList(bottomSheetDialog);
+        openUserProductList(bottomSheetDialog );
 
 
         imgBackArrow.setOnClickListener(new View.OnClickListener() {
@@ -869,7 +873,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
         }else{
 
             //BIND RECYCLER VIEW
-            SavedListNameAdapter mSavedListNameAdapter = new SavedListNameAdapter(mContext,ProductBuyingScreenActivity.this, body.getData());
+            SavedListNameAdapter mSavedListNameAdapter = new SavedListNameAdapter(mContext,ProductBuyingScreenActivity.this, body.getData(),recycleAccountList,strItemId, mSessionManager,bottomSheetDialog);
             recycleAccountList.setAdapter(mSavedListNameAdapter);
 
 
@@ -1003,7 +1007,11 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
                 if (response.code() == 200  ) {
 
+                    //CANCEL BOTTOM BAR AND SAVE ITEM TO LITS
                     bottomSheetDialog.cancel();
+
+
+
 
                 }else{
 
@@ -1013,7 +1021,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
                     } catch (Exception e) {
 
-
+                        CommonMethods.buildDialog(mContext,""+e.getMessage());
                     }
 
 

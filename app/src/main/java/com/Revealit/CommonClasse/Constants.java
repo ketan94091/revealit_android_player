@@ -112,6 +112,7 @@ public class Constants {
   public static final String API_ADD_REFARAL = "api/referral";
   public static final String API_GET_USER_SAVED_LISTS = "api/mylists";
   public static final String API_CREATE_NEW_PRODUCT_LIST = "api/mylist";
+  public static final String API_ADD_ITEM_TO_LIST = "api/listitem";
 
 
     public static final String AUTH_TOKEN = "access_token";

@@ -120,6 +120,7 @@
     <string name="strDontAllow">Dont allow</string>
     <string name="strAccount">Account</string>
     <string name="strAdmin">admin</string>
+    <string name="strMySavedList">My Saved Lists</string>
     <string name="strAdminCapital">Admin</string>
     <string name="strTokenBearer">Bearer</string>
     <string name="strOTPinboxMsg">Please check your inbox, We sent you an OTP</string>
@@ -241,6 +242,7 @@
     <string name="strWelcomeToTV">Welcome to revealitTV</string>
     <string name="strSetting">Settings</string>
     <string name="strProfile">Profile</string>
+    <string name="strSavedLists">Saved Lists</string>
     <string name="strEnterPrivateKey">Please enter private key!</string>
     <string name="strInvalidPrivateKey">Please enter a valid Revealit account private key</string>
     <string name="strReachedMaximumAccount">You have reached the maximum number of accounts added to this device. Kindly remove an account to add another</string>

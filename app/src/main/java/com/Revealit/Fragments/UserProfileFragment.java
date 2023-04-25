@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.Revealit.Activities.HomeScreenTabLayout;
 import com.Revealit.Activities.ImportAccountFromPrivateKey;
 import com.Revealit.Activities.QrCodeScannerActivity;
+import com.Revealit.Activities.UserSavedListActivity;
 import com.Revealit.Adapter.SilosAvailableAccountsListAdapterPopup;
 import com.Revealit.BuildConfig;
 import com.Revealit.CommonClasse.CommonMethods;
@@ -297,6 +298,13 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 //                mActivity.startActivity(mIntent);
 
                 //openBottomBarForReward();
+
+                break;
+
+            case  R.id.linearSavedItems:
+
+                   Intent mIntent = new Intent(mActivity, UserSavedListActivity.class);
+                   startActivity(mIntent);
 
                 break;
         }

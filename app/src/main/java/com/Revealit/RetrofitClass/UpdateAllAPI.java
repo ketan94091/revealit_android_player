@@ -240,6 +240,10 @@ public interface UpdateAllAPI {
     @POST(Constants.API_CREATE_NEW_PRODUCT_LIST)
     Call<JsonElement> createProductList(@Body JsonObject body);
 
+    //ADD ITEM TO THE LIST
+    @POST(Constants.API_ADD_ITEM_TO_LIST)
+    Call<JsonElement> addItemToTheList(@Body JsonObject body);
+
 }
 
 

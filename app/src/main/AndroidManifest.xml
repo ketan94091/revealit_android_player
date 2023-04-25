@@ -41,8 +41,6 @@
         <package android:name="com.instagram.android" />
     </queries>
 
-
-
     <application
         android:name=".Utils.Appcontroller"
         android:allowBackup="false"
@@ -58,8 +56,16 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,HardcodedDebugMode"
         tools:node="merge">
+        <activity
+            android:name=".Activities.UserSavedListActivity"
+            android:exported="false" />
 
-        <receiver android:name=".services.NetworkChangeReceiver"
+        <activity
+            android:name=".Activities.SavedItemListActivity"
+            android:exported="false" />
+
+        <receiver
+            android:name=".services.NetworkChangeReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -279,7 +285,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
     </application>
 
 </manifest>
