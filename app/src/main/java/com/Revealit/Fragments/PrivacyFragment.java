@@ -218,6 +218,8 @@ public class PrivacyFragment extends Fragment implements View.OnClickListener {
                         //CLEAR PUSHER NOTIFICATION INTEREST
                         //PushNotifications.clearAllState();
 
+                       ListenFragment.mRevealItHistoryListAdapter = null;
+
                         //UPDATE LOGIN FLAG
                         mSessionManager.updatePreferenceBoolean(Constants.USER_LOGGED_IN,false);
                         mSessionManager.updatePreferenceBoolean(Constants.KEY_ISFROM_LOGOUT,true);

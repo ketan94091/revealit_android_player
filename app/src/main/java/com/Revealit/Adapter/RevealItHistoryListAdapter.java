@@ -86,7 +86,7 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
 
     }
 
-    public void updateListData(ArrayList<RevealitHistoryModel.Data> mRevealitHistoryList, boolean isCheckBoxSelected,boolean shouldCheckBoxVisible) {
+    public void updateListData(ArrayList<RevealitHistoryModel.Data> mRevealitHistoryList, boolean isCheckBoxSelected, boolean shouldCheckBoxVisible, RevealItHistoryListAdapter mAdapter, RecyclerView recycleRevealList) {
 
         //CLEAR CURRENT LIST
         this.revealitHistoryData.clear();
@@ -103,9 +103,8 @@ public class RevealItHistoryListAdapter extends RecyclerView.Adapter<RevealItHis
         //CLEAR SELECTED IDS
         mSelectedVideoIds.clear();
 
+        notifyDataSetChanged();
 
-        //NOTIFY LISTENER
-       notifyDataSetChanged();
 
     }
 
