@@ -219,10 +219,12 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             imgScanQRcode.setOnClickListener(this);
 
         }else if(mSessionManager.getPreferenceBoolean(Constants.KEY_IS_USER_CANCEL_REFERRAL)){
-            linearAccount.setOnClickListener(this);
+
             linearHelp.setOnClickListener(this);
 
         }
+
+        linearAccount.setOnClickListener(this);
 
 
     }

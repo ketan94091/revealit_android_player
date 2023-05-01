@@ -487,6 +487,8 @@ public class QrCodeScannerActivity extends AppCompatActivity {
                         ResolvedSigningRequest resolved = signingRequest.resolve(new PermissionLevel(mProtonAccountName, permission), new TransactionContext());
 
 
+                        Log.e("resolved", gson.toJson(resolved.getSerializedTransaction()));
+
                         //GET CALLBACK FROM SIGNING REQUEST
                         //ResolvedCallback callback = resolved.getCallback( processor.getSignatures(),signingRequest.getChainId().getChainId(), CommonMethods.returnDateString(),qrCodeData, "PUB_K1_7KxbJA9qrEu9RrhrEsErkBE8T5orDNuLfy5sjA2vyXHrPvwXHS");
                         ResolvedCallback callback = resolved.getCallback(processor.getSignatures(), signingRequest.getChainId().getChainId(), CommonMethods.returnDateString(), qrCodeData, mPublicKey);
