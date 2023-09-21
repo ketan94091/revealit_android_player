@@ -50,6 +50,7 @@ import com.Revealit.ModelClasses.SavedProductListModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -237,7 +238,7 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
                     progressLoadData.setVisibility(View.GONE);
                     mAlertDialog.dismiss();
 
-                    Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
+                    Intent mLoginIntent = new Intent(mActivity, NewAuthGetStartedActivity.class);
                     mActivity.startActivity(mLoginIntent);
                     mActivity.finish();
 
@@ -443,24 +444,34 @@ public class ProductBuyingScreenActivity extends AppCompatActivity {
 
                 //IF DEVICE SUPPORT AR VIEW
                 //IF APP ENVIRONMENT IS T-CURATOR(WHICH SUPPORT MULTIPLE GLB)
-                if (CommonMethods.isDeviceSupportAR(mActivity) && mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 2) {
-                    //OPEN AR VIEW
-                    Intent mARviewIntent = new Intent(ProductBuyingScreenActivity.this, ArModelViewerWeb.class);
+//                if (CommonMethods.isDeviceSupportAR(mActivity) && mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 2) {
+//                    //OPEN AR VIEW
+//                    Intent mARviewIntent = new Intent(ProductBuyingScreenActivity.this, ArModelViewerWeb.class);
+//                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProduct_name());
+//                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.getVendor_url());
+//                    mARviewIntent.putExtra(Constants.AR_MODEL_ID, ""+data.getItem_id());
+//                    startActivity(mARviewIntent);
+//                }else{
+//                    //IF OTHER ENVIRONMENT OTHER THAN T CURATOR SHOULD OPEN DIRECTLY IN TO AR VIEW
+//                    if(CommonMethods.isDeviceSupportAR(mActivity)) {
+//                        Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
+//                        mARviewIntent.putExtra(Constants.AR_VIEW_URL,data.getGlb_model_url());
+//                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProduct_name());
+//                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL,  data.getVendor_url());
+//                        startActivity(mARviewIntent);
+//                    }else{
+//                        CommonMethods.displayToast(mContext ,"Device not support AR camera");
+//                    }
+//                }
+                //IF OTHER ENVIRONMENT OTHER THAN T CURATOR SHOULD OPEN DIRECTLY IN TO AR VIEW
+                if(CommonMethods.isDeviceSupportAR(mActivity)) {
+                    Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
+                    mARviewIntent.putExtra(Constants.AR_VIEW_URL,data.getGlb_model_url());
                     mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProduct_name());
-                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.getVendor_url());
-                    mARviewIntent.putExtra(Constants.AR_MODEL_ID, ""+data.getItem_id());
+                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL,  data.getVendor_url());
                     startActivity(mARviewIntent);
                 }else{
-                    //IF OTHER ENVIRONMENT OTHER THAN T CURATOR SHOULD OPEN DIRECTLY IN TO AR VIEW
-                    if(CommonMethods.isDeviceSupportAR(mActivity)) {
-                        Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
-                        mARviewIntent.putExtra(Constants.AR_VIEW_URL,data.getGlb_model_url());
-                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.getProduct_name());
-                        mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL,  data.getVendor_url());
-                        startActivity(mARviewIntent);
-                    }else{
-                        CommonMethods.displayToast(mContext ,"Device not support AR camera");
-                    }
+                    CommonMethods.displayToast(mContext ,"Device not support AR camera");
                 }
 
             }

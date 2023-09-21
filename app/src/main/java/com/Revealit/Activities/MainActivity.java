@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //Setting Up One Time Navigation
     private void setupNavigation() {
 
+        //TEST COMMENT
+
         mActivity = MainActivity.this;
         mContext = MainActivity.this;
 

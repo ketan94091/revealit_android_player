@@ -44,6 +44,7 @@ import com.Revealit.ModelClasses.GetProductDetailsModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -216,7 +217,7 @@ public class RecipesScreenActivity extends AppCompatActivity {
                     progressLoadData.setVisibility(View.GONE);
                     mAlertDialog.dismiss();
 
-                    Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
+                    Intent mLoginIntent = new Intent(mActivity, NewAuthGetStartedActivity.class);
                     mActivity.startActivity(mLoginIntent);
                     mActivity.finish();
 

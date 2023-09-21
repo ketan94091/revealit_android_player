@@ -25,6 +25,7 @@ import com.Revealit.ModelClasses.CheckEmailModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -257,7 +258,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
             case R.id.txtLogin:
 
-                Intent mLoginIntent = new Intent(RegistrationActivity.this, LoginActivityActivity.class);
+                Intent mLoginIntent = new Intent(RegistrationActivity.this, NewAuthGetStartedActivity.class);
                 startActivity(mLoginIntent);
                 finish();
 

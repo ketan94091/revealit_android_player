@@ -307,7 +307,7 @@ public class NewAuthEnterOTPActivity extends AppCompatActivity implements View.O
                             try {
                                 if(new UpdateUserDetailsInAndroidKeyStoreTask(mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_PRIVATEKEY),mSessionManager.getPreference(Constants.KEY_USER_NOT_FOUND_IMPORT_KEY_USERNAME),response.body().getRole(), response.body().getRevealit_private_key(),response.body().getAuth_token(), Integer.parseInt(response.body().getIs_activated()), response.body().getRemove(),response.body().getAudience()).execute(mSessionManager).get()){
                                     //GO TO NEXT ACTIVITY
-                                    Intent mIntent = new Intent(NewAuthEnterOTPActivity.this, HomeScreenTabLayout.class);
+                                    Intent mIntent = new Intent(NewAuthEnterOTPActivity.this, NewAuthBiomatricAuthenticationActivity.class);
                                     startActivity(mIntent);
                                     finishAffinity();
                                 }

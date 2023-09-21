@@ -947,6 +947,8 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
     }
 
 
+
+
     private void setOnClicks() {
 
         linearDelete.setOnClickListener(this);
@@ -976,23 +978,31 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
         //PUSHER SDK
         //IF -> SELECTED SERVER INSTANCE IS INTEGRATION
         //ELSE -> OTHER THAN INTEGRATION
-        if(mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 6){
-            //PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_INTERGRATION);
-            PushNotificationsInstance pushNotificationsIntegration =
-                    new PushNotificationsInstance(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_INTERGRATION);
-            pushNotificationsIntegration.start();
-            pushNotificationsIntegration.addDeviceInterest(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
-
-        }else {
-            //PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_PRODUCTION);
-            PushNotificationsInstance pushNotificationsProduction =
-                    new PushNotificationsInstance(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_PRODUCTION);
-            pushNotificationsProduction.start();
-            pushNotificationsProduction.addDeviceInterest(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
-        }
+//        if(mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 6){
+//            //PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_INTERGRATION);
+//            PushNotificationsInstance pushNotificationsIntegration =
+//                    new PushNotificationsInstance(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_INTERGRATION);
+//            pushNotificationsIntegration.start();
+//            pushNotificationsIntegration.addDeviceInterest(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+//
+//        }else {
+//            //PushNotifications.start(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_PRODUCTION);
+//            PushNotificationsInstance pushNotificationsProduction =
+//                    new PushNotificationsInstance(getApplicationContext(), Constants.PUSHER_INSTANCE_ID_PRODUCTION);
+//            pushNotificationsProduction.start();
+//            pushNotificationsProduction.addDeviceInterest(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+//        }
 
         //REGISTER PUSHER DEVICE INTEREST
         //pushNotificationsProduction.addDeviceInterest(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+
+        if(!mSessionManager.getPreference(Constants.KEY_PUSHER_ID).isEmpty()){
+            PushNotificationsInstance pushNotificationsIntegration =
+                    new PushNotificationsInstance(getApplicationContext(),mSessionManager.getPreference(Constants.KEY_PUSHER_ID));
+            pushNotificationsIntegration.start();
+            pushNotificationsIntegration.addDeviceInterest(mSessionManager.getPreference(Constants.PROTON_ACCOUNT_NAME));
+
+        }
 
     }
 
@@ -1083,6 +1093,8 @@ public class HomeScreenTabLayout extends AppCompatActivity implements DeleteVide
 
                 }
             });
+        }else{
+
         }
     }
 

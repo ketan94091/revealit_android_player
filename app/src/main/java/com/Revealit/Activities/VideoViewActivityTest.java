@@ -46,6 +46,7 @@ import com.Revealit.ModelClasses.DotsLocationsModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -586,7 +587,7 @@ public class VideoViewActivityTest extends AppCompatActivity implements View.OnC
 
                 } else if (response.code() == Constants.API_CODE_401) {
 
-                    Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
+                    Intent mLoginIntent = new Intent(mActivity, NewAuthGetStartedActivity.class);
                     mActivity.startActivity(mLoginIntent);
                     mActivity.finish();
 

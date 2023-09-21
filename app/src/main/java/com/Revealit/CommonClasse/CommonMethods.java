@@ -2,6 +2,7 @@ package com.Revealit.CommonClasse;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.KeyguardManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -183,6 +184,27 @@ public class CommonMethods {
         });
 
 
+    }
+    public static void showPusherImplementDialogue(Context mContext) {
+
+
+        Dialog dialog = new Dialog(mContext,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.pusher_implementation_dialogue);
+
+        ImageView imgCancel = (ImageView) dialog.findViewById(R.id.imgCancel);
+
+        imgCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+
+
+            }
+        });
+        dialog.show();
     }
 
 

@@ -193,7 +193,12 @@ public class ImportAccountFromPrivateKey extends AppCompatActivity implements Vi
             //OPEN DIALOGUE
             CommonMethods.showDialog(mContext);
 
-            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
             httpClient.addInterceptor(new Interceptor() {
                 @Override
                 public okhttp3.Response intercept(Chain chain) throws IOException {

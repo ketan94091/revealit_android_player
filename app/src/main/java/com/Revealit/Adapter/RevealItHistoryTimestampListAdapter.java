@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Revealit.Activities.ExoPlayerActivity;
-import com.Revealit.Activities.LoginActivityActivity;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
 import com.Revealit.CommonClasse.SessionManager;
@@ -31,6 +30,7 @@ import com.Revealit.ModelClasses.ItemListFromItemIdModel;
 import com.Revealit.ModelClasses.RevealitHistoryModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
+import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -290,7 +290,7 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
                         progressLoadData.setVisibility(View.GONE);
                         mDialogeForItems.dismiss();
 
-                        Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
+                        Intent mLoginIntent = new Intent(mActivity, NewAuthGetStartedActivity.class);
                         mActivity.startActivity(mLoginIntent);
                         mActivity.finish();
 
@@ -490,7 +490,7 @@ public class RevealItHistoryTimestampListAdapter extends RecyclerView.Adapter<Re
 
                     mDialogeForItems.dismiss();
 
-                    Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
+                    Intent mLoginIntent = new Intent(mActivity, NewAuthGetStartedActivity.class);
                     mActivity.startActivity(mLoginIntent);
                     mActivity.finish();
 

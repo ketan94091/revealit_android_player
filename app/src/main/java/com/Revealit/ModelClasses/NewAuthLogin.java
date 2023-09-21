@@ -11,7 +11,7 @@ public class NewAuthLogin {
     private String role;
     private  int error_code;
     private  String error_msg;
-    private List<NewAuthLoginCallbackModel.PublicSetting> public_settings;
+    private List<PublicSetting> public_settings;
 
     public String getToken() {
         return token;
@@ -55,11 +55,11 @@ public class NewAuthLogin {
         this.role = role;
     }
 
-    public List<NewAuthLoginCallbackModel.PublicSetting> getPublic_settings() {
+    public List<PublicSetting> getPublic_settings() {
         return public_settings;
     }
 
-    public void setPublic_settings(List<NewAuthLoginCallbackModel.PublicSetting> public_settings) {
+    public void setPublic_settings(List<PublicSetting> public_settings) {
         this.public_settings = public_settings;
     }
 
@@ -155,9 +155,10 @@ public class NewAuthLogin {
         }
     }
 
-    private class AppSetting {
+    public class AppSetting {
 
-        private List<BlockProducer> block_producers;
+        public List<BlockProducer> block_producers;
+        public PusherSettings pusher;
 
         public List<BlockProducer> getBlock_producers() {
             return block_producers;
@@ -167,10 +168,16 @@ public class NewAuthLogin {
             this.block_producers = block_producers;
         }
 
+        public PusherSettings getPusher() {
+            return pusher;
+        }
 
+        public void setPusher(PusherSettings pusher) {
+            this.pusher = pusher;
+        }
     }
 
-    private class BlockProducer {
+    public class BlockProducer {
 
         private String url;
 
@@ -180,6 +187,28 @@ public class NewAuthLogin {
 
         public void setUrl(String url) {
             this.url = url;
+        }
+    }
+
+    public class PusherSettings {
+
+        public String instance_id;
+        public String secret_key;
+
+        public String getInstance_id() {
+            return instance_id;
+        }
+
+        public void setInstance_id(String instance_id) {
+            this.instance_id = instance_id;
+        }
+
+        public String getSecret_key() {
+            return secret_key;
+        }
+
+        public void setSecret_key(String secret_key) {
+            this.secret_key = secret_key;
         }
     }
 }

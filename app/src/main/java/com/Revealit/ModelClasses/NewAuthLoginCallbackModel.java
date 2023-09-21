@@ -158,6 +158,8 @@ public class NewAuthLoginCallbackModel {
     public static class AppSetting {
 
         private List<BlockProducer> block_producers;
+        public PusherSettings pusher;
+
 
         public List<BlockProducer> getBlock_producers() {
             return block_producers;
@@ -165,6 +167,14 @@ public class NewAuthLoginCallbackModel {
 
         public void setBlock_producers(List<BlockProducer> block_producers) {
             this.block_producers = block_producers;
+        }
+
+        public PusherSettings getPusher() {
+            return pusher;
+        }
+
+        public void setPusher(PusherSettings pusher) {
+            this.pusher = pusher;
         }
     }
 
@@ -178,6 +188,28 @@ public class NewAuthLoginCallbackModel {
 
         public void setUrl(String url) {
             this.url = url;
+        }
+    }
+
+    public class PusherSettings {
+
+        public String instance_id;
+        public String secret_key;
+
+        public String getInstance_id() {
+            return instance_id;
+        }
+
+        public void setInstance_id(String instance_id) {
+            this.instance_id = instance_id;
+        }
+
+        public String getSecret_key() {
+            return secret_key;
+        }
+
+        public void setSecret_key(String secret_key) {
+            this.secret_key = secret_key;
         }
     }
 }

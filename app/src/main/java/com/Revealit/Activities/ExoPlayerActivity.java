@@ -65,6 +65,7 @@ import com.Revealit.ModelClasses.InfluencersModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -829,7 +830,7 @@ imgVoulume.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener
 
                 } else if (response.code() == Constants.API_CODE_401) {
 
-                    Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
+                    Intent mLoginIntent = new Intent(mActivity, NewAuthGetStartedActivity.class);
                     mActivity.startActivity(mLoginIntent);
                     mActivity.finish();
 
@@ -1305,24 +1306,35 @@ imgVoulume.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener
 
                             //IF DEVICE SUPPORT AR VIEW
                             //IF APP ENVIRONMENT IS T-CURATOR(WHICH SUPPORT MULTIPLE GLB)
-                            if (CommonMethods.isDeviceSupportAR(mActivity) && mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 2) {
-                                //OPEN AR VIEW
-                                Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ArModelViewerWeb.class);
+//                            if (CommonMethods.isDeviceSupportAR(mActivity) && mSessionManager.getPreferenceInt(Constants.TESTING_ENVIRONMENT_ID) == 2) {
+//                                //OPEN AR VIEW
+//                                Intent mARviewIntent = new Intent(ExoPlayerActivity.this, ArModelViewerWeb.class);
+//                                mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
+//                                mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.get(finalI).getVendorUrl());
+//                                mARviewIntent.putExtra(Constants.AR_MODEL_ID, data.get(finalI).getItemId());
+//                                startActivity(mARviewIntent);
+//                            }else{
+//                                //IF OTHER ENVIRONMENT OTHER THAN T CURATOR SHOULD OPEN DIRECTLY IN TO AR VIEW
+//                                if(CommonMethods.isDeviceSupportAR(mActivity)) {
+//                                    Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
+//                                    mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.get(finalI).getGlb_model_url());
+//                                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
+//                                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL,  data.get(finalI).getVendorUrl());
+//                                    startActivity(mARviewIntent);
+//                                }else{
+//                                    CommonMethods.displayToast(mContext ,"Device not support AR camera");
+//                                }
+//                            }
+
+                            //IF OTHER ENVIRONMENT OTHER THAN T CURATOR SHOULD OPEN DIRECTLY IN TO AR VIEW
+                            if(CommonMethods.isDeviceSupportAR(mActivity)) {
+                                Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
+                                mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.get(finalI).getGlb_model_url());
                                 mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
-                                mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL, data.get(finalI).getVendorUrl());
-                                mARviewIntent.putExtra(Constants.AR_MODEL_ID, data.get(finalI).getItemId());
+                                mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL,  data.get(finalI).getVendorUrl());
                                 startActivity(mARviewIntent);
                             }else{
-                                //IF OTHER ENVIRONMENT OTHER THAN T CURATOR SHOULD OPEN DIRECTLY IN TO AR VIEW
-                                if(CommonMethods.isDeviceSupportAR(mActivity)) {
-                                    Intent mARviewIntent = new Intent(mActivity, ARviewActivity.class);
-                                    mARviewIntent.putExtra(Constants.AR_VIEW_URL, data.get(finalI).getGlb_model_url());
-                                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_NAME, data.get(finalI).getVendor());
-                                    mARviewIntent.putExtra(Constants.AR_VIEW_MODEL_URL,  data.get(finalI).getVendorUrl());
-                                    startActivity(mARviewIntent);
-                                }else{
-                                    CommonMethods.displayToast(mContext ,"Device not support AR camera");
-                                }
+                                CommonMethods.displayToast(mContext ,"Device not support AR camera");
                             }
 
                         }
@@ -1897,7 +1909,7 @@ imgVoulume.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener
                     progressLoadData.setVisibility(View.GONE);
                     mAlertDialog.dismiss();
 
-                    Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
+                    Intent mLoginIntent = new Intent(mActivity, NewAuthGetStartedActivity.class);
                     mActivity.startActivity(mLoginIntent);
                     mActivity.finish();
 
@@ -1989,7 +2001,7 @@ imgVoulume.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener
                     progressLoadData.setVisibility(View.GONE);
                     mAlertDialog.dismiss();
 
-                    Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
+                    Intent mLoginIntent = new Intent(mActivity, NewAuthGetStartedActivity.class);
                     mActivity.startActivity(mLoginIntent);
                     mActivity.finish();
 

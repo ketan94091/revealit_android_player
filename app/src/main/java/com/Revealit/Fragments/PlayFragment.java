@@ -197,8 +197,12 @@ public class PlayFragment extends Fragment implements View.OnClickListener {
 
 
                 if(CommonMethods.areNotificationsEnabled(mContext)){
-                    Intent mIntentQRCodeActivity = new Intent(mActivity, QrCodeScannerActivity.class);
-                    mActivity.startActivity(mIntentQRCodeActivity);
+                    if(mSessionManager.getPreference(Constants.KEY_PUSHER_ID).isEmpty()){
+                        CommonMethods.showPusherImplementDialogue(mContext);
+                    }else{
+                        Intent mIntentQRCodeActivity = new Intent(mActivity, QrCodeScannerActivity.class);
+                        mActivity.startActivity(mIntentQRCodeActivity);
+                    }
                 }else{
                  CommonMethods.openNotificationSettings(mActivity);
 

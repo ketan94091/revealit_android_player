@@ -336,10 +336,18 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                                isAppVersionIsNotOk = true;
                            }
 
+                            //GET PUSHER SETTINGS
+                            //SAVE TO SHARE PREFERENCE
+                            if(response.body().getPublic_settings().get(i).getApp_settings().getPusher() != null){
+
+                            }else {
+                                mSessionManager.updatePreferenceString(Constants.KEY_PUSHER_ID, "");
+                                mSessionManager.updatePreferenceString(Constants.KEY_PUSHER_SERVER_KEY,"");
+                            }
+
+
                         }
                     }
-
-
 
 
                     //CHECK IF APPLICATION IS IN MAINTENANCE
@@ -535,6 +543,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                     }
 
 
+
                     //CHECK IF USER ROLE IS CHANGED
                      privatekey = getIntent().getStringExtra(Constants.KEY_PRIVATE_KEY);
                      username = getIntent().getStringExtra(Constants.KEY_PROTON_ACCOUNTNAME);
@@ -580,12 +589,21 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                                 isAppVersionIsNotOk = true;
                             }
 
+                            //GET PUSHER SETTINGS
+                            //SAVE TO SHARE PREFERENCE
+                              if(response.body().getPublic_settings().get(i).getApp_settings().getPusher() != null) {
+                                  mSessionManager.updatePreferenceString(Constants.KEY_PUSHER_ID, response.body().getPublic_settings().get(i).getApp_settings().getPusher().getInstance_id());
+                                  mSessionManager.updatePreferenceString(Constants.KEY_PUSHER_SERVER_KEY, response.body().getPublic_settings().get(i).getApp_settings().getPusher().getSecret_key());
+                              }else {
+                                  mSessionManager.updatePreferenceString(Constants.KEY_PUSHER_ID, "");
+                                  mSessionManager.updatePreferenceString(Constants.KEY_PUSHER_SERVER_KEY,"");
+                              }
+
                         }
                     }
 
                     //GET USER DETAILS API
                     getUserDetails();
-
 
                 }else {
 
@@ -594,19 +612,7 @@ public class NewAuthBiomatricAuthenticationActivity extends AppCompatActivity im
                     }else{
                         openAppMaintenanceScreen();
                     }
-//                    //displayAlertDialogue();
-//                    try {
-//                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-//
-//                        if(jObjError.getInt("error_code") ==  604){
-//                            displayUserNotFoundDialogue();
-//                        }else{
-//                            CommonMethods.buildDialog(mContext,"Error : "+ jObjError.getString("message"));
-//                        }
-//                    } catch (Exception e) {
-//                        CommonMethods.buildDialog(mContext,"Error : "+e.getMessage());
-//
-//                    }
+
                 }
             }
 

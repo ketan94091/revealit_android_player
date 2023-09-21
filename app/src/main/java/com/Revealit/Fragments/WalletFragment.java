@@ -34,7 +34,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.Revealit.Activities.ExoPlayerActivity;
 import com.Revealit.Activities.HomeScreenTabLayout;
-import com.Revealit.Activities.LoginActivityActivity;
 import com.Revealit.Activities.QrCodeScannerActivity;
 import com.Revealit.CommonClasse.CommonMethods;
 import com.Revealit.CommonClasse.Constants;
@@ -45,6 +44,7 @@ import com.Revealit.ModelClasses.RewardHistoryModel;
 import com.Revealit.R;
 import com.Revealit.RetrofitClass.UpdateAllAPI;
 import com.Revealit.SqliteDatabase.DatabaseHelper;
+import com.Revealit.UserOnboardingProcess.NewAuthGetStartedActivity;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -253,8 +253,12 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
             case R.id.imgScanQRcode:
 
                 if(CommonMethods.areNotificationsEnabled(mContext)){
-                    Intent mIntentQRCodeActivity = new Intent(mActivity, QrCodeScannerActivity.class);
-                    mActivity.startActivity(mIntentQRCodeActivity);
+                    if(mSessionManager.getPreference(Constants.KEY_PUSHER_ID).isEmpty()){
+                        CommonMethods.showPusherImplementDialogue(mContext);
+                    }else{
+                        Intent mIntentQRCodeActivity = new Intent(mActivity, QrCodeScannerActivity.class);
+                        mActivity.startActivity(mIntentQRCodeActivity);
+                    }
                 }else{
                     CommonMethods.openNotificationSettings(mActivity);
 
@@ -599,7 +603,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                 } else if (response.code() == Constants.API_CODE_401) {
 
-                    Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
+                    Intent mLoginIntent = new Intent(mActivity, NewAuthGetStartedActivity.class);
                     mActivity.startActivity(mLoginIntent);
                     mActivity.finish();
 
@@ -698,7 +702,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
 
                 } else if (response.code() == Constants.API_CODE_401) {
 
-                    Intent mLoginIntent = new Intent(mActivity, LoginActivityActivity.class);
+                    Intent mLoginIntent = new Intent(mActivity, NewAuthGetStartedActivity.class);
                     mActivity.startActivity(mLoginIntent);
                     mActivity.finish();
 

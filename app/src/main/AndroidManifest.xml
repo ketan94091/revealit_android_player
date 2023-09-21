@@ -169,14 +169,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".Activities.ExoPlayerTestActivity"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|uiMode|smallestScreenSize|layoutDirection"
-            android:launchMode="singleTop"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".Activities.LoginActivityActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".UserOnboardingProcess.BiomatricAuthenticationDeleteAccontActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -208,9 +200,6 @@
               android:persistent="true"/>
         -->
         <activity
-            android:name=".Activities.GettingStartedActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".UserOnboardingProcess.NewAuthBiomatricAuthenticationActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -221,9 +210,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.VerificationCodeActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activities.BiomatricAuthenticationActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.SharingActivity"

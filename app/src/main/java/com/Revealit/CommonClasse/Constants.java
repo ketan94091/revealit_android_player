@@ -172,7 +172,7 @@ public class Constants {
   public  static  final  String PLAYBACK_OFFSET_FOR_ITEMS ="playback_offset";
   public  static  final  String APPLICATION_NAME ="Revealit";
   public  static  final  String LOGOUT_FROM_APP ="Logout from Revealit?";
-  public  static  final String YES ="YES";
+  public  static  final  String YES ="YES";
   public  static  final  String NO ="NO";
   public  static  final  String OK ="OK";
   public  static  final  String ACCOUNT_NOT_FOUND ="Wallet was not available";
@@ -246,6 +246,8 @@ public class Constants {
   public  static  final  String KEY_IS_USER_CANCEL_REFERRAL="keyIsUserCancelReferral";
   public  static  final  String KEY_USERPROFILE_PIC="keyUserProfilePic";
   public  static  final  String KEY_IS_FROM_PLAY_SCREEN="keyIsFromPlayScreen";
+  public static final  String KEY_PUSHER_ID ="keyPusherID";
+  public static final  String KEY_PUSHER_SERVER_KEY ="keyPusherServerKey";
 
 
     public static String API_KEY = "AIzaSyC4elGdU9Oxi2DPIShG4pRW2gRBZOeE0pM";
